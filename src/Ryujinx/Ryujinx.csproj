@@ -74,6 +74,7 @@
     <PackageReference Include="Silk.NET.Vulkan.Extensions.KHR" />
     <PackageReference Include="SPB" />
     <PackageReference Include="SharpZipLib" />
+    <PackageReference Include="WebViewControl-Avalonia" />
   </ItemGroup>
   
   <ItemGroup>
