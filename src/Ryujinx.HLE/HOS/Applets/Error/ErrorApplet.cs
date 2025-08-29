@@ -8,7 +8,7 @@ using LibHac.Tools.FsSystem.NcaUtils;
 using Ryujinx.Common.Helper;
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Services.Am.AppletAE;
-using Ryujinx.HLE.HOS.SystemState;
+using Ryujinx.HLE.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -74,34 +74,6 @@ namespace Ryujinx.HLE.HOS.Applets.Error
             return ((resultCode & 0x1FF) + 2000, (resultCode >> 9) & 0x3FFF);
         }
 
-        private static string SystemLanguageToLanguageKey(SystemLanguage systemLanguage)
-        {
-            return systemLanguage switch
-            {
-#pragma warning disable IDE0055 // Disable formatting
-                SystemLanguage.Japanese             => "ja",
-                SystemLanguage.AmericanEnglish      => "en-US",
-                SystemLanguage.French               => "fr",
-                SystemLanguage.German               => "de",
-                SystemLanguage.Italian              => "it",
-                SystemLanguage.Spanish              => "es",
-                SystemLanguage.Chinese              => "zh-Hans",
-                SystemLanguage.Korean               => "ko",
-                SystemLanguage.Dutch                => "nl",
-                SystemLanguage.Portuguese           => "pt",
-                SystemLanguage.Russian              => "ru",
-                SystemLanguage.Taiwanese            => "zh-HansT",
-                SystemLanguage.BritishEnglish       => "en-GB",
-                SystemLanguage.CanadianFrench       => "fr-CA",
-                SystemLanguage.LatinAmericanSpanish => "es-419",
-                SystemLanguage.SimplifiedChinese    => "zh-Hans",
-                SystemLanguage.TraditionalChinese   => "zh-Hant",
-                SystemLanguage.BrazilianPortuguese  => "pt-BR",
-                _                                   => "en-US",
-#pragma warning restore IDE0055
-            };
-        }
-
         private static string CleanText(string value)
         {
             return Patterns.CleanText.Replace(value, string.Empty).Replace("\0", string.Empty);
@@ -114,7 +86,7 @@ namespace Ryujinx.HLE.HOS.Applets.Error
             using LibHac.Fs.IStorage ncaFileStream = new LocalStorage(FileSystem.VirtualFileSystem.SwitchPathToSystemPath(binaryTitleContentPath), FileAccess.Read, FileMode.Open);
             Nca nca = new(_horizon.Device.FileSystem.KeySet, ncaFileStream);
             IFileSystem romfs = nca.OpenFileSystem(NcaSectionType.Data, _horizon.FsIntegrityCheckLevel);
-            string languageCode = SystemLanguageToLanguageKey(_horizon.State.DesiredSystemLanguage);
+            string languageCode = GlobalizationUtils.SystemLanguageToLanguageKey(_horizon.State.DesiredSystemLanguage);
             string filePath = $"/{module}/{description:0000}/{languageCode}_{key}";
 
             if (romfs.FileExists(filePath))
