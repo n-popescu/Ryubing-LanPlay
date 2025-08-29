@@ -126,6 +126,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 },
                 LanguageCode = UI.LanguageCode,
                 BaseStyle = UI.BaseStyle,
+                SelectedWindowIcon = UI.SelectedWindowIcon,
                 GameListViewMode = UI.GameListViewMode,
                 ShowNames = UI.ShowNames,
                 GridSize = UI.GridSize,
