@@ -192,7 +192,18 @@ namespace Ryujinx.Ava
 
         public static void UpdateAppIcon(string newIconName)
         {
-            ApplicationIcon selectedIcon = AvailableApplicationIcons.First(x => x.Name == newIconName);
+            if (newIconName.IsNullOrEmpty())
+            {
+                newIconName = "Classic Ryugay";
+            }
+
+            ApplicationIcon selectedIcon = AvailableApplicationIcons.FirstOrDefault(x => x.Name == newIconName);
+            if (selectedIcon == null)
+            {
+                // Fallback to default icon if the selected one is not found
+                UpdateAppIcon("Classic Ryugay");
+            }
+
             Stream activeIconStream = EmbeddedResources.GetStream(selectedIcon.FullPath);
             if (activeIconStream != null)
             {
