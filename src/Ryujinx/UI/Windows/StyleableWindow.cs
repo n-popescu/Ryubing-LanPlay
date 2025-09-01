@@ -3,11 +3,13 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using FluentAvalonia.UI.Windowing;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Systems.Configuration;
 using Ryujinx.Ava.UI.Controls;
+using Ryujinx.Common;
 using System.Threading.Tasks;
 
 namespace Ryujinx.Ava.UI.Windows
@@ -39,7 +41,8 @@ namespace Ryujinx.Ava.UI.Windows
                     TitleBar.Height = titleBarHeight.Value;
             }
 
-            Icon = RyujinxLogo.Bitmap;
+            Icon = RyujinxLogo.CurrentLogoBitmap.Value;
+            RyujinxLogo.CurrentLogoBitmap.Event += WindowIconChanged_Event;
         }
 
         private void LocaleChanged()
@@ -52,6 +55,12 @@ namespace Ryujinx.Ava.UI.Windows
             base.OnApplyTemplate(e);
 
             ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.SystemChrome | ExtendClientAreaChromeHints.OSXThickTitleBar;
+        }
+
+        private void WindowIconChanged_Event(object _, ReactiveEventArgs<Bitmap> rArgs) => UpdateIcon(rArgs.NewValue);
+        private void UpdateIcon(Bitmap newIcon)
+        {
+            Icon = newIcon;
         }
     }
 
@@ -73,7 +82,8 @@ namespace Ryujinx.Ava.UI.Windows
             LocaleManager.Instance.LocaleChanged += LocaleChanged;
             LocaleChanged();
 
-            Icon = new WindowIcon(RyujinxLogo.Bitmap);
+            Icon = new WindowIcon(RyujinxLogo.CurrentLogoBitmap.Value);
+            RyujinxLogo.CurrentLogoBitmap.Event += WindowIconChanged_Event;
         }
 
         private void LocaleChanged()
@@ -86,6 +96,12 @@ namespace Ryujinx.Ava.UI.Windows
             base.OnApplyTemplate(e);
 
             ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.SystemChrome | ExtendClientAreaChromeHints.OSXThickTitleBar;
+        }
+
+        private void WindowIconChanged_Event(object _, ReactiveEventArgs<Bitmap> rArgs) => UpdateIcon(rArgs.NewValue);
+        private void UpdateIcon(Bitmap newIcon)
+        {
+            Icon = new WindowIcon(newIcon);
         }
     }
 }

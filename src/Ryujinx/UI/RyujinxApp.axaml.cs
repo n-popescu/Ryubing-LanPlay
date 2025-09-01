@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input.Platform;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -12,6 +11,7 @@ using Gommon;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Common.Models;
 using Ryujinx.Ava.Systems.Configuration;
+using Ryujinx.Ava.UI.Controls;
 using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Ava.UI.Views.Dialog;
 using Ryujinx.Ava.UI.Windows;
@@ -63,6 +63,7 @@ namespace Ryujinx.Ava
             FAUISettings.SetAnimationsEnabledAtAppLevel(false);
 
             RetrieveAvailableAppIcons();
+            RyujinxLogo.RefreshAppIconFromSettings();
 
             AvaloniaXamlLoader.Load(this);
 
@@ -87,9 +88,6 @@ namespace Ryujinx.Ava
             {
                 ApplyConfiguredTheme(ConfigurationState.Instance.UI.BaseStyle);
                 ConfigurationState.Instance.UI.BaseStyle.Event += ThemeChanged_Event;
-
-                UpdateAppIcon(ConfigurationState.Instance.UI.SelectedWindowIcon);
-                ConfigurationState.Instance.UI.SelectedWindowIcon.Event += WindowIconChanged_Event;
             }
         }
 
@@ -189,28 +187,5 @@ namespace Ryujinx.Ava
                 });
             }
         }
-
-        public static void UpdateAppIcon(string newIconName)
-        {
-            if (newIconName.IsNullOrEmpty())
-            {
-                newIconName = "Classic Ryugay";
-            }
-
-            ApplicationIcon selectedIcon = AvailableApplicationIcons.FirstOrDefault(x => x.Name == newIconName);
-            if (selectedIcon == null)
-            {
-                // Fallback to default icon if the selected one is not found
-                UpdateAppIcon("Classic Ryugay");
-            }
-
-            Stream activeIconStream = EmbeddedResources.GetStream(selectedIcon.FullPath);
-            if (activeIconStream != null)
-            {
-                MainWindow.Icon = new Bitmap(activeIconStream);
-            }
-        }
-
-        private void WindowIconChanged_Event(object _, ReactiveEventArgs<string> rArgs) => UpdateAppIcon(rArgs.NewValue);
     }
 }
