@@ -4,6 +4,7 @@ using Avalonia.Media.Imaging;
 using Ryujinx.Ava.Common.Models;
 using Ryujinx.Ava.Systems.Configuration;
 using Ryujinx.Common;
+using SkiaSharp;
 using Svg.Skia;
 using System;
 using System.IO;
@@ -62,8 +63,8 @@ namespace Ryujinx.Ava.UI.Controls
                 // SVG files need to be converted to an image first
                 if (selectedIcon.FullPath.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
                 {
-                    // TODO: Convert SVG to a bitmap
-                    using SKSvg svg = new();
+                    Stream pngStream = ConvertSvgToPng(activeIconStream);
+                    CurrentLogoBitmap.Value = new Bitmap(pngStream);
                 }
                 else
                 {
@@ -80,5 +81,47 @@ namespace Ryujinx.Ava.UI.Controls
         }
         
         private void WindowIconChanged_Event(object _, ReactiveEventArgs<string> rArgs) => SetNewAppIcon(rArgs.NewValue);
+
+        private static Stream ConvertSvgToPng(Stream svgStream)
+        {
+            int width = 256;
+            int height = 256;
+
+            // Load SVG
+            var svg = new SKSvg();
+            svg.Load(svgStream);
+
+            // Determine size
+            var picture = svg.Picture;
+            if (picture == null)
+                throw new InvalidOperationException("Invalid SVG data");
+
+            var picWidth = width > 0 ? width : (int)svg.Picture.CullRect.Width;
+            var picHeight = height > 0 ? height : (int)svg.Picture.CullRect.Height;
+
+            // Create bitmap
+            using var bitmap = new SKBitmap(picWidth, picHeight);
+            using var canvas = new SKCanvas(bitmap);
+            canvas.Clear(SKColors.Transparent);
+
+            // Scale to fit
+            float scaleX = (float)picWidth / svg.Picture.CullRect.Width;
+            float scaleY = (float)picHeight / svg.Picture.CullRect.Height;
+            canvas.Scale(scaleX, scaleY);
+
+            canvas.DrawPicture(svg.Picture);
+            canvas.Flush();
+
+            // Encode PNG into memory stream
+            var outputStream = new MemoryStream();
+            using (var image = SKImage.FromBitmap(bitmap))
+            using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
+            {
+                data.SaveTo(outputStream);
+            }
+
+            outputStream.Position = 0;
+            return outputStream;
+        }
     }
 }
