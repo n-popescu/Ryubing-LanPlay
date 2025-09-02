@@ -145,6 +145,7 @@
                             IsEnabled="{Binding !IsGameTitleNotNull}"
                             Opacity="{Binding PanelOpacity}"
                             Margin="0, 15, 0, 10"
+                            ToolTip.Tip="{ext:Locale SettingsTabGeneralIconTooltip}"
                             Orientation="Horizontal">
                             <TextBlock
                                 VerticalAlignment="Center"
