@@ -60,15 +60,10 @@ namespace Ryujinx.Ava.UI.Controls
             Stream activeIconStream = EmbeddedResources.GetStream(selectedIcon.FullPath);
             if (activeIconStream != null)
             {
-                // SVG files need to be converted to an image first
-                if (selectedIcon.FullPath.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+                Bitmap logoBitmap = GetBitmapForLogo(selectedIcon);
+                if (logoBitmap != null)
                 {
-                    Stream pngStream = ConvertSvgToPng(activeIconStream);
-                    CurrentLogoBitmap.Value = new Bitmap(pngStream);
-                }
-                else
-                {
-                    CurrentLogoBitmap.Value = new Bitmap(activeIconStream);
+                    CurrentLogoBitmap.Value = logoBitmap;
                 }
             }
         }
@@ -81,6 +76,24 @@ namespace Ryujinx.Ava.UI.Controls
         }
         
         private void WindowIconChanged_Event(object _, ReactiveEventArgs<string> rArgs) => SetNewAppIcon(rArgs.NewValue);
+
+        public static Bitmap GetBitmapForLogo(ApplicationIcon icon)
+        {
+            Stream activeIconStream = EmbeddedResources.GetStream(icon.FullPath);
+            if (activeIconStream == null)
+                return null;
+
+            // SVG files need to be converted to an image first
+            if (icon.FullPath.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+            {
+                Stream pngStream = ConvertSvgToPng(activeIconStream);
+                return new Bitmap(pngStream);
+            }
+            else
+            {
+                return new Bitmap(activeIconStream);
+            }
+        }
 
         private static Stream ConvertSvgToPng(Stream svgStream)
         {
