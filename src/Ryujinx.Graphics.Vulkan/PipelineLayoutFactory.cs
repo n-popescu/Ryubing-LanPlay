@@ -17,7 +17,7 @@ namespace Ryujinx.Graphics.Vulkan
             DescriptorSetLayout[] layouts = new DescriptorSetLayout[setDescriptors.Count];
             bool[] updateAfterBindFlags = new bool[setDescriptors.Count];
 
-            bool isMoltenVk = gd.IsMoltenVk;
+            bool isMoltenVk = false; // gd.IsMoltenVk
 
             for (int setIndex = 0; setIndex < setDescriptors.Count; setIndex++)
             {
