@@ -24,6 +24,12 @@ namespace Ryujinx.Ava.UI.Controls
             Source = CurrentLogoBitmap.Value;
             IsVisible = !ConfigurationState.Instance.ShowOldUI;
             ConfigurationState.Instance.UI.SelectedWindowIcon.Event += WindowIconChanged_Event;
+            CurrentLogoBitmap.Event += CurrentLogoBitmapChanged_Event;
+        }
+
+        private void CurrentLogoBitmapChanged_Event(object _, ReactiveEventArgs<Bitmap> e)
+        {
+            Source = e.NewValue;
         }
 
         public static void RefreshAppIconFromSettings()
