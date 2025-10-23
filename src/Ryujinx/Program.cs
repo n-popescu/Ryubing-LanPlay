@@ -382,6 +382,11 @@ namespace Ryujinx.Ava
                 exceptions.Add(initialException);
             }
 
+            if (isTerminating)
+            {
+                TryWriteApplicationMinidump();
+            }
+
             foreach (Exception e in exceptions)
             {
                 string message = $"Unhandled exception caught: {e}";
@@ -397,6 +402,31 @@ namespace Ryujinx.Ava
             {
                 Logger.Flush();
                 Exit();
+            }
+        }
+
+        private static void TryWriteApplicationMinidump()
+        {
+            try
+            {
+                if (HLE.Switch.Shared is not { } device)
+                {
+                    return;
+                }
+
+                var minidump = device?.System?.DebugGetApplicationProcessMinidump();
+
+                if (minidump == null)
+                {
+                    Logger.Warning?.Print(LogClass.Application, "Failed to create minidump");
+                    return;
+                }
+
+                Logger.Info?.Print(LogClass.Application, minidump);
+            }
+            catch (Exception e)
+            {
+                Logger.Error?.Print(LogClass.Application, $"Failed to create minidump: {e.Message}");
             }
         }
 
