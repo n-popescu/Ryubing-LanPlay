@@ -72,6 +72,10 @@ namespace Ryujinx.Ava.UI.Windows
         // Correctly size window when 'TitleBar' is enabled (Nov. 14, 2024)
         public readonly double TitleBarHeight;
 
+        // Avalonia will make the window higher than we set.
+        // Store the delta between those 2 values to save the correct window height when exiting.
+        private double _heightCorrection = 0;
+
         public readonly double StatusBarHeight;
         public readonly double MenuBarHeight;
 
@@ -468,6 +472,16 @@ namespace Ryujinx.Ava.UI.Windows
             }
         }
 
+        private void SaveHeightCorrection()
+        {
+            // Store the delta between the height we set (ViewModel.WindowHeight) and the actual height returned by Avalonia (Height).
+            _heightCorrection = Height - ViewModel.WindowHeight;
+            if (Math.Abs(_heightCorrection) > 50)
+            {
+                _heightCorrection = 0;
+            }
+        }
+
         private void SaveWindowSizePosition()
         {
             ConfigurationState.Instance.UI.WindowStartup.WindowMaximized.Value = WindowState == WindowState.Maximized;
@@ -477,8 +491,8 @@ namespace Ryujinx.Ava.UI.Windows
             {
                 // Since scaling is being applied to the loaded settings from disk (see SetWindowSizePosition() above), scaling should be removed from width/height before saving out to disk
                 // as well - otherwise anyone not using a 1.0 scale factor their window will increase in size with every subsequent launch of the program when scaling is applied (Nov. 14, 2024)
-                ConfigurationState.Instance.UI.WindowStartup.WindowSizeHeight.Value = (int)(Height / Program.WindowScaleFactor);
-                ConfigurationState.Instance.UI.WindowStartup.WindowSizeWidth.Value = (int)(Width / Program.WindowScaleFactor);
+                ConfigurationState.Instance.UI.WindowStartup.WindowSizeHeight.Value = (int)Math.Round((Height - _heightCorrection) / Program.WindowScaleFactor);
+                ConfigurationState.Instance.UI.WindowStartup.WindowSizeWidth.Value = (int)Math.Round(Width / Program.WindowScaleFactor);
 
                 ConfigurationState.Instance.UI.WindowStartup.WindowPositionX.Value = Position.X;
                 ConfigurationState.Instance.UI.WindowStartup.WindowPositionY.Value = Position.Y;
@@ -538,6 +552,8 @@ namespace Ryujinx.Ava.UI.Windows
             {
                 LoadApplications();
             }
+
+            Dispatcher.UIThread.Post(SaveHeightCorrection, DispatcherPriority.Loaded);
 
             _ = CheckLaunchState();
         }
