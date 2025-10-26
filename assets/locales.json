@@ -14789,7 +14789,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_hoisN": "",
+        "zh_CN": "",
         "zh_TW": ""
       }
     },
@@ -17101,7 +17101,7 @@
         "el_GR": "Ενεργοποιεί την εκτύπωση μηνυμάτων αρχείου καταγραφής εντοπισμού σφαλμάτων",
         "en_US": "Prints debug log messages in the console.\n\nOnly use this if specifically instructed by a staff member, as it will make logs difficult to read and worsen emulator performance.",
         "es_ES": "Escribe mensajes de debug en la consola\n\nActiva esto solo si un miembro del equipo te lo pide expresamente, pues hará que el registro sea difícil de leer y empeorará el rendimiento del emulador.",
-        "fr_FR": "Affiche dans la console les journaux de debug.\n\nN’uties LDisez cette option que si un membre du personnel vous l’a expressément demandé, car cela rendra les journaux difficiles à lire et dégradera la performance de l’émulateur.",
+        "fr_FR": "Affiche dans la console les journaux de debug.\n\nN’utilisez cette option que si un membre du personnel vous l’a expressément demandé, car cela rendra les journaux difficiles à lire et dégradera la performance de l’émulateur.",
         "he_IL": "מדפיס הודעות יומן ניפוי באגים בשורת הפקודות.",
         "it_IT": "Stampa i messaggi di log per il debug nella console.\n\nUsa questa opzione solo se specificatamente richiesto da un membro del team, dal momento che rende i log difficili da leggere e riduce le prestazioni dell'emulatore.",
         "ja_JP": "デバッグログメッセージをコンソールに出力します.\n\nログが読みづらくなり,エミュレータのパフォーマンスが低下するため,開発者から特別な指示がある場合のみ使用してください.",
