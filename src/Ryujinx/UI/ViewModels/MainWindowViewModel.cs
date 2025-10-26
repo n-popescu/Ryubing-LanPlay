@@ -149,7 +149,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         /// </summary>
         public SafeDictionary<string, LdnGameModel.Array> UsableLdnData = [];
 
-        private LdnGameModel[] _ldnModels;
+        private LdnGameModel[] _ldnModels = [];
 
         public LdnGameModel[] LdnModels
         {

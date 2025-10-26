@@ -177,6 +177,8 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         private void SetEntries(IEnumerable<LdnGameModel> entries)
         {
+            entries ??= [];
+
             _visibleEntries = entries.ToList();
             OnPropertyChanged(nameof(VisibleEntries));
         }

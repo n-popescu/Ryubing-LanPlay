@@ -151,6 +151,11 @@ namespace Ryujinx.Cpu.Jit
                 return default;
             }
         }
+        
+        public override bool TryReadUnsafe(ulong va, int length, out Span<byte> data)
+        {
+            throw new NotImplementedException();
+        }
 
         public override T ReadTracked<T>(ulong va)
         {
