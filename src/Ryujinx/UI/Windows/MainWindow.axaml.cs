@@ -474,6 +474,11 @@ namespace Ryujinx.Ava.UI.Windows
 
         private void SaveHeightCorrection()
         {
+            if (WindowState != WindowState.Normal)
+            {
+                return;
+            }
+
             // Store the delta between the height we set (ViewModel.WindowHeight) and the actual height returned by Avalonia (Height).
             _heightCorrection = Height - ViewModel.WindowHeight;
             if (Math.Abs(_heightCorrection) > 50)
