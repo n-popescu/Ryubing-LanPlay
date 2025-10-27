@@ -25,6 +25,8 @@ namespace Ryujinx.Cpu.AppleHv
         private readonly MemoryBlock _backingMemory;
         private readonly PageTable<ulong> _pageTable;
 
+        private readonly bool _forceOrderedAtomics;
+
         private readonly ManagedPageFlags _pages;
 
         public bool UsesPrivateAllocations => false;
@@ -46,11 +48,13 @@ namespace Ryujinx.Cpu.AppleHv
         /// </summary>
         /// <param name="backingMemory">Physical backing memory where virtual memory will be mapped to</param>
         /// <param name="addressSpaceSize">Size of the address space</param>
+        /// <param name="forceOrderedAtomics">Force all exclusive memory accesses to be ordered</param>
         /// <param name="invalidAccessHandler">Optional function to handle invalid memory accesses</param>
-        public HvMemoryManager(MemoryBlock backingMemory, ulong addressSpaceSize, InvalidAccessHandler invalidAccessHandler = null)
+        public HvMemoryManager(MemoryBlock backingMemory, ulong addressSpaceSize, bool forceOrderedAtomics, InvalidAccessHandler invalidAccessHandler = null)
         {
             _backingMemory = backingMemory;
             _pageTable = new PageTable<ulong>();
+            _forceOrderedAtomics = forceOrderedAtomics;
             _invalidAccessHandler = invalidAccessHandler;
             AddressSpaceSize = addressSpaceSize;
 
@@ -317,6 +321,18 @@ namespace Ryujinx.Cpu.AppleHv
 
         public void Reprotect(ulong va, ulong size, MemoryPermission protection)
         {
+            if (_forceOrderedAtomics && protection.HasFlag(MemoryPermission.Execute))
+            {
+                // Some applications use unordered exclusive memory access instructions
+                // where it is not valid to do so, leading to memory re-ordering that
+                // makes the code behave incorrectly on some CPUs.
+                // To work around this, we force all such accesses to be ordered.
+
+                using WritableRegion writableRegion = GetWritableRegion(va, (int)size);
+
+                HvCodePatcher.RewriteUnorderedExclusiveInstructions(writableRegion.Memory.Span);
+            }
+
             // TODO
         }
 

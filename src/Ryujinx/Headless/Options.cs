@@ -79,6 +79,9 @@ namespace Ryujinx.Headless
             if (NeedsOverride(nameof(UseHypervisor)) && OperatingSystem.IsMacOS())
                 UseHypervisor = configurationState.System.UseHypervisor;
 
+            if (NeedsOverride(nameof(HvForceOrderedAtomics)) && OperatingSystem.IsMacOS())
+                HvForceOrderedAtomics = configurationState.System.HvForceOrderedAtomics;
+
             if (NeedsOverride(nameof(MultiplayerLanInterfaceId)))
                 MultiplayerLanInterfaceId = configurationState.Multiplayer.LanInterfaceId;
 
@@ -338,6 +341,9 @@ namespace Ryujinx.Headless
 
         [Option("use-hypervisor", Required = false, Default = true, HelpText = "Uses Hypervisor over JIT if available.")]
         public bool? UseHypervisor { get; set; }
+
+        [Option("hv-force-ordered-atomics", Required = false, Default = false, HelpText = "Forces all exclusive memory accesses to be ordered on Hypervisor.")]
+        public bool HvForceOrderedAtomics { get; set; }
 
         [Option("lan-interface-id", Required = false, Default = "0", HelpText = "GUID for the network interface used by LAN.")]
         public string MultiplayerLanInterfaceId { get; set; }

@@ -55,7 +55,7 @@ namespace Ryujinx.HLE.HOS
             if (OperatingSystem.IsMacOS() && isArm64Host && for64Bit && context.Device.Configuration.UseHypervisor)
             {
                 HvEngine cpuEngine = new(_tickSource);
-                HvMemoryManager memoryManager = new(context.Memory, addressSpaceSize, invalidAccessHandler);
+                HvMemoryManager memoryManager = new(context.Memory, addressSpaceSize, context.Device.Configuration.HvForceOrderedAtomics, invalidAccessHandler);
                 processContext = new ArmProcessContext<HvMemoryManager>(pid, cpuEngine, _gpu, memoryManager, addressSpaceSize, for64Bit);
             }
             else

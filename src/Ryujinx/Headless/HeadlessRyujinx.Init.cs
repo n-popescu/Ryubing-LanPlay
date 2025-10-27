@@ -333,6 +333,7 @@ namespace Ryujinx.Headless
                         options.AspectRatio,
                         options.AudioVolume,
                         options.UseHypervisor ?? true,
+                        options.HvForceOrderedAtomics,
                         options.MultiplayerLanInterfaceId,
                         Common.Configuration.Multiplayer.MultiplayerMode.Disabled,
                         false,

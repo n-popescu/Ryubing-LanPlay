@@ -268,6 +268,31 @@
       }
     },
     {
+      "ID": "SettingsTabSystemHvForceOrderedAtomics",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Force Ordered Atomics on Hypervisor",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
       "ID": "MenuBarFile",
       "Translations": {
         "ar_SA": "_ملف",
@@ -16516,6 +16541,31 @@
         "uk_UA": "Використання гіпервізор замість JIT. Значно покращує продуктивність, коли доступний, але може бути нестабільним у поточному стані.",
         "zh_CN": "使用 Hypervisor 虚拟机代替即时编译，在可用的情况下能大幅提高性能，但目前可能还不稳定。",
         "zh_TW": "使用 Hypervisor 取代 JIT。使用時可大幅提高效能，但在目前狀態下可能不穩定。"
+      }
+    },
+    {
+      "ID": "HvForceOrderedAtomicsTooltip",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Force all exclusive memory accesses to be ordered on Hypervisor.\n\nSome games like The Legend of Zelda: Breath of the Wild and Splatoon 2 require this setting to be ON when using Hypervisor to prevent softlocks and crashes.\n\nLeave OFF if unsure.",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
       }
     },
     {
