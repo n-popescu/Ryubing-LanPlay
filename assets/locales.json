@@ -11194,31 +11194,6 @@
       }
     },
     {
-      "ID": "UserProfilesClose",
-      "Translations": {
-        "ar_SA": "إغلاق",
-        "de_DE": "Schließen",
-        "el_GR": "Κλείσιμο",
-        "en_US": "Close",
-        "es_ES": "Cerrar",
-        "fr_FR": "Fermer",
-        "he_IL": "סגור",
-        "it_IT": "Chiudi",
-        "ja_JP": "閉じる",
-        "ko_KR": "닫기",
-        "no_NO": "Lukk",
-        "pl_PL": "Zamknij",
-        "pt_BR": "Fechar",
-        "ru_RU": "Закрыть",
-        "sv_SE": "Stäng",
-        "th_TH": "ปิด",
-        "tr_TR": "Kapat",
-        "uk_UA": "Закрити",
-        "zh_CN": "关闭",
-        "zh_TW": "關閉"
-      }
-    },
-    {
       "ID": "ProfileNameSelectionWatermark",
       "Translations": {
         "ar_SA": "اختر اسم مستعار",
@@ -11616,31 +11591,6 @@
         "uk_UA": "Встановити колір фону",
         "zh_CN": "设置背景色",
         "zh_TW": "設定背景顏色"
-      }
-    },
-    {
-      "ID": "AvatarClose",
-      "Translations": {
-        "ar_SA": "إغلاق",
-        "de_DE": "Schließen",
-        "el_GR": "Κλείσιμο",
-        "en_US": "Close",
-        "es_ES": "Cerrar",
-        "fr_FR": "Fermer",
-        "he_IL": "סגור",
-        "it_IT": "Chiudi",
-        "ja_JP": "閉じる",
-        "ko_KR": "닫기",
-        "no_NO": "Lukk",
-        "pl_PL": "Zamknij",
-        "pt_BR": "Fechar",
-        "ru_RU": "Закрыть",
-        "sv_SE": "Stäng",
-        "th_TH": "ปิด",
-        "tr_TR": "Kapat",
-        "uk_UA": "Закрити",
-        "zh_CN": "关闭",
-        "zh_TW": "關閉"
       }
     },
     {

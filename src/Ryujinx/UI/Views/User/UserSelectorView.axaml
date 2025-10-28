@@ -151,7 +151,7 @@
             Orientation="Horizontal">
             <Button
                 Click="Close">
-                <TextBlock Text="{ext:Locale UserProfilesClose}" />
+                <TextBlock Text="{ext:Locale SettingsButtonClose}" />
             </Button>
         </StackPanel>
     </Grid>
