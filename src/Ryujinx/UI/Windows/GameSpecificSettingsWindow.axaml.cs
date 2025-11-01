@@ -11,6 +11,12 @@ namespace Ryujinx.Ava.UI.Windows
     {
         internal readonly SettingsViewModel ViewModel;
 
+        //Fix compiler warning
+        public GameSpecificSettingsWindow()
+        {
+            
+        }
+        
         public GameSpecificSettingsWindow(MainWindowViewModel viewModel, bool findUserConfigDir = true)
         {
             Title = string.Format(LocaleManager.Instance[LocaleKeys.SettingsWithInfo], viewModel.SelectedApplication.Name, viewModel.SelectedApplication.IdString);
