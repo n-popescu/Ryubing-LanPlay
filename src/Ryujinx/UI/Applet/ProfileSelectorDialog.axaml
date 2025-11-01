@@ -17,10 +17,7 @@
         <viewModels:ProfileSelectorDialogViewModel />
     </Design.DataContext>
     <Grid Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowDefinitions="*,Auto">
-        <Border
-            CornerRadius="5"
-            BorderBrush="{DynamicResource AppListHoverBackgroundColor}"
-            BorderThickness="1">
+        <StackPanel>
             <ListBox
                 MaxHeight="300"
                 HorizontalAlignment="Stretch"
@@ -56,7 +53,7 @@
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 ClipToBounds="True"
-                                CornerRadius="6"
+                                CornerRadius="5"
                                 Background="{Binding BackgroundColor}">
                                 <StackPanel
                                     HorizontalAlignment="Stretch"
@@ -64,42 +61,26 @@
                                     <Image
                                         Width="96"
                                         Height="96"
+                                        Margin="0,0,0,10"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
                                         Source="{Binding Image, Converter={x:Static helpers:BitmapArrayValueConverter.Instance}}" />
-                                    <Panel
-                                        Height="40"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch">
-                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                            <TextBlock
-                                                Text="{Binding Name}"
-                                                MaxWidth="85"
-                                                TextAlignment="Center"
-                                                TextTrimming="CharacterEllipsis"
-                                                TextWrapping="Wrap"
-                                                MaxLines="2" />
-                                        </StackPanel>
-                                    </Panel>
+                                    <TextBlock
+                                        Text="{Binding Name}"
+                                        Height="30"
+                                        MaxWidth="90"
+                                        TextAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="Wrap"
+                                        MaxLines="2" />
                                 </StackPanel>
                             </Border>
                         </Grid>
                     </DataTemplate>
-                    <DataTemplate
-                        DataType="viewModels:BaseModel">
-                        <Panel
-                            Height="120"
-                            Width="100">
-                            <Panel.Styles>
-                                <Style Selector="Panel">
-                                    <Setter Property="Background" Value="{DynamicResource ListBoxBackground}" />
-                                </Style>
-                            </Panel.Styles>
-                        </Panel>
-                    </DataTemplate>
                 </ListBox.DataTemplates>
             </ListBox>
-        </Border>
-        
+        </StackPanel>
     </Grid>
 </UserControl>

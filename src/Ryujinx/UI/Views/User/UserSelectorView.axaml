@@ -119,11 +119,6 @@
                                 Click="AddUser">
                                 <ui:SymbolIcon Symbol="Add" />
                             </Button>
-                            <Panel.Styles>
-                                <Style Selector="Panel">
-                                    <Setter Property="Background" Value="{DynamicResource ListBoxBackground}"/>
-                                </Style>
-                            </Panel.Styles>
                         </Panel>
                     </DataTemplate>
                 </ListBox.DataTemplates>
