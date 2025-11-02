@@ -1,6 +1,7 @@
 using Ryujinx.Common;
 using Ryujinx.Common.Memory;
 using Ryujinx.Graphics.Device;
+using Ryujinx.Graphics.GAL;
 using Ryujinx.Graphics.Gpu.Engine.Threed;
 using Ryujinx.Graphics.Gpu.Memory;
 using Ryujinx.Graphics.Texture;
@@ -307,27 +308,35 @@ namespace Ryujinx.Graphics.Gpu.Engine.Dma
 
                     if (source != null && source.Height == yCount)
                     {
-                        source.SynchronizeMemory();
+                        // HACK: Exclude RGBA16Float texture format for fast DMA copy on Apple silicon.
+                        // Fixes Sonic Frontiers when VK_EXT_external_memory_host is not available.
+                        bool skipDma = _context.Capabilities.VendorName == "Apple" &&
+                                       source.Info.FormatInfo.Format == Format.R16G16B16A16Float;
 
-                        Image.Texture target = memoryManager.Physical.TextureCache.FindOrCreateTexture(
-                            memoryManager,
-                            source.Info.FormatInfo,
-                            dstGpuVa,
-                            xCount,
-                            yCount,
-                            dstStride,
-                            dstLinear,
-                            dst.MemoryLayout.UnpackGobBlocksInY(),
-                            dst.MemoryLayout.UnpackGobBlocksInZ());
-
-                        if (source.ScaleFactor != target.ScaleFactor)
+                        if (!skipDma)
                         {
-                            target.PropagateScale(source);
-                        }
+                            source.SynchronizeMemory();
 
-                        source.HostTexture.CopyTo(target.HostTexture, 0, 0);
-                        target.SignalModified();
-                        return;
+                            Image.Texture target = memoryManager.Physical.TextureCache.FindOrCreateTexture(
+                                memoryManager,
+                                source.Info.FormatInfo,
+                                dstGpuVa,
+                                xCount,
+                                yCount,
+                                dstStride,
+                                dstLinear,
+                                dst.MemoryLayout.UnpackGobBlocksInY(),
+                                dst.MemoryLayout.UnpackGobBlocksInZ());
+
+                            if (source.ScaleFactor != target.ScaleFactor)
+                            {
+                                target.PropagateScale(source);
+                            }
+
+                            source.HostTexture.CopyTo(target.HostTexture, 0, 0);
+                            target.SignalModified();
+                            return;
+                        }
                     }
                 }
 
