@@ -86,6 +86,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 IgnoreApplet = System.IgnoreControllerApplet,
                 SkipUserProfiles = System.SkipUserProfilesManager,
                 UseHypervisor = System.UseHypervisor,
+                HvForceOrderedAtomics = System.HvForceOrderedAtomics,
                 GuiColumns = new GuiColumns
                 {
                     FavColumn = UI.GuiColumns.FavColumn,
@@ -215,6 +216,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.IgnoreControllerApplet.Value = false;
             System.SkipUserProfilesManager.Value = false;
             System.UseHypervisor.Value = true;
+            System.HvForceOrderedAtomics.Value = false;
             Multiplayer.LanInterfaceId.Value = "0";
             Multiplayer.Mode.Value = MultiplayerMode.Disabled;
             Multiplayer.DisableP2p.Value = false;

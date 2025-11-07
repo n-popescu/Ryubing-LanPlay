@@ -15,7 +15,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// <summary>
         /// The current version of the file format
         /// </summary>
-        public const int CurrentVersion = 70;
+        public const int CurrentVersion = 71;
 
         /// <summary>
         /// Version of the configuration file format
@@ -463,6 +463,11 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// Uses Hypervisor over JIT if available
         /// </summary>
         public bool UseHypervisor { get; set; }
+
+        /// <summary>
+        /// Force all exclusive memory accesses to be ordered on Hypervisor.
+        /// </summary>
+        public bool HvForceOrderedAtomics { get; set; }
 
         /// <summary>
         /// Enables or disables the GDB stub

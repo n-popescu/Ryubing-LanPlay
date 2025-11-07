@@ -276,6 +276,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         public bool IsVulkanSelected =>
             GraphicsBackendIndex == 1 || (GraphicsBackendIndex == 0 && !OperatingSystem.IsMacOS());
         public bool UseHypervisor { get; set; }
+        public bool HvForceOrderedAtomics { get; set; }
         public bool DisableP2P { get; set; }
 
         public bool ShowDirtyHacks => ConfigurationState.Instance.Hacks.ShowDirtyHacks;
@@ -673,6 +674,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             EnableLowPowerPptc = config.System.EnableLowPowerPtc;
             MemoryMode = (int)config.System.MemoryManagerMode.Value;
             UseHypervisor = config.System.UseHypervisor;
+            HvForceOrderedAtomics = config.System.HvForceOrderedAtomics;
             TurboMultiplier = config.System.TickScalar;
 
             // Graphics
@@ -784,6 +786,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             config.System.EnableLowPowerPtc.Value = EnableLowPowerPptc;
             config.System.MemoryManagerMode.Value = (MemoryManagerMode)MemoryMode;
             config.System.UseHypervisor.Value = UseHypervisor;
+            config.System.HvForceOrderedAtomics.Value = HvForceOrderedAtomics;
             config.System.TickScalar.Value = TurboMultiplier;
 
             // Graphics

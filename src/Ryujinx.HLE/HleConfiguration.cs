@@ -165,6 +165,11 @@ namespace Ryujinx.HLE
         internal readonly bool UseHypervisor;
 
         /// <summary>
+        /// Force all exclusive memory accesses to be ordered on Hypervisor.
+        /// </summary>
+        internal readonly bool HvForceOrderedAtomics;
+
+        /// <summary>
         /// Multiplayer LAN Interface ID (device GUID)
         /// </summary>
         public string MultiplayerLanInterfaceId { internal get; set; }
@@ -232,6 +237,7 @@ namespace Ryujinx.HLE
                                 AspectRatio aspectRatio,
                                 float audioVolume,
                                 bool useHypervisor,
+                                bool hvForceOrderedAtomics,
                                 string multiplayerLanInterfaceId,
                                 MultiplayerMode multiplayerMode,
                                 bool multiplayerDisableP2p,
@@ -261,6 +267,7 @@ namespace Ryujinx.HLE
             AspectRatio = aspectRatio;
             AudioVolume = audioVolume;
             UseHypervisor = useHypervisor;
+            HvForceOrderedAtomics = hvForceOrderedAtomics;
             MultiplayerLanInterfaceId = multiplayerLanInterfaceId;
             MultiplayerMode = multiplayerMode;
             MultiplayerDisableP2p = multiplayerDisableP2p;

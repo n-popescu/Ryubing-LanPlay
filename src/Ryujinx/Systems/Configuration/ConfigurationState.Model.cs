@@ -412,6 +412,11 @@ namespace Ryujinx.Ava.Systems.Configuration
             /// </summary>
             public ReactiveObject<bool> UseHypervisor { get; private set; }
 
+            /// <summary>
+            /// Force all exclusive memory accesses to be ordered on Hypervisor.
+            /// </summary>
+            public ReactiveObject<bool> HvForceOrderedAtomics { get; private set; }
+
             public SystemSection()
             {
                 Language = new ReactiveObject<Language>();
@@ -465,6 +470,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 AudioVolume.LogChangesToValue(nameof(AudioVolume));
                 UseHypervisor = new ReactiveObject<bool>();
                 UseHypervisor.LogChangesToValue(nameof(UseHypervisor));
+                HvForceOrderedAtomics = new ReactiveObject<bool>();
+                HvForceOrderedAtomics.LogChangesToValue(nameof(HvForceOrderedAtomics));
             }
         }
 
@@ -936,6 +943,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 Graphics.AspectRatio,
                 System.AudioVolume,
                 System.UseHypervisor,
+                System.HvForceOrderedAtomics,
                 Multiplayer.LanInterfaceId,
                 Multiplayer.Mode,
                 Multiplayer.DisableP2p,

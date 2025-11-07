@@ -71,6 +71,12 @@
                         <TextBlock Text="{ext:Locale SettingsTabSystemUseHypervisor}"
                                    ToolTip.Tip="{ext:Locale UseHypervisorTooltip}" />
                     </CheckBox>
+                    <CheckBox IsChecked="{Binding HvForceOrderedAtomics}"
+                              IsVisible="{x:Static helper:RunningPlatform.IsArmMac}"
+                              ToolTip.Tip="{ext:Locale HvForceOrderedAtomicsTooltip}">
+                        <TextBlock Text="{ext:Locale SettingsTabSystemHvForceOrderedAtomics}"
+                                   ToolTip.Tip="{ext:Locale HvForceOrderedAtomicsTooltip}" />
+                    </CheckBox>
                 </StackPanel>
                 <Separator Height="1" />
                 <StackPanel
