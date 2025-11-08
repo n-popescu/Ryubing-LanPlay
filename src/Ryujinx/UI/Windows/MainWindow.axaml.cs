@@ -29,7 +29,7 @@ using Ryujinx.HLE.FileSystem;
 using Ryujinx.HLE.HOS;
 using Ryujinx.HLE.HOS.Services.Account.Acc;
 using Ryujinx.Input.HLE;
-using Ryujinx.Input.SDL2;
+using Ryujinx.Input.SDL3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,7 +105,7 @@ namespace Ryujinx.Ava.UI.Windows
 
             if (Program.PreviewerDetached)
             {
-                InputManager = new InputManager(new AvaloniaKeyboardDriver(this), new SDL2GamepadDriver());
+                InputManager = new InputManager(new AvaloniaKeyboardDriver(this), new SDL3GamepadDriver());
 
                 _ = this.GetObservable(IsActiveProperty).Subscribe(it => ViewModel.IsActive = it);
                 this.ScalingChanged += OnScalingChanged;
@@ -771,7 +771,7 @@ namespace Ryujinx.Ava.UI.Windows
             _intelMacWarningShown = true;
         }
 
-        private void InputElement_OnGotFocus(object sender, GotFocusEventArgs e)
+        private void AppWindow_OnGotFocus(object sender, GotFocusEventArgs e)
         {
             if (ViewModel.AppHost is null)
                 return;
@@ -835,7 +835,7 @@ namespace Ryujinx.Ava.UI.Windows
 
         private (FocusLostType Type, bool Active) _focusLoss;
 
-        private void InputElement_OnLostFocus(object sender, RoutedEventArgs e)
+        private void AppWindow_OnLostFocus(object sender, RoutedEventArgs e)
         {
             if (ConfigurationState.Instance.FocusLostActionType.Value is FocusLostType.DoNothing)
                 return;

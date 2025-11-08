@@ -9,6 +9,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         Dummy,
         OpenAl,
         SoundIo,
-        SDL2,
+        SDL3,
+        SDL2 = SDL3
     }
 }
