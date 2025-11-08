@@ -771,7 +771,7 @@ namespace Ryujinx.Ava.UI.Windows
             _intelMacWarningShown = true;
         }
 
-        private void InputElement_OnGotFocus(object sender, GotFocusEventArgs e)
+        private void AppWindow_OnGotFocus(object sender, GotFocusEventArgs e)
         {
             if (ViewModel.AppHost is null)
                 return;
@@ -835,7 +835,7 @@ namespace Ryujinx.Ava.UI.Windows
 
         private (FocusLostType Type, bool Active) _focusLoss;
 
-        private void InputElement_OnLostFocus(object sender, RoutedEventArgs e)
+        private void AppWindow_OnLostFocus(object sender, RoutedEventArgs e)
         {
             if (ConfigurationState.Instance.FocusLostActionType.Value is FocusLostType.DoNothing)
                 return;

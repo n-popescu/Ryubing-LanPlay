@@ -23,8 +23,8 @@
     mc:Ignorable="d"
     WindowStartupLocation="Manual"
     Focusable="True"
-    GotFocus="InputElement_OnGotFocus"
-    LostFocus="InputElement_OnLostFocus">
+    GotFocus="AppWindow_OnGotFocus"
+    LostFocus="AppWindow_OnLostFocus">
     <Window.Styles>
         <Style Selector="TitleBar:fullscreen">
             <Setter Property="Background" Value="#000000" />
