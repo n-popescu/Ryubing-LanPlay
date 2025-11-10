@@ -110,7 +110,7 @@ namespace Ryujinx.Input.SDL3
                 .ToDictionary();
             SDL_JoystickID idx;
             int leftIndex = gamepadNames.TryGetValue(SDL3JoyCon.LeftName, out idx) ? (int)idx : -1;
-            int rightIndex = gamepadNames.TryGetValue(SDL3JoyCon.LeftName, out idx) ? (int)idx : -1;
+            int rightIndex = gamepadNames.TryGetValue(SDL3JoyCon.RightName, out idx) ? (int)idx : -1;
 
             return (leftIndex, rightIndex);
         }
