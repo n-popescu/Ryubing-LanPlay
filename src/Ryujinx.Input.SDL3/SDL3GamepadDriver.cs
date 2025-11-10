@@ -154,8 +154,14 @@ namespace Ryujinx.Input.SDL3
 
                         if (SDL3JoyConPair.IsCombinable(_gamepadsIds))
                         {
+                            // TODO - It appears that you can only have one joy con pair connected at a time?
+                            // This was also the behavior before SDL3
                             _gamepadsIds.Remove(GetInstanceIdFromId(SDL3JoyConPair.Id));
-                            _gamepadsIds.Add(joystickInstanceId, SDL3JoyConPair.Id);
+                            uint fakeInstanceID = uint.MaxValue;
+                            while (!_gamepadsIds.TryAdd((SDL_JoystickID)fakeInstanceID, SDL3JoyConPair.Id))
+                            {
+                                fakeInstanceID--;
+                            }
                             joyConPairConnected = true;
                         }
                     }
