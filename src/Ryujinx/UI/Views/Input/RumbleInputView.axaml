@@ -10,49 +10,46 @@
     x:Class="Ryujinx.Ava.UI.Views.Input.RumbleInputView"
     x:DataType="viewModels:RumbleInputViewModel"
     Focusable="True">
-    <Grid Margin="10" RowDefinitions="Auto,*">
-        <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock
-                    Width="100"
-                    TextWrapping="WrapWithOverflow"
-                    HorizontalAlignment="Center"
-                    Text="{ext:Locale ControllerSettingsRumbleStrongMultiplier}" />
-                <controls:SliderScroll
-                    Margin="0,-5,0,-5"
-                    Width="200"
-                    TickFrequency="0.01"
-                    IsSnapToTickEnabled="True"
-                    SmallChange="0.01"
-                    Maximum="10"
-                    Minimum="0"
-                    Value="{Binding StrongRumble, Mode=TwoWay}" />
-                <TextBlock
-                    VerticalAlignment="Center"
-                    Margin="5,0"
-                    Text="{Binding StrongRumble, StringFormat=\{0:0.00\}}" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock
-                    Width="100"
-                    TextWrapping="WrapWithOverflow"
-                    HorizontalAlignment="Center"
-                    Text="{ext:Locale ControllerSettingsRumbleWeakMultiplier}" />
-                <controls:SliderScroll
-                    Margin="0,-5,0,-5"
-                    Width="200"
-                    MaxWidth="200"
-                    Maximum="10"
-                    TickFrequency="0.01"
-                    IsSnapToTickEnabled="True"
-                    SmallChange="0.01"
-                    Minimum="0"
-                    Value="{Binding WeakRumble, Mode=TwoWay}" />
-                <TextBlock
-                    VerticalAlignment="Center"
-                    Margin="5,0"
-                    Text="{Binding WeakRumble, StringFormat=\{0:0.00\}}" />
-            </StackPanel>
-        </StackPanel>
+    <Grid Margin="10" RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*,Auto">
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            Text="{ext:Locale ControllerSettingsRumbleStrongMultiplier}" />
+        <controls:SliderScroll
+            Grid.Row="0"
+            Grid.Column="1"
+            Width="150"
+            TickFrequency="0.01"
+            IsSnapToTickEnabled="True"
+            SmallChange="0.01"
+            Maximum="10"
+            Minimum="0"
+            Value="{Binding StrongRumble, Mode=TwoWay}" />
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="2"
+            Margin="5,0,5,1"
+            Text="{Binding StrongRumble, StringFormat=\{0:0.00\}}" />
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            Text="{ext:Locale ControllerSettingsRumbleWeakMultiplier}" />
+        <controls:SliderScroll
+            Grid.Row="1"
+            Grid.Column="1"
+            Width="150"
+            Maximum="10"
+            TickFrequency="0.01"
+            IsSnapToTickEnabled="True"
+            SmallChange="0.01"
+            Minimum="0"
+            Value="{Binding WeakRumble, Mode=TwoWay}" />        
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="2"
+            Margin="5,0,5,1"
+            Text="{Binding WeakRumble, StringFormat=\{0:0.00\}}" />
     </Grid>
 </UserControl>

@@ -43,6 +43,7 @@
                             Spacing="10">
                             <CheckBox                          
                                 ToolTip.Tip="{ext:Locale UseGlobalInputTooltip}"
+                                ToolTip.Placement="Right"
                                 MinWidth="0"
                                 IsChecked="{Binding UseGlobalInputConfig}">
                                 <TextBlock
@@ -50,6 +51,7 @@
                             </CheckBox>
                             <CheckBox
                                 ToolTip.Tip="{ext:Locale DockModeToggleTooltip}"
+                                ToolTip.Placement="Right"
                                 MinWidth="0"
                                 IsChecked="{Binding EnableDockedMode}">
                                 <TextBlock
@@ -57,12 +59,14 @@
                             </CheckBox>
                             <CheckBox
                                 ToolTip.Tip="{ext:Locale DirectKeyboardTooltip}"
+                                ToolTip.Placement="Right"
                                 IsChecked="{Binding EnableKeyboard}">
                                 <TextBlock
                                     Text="{ext:Locale SettingsTabInputDirectKeyboardAccess}" />
                             </CheckBox>
                             <CheckBox
                                 ToolTip.Tip="{ext:Locale DirectMouseTooltip}"
+                                ToolTip.Placement="Right"
                                 IsChecked="{Binding EnableMouse}">
                                 <TextBlock
                                     Text="{ext:Locale SettingsTabInputDirectMouseAccess}" />

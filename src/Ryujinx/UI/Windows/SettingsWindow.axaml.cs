@@ -29,6 +29,8 @@ namespace Ryujinx.Ava.UI.Windows
                 ConfigurationState.Instance.ShowOldUI
                     ? NavigationViewPaneDisplayMode.Left
                     : NavigationViewPaneDisplayMode.Top;
+            
+            NavPanel.IsPaneOpen = false;
 
             Height = ConfigurationState.Instance.ShowOldUI
                 ? 906
