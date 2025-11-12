@@ -16,10 +16,10 @@ namespace Ryujinx.Ava.UI.Applet
 {
     internal partial class ControllerAppletDialog : UserControl
     {
-        private const string ProControllerResource = "Ryujinx/Assets/Icons/Controller_ProCon.svg";
-        private const string JoyConPairResource = "Ryujinx/Assets/Icons/Controller_JoyConPair.svg";
-        private const string JoyConLeftResource = "Ryujinx/Assets/Icons/Controller_JoyConLeft.svg";
-        private const string JoyConRightResource = "Ryujinx/Assets/Icons/Controller_JoyConRight.svg";
+        private const string ProControllerResource = "Ryujinx/Assets/Icons/Controller_ProCon_Simplified.svg";
+        private const string JoyConPairResource = "Ryujinx/Assets/Icons/Controller_JoyConPair_Simplified.svg";
+        private const string JoyConLeftResource = "Ryujinx/Assets/Icons/Controller_JoyConLeft_Simplified.svg";
+        private const string JoyConRightResource = "Ryujinx/Assets/Icons/Controller_JoyConRight_Simplified.svg";
 
         public static SvgImage ProControllerImage => GetResource(ProControllerResource);
         public static SvgImage JoyconPairImage => GetResource(JoyConPairResource);

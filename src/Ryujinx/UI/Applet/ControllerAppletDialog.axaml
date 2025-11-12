@@ -121,7 +121,7 @@
                     Name="SaveButton"
                     MinWidth="90"
                     Command="{Binding OpenSettingsWindow}">
-                    <TextBlock Text="{ext:Locale DialogOpenSettingsWindowLabel}" />
+                    <TextBlock Text="{ext:Locale Settings}" />
                 </Button>
                 <Button
                     Name="CancelButton"

@@ -78,7 +78,7 @@ namespace Ryujinx.Ava.UI.Applet
                         title,
                         message,
                         string.Empty,
-                        LocaleManager.Instance[LocaleKeys.DialogOpenSettingsWindowLabel],
+                        LocaleManager.Instance[LocaleKeys.Settings],
                         string.Empty,
                         LocaleManager.Instance[LocaleKeys.SettingsButtonClose],
                         (int)Symbol.Important,
