@@ -233,6 +233,8 @@ namespace Ryujinx.Ava
                 {
                     Logger.Warning?.PrintMsg(LogClass.Application, $"Failed to load config! Loading the default config instead.\nFailed config location: {ConfigurationPath}");
 
+                    ConfigurationFileFormat.RenameInvalidConfigFile(ConfigurationPath);
+
                     ConfigurationState.Instance.LoadDefault();
                 }
             }
@@ -296,16 +298,16 @@ namespace Ryujinx.Ava
 
             // Check if region was overridden. 
             if (CommandLineState.OverrideSystemRegion is not null)
-                if (Enum.TryParse(CommandLineState.OverrideSystemRegion, true, out HLE.HOS.SystemState.RegionCode result))
+                if (Enum.TryParse(CommandLineState.OverrideSystemRegion, true, out Region result))
                 {
-                    ConfigurationState.Instance.System.Region.Value = result.ToUI();
+                    ConfigurationState.Instance.System.Region.Value = result;
                 }
 
             //Check if language was overridden. 
             if (CommandLineState.OverrideSystemLanguage is not null)
-                if (Enum.TryParse(CommandLineState.OverrideSystemLanguage, true, out HLE.HOS.SystemState.SystemLanguage result))
+                if (Enum.TryParse(CommandLineState.OverrideSystemLanguage, true, out Language result))
                 {
-                    ConfigurationState.Instance.System.Language.Value = result.ToUI();
+                    ConfigurationState.Instance.System.Language.Value = result;
                 }
 
             // Check if hardware-acceleration was overridden.
