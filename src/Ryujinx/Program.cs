@@ -384,7 +384,26 @@ namespace Ryujinx.Ava
 
             if (isTerminating)
             {
-                TryWriteApplicationMinidump();
+                try
+                {
+                    // Print a short message first just in case it crashes again during minidump creation (should not happen)
+                    Logger.Error?.Print(LogClass.Application, $"Unhandled exception caught: {initialException.GetType().Name}. Creating guest program minidump...");
+
+                    var minidump = HLE.Switch.Shared?.System?.DebugGetApplicationProcessMinidump();
+
+                    if (minidump == null)
+                    {
+                        Logger.Warning?.Print(LogClass.Application, "Failed to create minidump");
+                    }
+                    else
+                    {
+                        Logger.Info?.Print(LogClass.Application, minidump);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Error?.Print(LogClass.Application, $"Failed to create minidump: {e.Message}");
+                }
             }
 
             foreach (Exception e in exceptions)
@@ -402,31 +421,6 @@ namespace Ryujinx.Ava
             {
                 Logger.Flush();
                 Exit();
-            }
-        }
-
-        private static void TryWriteApplicationMinidump()
-        {
-            try
-            {
-                if (HLE.Switch.Shared is not { } device)
-                {
-                    return;
-                }
-
-                var minidump = device?.System?.DebugGetApplicationProcessMinidump();
-
-                if (minidump == null)
-                {
-                    Logger.Warning?.Print(LogClass.Application, "Failed to create minidump");
-                    return;
-                }
-
-                Logger.Info?.Print(LogClass.Application, minidump);
-            }
-            catch (Exception e)
-            {
-                Logger.Error?.Print(LogClass.Application, $"Failed to create minidump: {e.Message}");
             }
         }
 
