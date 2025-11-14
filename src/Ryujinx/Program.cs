@@ -382,14 +382,14 @@ namespace Ryujinx.Ava
                 exceptions.Add(initialException);
             }
 
-            if (isTerminating)
+            if (isTerminating && HLE.Switch.Shared is { } device)
             {
                 try
                 {
                     // Print a short message first just in case it crashes again during minidump creation (should not happen)
                     Logger.Error?.Print(LogClass.Application, $"Unhandled exception caught: {initialException.GetType().Name}. Creating guest program minidump...");
 
-                    var minidump = HLE.Switch.Shared?.System?.DebugGetApplicationProcessMinidump();
+                    var minidump = device.System?.DebugGetApplicationProcessMinidump();
 
                     if (minidump == null)
                     {
