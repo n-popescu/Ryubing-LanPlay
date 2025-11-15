@@ -164,8 +164,7 @@
                             ToolTip.Tip="{ext:Locale MatchTimeTooltip}">
                             <TextBlock
                                 VerticalAlignment="Center"
-                                Text="{ext:Locale SettingsTabSystemSystemTimeMatch}"
-                                Width="250"/>
+                                Text="{ext:Locale SettingsTabSystemSystemTimeMatch}" />
                         </CheckBox>
                         <TextBlock Classes="globalConfigMarker" IsVisible="{Binding IsGameTitleNotNull}"/>
                     </StackPanel>
