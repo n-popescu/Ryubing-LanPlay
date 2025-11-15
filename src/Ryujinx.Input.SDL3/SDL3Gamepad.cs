@@ -22,7 +22,7 @@ namespace Ryujinx.Input.SDL3
 
         private StandardControllerInputConfig _configuration;
 
-        private static readonly SDL_GamepadButton[] _buttonsDriverMapping =
+        private readonly SDL_GamepadButton[] _buttonsDriverMapping =
         [
             // Unbound, ignored.
             SDL_GamepadButton.SDL_GAMEPAD_BUTTON_INVALID,
@@ -87,6 +87,20 @@ namespace Ryujinx.Input.SDL3
             Id = driverId;
             Features = GetFeaturesFlag();
             _triggerThreshold = 0.0f;
+
+            // Face button mapping
+            SDL_GamepadButton[] faceButtons = _buttonsDriverMapping[1..5];
+            foreach (SDL_GamepadButton btn in faceButtons) {
+                int mapId = SDL_GetGamepadButtonLabel(_gamepadHandle, btn) switch {
+                    SDL_GamepadButtonLabel.SDL_GAMEPAD_BUTTON_LABEL_A or SDL_GamepadButtonLabel.SDL_GAMEPAD_BUTTON_LABEL_CROSS => 1,
+                    SDL_GamepadButtonLabel.SDL_GAMEPAD_BUTTON_LABEL_B or SDL_GamepadButtonLabel.SDL_GAMEPAD_BUTTON_LABEL_CIRCLE => 2,
+                    SDL_GamepadButtonLabel.SDL_GAMEPAD_BUTTON_LABEL_X or SDL_GamepadButtonLabel.SDL_GAMEPAD_BUTTON_LABEL_SQUARE => 3,
+                    SDL_GamepadButtonLabel.SDL_GAMEPAD_BUTTON_LABEL_Y or SDL_GamepadButtonLabel.SDL_GAMEPAD_BUTTON_LABEL_TRIANGLE => 4,
+                    _ => -1
+                };
+                if (mapId == -1) { continue; }
+                _buttonsDriverMapping[mapId] = btn;
+            }
 
             // Enable motion tracking
             if ((Features & GamepadFeaturesFlag.Motion) != 0)
