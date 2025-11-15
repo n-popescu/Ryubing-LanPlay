@@ -13,7 +13,7 @@
     Focusable="True">
     <StackPanel>
         <StackPanel Orientation="Vertical">
-            <Grid Margin="10,10,10,0" RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*,Auto">
+            <Grid Margin="10,0,10,0" RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*,Auto">
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="0"

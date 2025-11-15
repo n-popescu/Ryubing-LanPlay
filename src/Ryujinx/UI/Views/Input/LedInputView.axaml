@@ -31,10 +31,10 @@
                     TickFrequency="0.25"
                     IsSnapToTickEnabled="True"
                     LargeChange="1"
-                    SmallChange="0.01"
+                    SmallChange="0.25"
                     Minimum="0"
                     Maximum="10" />
-            <TextBlock Margin="5,0,5,1" Text="{Binding RainbowSpeedText}" />
+            <TextBlock Margin="5,0,0,2.5" Text="{Binding RainbowSpeedText}" />
         </StackPanel>
         <StackPanel Margin="0,2.5,0,0" Orientation="Horizontal" IsEnabled="{Binding ShowLedColorPicker}">
             <TextBlock Text="{ext:Locale ControllerSettingsLedColor}" />

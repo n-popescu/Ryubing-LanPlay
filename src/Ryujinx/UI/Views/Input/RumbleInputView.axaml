@@ -10,7 +10,7 @@
     x:Class="Ryujinx.Ava.UI.Views.Input.RumbleInputView"
     x:DataType="viewModels:RumbleInputViewModel"
     Focusable="True">
-    <Grid Margin="10" RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*,Auto">
+    <Grid Margin="10,10,10,0" RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*,Auto">
         <TextBlock
             Grid.Row="0"
             Grid.Column="0"
