@@ -7,24 +7,26 @@ namespace Ryujinx.Ava.UI.Models
 {
     public partial class TempProfile : BaseModel
     {
-        [ObservableProperty] private byte[] _image;
-        [ObservableProperty] private string _name = String.Empty;
-        private UserId _userId;
+        [ObservableProperty]
+        public partial byte[] Image { get; set; }
+
+        [ObservableProperty]
+        public partial string Name { get; set; } = string.Empty;
 
         public static uint MaxProfileNameLength => 0x20;
 
         public UserId UserId
         {
-            get => _userId;
+            get;
             set
             {
-                _userId = value;
+                field = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(UserIdString));
             }
         }
 
-        public string UserIdString => _userId.ToString();
+        public string UserIdString => UserId.ToString();
 
         public TempProfile(UserProfile profile)
         {

@@ -6,31 +6,44 @@ namespace Ryujinx.Ava.UI.Models.Input
 {
     public partial class HotkeyConfig : BaseModel
     {
-        [ObservableProperty] private Key _toggleVSyncMode;
+        [ObservableProperty]
+        public partial Key ToggleVSyncMode { get; set; }
 
-        [ObservableProperty] private Key _screenshot;
+        [ObservableProperty]
+        public partial Key Screenshot { get; set; }
 
-        [ObservableProperty] private Key _showUI;
+        [ObservableProperty]
+        public partial Key ShowUI { get; set; }
 
-        [ObservableProperty] private Key _pause;
+        [ObservableProperty]
+        public partial Key Pause { get; set; }
 
-        [ObservableProperty] private Key _toggleMute;
+        [ObservableProperty]
+        public partial Key ToggleMute { get; set; }
 
-        [ObservableProperty] private Key _resScaleUp;
+        [ObservableProperty]
+        public partial Key ResScaleUp { get; set; }
 
-        [ObservableProperty] private Key _resScaleDown;
+        [ObservableProperty]
+        public partial Key ResScaleDown { get; set; }
 
-        [ObservableProperty] private Key _volumeUp;
+        [ObservableProperty]
+        public partial Key VolumeUp { get; set; }
 
-        [ObservableProperty] private Key _volumeDown;
+        [ObservableProperty]
+        public partial Key VolumeDown { get; set; }
 
-        [ObservableProperty] private Key _customVSyncIntervalIncrement;
+        [ObservableProperty]
+        public partial Key CustomVSyncIntervalIncrement { get; set; }
 
-        [ObservableProperty] private Key _customVSyncIntervalDecrement;
+        [ObservableProperty]
+        public partial Key CustomVSyncIntervalDecrement { get; set; }
 
-        [ObservableProperty] private Key _turboMode;
+        [ObservableProperty]
+        public partial Key TurboMode { get; set; }
 
-        [ObservableProperty] private bool _turboModeWhileHeld;
+        [ObservableProperty]
+        public partial bool TurboModeWhileHeld { get; set; }
 
         public HotkeyConfig(KeyboardHotkeys config)
         {

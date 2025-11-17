@@ -88,14 +88,10 @@ namespace Ryujinx.Ava.Systems
             {
                 if (showVersionUpToDate)
                 {
-                    UserResult userResult = await ContentDialogHelper.CreateUpdaterUpToDateInfoDialog(
+                    await ContentDialogHelper.CreateUpdaterUpToDateInfoDialog(
                         LocaleManager.Instance[LocaleKeys.DialogUpdaterAlreadyOnLatestVersionMessage],
-                        string.Empty);
-
-                    if (userResult is UserResult.Ok)
-                    {
-                        OpenHelper.OpenUrl(_versionResponse.ReleaseUrlFormat.Format(currentVersion));
-                    }
+                        string.Empty, 
+                        _versionResponse.ReleaseUrlFormat.Format(currentVersion));
                 }
 
                 Logger.Info?.Print(LogClass.Application, "Up to date.");

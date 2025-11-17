@@ -10,6 +10,7 @@ using FluentAvalonia.Core;
 using FluentAvalonia.UI.Controls;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.UI.Windows;
+using Ryujinx.Common.Helper;
 using Ryujinx.Common.Logging;
 using System;
 using System.Threading;
@@ -102,6 +103,25 @@ namespace Ryujinx.Ava.UI.Helpers
 
             return await ShowContentDialog(title, content, primaryButton, secondaryButton, closeButton, primaryButtonResult, deferResetEvent, deferCloseAction);
         }
+        
+        public async static Task<UserResult> ShowTextDialogWithButton(
+            string title,
+            string primaryText,
+            string secondaryText,
+            string primaryButton,
+            string secondaryButton,
+            string closeButton,
+            int iconSymbol,
+            string buttonText,
+            Action onClick,
+            UserResult primaryButtonResult = UserResult.Ok,
+            ManualResetEvent deferResetEvent = null,
+            TypedEventHandler<ContentDialog, ContentDialogButtonClickEventArgs> deferCloseAction = null)
+        {
+            Grid content = CreateTextDialogContentWithButton(primaryText, secondaryText, iconSymbol, buttonText, onClick);
+
+            return await ShowContentDialog(title, content, primaryButton, secondaryButton, closeButton, primaryButtonResult, deferResetEvent, deferCloseAction);
+        }
 
         public static async Task<UserResult> ShowDeferredContentDialog(
             Window window,
@@ -173,43 +193,109 @@ namespace Ryujinx.Ava.UI.Helpers
                 MinHeight = 80,
             };
 
-            SymbolIcon icon = new()
+            content.Children.Add(new SymbolIcon
             {
                 Symbol = (Symbol)symbol,
                 Margin = new Thickness(10),
                 FontSize = 40,
                 FlowDirection = FlowDirection.LeftToRight,
                 VerticalAlignment = VerticalAlignment.Center,
-            };
+                GridColumn = 0,
+                GridRow = 0,
+                GridRowSpan = 2
+            });
 
-            Grid.SetColumn(icon, 0);
-            Grid.SetRowSpan(icon, 2);
-            Grid.SetRow(icon, 0);
-
-            TextBlock primaryLabel = new()
+            content.Children.Add(new TextBlock
             {
                 Text = primaryText,
                 Margin = new Thickness(5),
                 TextWrapping = TextWrapping.Wrap,
                 MaxWidth = 450,
-            };
+                GridColumn = 1,
+                GridRow = 0
+            });
 
-            TextBlock secondaryLabel = new()
+            content.Children.Add(new TextBlock
             {
                 Text = secondaryText,
                 Margin = new Thickness(5),
                 TextWrapping = TextWrapping.Wrap,
                 MaxWidth = 450,
+                GridColumn = 1,
+                GridRow = 1
+            });
+
+            return content;
+        }
+
+        private static Grid CreateTextDialogContentWithButton(string primaryText, string secondaryText, int symbol, string buttonName, Action onClick)
+        {
+            Grid content = new()
+            {
+                RowDefinitions = [new(), new(), new(GridLength.Star), new()],
+                ColumnDefinitions = [new(GridLength.Auto), new()],
+
+                MinHeight = 80,
             };
 
-            Grid.SetColumn(primaryLabel, 1);
-            Grid.SetColumn(secondaryLabel, 1);
-            Grid.SetRow(primaryLabel, 0);
-            Grid.SetRow(secondaryLabel, 1);
+            content.Children.Add(new SymbolIcon
+            {
+                Symbol = (Symbol)symbol,
+                Margin = new Thickness(10),
+                FontSize = 40,
+                FlowDirection = FlowDirection.LeftToRight,
+                VerticalAlignment = VerticalAlignment.Center,
+                GridColumn = 0,
+                GridRow = 0,
+                GridRowSpan = 2
+            });
 
-            content.Children.Add(icon);
-            content.Children.Add(primaryLabel);
-            content.Children.Add(secondaryLabel);
+            StackPanel buttonContent = new()
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 2
+            };
+
+            buttonContent.Children.Add(new TextBlock
+            {
+                Text = buttonName, 
+                Margin = new Thickness(2)
+            });
+
+            buttonContent.Children.Add(new SymbolIcon
+            {
+                FlowDirection = FlowDirection.LeftToRight,
+                Symbol = Symbol.Open
+            });
+
+            content.Children.Add(new TextBlock
+            {
+                Text = primaryText,
+                Margin = new Thickness(5),
+                TextWrapping = TextWrapping.Wrap,
+                MaxWidth = 450,
+                GridColumn = 1,
+                GridRow = 0
+            });
+
+            content.Children.Add(new TextBlock
+            {
+                Text = secondaryText,
+                Margin = new Thickness(5),
+                TextWrapping = TextWrapping.Wrap,
+                MaxWidth = 450,
+                GridColumn = 1,
+                GridRow = 1
+            });
+
+            content.Children.Add(new Button
+            {
+                Content = buttonContent,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Command = Commands.Create(onClick),
+                GridRow = 2,
+                GridColumnSpan = 2,
+            });
 
             return content;
         }
@@ -282,15 +368,20 @@ namespace Ryujinx.Ava.UI.Helpers
                 LocaleManager.Instance[LocaleKeys.InputDialogOk],
                 (int)Symbol.Important);
 
-        internal static async Task<UserResult> CreateUpdaterUpToDateInfoDialog(string primary, string secondaryText)
-            => await ShowTextDialog(
+        internal static async Task CreateUpdaterUpToDateInfoDialog(string primary, string secondaryText,
+            string changelogUrl)
+        {
+            await ShowTextDialogWithButton(
                 LocaleManager.Instance[LocaleKeys.DialogUpdaterTitle],
                 primary,
                 secondaryText,
-                LocaleManager.Instance[LocaleKeys.DialogUpdaterShowChangelogMessage],
+                string.Empty,
                 string.Empty,
                 LocaleManager.Instance[LocaleKeys.InputDialogOk],
-                (int)Symbol.Important);
+                (int)Symbol.Important,
+                LocaleManager.Instance[LocaleKeys.DialogUpdaterShowChangelogMessage],
+                () => OpenHelper.OpenUrl(changelogUrl));
+        }
 
         internal static async Task CreateWarningDialog(string primary, string secondaryText)
             => await ShowTextDialog(
@@ -340,7 +431,7 @@ namespace Ryujinx.Ava.UI.Helpers
             return response == UserResult.Yes;
         }
 
-        internal static async Task<UserResult> CreateUpdaterChoiceDialog(string title, string primary, string secondaryText)
+        internal static async Task<UserResult> CreateUpdaterChoiceDialog(string title, string primary, string secondaryText, string changelogUrl)
         {
             if (_isChoiceDialogOpen)
             {
@@ -349,14 +440,16 @@ namespace Ryujinx.Ava.UI.Helpers
 
             _isChoiceDialogOpen = true;
 
-            UserResult response = await ShowTextDialog(
+            UserResult response = await ShowTextDialogWithButton(
                 title,
                 primary,
                 secondaryText,
                 LocaleManager.Instance[LocaleKeys.InputDialogYes],
-                LocaleManager.Instance[LocaleKeys.DialogUpdaterShowChangelogMessage],
+                string.Empty,
                 LocaleManager.Instance[LocaleKeys.InputDialogNo],
                 (int)Symbol.Help,
+                LocaleManager.Instance[LocaleKeys.DialogUpdaterShowChangelogMessage],
+                () => OpenHelper.OpenUrl(changelogUrl),
                 UserResult.Yes);
 
             _isChoiceDialogOpen = false;
