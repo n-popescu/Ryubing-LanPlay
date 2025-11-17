@@ -11162,7 +11162,7 @@
         "sv_SE": "Byt bild",
         "th_TH": "เปลี่ยนรูปภาพ",
         "tr_TR": "Resmi değiştir",
-        "uk_UA": "Змінити зображення",
+        "uk_UA": "Змінити аватар",
         "zh_CN": "更换图片",
         "zh_TW": "變更圖片"
       }
@@ -11262,7 +11262,7 @@
         "sv_SE": "Välj en profilbild",
         "th_TH": "เลือก รูปโปรไฟล์",
         "tr_TR": "Profil Resmi Seç",
-        "uk_UA": "Виберіть зображення профілю",
+        "uk_UA": "Виберіть аватара",
         "zh_CN": "选择合适的头像图片",
         "zh_TW": "選擇設定檔圖像"
       }
@@ -19443,31 +19443,6 @@
       }
     },
     {
-      "ID": "AvatarWindowTitle",
-      "Translations": {
-        "ar_SA": "إدارة الحسابات - الصورة الرمزية",
-        "de_DE": "Profile verwalten - Avatar",
-        "el_GR": "Διαχείριση Λογαριασμών - Avatar",
-        "en_US": "Manage Accounts - Avatar",
-        "es_ES": "Administrar Cuentas - Avatar",
-        "fr_FR": "Gérer les Comptes - Avatar",
-        "he_IL": "ניהול חשבונות - אוואטר",
-        "it_IT": "Gestisci account - Avatar",
-        "ja_JP": "アカウント - アバター管理",
-        "ko_KR": "계정 관리 - 아바타",
-        "no_NO": "Administrer kontoer - Profilbilde",
-        "pl_PL": "Zarządzaj Kontami — Avatar",
-        "pt_BR": "Gerenciar Contas - Avatar",
-        "ru_RU": "Управление аккаунтами - Аватар",
-        "sv_SE": "Hantera konton - Avatar",
-        "th_TH": "จัดการบัญชี - อวาต้า",
-        "tr_TR": "Hesapları Yönet - Avatar",
-        "uk_UA": "Керування обліковими записами - Аватар",
-        "zh_CN": "管理账户 - 头像",
-        "zh_TW": "管理帳戶 - 大頭貼"
-      }
-    },
-    {
       "ID": "Amiibo",
       "Translations": {
         "ar_SA": "أميبو",
@@ -20870,26 +20845,26 @@
     {
       "ID": "UserProfilesSetProfileImage",
       "Translations": {
-        "ar_SA": "تعيين صورة الملف الشخصي",
-        "de_DE": "Profilbild einrichten",
-        "el_GR": "Ορισμός Εικόνας Προφίλ",
-        "en_US": "Set Profile Image",
-        "es_ES": "Elegir Imagen de Perfil ",
-        "fr_FR": "Définir l'Image de Profil",
-        "he_IL": "הגדר תמונת פרופיל",
-        "it_IT": "Imposta immagine profilo",
-        "ja_JP": "プロファイル画像を設定",
-        "ko_KR": "프로필 이미지 설정",
-        "no_NO": "Angi profilbilde",
-        "pl_PL": "Ustaw Obraz Profilu",
-        "pt_BR": "Definir Imagem de Perfil",
+        "ar_SA": "تعيين صورة",
+        "de_DE": "Bild festlegen",
+        "el_GR": "Ορισμός Εικόνας",
+        "en_US": "Set Image",
+        "es_ES": "Elegir Imagen",
+        "fr_FR": "Définir l’Image",
+        "he_IL": "הגדר תמונה",
+        "it_IT": "Imposta immagine",
+        "ja_JP": "画像を設定",
+        "ko_KR": "이미지 설정",
+        "no_NO": "Angi bilde",
+        "pl_PL": "Ustaw obraz",
+        "pt_BR": "Definir Imagem",
         "ru_RU": "Установить аватар",
-        "sv_SE": "Välj profilbild",
-        "th_TH": "ตั้งค่ารูปโปรไฟล์",
-        "tr_TR": "Profil Resmi Ayarla",
-        "uk_UA": "Встановити зображення профілю",
-        "zh_CN": "选择头像",
-        "zh_TW": "設定設定檔圖像"
+        "sv_SE": "Välj bild",
+        "th_TH": "ตั้งค่ารูปภาพ",
+        "tr_TR": "Resim Ayarla",
+        "uk_UA": "Встановити аватар",
+        "zh_CN": "设置图片",
+        "zh_TW": "設定圖片"
       }
     },
     {
