@@ -60,9 +60,7 @@
                         <TextBlock Text="{ext:Locale SettingsTabDebugSuspendOnStart}"
                                    ToolTip.Tip="{ext:Locale SettingsTabDebugSuspendOnStartTooltip}" />
                     </CheckBox>
-                    <Button
-                        Click="PurgeAllSharedCaches_OnClick"
-                        >
+                    <Button Command="{Binding PurgeAllCaches}">
                         <TextBlock HorizontalAlignment="Center"
                                    Text="{ext:Locale SettingsTabDebugPurgeAllCaches}" />
                     </Button>
