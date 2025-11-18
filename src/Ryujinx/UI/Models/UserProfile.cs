@@ -13,11 +13,20 @@ namespace Ryujinx.Ava.UI.Models
     {
         private readonly Profile _profile;
         private readonly NavigationDialogHost _owner;
-        [ObservableProperty] private byte[] _image;
-        [ObservableProperty] private string _name;
-        [ObservableProperty] private UserId _userId;
-        [ObservableProperty] private bool _isPointerOver;
-        [ObservableProperty] private IBrush _backgroundColor;
+        [ObservableProperty]
+        public partial byte[] Image { get; set; }
+
+        [ObservableProperty]
+        public partial string Name { get; set; }
+
+        [ObservableProperty]
+        public partial UserId UserId { get; set; }
+
+        [ObservableProperty]
+        public partial bool IsPointerOver { get; set; }
+
+        [ObservableProperty]
+        public partial IBrush BackgroundColor { get; set; }
 
         public UserProfile(Profile profile, NavigationDialogHost owner)
         {
@@ -39,7 +48,7 @@ namespace Ryujinx.Ava.UI.Models
 
         private void UpdateBackground()
         {
-            Application currentApplication = Avalonia.Application.Current;
+            Application currentApplication = Application.Current;
             currentApplication.Styles.TryGetResource("ControlFillColorSecondary", currentApplication.ActualThemeVariant, out object color);
 
             if (color is not null)

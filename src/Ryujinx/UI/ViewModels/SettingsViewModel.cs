@@ -359,8 +359,9 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
-        [ObservableProperty] private bool _matchSystemTime;
-
+        [ObservableProperty]
+        public partial bool MatchSystemTime { get; set; }
+        
         public DateTimeOffset CurrentDate { get; set; }
 
         public TimeSpan CurrentTime { get; set; }

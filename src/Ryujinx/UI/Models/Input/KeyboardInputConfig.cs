@@ -12,42 +12,89 @@ namespace Ryujinx.Ava.UI.Models.Input
         public ControllerType ControllerType { get; set; }
         public PlayerIndex PlayerIndex { get; set; }
 
-        [ObservableProperty] private Key _leftStickUp;
-        [ObservableProperty] private Key _leftStickDown;
-        [ObservableProperty] private Key _leftStickLeft;
-        [ObservableProperty] private Key _leftStickRight;
-        [ObservableProperty] private Key _leftStickButton;
+        [ObservableProperty]
+        public partial Key LeftStickUp { get; set; }
 
-        [ObservableProperty] private Key _rightStickUp;
-        [ObservableProperty] private Key _rightStickDown;
-        [ObservableProperty] private Key _rightStickLeft;
-        [ObservableProperty] private Key _rightStickRight;
-        [ObservableProperty] private Key _rightStickButton;
+        [ObservableProperty]
+        public partial Key LeftStickDown { get; set; }
 
-        [ObservableProperty] private Key _dpadUp;
-        [ObservableProperty] private Key _dpadDown;
-        [ObservableProperty] private Key _dpadLeft;
-        [ObservableProperty] private Key _dpadRight;
+        [ObservableProperty]
+        public partial Key LeftStickLeft { get; set; }
 
-        [ObservableProperty] private Key _buttonMinus;
-        [ObservableProperty] private Key _buttonPlus;
+        [ObservableProperty]
+        public partial Key LeftStickRight { get; set; }
 
-        [ObservableProperty] private Key _buttonA;
-        [ObservableProperty] private Key _buttonB;
-        [ObservableProperty] private Key _buttonX;
-        [ObservableProperty] private Key _buttonY;
+        [ObservableProperty]
+        public partial Key LeftStickButton { get; set; }
 
-        [ObservableProperty] private Key _buttonL;
-        [ObservableProperty] private Key _buttonR;
+        [ObservableProperty]
+        public partial Key RightStickUp { get; set; }
 
-        [ObservableProperty] private Key _buttonZl;
-        [ObservableProperty] private Key _buttonZr;
+        [ObservableProperty]
+        public partial Key RightStickDown { get; set; }
 
-        [ObservableProperty] private Key _leftButtonSl;
-        [ObservableProperty] private Key _leftButtonSr;
+        [ObservableProperty]
+        public partial Key RightStickLeft { get; set; }
 
-        [ObservableProperty] private Key _rightButtonSl;
-        [ObservableProperty] private Key _rightButtonSr;
+        [ObservableProperty]
+        public partial Key RightStickRight { get; set; }
+
+        [ObservableProperty]
+        public partial Key RightStickButton { get; set; }
+
+        [ObservableProperty]
+        public partial Key DpadUp { get; set; }
+
+        [ObservableProperty]
+        public partial Key DpadDown { get; set; }
+
+        [ObservableProperty]
+        public partial Key DpadLeft { get; set; }
+
+        [ObservableProperty]
+        public partial Key DpadRight { get; set; }
+
+        [ObservableProperty]
+        public partial Key ButtonMinus { get; set; }
+
+        [ObservableProperty]
+        public partial Key ButtonPlus { get; set; }
+
+        [ObservableProperty]
+        public partial Key ButtonA { get; set; }
+
+        [ObservableProperty]
+        public partial Key ButtonB { get; set; }
+
+        [ObservableProperty]
+        public partial Key ButtonX { get; set; }
+
+        [ObservableProperty]
+        public partial Key ButtonY { get; set; }
+
+        [ObservableProperty]
+        public partial Key ButtonL { get; set; }
+
+        [ObservableProperty]
+        public partial Key ButtonR { get; set; }
+
+        [ObservableProperty]
+        public partial Key ButtonZl { get; set; }
+
+        [ObservableProperty]
+        public partial Key ButtonZr { get; set; }
+
+        [ObservableProperty]
+        public partial Key LeftButtonSl { get; set; }
+
+        [ObservableProperty]
+        public partial Key LeftButtonSr { get; set; }
+
+        [ObservableProperty]
+        public partial Key RightButtonSl { get; set; }
+
+        [ObservableProperty]
+        public partial Key RightButtonSr { get; set; }
 
         public KeyboardInputConfig(InputConfig config)
         {

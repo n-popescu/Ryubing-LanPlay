@@ -15,6 +15,7 @@ namespace Ryujinx.Ava.UI.Models
         public string Name { get; set; }
         public byte[] Data { get; set; }
 
-        [ObservableProperty] private SolidColorBrush _backgroundColor = new(Colors.White);
+        [ObservableProperty]
+        public partial SolidColorBrush BackgroundColor { get; set; } = new(Colors.White);
     }
 }
