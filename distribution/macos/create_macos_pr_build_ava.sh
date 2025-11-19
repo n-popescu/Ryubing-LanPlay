@@ -31,69 +31,39 @@ if [[ "$(uname)" == "Darwin" ]]; then
     ' sh {} +
 fi
 
-RELEASE_TAR_FILE_NAME=ryujinx-$CONFIGURATION-$VERSION+$SOURCE_REVISION_ID-macos_universal.app.tar
+RELEASE_TAR_FILE_NAME=ryujinx-$CONFIGURATION-$VERSION+$SOURCE_REVISION_ID-macos_arm64.app.tar
 
 ARM64_APP_BUNDLE="$TEMP_DIRECTORY/output_arm64/Ryujinx.app"
-X64_APP_BUNDLE="$TEMP_DIRECTORY/output_x64/Ryujinx.app"
-UNIVERSAL_APP_BUNDLE="$OUTPUT_DIRECTORY/Ryujinx.app"
+OUTPUT_APP_BUNDLE="$OUTPUT_DIRECTORY/Ryujinx.app"
 EXECUTABLE_SUB_PATH=Contents/MacOS/Ryujinx
 
 rm -rf "$TEMP_DIRECTORY"
 mkdir -p "$TEMP_DIRECTORY"
 
-DOTNET_COMMON_ARGS=(-p:DebugType=embedded -p:Version="$VERSION" -p:SourceRevisionId="$SOURCE_REVISION_ID" -p:UseSharedCompilation=false --self-contained true $EXTRA_ARGS)
+DOTNET_COMMON_ARGS=(-p:DebugType=embedded -p:Version="$VERSION" -p:SourceRevisionId="$SOURCE_REVISION_ID" -p:UseSharedCompilation=false --self-contained $EXTRA_ARGS)
 
 dotnet restore
 dotnet build -c "$CONFIGURATION" src/Ryujinx
 dotnet publish -c "$CONFIGURATION" -r osx-arm64 -o "$TEMP_DIRECTORY/publish_arm64" "${DOTNET_COMMON_ARGS[@]}" src/Ryujinx
-dotnet publish -c "$CONFIGURATION" -r osx-x64 -o "$TEMP_DIRECTORY/publish_x64" "${DOTNET_COMMON_ARGS[@]}" src/Ryujinx
-
-# Get rid of the support library for ARMeilleure for x64 (that's only for arm64)
-rm -rf "$TEMP_DIRECTORY/publish_x64/libarmeilleure-jitsupport.dylib"
 
 # Get rid of libsoundio from arm64 builds as we don't have a arm64 variant
 # TODO: remove this once done
 rm -rf "$TEMP_DIRECTORY/publish_arm64/libsoundio.dylib"
 
 pushd "$BASE_DIR/distribution/macos"
-./create_app_bundle.sh "$TEMP_DIRECTORY/publish_x64" "$TEMP_DIRECTORY/output_x64" "$ENTITLEMENTS_FILE_PATH"
 ./create_app_bundle.sh "$TEMP_DIRECTORY/publish_arm64" "$TEMP_DIRECTORY/output_arm64" "$ENTITLEMENTS_FILE_PATH"
 popd
 
-rm -rf "$UNIVERSAL_APP_BUNDLE"
+rm -rf "$OUTPUT_APP_BUNDLE"
 mkdir -p "$OUTPUT_DIRECTORY"
 
-# Let's copy one of the two different app bundle and remove the executable
-cp -R "$ARM64_APP_BUNDLE" "$UNIVERSAL_APP_BUNDLE"
-rm "$UNIVERSAL_APP_BUNDLE/$EXECUTABLE_SUB_PATH"
-
-# Make its libraries universal
-python3 "$BASE_DIR/distribution/macos/construct_universal_dylib.py" "$ARM64_APP_BUNDLE" "$X64_APP_BUNDLE" "$UNIVERSAL_APP_BUNDLE" "**/*.dylib"
-
-# Copy arm64-only libraries to UNIVERSAL_APP_BUNDLE
-cp "$ARM64_APP_BUNDLE/Contents/Frameworks/libarmeilleure-jitsupport.dylib" "$UNIVERSAL_APP_BUNDLE/Contents/Frameworks/libarmeilleure-jitsupport.dylib"
-cp "$ARM64_APP_BUNDLE/Contents/Frameworks/libvulkan_kosmickrisp.dylib" "$UNIVERSAL_APP_BUNDLE/Contents/Frameworks/libvulkan_kosmickrisp.dylib"
-cp "$ARM64_APP_BUNDLE/Contents/Frameworks/libvulkan.1.dylib" "$UNIVERSAL_APP_BUNDLE/Contents/Frameworks/libvulkan.1.dylib"
-
-if ! [ -x "$(command -v lipo)" ];
-then
-    if ! [ -x "$(command -v llvm-lipo-17)" ];
-    then
-        LIPO=llvm-lipo
-    else
-        LIPO=llvm-lipo-17
-    fi
-else
-    LIPO=lipo
-fi
-
-# Make the executable universal
-$LIPO "$ARM64_APP_BUNDLE/$EXECUTABLE_SUB_PATH" "$X64_APP_BUNDLE/$EXECUTABLE_SUB_PATH" -output "$UNIVERSAL_APP_BUNDLE/$EXECUTABLE_SUB_PATH" -create
+# Let's copy the app bundle to the output folder so we can package it freely
+cp -R "$ARM64_APP_BUNDLE" "$OUTPUT_APP_BUNDLE"
 
 # Patch up the Info.plist to have appropriate version
-sed -r -i.bck "s/\%\%RYUJINX_BUILD_VERSION\%\%/$VERSION/g;" "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist"
-sed -r -i.bck "s/\%\%RYUJINX_BUILD_GIT_HASH\%\%/$SOURCE_REVISION_ID/g;" "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist"
-rm "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist.bck"
+sed -r -i.bck "s/\%\%RYUJINX_BUILD_VERSION\%\%/$VERSION/g;" "$OUTPUT_APP_BUNDLE/Contents/Info.plist"
+sed -r -i.bck "s/\%\%RYUJINX_BUILD_GIT_HASH\%\%/$SOURCE_REVISION_ID/g;" "$OUTPUT_APP_BUNDLE/Contents/Info.plist"
+rm "$OUTPUT_APP_BUNDLE/Contents/Info.plist.bck"
 
 # Now sign it
 if ! [ -x "$(command -v codesign)" ];
@@ -107,10 +77,10 @@ then
     # NOTE: Currently require https://github.com/indygreg/apple-platform-rs/pull/44 to work on other OSes.
     # cargo install --git "https://github.com/marysaka/apple-platform-rs" --branch "fix/adhoc-app-bundle" apple-codesign --bin "rcodesign"
     echo "Using rcodesign for ad-hoc signing"
-    rcodesign sign --entitlements-xml-path "$ENTITLEMENTS_FILE_PATH" "$UNIVERSAL_APP_BUNDLE"
+    rcodesign sign --entitlements-xml-path "$ENTITLEMENTS_FILE_PATH" "$OUTPUT_APP_BUNDLE"
 else
     echo "Using codesign for ad-hoc signing"
-    codesign --entitlements "$ENTITLEMENTS_FILE_PATH" -f -s - "$UNIVERSAL_APP_BUNDLE"
+    codesign --entitlements "$ENTITLEMENTS_FILE_PATH" -f -s - "$OUTPUT_APP_BUNDLE"
 fi
 
 echo "Creating archive"
