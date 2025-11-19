@@ -526,7 +526,7 @@ namespace Ryujinx.Ava.Systems
                 return false;
             }
 
-            if (Program.Version.Contains("dirty") || !ReleaseInformation.IsValid)
+            if (Program.Version.Contains("dirty") || !ReleaseInformation.IsValid || RunningPlatform.IsIntelMac)
             {
                 if (showWarnings)
                 {
@@ -623,7 +623,7 @@ namespace Ryujinx.Ava.Systems
         private static string BuildPlatformExtension()
         {
             if (RunningPlatform.IsMacOS)
-                return "macos_universal.app.tar.gz";
+                return "macos_arm64.app.tar.gz";
 
 #pragma warning disable CS8509 // It is exhaustive for any values this can contain.
             string osPrefix = RunningPlatform.CurrentOS switch
