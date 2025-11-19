@@ -2,7 +2,7 @@ using Ryujinx.Common.Logging;
 
 namespace Ryujinx.HLE.HOS.Services.Ldn.Lp2p
 {
-    class ISfService : IpcService
+    partial class ISfService : IpcService
     {
         public ISfService(ServiceCtx context) { }
 

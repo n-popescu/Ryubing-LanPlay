@@ -5,7 +5,7 @@ using System;
 
 namespace Ryujinx.HLE.HOS.Services.Account.Acc
 {
-    class IAsyncContext : IpcService
+    partial class IAsyncContext : IpcService
     {
         protected AsyncExecution AsyncExecution;
 

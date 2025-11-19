@@ -6,7 +6,7 @@ using System;
 
 namespace Ryujinx.HLE.HOS.Services.Nim.Ntc.StaticService
 {
-    class IEnsureNetworkClockAvailabilityService : IpcService
+    partial class IEnsureNetworkClockAvailabilityService : IpcService
     {
         private readonly KEvent _finishNotificationEvent;
         private ResultCode _taskResultCode;

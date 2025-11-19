@@ -3,7 +3,7 @@ using Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator;
 namespace Ryujinx.HLE.HOS.Services.Ldn
 {
     [Service("ldn:u")]
-    class IUserServiceCreator : IpcService
+    partial class IUserServiceCreator : IpcService
     {
         public IUserServiceCreator(ServiceCtx context) : base(context.Device.System.LdnServer) { }
 

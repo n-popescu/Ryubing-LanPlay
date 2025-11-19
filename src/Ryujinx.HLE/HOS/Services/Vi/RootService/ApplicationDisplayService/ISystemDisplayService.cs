@@ -2,7 +2,7 @@ using Ryujinx.Common.Logging;
 
 namespace Ryujinx.HLE.HOS.Services.Vi.RootService.ApplicationDisplayService
 {
-    class ISystemDisplayService : IpcService
+    partial class ISystemDisplayService : IpcService
     {
         private readonly IApplicationDisplayService _applicationDisplayService;
 

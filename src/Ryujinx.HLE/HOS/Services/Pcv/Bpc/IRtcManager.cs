@@ -3,7 +3,7 @@ using System;
 namespace Ryujinx.HLE.HOS.Services.Pcv.Bpc
 {
     [Service("bpc:r")] //  1.0.0 - 8.1.0
-    class IRtcManager : IpcService
+    partial class IRtcManager : IpcService
     {
         public IRtcManager(ServiceCtx context) { }
 

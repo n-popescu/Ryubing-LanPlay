@@ -14,7 +14,7 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd
 {
     [Service("bsd:s", true)]
     [Service("bsd:u", false)]
-    class IClient : IpcService
+    partial class IClient : IpcService
     {
         private static readonly List<IPollManager> _pollManagers =
         [

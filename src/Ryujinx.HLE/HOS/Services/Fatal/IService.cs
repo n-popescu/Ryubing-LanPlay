@@ -7,7 +7,7 @@ using System.Text;
 namespace Ryujinx.HLE.HOS.Services.Fatal
 {
     [Service("fatal:u")]
-    class IService : IpcService
+    partial class IService : IpcService
     {
         public IService(ServiceCtx context) { }
 

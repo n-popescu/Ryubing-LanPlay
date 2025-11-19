@@ -10,7 +10,7 @@ namespace Ryujinx.HLE.HOS.Services.Spl
     [Service("spl:manu")]
     [Service("spl:mig")]
     [Service("spl:ssl")]
-    class IGeneralInterface : IpcService
+    partial class IGeneralInterface : IpcService
     {
         public IGeneralInterface(ServiceCtx context) { }
 

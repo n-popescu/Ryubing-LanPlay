@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 namespace Ryujinx.HLE.HOS.Services.Spl
 {
     [Service("csrng")]
-    class IRandomInterface : DisposableIpcService
+    partial class IRandomInterface : DisposableIpcService
     {
         private readonly RandomNumberGenerator _rng;
 

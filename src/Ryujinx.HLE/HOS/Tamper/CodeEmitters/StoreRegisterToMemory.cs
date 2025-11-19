@@ -79,7 +79,7 @@ namespace Ryujinx.HLE.HOS.Tamper.CodeEmitters
                     throw new TamperCompilationException($"Invalid offset type {offsetType} in Atmosphere cheat");
             }
 
-            InstructionHelper.EmitMov(operationWidth, context, destinationMemory, sourceRegister);
+            InstructionHelper.Emit<OpMovFactory>(operationWidth, context, destinationMemory, sourceRegister, null);
 
             switch (incrementAddressRegister)
             {

@@ -185,3 +185,6 @@ PublishProfiles/
 # Ignore distribution build files
 distribution/macos/temp/
 distribution/macos/output/
+
+# MSBuild logs
+*.binlog

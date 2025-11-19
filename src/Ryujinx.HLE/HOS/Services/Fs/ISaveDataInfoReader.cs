@@ -5,7 +5,7 @@ using Ryujinx.Memory;
 
 namespace Ryujinx.HLE.HOS.Services.Fs
 {
-    class ISaveDataInfoReader : DisposableIpcService
+    partial class ISaveDataInfoReader : DisposableIpcService
     {
         private SharedRef<LibHac.FsSrv.Sf.ISaveDataInfoReader> _baseReader;
 

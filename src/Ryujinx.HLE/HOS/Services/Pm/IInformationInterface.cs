@@ -3,7 +3,7 @@ using Ryujinx.HLE.HOS.Kernel.Process;
 namespace Ryujinx.HLE.HOS.Services.Pm
 {
     [Service("pm:info")]
-    class IInformationInterface : IpcService
+    partial class IInformationInterface : IpcService
     {
         public IInformationInterface(ServiceCtx context) { }
 

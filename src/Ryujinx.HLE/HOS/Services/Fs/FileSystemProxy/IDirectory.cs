@@ -5,7 +5,7 @@ using Ryujinx.Memory;
 
 namespace Ryujinx.HLE.HOS.Services.Fs.FileSystemProxy
 {
-    class IDirectory : DisposableIpcService
+    partial class IDirectory : DisposableIpcService
     {
         private SharedRef<LibHac.FsSrv.Sf.IDirectory> _baseDirectory;
 

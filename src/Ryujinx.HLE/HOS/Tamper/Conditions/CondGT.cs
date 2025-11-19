@@ -1,8 +1,16 @@
 using Ryujinx.HLE.HOS.Tamper.Operations;
+using System.Numerics;
 
 namespace Ryujinx.HLE.HOS.Tamper.Conditions
 {
-    class CondGT<T> : ICondition where T : unmanaged
+    sealed class CondGTFactory : IConditionFactory
+    {
+        private CondGTFactory() { }
+
+        public static ICondition CreateFor<T>(IOperand lhs, IOperand rhs) where T : unmanaged, INumber<T>
+            => new CondGT<T>(lhs, rhs);
+    }
+    class CondGT<T> : ICondition where T : unmanaged, INumber<T>
     {
         private readonly IOperand _lhs;
         private readonly IOperand _rhs;
@@ -15,7 +23,7 @@ namespace Ryujinx.HLE.HOS.Tamper.Conditions
 
         public bool Evaluate()
         {
-            return (dynamic)_lhs.Get<T>() > (dynamic)_rhs.Get<T>();
+            return _lhs.Get<T>() > _rhs.Get<T>();
         }
     }
 }

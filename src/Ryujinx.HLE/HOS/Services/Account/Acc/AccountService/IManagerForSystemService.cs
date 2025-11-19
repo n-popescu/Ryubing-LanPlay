@@ -1,6 +1,6 @@
 namespace Ryujinx.HLE.HOS.Services.Account.Acc.AccountService
 {
-    class IManagerForSystemService : IpcService
+    partial class IManagerForSystemService : IpcService
     {
         private readonly ManagerServer _managerServer;
 
