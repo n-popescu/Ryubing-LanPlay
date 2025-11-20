@@ -196,22 +196,26 @@ namespace Ryujinx.Ava
             return gameDir;
         }
 
-        public static void ReloadConfig()
+        public static void ReloadConfig(bool isRunGameWithCustomConfig = false)
         {
 
             string localConfigurationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ReleaseInformation.ConfigName);
             string appDataConfigurationPath = Path.Combine(AppDataManager.BaseDirPath, ReleaseInformation.ConfigName);
 
-            // Now load the configuration as the other subsystems are now registered
-            if (File.Exists(localConfigurationPath))
-            {
-                ConfigurationPath = localConfigurationPath;
-            }
-            else if (File.Exists(appDataConfigurationPath))
-            {
-                ConfigurationPath = appDataConfigurationPath;
-            }
 
+            if (!isRunGameWithCustomConfig) // To return settings from the game folder if the user configuration exists
+            {
+                // Now load the configuration as the other subsystems are now registered
+                if (File.Exists(localConfigurationPath))
+                {
+                    ConfigurationPath = localConfigurationPath;
+                }
+                else if (File.Exists(appDataConfigurationPath))
+                {
+                    ConfigurationPath = appDataConfigurationPath;
+                }
+            }
+        
             if (ConfigurationPath == null)
             {
                 // No configuration, we load the default values and save it to disk
