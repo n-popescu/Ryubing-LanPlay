@@ -4,11 +4,13 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DynamicData.Binding;
 using LibHac.Tools.FsSystem;
 using Ryujinx.Audio.Backends.OpenAL;
 using Ryujinx.Audio.Backends.SDL3;
 using Ryujinx.Audio.Backends.SoundIo;
 using Ryujinx.Ava.Common.Locale;
+using Ryujinx.Ava.Systems.AppLibrary;
 using Ryujinx.Ava.Systems.Configuration;
 using Ryujinx.Ava.Systems.Configuration.System;
 using Ryujinx.Ava.Systems.Configuration.UI;
@@ -19,6 +21,7 @@ using Ryujinx.Common.Configuration;
 using Ryujinx.Common.Configuration.Multiplayer;
 using Ryujinx.Common.GraphicsDriver;
 using Ryujinx.Common.Helper;
+using Ryujinx.Common.Logging;
 using Ryujinx.Graphics.GAL;
 using Ryujinx.Graphics.Vulkan;
 using Ryujinx.HLE;
@@ -912,7 +915,13 @@ namespace Ryujinx.Ava.UI.ViewModels
             CloseWindow?.Invoke();
         }
 
-        [ObservableProperty] private bool _wantsToReset;
+        public void CancelButton()
+        {
+            RevertIfNotSaved();
+            CloseWindow?.Invoke();
+        }
+
+        [ObservableProperty] public partial bool WantsToReset { get; set; }
 
         public AsyncRelayCommand ResetButton => Commands.Create(async () =>
         {
@@ -932,10 +941,62 @@ namespace Ryujinx.Ava.UI.ViewModels
                 "Configuration Reset");
         });
 
-        public void CancelButton()
+        public AsyncRelayCommand PurgeAllCaches => Commands.Create(async () =>
         {
-            RevertIfNotSaved();
-            CloseWindow?.Invoke();
-        }
+            ObservableCollectionExtended<ApplicationData> appList = RyujinxApp.MainWindow.ViewModel.Applications;
+
+            if (appList.Count == 0)
+            {
+                return;
+            }
+
+            UserResult result = await ContentDialogHelper.CreateConfirmationDialog(
+                LocaleManager.Instance[LocaleKeys.DialogWarning],
+                LocaleManager.Instance[LocaleKeys.DialogDeleteAllCaches],
+                LocaleManager.Instance[LocaleKeys.InputDialogYes],
+                LocaleManager.Instance[LocaleKeys.InputDialogNo],
+                LocaleManager.Instance[LocaleKeys.RyujinxConfirm]);
+
+            bool hasErrors = false;
+
+            if (result != UserResult.Yes)
+            {
+                return;
+            }
+
+            foreach (ApplicationData application in appList)
+            {
+                DirectoryInfo cacheDir = new(Path.Combine(AppDataManager.GamesDirPath, application.IdString, "cache"));
+
+                if (!cacheDir.Exists)
+                {
+                    continue;
+                }
+
+                foreach (DirectoryInfo dInfo in cacheDir.EnumerateDirectories())
+                {
+                    try
+                    {
+                        dInfo.Delete(recursive: true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error?.PrintMsg(LogClass.Application, $"Failed to purge shader cache for {application.Name} ({application.IdString}): {ex}");
+                        hasErrors = true;
+                    }
+                }
+            }
+
+            if (hasErrors)
+            {
+                await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.DialogDeleteAllCachesErrorMessage]);
+            }
+            else
+            {
+                NotificationHelper.ShowSuccess(
+                    title: LocaleManager.Instance[LocaleKeys.SettingsTabDebugPurgeAllCachesSuccessTitle], 
+                    text: LocaleManager.GetFormatted(LocaleKeys.SettingsTabDebugPurgeAllCachesSuccessText, appList.Count));
+            }
+        });
     }
 }

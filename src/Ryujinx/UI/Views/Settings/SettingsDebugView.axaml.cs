@@ -10,4 +10,3 @@ namespace Ryujinx.Ava.UI.Views.Settings
         }
     }
 }
-

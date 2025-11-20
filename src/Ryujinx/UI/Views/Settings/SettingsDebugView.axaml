@@ -53,12 +53,17 @@
                 </StackPanel>
                 <StackPanel
                     Margin="10,0,0,0"
+                    Spacing="10"
                     HorizontalAlignment="Stretch"
                     Orientation="Vertical">
                     <CheckBox IsChecked="{Binding DebuggerSuspendOnStart}">
                         <TextBlock Text="{ext:Locale SettingsTabDebugSuspendOnStart}"
                                    ToolTip.Tip="{ext:Locale SettingsTabDebugSuspendOnStartTooltip}" />
                     </CheckBox>
+                    <Button Command="{Binding PurgeAllCaches}">
+                        <TextBlock HorizontalAlignment="Center"
+                                   Text="{ext:Locale SettingsTabDebugPurgeAllCaches}" />
+                    </Button>
                 </StackPanel>
             </StackPanel>
         </Border>
