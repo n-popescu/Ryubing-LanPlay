@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.Globalization;
 
 namespace Ryujinx.Ava.UI.ViewModels.Input
 {
@@ -22,8 +23,36 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         [ObservableProperty]
         public partial int Sensitivity { get; set; }
 
-        [ObservableProperty]
-        public partial double GyroDeadzone { get; set; }
+        private double _gyroDeadzone;
+        
+        public double GyroDeadzone
+        {
+            get => _gyroDeadzone;
+            set
+            {
+                if (_gyroDeadzone != value)
+                {
+                    _gyroDeadzone = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(GyroDeadzoneText));
+                }
+            }
+        }
+
+        public string GyroDeadzoneText
+        {
+            get
+            {
+                if (_gyroDeadzone == 100)
+                {
+                    return _gyroDeadzone.ToString("F1", CultureInfo.CurrentCulture);
+                }
+                else
+                {
+                    return _gyroDeadzone.ToString("F2", CultureInfo.CurrentCulture);
+                }
+            }
+        }
 
         [ObservableProperty]
         public partial bool EnableCemuHookMotion { get; set; }
