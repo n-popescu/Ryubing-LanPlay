@@ -9,30 +9,30 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="viewModels:LedInputViewModel"
              x:Class="Ryujinx.UI.Views.Input.LedInputView">
-    <Grid Margin="10" HorizontalAlignment="Center" RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
-        <CheckBox Grid.Row="0" Margin="0,0,0,2.5" IsChecked="{Binding TurnOffLed, Mode=TwoWay}"
-                Command="{Binding LedDisabledChanged}" IsVisible="{Binding ParentModel.CanClearLed}">
+    <StackPanel Margin="10" HorizontalAlignment="Center">
+        <CheckBox Margin="0,0,0,2.5" IsChecked="{Binding TurnOffLed, Mode=TwoWay}"
+                  Command="{Binding LedDisabledChanged}" IsVisible="{Binding ParentModel.CanClearLed}">
             <TextBlock Text="{ext:Locale ControllerSettingsLedColorDisable}" />
         </CheckBox>
-        <CheckBox Grid.Row="1" Margin="0,0,0,2.5" IsChecked="{Binding UseRainbowLed, Mode=TwoWay}">
+        <CheckBox Margin="0,0,0,2.5" IsChecked="{Binding UseRainbowLed, Mode=TwoWay}">
             <TextBlock Text="{ext:Locale ControllerSettingsLedColorRainbow}" />
         </CheckBox>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" IsEnabled="{Binding !TurnOffLed}">
-            <TextBlock Margin="0,0,10,2.5" Text="{ext:Locale ControllerSettingsLedColorRainbowSpeed}" />
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,2.5" IsEnabled="{Binding !TurnOffLed}">
+            <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" Text="{ext:Locale ControllerSettingsLedColorRainbowSpeed}" />
             <controls:SliderScroll
-                Value="{Binding RainbowSpeed}"
                 Width="150"
-                Margin="0,0,0,2.5"
+                VerticalAlignment="Center"
+                Value="{Binding RainbowSpeed}"
                 TickFrequency="0.25"
                 IsSnapToTickEnabled="True"
                 LargeChange="1"
                 SmallChange="0.25"
                 Minimum="0"
                 Maximum="10" />
-            <TextBlock Margin="5,0,0,2.5" Text="{Binding RainbowSpeedText}" />
+            <TextBlock Width="40" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding RainbowSpeedText}" />
         </StackPanel>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" IsEnabled="{Binding ShowLedColorPicker}">
-            <TextBlock Text="{ext:Locale ControllerSettingsLedColor}" />
+        <StackPanel Orientation="Horizontal" IsEnabled="{Binding ShowLedColorPicker}">
+            <TextBlock VerticalAlignment="Center" Text="{ext:Locale ControllerSettingsLedColor}" />
             <ColorPicker
                 Margin="20,0,0,0"
                 IsAlphaEnabled="False"
@@ -41,5 +41,5 @@
                 Color="{Binding LedColor, Mode=TwoWay}">
             </ColorPicker>
         </StackPanel>
-    </Grid>
+    </StackPanel>
 </UserControl>
