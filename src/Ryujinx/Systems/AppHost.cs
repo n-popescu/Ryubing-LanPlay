@@ -8,7 +8,7 @@ using LibHac.Common;
 using LibHac.Ns;
 using Ryujinx.Audio.Backends.Dummy;
 using Ryujinx.Audio.Backends.OpenAL;
-using Ryujinx.Audio.Backends.SDL2;
+using Ryujinx.Audio.Backends.SDL3;
 using Ryujinx.Audio.Backends.SoundIo;
 using Ryujinx.Audio.Integration;
 using Ryujinx.Ava.Common;
@@ -501,18 +501,12 @@ namespace Ryujinx.Ava.Systems
 
         private void UpdateIgnoreMissingServicesState(object sender, ReactiveEventArgs<bool> args)
         {
-            if (Device != null)
-            {
-                Device.Configuration.IgnoreMissingServices = args.NewValue;
-            }
+            Device?.Configuration.IgnoreMissingServices = args.NewValue;
         }
 
         private void UpdateAspectRatioState(object sender, ReactiveEventArgs<AspectRatio> args)
         {
-            if (Device != null)
-            {
-                Device.Configuration.AspectRatio = args.NewValue;
-            }
+            Device?.Configuration.AspectRatio = args.NewValue;
         }
 
         private void UpdateAntiAliasing(object sender, ReactiveEventArgs<AntiAliasing> e)
@@ -949,13 +943,16 @@ namespace Ryujinx.Ava.Systems
         {
             List<AudioBackend> availableBackends =
             [
-                AudioBackend.SDL2,
+                AudioBackend.SDL3,
                 AudioBackend.SoundIo,
                 AudioBackend.OpenAl,
                 AudioBackend.Dummy
             ];
 
             AudioBackend preferredBackend = ConfigurationState.Instance.System.AudioBackend.Value;
+
+            if (preferredBackend is AudioBackend.SDL2)
+                preferredBackend = AudioBackend.SDL3;
 
             for (int i = 0; i < availableBackends.Count; i++)
             {
@@ -988,7 +985,7 @@ namespace Ryujinx.Ava.Systems
 
                 deviceDriver = currentBackend switch
                 {
-                    AudioBackend.SDL2 => InitializeAudioBackend<SDL2HardwareDeviceDriver>(AudioBackend.SDL2, nextBackend),
+                    AudioBackend.SDL3 => InitializeAudioBackend<SDL3HardwareDeviceDriver>(AudioBackend.SDL3, nextBackend),
                     AudioBackend.SoundIo => InitializeAudioBackend<SoundIoHardwareDeviceDriver>(AudioBackend.SoundIo, nextBackend),
                     AudioBackend.OpenAl => InitializeAudioBackend<OpenALHardwareDeviceDriver>(AudioBackend.OpenAl, nextBackend),
                     _ => new DummyHardwareDeviceDriver(),

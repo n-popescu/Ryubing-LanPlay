@@ -48,36 +48,41 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         private int _controller;
         private string _controllerImage;
         private int _device;
-        private object _configViewModel;
         private bool _isChangeTrackingActive;
-        private string _chosenProfile;
-        [ObservableProperty] private bool _isModified;
-        [ObservableProperty] private string _profileName;
-        [ObservableProperty] private bool _notificationIsVisible; // Automatically call the NotificationView property with OnPropertyChanged()
-        [ObservableProperty] private string _notificationText; // Automatically call the NotificationText property with OnPropertyChanged()
+        [ObservableProperty]
+        public partial bool IsModified { get; set; }
+
+        [ObservableProperty]
+        public partial string ProfileName { get; set; }
+
+        [ObservableProperty]
+        public partial bool NotificationIsVisible { get; set; } // Automatically call the NotificationView property with OnPropertyChanged()
+
+        [ObservableProperty]
+        public partial string NotificationText { get; set; } // Automatically call the NotificationText property with OnPropertyChanged()
+
         private bool _isLoaded;
 
         private static readonly InputConfigJsonSerializerContext _serializerContext = new(JsonHelper.GetDefaultSerializerOptions());
 
         public IGamepadDriver AvaloniaKeyboardDriver { get; }
 
-        private IGamepad _selectedGamepad;
-
         public IGamepad SelectedGamepad
         {
-            get => _selectedGamepad;
+            get;
             private set
             {
                 Rainbow.Reset();
 
-                _selectedGamepad = value;
+                field = value;
 
                 if (ConfigViewModel is ControllerInputViewModel { Config.UseRainbowLed: true })
-                    Rainbow.Updated += (ref Color color) => _selectedGamepad.SetLed((uint)color.ToArgb());
+                    Rainbow.Updated += (ref Color color) => field.SetLed((uint)color.ToArgb());
 
                 OnPropertiesChanged(nameof(HasLed), nameof(CanClearLed));
             }
         }
+
         public StickVisualizer VisualStick { get; private set; }
 
         public ObservableCollection<PlayerModel> PlayerIndexes { get; set; }
@@ -95,19 +100,19 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         public bool IsRight { get; set; }
         public bool IsLeft { get; set; }
         public string RevertDeviceId { get; set; }
-        public bool HasLed => SelectedGamepad.Features.HasFlag(GamepadFeaturesFlag.Led);
+        public bool HasLed => (SelectedGamepad.Features & GamepadFeaturesFlag.Led) != 0;
         public bool CanClearLed => SelectedGamepad.Name.ContainsIgnoreCase("DualSense");
 
         public event Action NotifyChangesEvent;
-        
+
         public string ChosenProfile
         {
-            get => _chosenProfile;
+            get;
             set
             {
                 // When you select a profile, the settings from the profile will be applied.
                 // To save the settings, you still need to click the apply button
-                _chosenProfile = value;
+                field = value;
                 LoadProfile();
                 OnPropertyChanged();
             }
@@ -115,10 +120,10 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         public object ConfigViewModel
         {
-            get => _configViewModel;
+            get;
             set
             {
-                _configViewModel = value;
+                field = value;
 
                 VisualStick.UpdateConfig(value);
 
@@ -714,7 +719,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 config = new StandardControllerInputConfig
                 {
                     Version = InputConfig.CurrentVersion,
-                    Backend = InputBackendType.GamepadSDL2,
+                    Backend = InputBackendType.GamepadSDL3,
                     Id = id,
                     Name = name,
                     ControllerType = ControllerType.ProController,

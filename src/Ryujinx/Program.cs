@@ -19,16 +19,17 @@ using Ryujinx.Common.Logging;
 using Ryujinx.Common.SystemInterop;
 using Ryujinx.Graphics.Vulkan.MoltenVK;
 using Ryujinx.Headless;
-using Ryujinx.SDL2.Common;
+using Ryujinx.SDL3.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace Ryujinx.Ava
 {
-    internal partial class Program
+    internal static class Program
     {
         public static double WindowScaleFactor { get; set; }
         public static double DesktopScaleFactor { get; set; } = 1.0;
@@ -40,19 +41,36 @@ namespace Ryujinx.Ava
         public static bool UseHardwareAcceleration { get; private set; }
         public static string BackendThreadingArg { get; private set; }
 
-        [LibraryImport("user32.dll", SetLastError = true)]
-        public static partial int MessageBoxA(nint hWnd, [MarshalAs(UnmanagedType.LPStr)] string text, [MarshalAs(UnmanagedType.LPStr)] string caption, uint type);
-
         private const uint MbIconwarning = 0x30;
 
         public static int Main(string[] args)
         {
             Version = ReleaseInformation.Version;
-
-            if (OperatingSystem.IsWindows() && !OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+            
+            if (OperatingSystem.IsWindows())
             {
-                _ = MessageBoxA(nint.Zero, "You are running an outdated version of Windows.\n\nRyujinx supports Windows 10 version 20H1 and newer.\n", $"Ryujinx {Version}", MbIconwarning);
-                return 0;
+                if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                {
+                    _ = Win32NativeInterop.MessageBoxA(nint.Zero, "You are running an outdated version of Windows.\n\nRyujinx supports Windows 10 version 20H1 and newer.\n", $"Ryujinx {Version}", MbIconwarning);
+                    return 0;
+                }
+
+                if (Environment.CurrentDirectory.StartsWithIgnoreCase("C:\\Program Files") || 
+                    Environment.CurrentDirectory.StartsWithIgnoreCase("C:\\Program Files (x86)"))
+                {
+                    _ = Win32NativeInterop.MessageBoxA(nint.Zero, "Ryujinx is not intended to be run from the Program Files folder. Please move it out and relaunch.", $"Ryujinx {Version}", MbIconwarning);
+                    return 0;
+                }
+
+                // The names of everything here makes no sense for what this actually checks for. Thanks, Microsoft.
+                // If you can't tell by the error string,
+                // this actually checks if the current process was run with "Run as Administrator"
+                // ...but this reads like it checks if the current is in/has the Windows admin role? lol
+                if (new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
+                {
+                    _ = Win32NativeInterop.MessageBoxA(nint.Zero, "Ryujinx is not intended to be run as administrator.", $"Ryujinx {Version}", MbIconwarning);
+                    return 0;
+                }
             }
 
             PreviewerDetached = true;
@@ -131,8 +149,8 @@ namespace Ryujinx.Ava
             // Initialize Discord integration.
             DiscordIntegrationModule.Initialize();
 
-            // Initialize SDL2 driver
-            SDL2Driver.MainThreadDispatcher = action => Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Input);
+            // Initialize SDL3 driver
+            SDL3Driver.MainThreadDispatcher = action => Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Input);
 
             ReloadConfig();
 
@@ -178,22 +196,26 @@ namespace Ryujinx.Ava
             return gameDir;
         }
 
-        public static void ReloadConfig()
+        public static void ReloadConfig(bool isRunGameWithCustomConfig = false)
         {
 
             string localConfigurationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ReleaseInformation.ConfigName);
             string appDataConfigurationPath = Path.Combine(AppDataManager.BaseDirPath, ReleaseInformation.ConfigName);
 
-            // Now load the configuration as the other subsystems are now registered
-            if (File.Exists(localConfigurationPath))
-            {
-                ConfigurationPath = localConfigurationPath;
-            }
-            else if (File.Exists(appDataConfigurationPath))
-            {
-                ConfigurationPath = appDataConfigurationPath;
-            }
 
+            if (!isRunGameWithCustomConfig) // To return settings from the game folder if the user configuration exists
+            {
+                // Now load the configuration as the other subsystems are now registered
+                if (File.Exists(localConfigurationPath))
+                {
+                    ConfigurationPath = localConfigurationPath;
+                }
+                else if (File.Exists(appDataConfigurationPath))
+                {
+                    ConfigurationPath = appDataConfigurationPath;
+                }
+            }
+        
             if (ConfigurationPath == null)
             {
                 // No configuration, we load the default values and save it to disk
@@ -214,6 +236,8 @@ namespace Ryujinx.Ava
                 else
                 {
                     Logger.Warning?.PrintMsg(LogClass.Application, $"Failed to load config! Loading the default config instead.\nFailed config location: {ConfigurationPath}");
+
+                    ConfigurationFileFormat.RenameInvalidConfigFile(ConfigurationPath);
 
                     ConfigurationState.Instance.LoadDefault();
                 }
@@ -278,16 +302,16 @@ namespace Ryujinx.Ava
 
             // Check if region was overridden. 
             if (CommandLineState.OverrideSystemRegion is not null)
-                if (Enum.TryParse(CommandLineState.OverrideSystemRegion, true, out HLE.HOS.SystemState.RegionCode result))
+                if (Enum.TryParse(CommandLineState.OverrideSystemRegion, true, out Region result))
                 {
-                    ConfigurationState.Instance.System.Region.Value = result.ToUI();
+                    ConfigurationState.Instance.System.Region.Value = result;
                 }
 
             //Check if language was overridden. 
             if (CommandLineState.OverrideSystemLanguage is not null)
-                if (Enum.TryParse(CommandLineState.OverrideSystemLanguage, true, out HLE.HOS.SystemState.SystemLanguage result))
+                if (Enum.TryParse(CommandLineState.OverrideSystemLanguage, true, out Language result))
                 {
-                    ConfigurationState.Instance.System.Language.Value = result.ToUI();
+                    ConfigurationState.Instance.System.Language.Value = result;
                 }
 
             // Check if hardware-acceleration was overridden.

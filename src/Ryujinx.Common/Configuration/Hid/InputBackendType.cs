@@ -8,6 +8,7 @@ namespace Ryujinx.Common.Configuration.Hid
     {
         Invalid,
         WindowKeyboard,
-        GamepadSDL2,
+        GamepadSDL2, //backcompat
+        GamepadSDL3,
     }
 }

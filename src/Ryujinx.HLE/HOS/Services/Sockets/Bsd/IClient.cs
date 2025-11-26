@@ -1165,5 +1165,11 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd
 
             return WriteBsdResult(context, newSockFd, errno);
         }
+
+
+        public override void DestroyAtExit()
+        {
+            _context?.Dispose();
+        }
     }
 }

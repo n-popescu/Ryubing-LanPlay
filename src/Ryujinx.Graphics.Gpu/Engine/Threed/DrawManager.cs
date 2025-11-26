@@ -451,7 +451,7 @@ namespace Ryujinx.Graphics.Gpu.Engine.Threed
 
             // TODO: Confirm behaviour on hardware.
             // When this is active, the origin appears to be on the bottom.
-            if (_state.State.YControl.HasFlag(YControl.NegateY))
+            if ((_state.State.YControl & YControl.NegateY) != 0)
             {
                 dstY0 -= dstHeight;
             }
@@ -849,8 +849,8 @@ namespace Ryujinx.Graphics.Gpu.Engine.Threed
 
                     FormatInfo dsFormat = _state.State.RtDepthStencilState.Format.Convert();
 
-                    bool hasDepth = dsFormat.Format.HasDepth();
-                    bool hasStencil = dsFormat.Format.HasStencil();
+                    bool hasDepth = dsFormat.Format.HasDepth;
+                    bool hasStencil = dsFormat.Format.HasStencil;
 
                     if (hasStencil && (!clearStencil || (clearAffectedByStencilMask && _state.State.StencilTestState.FrontMask != 0xff)))
                     {

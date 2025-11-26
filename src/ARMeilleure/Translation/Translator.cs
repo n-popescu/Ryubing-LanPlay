@@ -186,6 +186,7 @@ namespace ARMeilleure.Translation
 
             Statistics.StartTimer();
 
+            context.ResetCallDepth();
             ulong nextAddr = func.Execute(Stubs.ContextWrapper, context);
 
             Statistics.StopTimer(address);
@@ -260,6 +261,7 @@ namespace ARMeilleure.Translation
 
             Logger.StartPass(PassName.Translation);
 
+            InstEmitFlowHelper.EmitCallDepthCheckAndIncrement(context, Const(address));
             EmitSynchronization(context);
 
             if (blocks[0].Address != address)
@@ -412,7 +414,7 @@ namespace ARMeilleure.Translation
                         {
                             context.SyncQcFlag();
 
-                            if (block.Branch != null && !block.Branch.Exit && block.Branch.Address <= block.Address)
+                            if (block.Branch is { Exit: false } && block.Branch.Address <= block.Address)
                             {
                                 EmitSynchronization(context);
                             }
@@ -429,14 +431,14 @@ namespace ARMeilleure.Translation
                         {
                             lblPredicateSkip = Label();
 
-                            InstEmitFlowHelper.EmitCondBranch(context, lblPredicateSkip, context.CurrentIfThenBlockCond.Invert());
+                            InstEmitFlowHelper.EmitCondBranch(context, lblPredicateSkip, context.CurrentIfThenBlockCond.Inverse);
                         }
 
-                        if (opCode is OpCode32 op && op.Cond < Condition.Al)
+                        if (opCode is OpCode32 { Cond: < Condition.Al } op)
                         {
                             lblPredicateSkip = Label();
 
-                            InstEmitFlowHelper.EmitCondBranch(context, lblPredicateSkip, op.Cond.Invert());
+                            InstEmitFlowHelper.EmitCondBranch(context, lblPredicateSkip, op.Cond.Inverse);
                         }
 
                         if (opCode.Instruction.Emitter != null)

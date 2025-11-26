@@ -10,6 +10,12 @@ namespace Ryujinx.UI.Views.Input
 {
     public partial class LedInputView : RyujinxControl<LedInputViewModel>
     {
+        //Fix compiler warning
+        public LedInputView()
+        {
+            
+        }
+        
         public LedInputView(ControllerInputViewModel viewModel)
         {
             ViewModel = new LedInputViewModel

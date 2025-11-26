@@ -6,8 +6,8 @@ namespace Ryujinx.Ava.UI.Models
 {
     public partial class ModModel : BaseModel
     {
-        [ObservableProperty] private bool _enabled;
-
+        [ObservableProperty]
+        public partial bool Enabled { get; set; }
         public bool InSd { get; }
         public string Path { get; }
         public string Name { get; }

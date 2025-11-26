@@ -18,6 +18,8 @@ build/
 [Oo]bj/
 AppDir/
 publish_appimage/
+publish_ava/
+publish_tmp_ava/
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
