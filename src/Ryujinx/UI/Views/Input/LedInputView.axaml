@@ -29,7 +29,7 @@
                 SmallChange="0.25"
                 Minimum="0"
                 Maximum="10" />
-            <TextBlock Width="40" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding RainbowSpeedText}" />
+            <TextBlock Width="40" Margin="5,0,0,1" VerticalAlignment="Center" Text="{Binding RainbowSpeedText}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" IsEnabled="{Binding ShowLedColorPicker}">
             <TextBlock VerticalAlignment="Center" Text="{ext:Locale ControllerSettingsLedColor}" />
