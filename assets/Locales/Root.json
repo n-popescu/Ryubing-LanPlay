@@ -6781,9 +6781,9 @@
         "ar_SA": "تم العثور على التكوين:\n\nالاسم:\t{0}\nGUID:\t{1}\n\n في انتظار اتصال وحدة التحكم...",
         "de_DE": "Konfiguration gefunden:\n\nName:\t{0}\nGUID:\t{1}\n\nWarte auf Controller-Verbindung…",
         "el_GR": "Διαμόρφωση εντοπίστηκε:\n\nΌνομα:\t{0}\nGUID:\t{1}\n\nΑναμονή για σύνδεση χειριστηρίου…",
-        "en_US": "Configuration Found:\n\nName:\t{0}\nGUID:\t{1}\n\nWaiting for controller connection...",
-        "es_ES": "Configuración Encontrada:\n\nNombre:\t{0}\nGUID:\t{1}\n\nEsperando la conexión del controlador...",
-        "fr_FR": "Configuration Trouvée :\n\nNom :\t{0}\nGUID :\t{1}\n\nEn attente de connexion de la manette...",
+        "en_US": "Configuration Found:\n\nName:\t{0}\nGUID:\t{1}\n\nWaiting for Controller Connection...",
+        "es_ES": "Configuración Encontrada:\n\nNombre:\t{0}\nGUID:\t{1}\n\nEsperando la Conexión del Controlador...",
+        "fr_FR": "Configuration Trouvée :\n\nNom :\t{0}\nGUID :\t{1}\n\nEn Attente de Connexion de la Manette...",
         "he_IL": "הגדרה נמצאה:\n\nשם:\t{0}\nGUID:\t{1}\n\n ממתין לחיבור בקר…",
         "it_IT": "Configurazione trovata:\n\nNome:\t{0}\nGUID:\t{1}\n\nIn attesa della connessione del controller...",
         "ja_JP": "構成が見つかりました：\n\n名前：\t{0}\nGUID：\t{1}\n\nコントローラー接続を待機しています…",
@@ -7023,31 +7023,6 @@
         "uk_UA": "Додати",
         "zh_CN": "新建",
         "zh_TW": "新增"
-      }
-    },
-    {
-      "ID": "ControllerSettingsDisableDeviceForSaving",
-      "Translations": {
-        "ar_SA": "تم إعداد التحكم.\n\nفي انتظار اتصال وحدة التحكم...",
-        "de_DE": "Steuerung konfiguriert.\n\nWarten auf die Verbindung des Controllers...",
-        "el_GR": "Η διαχείριση έχει ρυθμιστεί.\n\nΑναμένεται σύνδεση του χειριστηρίου...",
-        "en_US": "Control configured.\n\nWaiting for controller connection...",
-        "es_ES": "Control configurado.\n\nEsperando la conexión del controlador...",
-        "fr_FR": "Contrôle configuré.\n\nEn attente de la connexion de la manette...",
-        "he_IL": "השליטה הוגדרה.\n\nממתין לחיבור הבקר...",
-        "it_IT": "Controllo configurato.\n\nIn attesa della connessione del controller...",
-        "ja_JP": "コントロールが設定されました。\n\nコントローラーの接続を待っています...",
-        "ko_KR": "제어가 설정되었습니다.\n\n컨트롤러 연결 대기 중...",
-        "no_NO": "Kontroll konfigurert.\n\nVenter på tilkobling av kontroller...",
-        "pl_PL": "Sterowanie skonfigurowane.\n\nOczekiwanie na połączenie kontrolera...",
-        "pt_BR": "Controle configurado.\n\nAguardando conexão do controle...",
-        "ru_RU": "Управление настроено.\n\nОжидается подключение контроллера...",
-        "sv_SE": "Kontroll konfigurerad.\n\nVäntar på anslutning av kontrollen...",
-        "th_TH": "การควบคุมได้รับการตั้งค่าแล้ว\n\nกำลังรอการเชื่อมต่อคอนโทรลเลอร์...",
-        "tr_TR": "Kontrol yapılandırıldı.\n\nKontrolcü bağlantısı bekleniyor...",
-        "uk_UA": "Керування налаштовано.\n\nОчікується підключення контролера...",
-        "zh_CN": "已配置控制器。\n\n正在等待控制器连接...",
-        "zh_TW": "控制已設定。\n\n等待控制器連接..."
       }
     },
     {
