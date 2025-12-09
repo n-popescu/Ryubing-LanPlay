@@ -7276,7 +7276,7 @@
       }
     },
     {
-      "ID": "ControllerSettingsDPadUp",
+      "ID": "ControllerSettingsUp",
       "Translations": {
         "ar_SA": "اعلى",
         "de_DE": "Hoch",
@@ -7287,7 +7287,7 @@
         "he_IL": "מעלה",
         "it_IT": "Su",
         "ja_JP": "上",
-        "ko_KR": "↑",
+        "ko_KR": "위",
         "no_NO": "Opp",
         "pl_PL": "Góra",
         "pt_BR": "Cima",
@@ -7301,7 +7301,7 @@
       }
     },
     {
-      "ID": "ControllerSettingsDPadDown",
+      "ID": "ControllerSettingsDown",
       "Translations": {
         "ar_SA": "أسفل",
         "de_DE": "Runter",
@@ -7312,7 +7312,7 @@
         "he_IL": "מטה",
         "it_IT": "Giù",
         "ja_JP": "下",
-        "ko_KR": "↓",
+        "ko_KR": "아래",
         "no_NO": "Ned",
         "pl_PL": "Dół",
         "pt_BR": "Baixo",
@@ -7326,7 +7326,7 @@
       }
     },
     {
-      "ID": "ControllerSettingsDPadLeft",
+      "ID": "ControllerSettingsLeft",
       "Translations": {
         "ar_SA": "يسار",
         "de_DE": "Links",
@@ -7337,7 +7337,7 @@
         "he_IL": "שמאלה",
         "it_IT": "Sinistra",
         "ja_JP": "左",
-        "ko_KR": "←",
+        "ko_KR": "왼쪽",
         "no_NO": "Venstre",
         "pl_PL": "Lewo",
         "pt_BR": "Esquerda",
@@ -7351,7 +7351,7 @@
       }
     },
     {
-      "ID": "ControllerSettingsDPadRight",
+      "ID": "ControllerSettingsRight",
       "Translations": {
         "ar_SA": "يمين",
         "de_DE": "Rechts",
@@ -7362,7 +7362,7 @@
         "he_IL": "ימינה",
         "it_IT": "Destra",
         "ja_JP": "右",
-        "ko_KR": "→",
+        "ko_KR": "오른쪽",
         "no_NO": "Høyre",
         "pl_PL": "Prawo",
         "pt_BR": "Direita",
@@ -7398,106 +7398,6 @@
         "uk_UA": "Натискання ⌾",
         "zh_CN": "按下 ⌾",
         "zh_TW": "按下 ⌾"
-      }
-    },
-    {
-      "ID": "ControllerSettingsStickUp",
-      "Translations": {
-        "ar_SA": "فوق",
-        "de_DE": "Hoch",
-        "el_GR": "Πάνω",
-        "en_US": "Up",
-        "es_ES": "Arriba",
-        "fr_FR": "Haut",
-        "he_IL": "למעלה",
-        "it_IT": "Su",
-        "ja_JP": "上",
-        "ko_KR": "↑",
-        "no_NO": "Opp",
-        "pl_PL": "Góra ",
-        "pt_BR": "Cima",
-        "ru_RU": "Вверх",
-        "sv_SE": "Upp",
-        "th_TH": "ขึ้น",
-        "tr_TR": "Yukarı",
-        "uk_UA": "Уверх",
-        "zh_CN": "上",
-        "zh_TW": "上"
-      }
-    },
-    {
-      "ID": "ControllerSettingsStickDown",
-      "Translations": {
-        "ar_SA": "أسفل",
-        "de_DE": "Runter",
-        "el_GR": "Κάτω",
-        "en_US": "Down",
-        "es_ES": "Abajo",
-        "fr_FR": "Bas",
-        "he_IL": "למטה",
-        "it_IT": "Giù",
-        "ja_JP": "下",
-        "ko_KR": "↓",
-        "no_NO": "Ned",
-        "pl_PL": "Dół ",
-        "pt_BR": "Baixo",
-        "ru_RU": "Вниз",
-        "sv_SE": "Ner",
-        "th_TH": "ลง",
-        "tr_TR": "Aşağı",
-        "uk_UA": "Униз",
-        "zh_CN": "下",
-        "zh_TW": "下"
-      }
-    },
-    {
-      "ID": "ControllerSettingsStickLeft",
-      "Translations": {
-        "ar_SA": "يسار",
-        "de_DE": "Links",
-        "el_GR": "Αριστερά",
-        "en_US": "Left",
-        "es_ES": "Izquierda",
-        "fr_FR": "Gauche",
-        "he_IL": "שמאלה",
-        "it_IT": "Sinistra",
-        "ja_JP": "左",
-        "ko_KR": "←",
-        "no_NO": "Venstre",
-        "pl_PL": "Lewo",
-        "pt_BR": "Esquerda",
-        "ru_RU": "Влево",
-        "sv_SE": "Vänster",
-        "th_TH": "ซ้าย",
-        "tr_TR": "Sol",
-        "uk_UA": "Ліворуч",
-        "zh_CN": "左",
-        "zh_TW": "左"
-      }
-    },
-    {
-      "ID": "ControllerSettingsStickRight",
-      "Translations": {
-        "ar_SA": "يمين",
-        "de_DE": "Rechts",
-        "el_GR": "Δεξιά",
-        "en_US": "Right",
-        "es_ES": "Derecha",
-        "fr_FR": "Droite",
-        "he_IL": "ימינה",
-        "it_IT": "Destra",
-        "ja_JP": "右",
-        "ko_KR": "→",
-        "no_NO": "Høyre",
-        "pl_PL": "Prawo",
-        "pt_BR": "Direita",
-        "ru_RU": "Вправо",
-        "sv_SE": "Höger",
-        "th_TH": "ขวา",
-        "tr_TR": "Sağ",
-        "uk_UA": "Праворуч",
-        "zh_CN": "右",
-        "zh_TW": "右"
       }
     },
     {

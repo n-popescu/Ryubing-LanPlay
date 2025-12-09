@@ -140,7 +140,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsStickUp}"
+                                    Text="{ext:Locale ControllerSettingsUp}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="LeftStickUp">
                                     <TextBlock
@@ -157,7 +157,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsStickDown}"
+                                    Text="{ext:Locale ControllerSettingsDown}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="LeftStickDown">
                                     <TextBlock
@@ -174,7 +174,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsStickLeft}"
+                                    Text="{ext:Locale ControllerSettingsLeft}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="LeftStickLeft">
                                     <TextBlock
@@ -191,7 +191,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsStickRight}"
+                                    Text="{ext:Locale ControllerSettingsRight}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="LeftStickRight">
                                     <TextBlock
@@ -227,7 +227,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsDPadUp}"
+                                    Text="{ext:Locale ControllerSettingsUp}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="DpadUp">
                                     <TextBlock
@@ -244,7 +244,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsDPadDown}"
+                                    Text="{ext:Locale ControllerSettingsDown}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="DpadDown">
                                     <TextBlock
@@ -261,7 +261,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsDPadLeft}"
+                                    Text="{ext:Locale ControllerSettingsLeft}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="DpadLeft">
                                     <TextBlock
@@ -278,7 +278,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsDPadRight}"
+                                    Text="{ext:Locale ControllerSettingsRight}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="DpadRight">
                                     <TextBlock
@@ -654,7 +654,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsStickUp}"
+                                    Text="{ext:Locale ControllerSettingsUp}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="RightStickUp">
                                     <TextBlock
@@ -671,7 +671,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsStickDown}"
+                                    Text="{ext:Locale ControllerSettingsDown}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="RightStickDown">
                                     <TextBlock
@@ -688,7 +688,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsStickLeft}"
+                                    Text="{ext:Locale ControllerSettingsLeft}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="RightStickLeft">
                                     <TextBlock
@@ -705,7 +705,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsStickRight}"
+                                    Text="{ext:Locale ControllerSettingsRight}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="RightStickRight">
                                     <TextBlock

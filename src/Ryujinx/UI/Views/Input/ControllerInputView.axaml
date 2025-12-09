@@ -240,7 +240,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsDPadUp}"
+                                    Text="{ext:Locale ControllerSettingsUp}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="DpadUp">
                                     <TextBlock
@@ -257,7 +257,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsDPadDown}"
+                                    Text="{ext:Locale ControllerSettingsDown}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="DpadDown">
                                     <TextBlock
@@ -274,7 +274,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsDPadLeft}"
+                                    Text="{ext:Locale ControllerSettingsLeft}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="DpadLeft">
                                     <TextBlock
@@ -291,7 +291,7 @@
                                     Width="120"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{ext:Locale ControllerSettingsDPadRight}"
+                                    Text="{ext:Locale ControllerSettingsRight}"
                                     TextAlignment="Center" />
                                 <ToggleButton Name="DpadRight">
                                     <TextBlock
