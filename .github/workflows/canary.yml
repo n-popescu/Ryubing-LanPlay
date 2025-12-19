@@ -1,4 +1,4 @@
-name: Canary release job
+name: Canary CI
 
 on:
   workflow_dispatch:
@@ -19,7 +19,6 @@ concurrency: release
 env:
   POWERSHELL_TELEMETRY_OPTOUT: 1
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
-  RYUJINX_BASE_VERSION: "1.3"
   RYUJINX_TARGET_RELEASE_CHANNEL_NAME: "canary"
   RELEASE: 1
 
@@ -48,10 +47,10 @@ jobs:
         run: |
           sudo apt install -y 7zip
 
-      - name: Install GitLabCli
+      - name: Install gli
         run: |
           mkdir -p $HOME/.bin
-          gh release download -R GreemDev/GLI -O gli -p 'GitLabCli-linux_x64' 1.4.1
+          gh release download -R GreemDev/GLI -O gli -p 'gli-linux-x64'
           chmod +x gli
           mv gli $HOME/.bin/
           echo "$HOME/.bin" >> $GITHUB_PATH
@@ -61,9 +60,10 @@ jobs:
       - name: Get version info
         id: version_info
         run: |
-          echo "build_version=${{ env.RYUJINX_BASE_VERSION }}.${{ github.run_number }}" >> $GITHUB_OUTPUT
-          echo "prev_build_version=${{ env.RYUJINX_BASE_VERSION }}.$((${{ github.run_number }} - 1))" >> $GITHUB_OUTPUT
+          echo "build_version=$(gli get-next-version -c Canary -R)" >> $GITHUB_OUTPUT
+          echo "prev_build_version=$(gli get-current-version -c Canary -R)" >> $GITHUB_OUTPUT
           echo "git_short_hash=$(git rev-parse --short "${{ github.sha }}")" >> $GITHUB_OUTPUT
+          echo "commit_message=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Configure for release
@@ -89,8 +89,8 @@ jobs:
           rm libarmeilleure-jitsupport.dylib
           7z a ../release_output/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.zip ../publish
           popd
-          
-          gli --access-token=${{ secrets.GITLAB_TOKEN }} --project=ryubing/canary --command=UploadGenericPackage "Ryubing-Canary|${{ steps.version_info.outputs.build_version }}|release_output/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.zip"
+
+          gli upload-generic-package -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/canary -n Ryubing-Canary -v ${{ steps.version_info.outputs.build_version }} -p release_output/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.zip
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -104,7 +104,7 @@ jobs:
           tar -czvf ../release_output/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.tar.gz ../publish
           popd
 
-          gli --access-token=${{ secrets.GITLAB_TOKEN }} --project=ryubing/canary --command=UploadGenericPackage "Ryubing-Canary|${{ steps.version_info.outputs.build_version }}|release_output/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.tar.gz"
+          gli upload-generic-package -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/canary -n Ryubing-Canary -v ${{ steps.version_info.outputs.build_version }} -p release_output/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.tar.gz
         shell: bash
 
       - name: Build AppImage (Linux)
@@ -140,8 +140,8 @@ jobs:
           pushd publish_appimage
           mv Ryujinx.AppImage ../release_output/ryujinx-canary-$BUILD_VERSION-$ARCH_NAME.AppImage
           popd
-
-          gli --access-token=${{ secrets.GITLAB_TOKEN }} --project=ryubing/canary --command=UploadGenericPackage "Ryubing-Canary|${{ steps.version_info.outputs.build_version }}|release_output/ryujinx-canary-$BUILD_VERSION-$ARCH_NAME.AppImage"
+          
+          gli upload-generic-package -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/canary -n Ryubing-Canary -v ${{ steps.version_info.outputs.build_version }} -p release_output/ryujinx-canary-$BUILD_VERSION-$ARCH_NAME.AppImage
         shell: bash
 
   macos_release:
@@ -160,10 +160,10 @@ jobs:
           chmod +x llvm.sh
           sudo ./llvm.sh 17
           
-      - name: Install GitLabCli
+      - name: Install gli
         run: |
           mkdir -p $HOME/.bin
-          gh release download -R GreemDev/GLI -O gli -p 'GitLabCli-linux_x64' 1.4.1
+          gh release download -R GreemDev/GLI -O gli -p 'gli-linux-x64'
           chmod +x gli
           mv gli $HOME/.bin/
           echo "$HOME/.bin" >> $GITHUB_PATH
@@ -184,9 +184,10 @@ jobs:
       - name: Get version info
         id: version_info
         run: |
-          echo "build_version=${{ env.RYUJINX_BASE_VERSION }}.${{ github.run_number }}" >> $GITHUB_OUTPUT
-          echo "prev_build_version=${{ env.RYUJINX_BASE_VERSION }}.$((${{ github.run_number }} - 1))" >> $GITHUB_OUTPUT
+          echo "build_version=$(gli get-next-version -c Canary -R)" >> $GITHUB_OUTPUT
+          echo "prev_build_version=$(gli get-current-version -c Canary -R)" >> $GITHUB_OUTPUT
           echo "git_short_hash=$(git rev-parse --short "${{ github.sha }}")" >> $GITHUB_OUTPUT
+        shell: bash
 
       - name: Configure for release
         run: |
@@ -201,7 +202,7 @@ jobs:
       - name: Publish macOS Ryujinx
         run: |
           ./distribution/macos/create_macos_build_ava.sh . publish_tmp_ava publish_ava ./distribution/macos/entitlements.xml "${{ steps.version_info.outputs.build_version }}" "${{ steps.version_info.outputs.git_short_hash }}" Release 1
-          gli --access-token=${{ secrets.GITLAB_TOKEN }} --project=ryubing/canary --command=UploadGenericPackage "Ryubing-Canary|${{ steps.version_info.outputs.build_version }}|publish_ava/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-macos_universal.app.tar.gz"
+          gli upload-generic-package -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/canary -n Ryubing-Canary -v ${{ steps.version_info.outputs.build_version }} -p publish_ava/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-macos_universal.app.tar.gz
 
   create_gitlab_release:
     name: Create GitLab Release
@@ -211,37 +212,42 @@ jobs:
       - release
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Get version info
-        id: version_info
-        run: |
-          echo "build_version=${{ env.RYUJINX_BASE_VERSION }}.${{ github.run_number }}" >> $GITHUB_OUTPUT
-          echo "prev_build_version=${{ env.RYUJINX_BASE_VERSION }}.$((${{ github.run_number }} - 1))" >> $GITHUB_OUTPUT
-          echo "git_short_hash=$(git rev-parse --short "${{ github.sha }}")" >> $GITHUB_OUTPUT
-        shell: bash
-
-      - name: Install GitLabCli
+        
+      - name: Install gli
         run: |
           mkdir -p $HOME/.bin
-          gh release download -R GreemDev/GLI -O gli -p 'GitLabCli-linux_x64' 1.4.1
+          gh release download -R GreemDev/GLI -O gli -p 'gli-linux-x64'
           chmod +x gli
           mv gli $HOME/.bin/
           echo "$HOME/.bin" >> $GITHUB_PATH
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Get version info
+        id: version_info
+        run: |
+          echo "build_version=$(gli get-next-version -c Canary -R)" >> $GITHUB_OUTPUT
+          echo "prev_build_version=$(gli get-current-version -c Canary -R)" >> $GITHUB_OUTPUT
+          echo "git_short_hash=$(git rev-parse --short "${{ github.sha }}")" >> $GITHUB_OUTPUT
+          echo "commit_message=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+        shell: bash
           
       - name: Create tag
         run: |
-          gli --access-token=${{ secrets.GITLAB_TOKEN }} --project=ryubing/ryujinx --command=CreateTag "Canary-${{ steps.version_info.outputs.build_version }}|${{ steps.version_info.outputs.git_short_hash }}"
+          gli create-tag -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/ryujinx -n Canary-${{ steps.version_info.outputs.build_version }} -r ${{ steps.version_info.outputs.git_short_hash }} -c "${{ steps.version_info.outputs.commit_message }}"
           
       - name: Create release
         run: |
-          gli --access-token=${{ secrets.GITLAB_TOKEN }} --project=ryubing/canary --command=CreateReleaseFromGenericPackageFiles "Ryubing-Canary|${{ steps.version_info.outputs.build_version }}|main|Canary ${{ steps.version_info.outputs.build_version }}|**Full Changelog:** [${{ steps.version_info.outputs.prev_build_version }}...${{ steps.version_info.outputs.build_version }}](https://git.ryujinx.app/ryubing/ryujinx/-/compare/Canary-${{ steps.version_info.outputs.prev_build_version }}...Canary-${{ steps.version_info.outputs.build_version }})"
+          gli create-release-from-generic-package-files -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/canary -n Ryubing-Canary -v ${{ steps.version_info.outputs.build_version }} -r main -t "Canary ${{ steps.version_info.outputs.build_version }}" -b "**Full Changelog:** [${{ steps.version_info.outputs.prev_build_version }}...${{ steps.version_info.outputs.build_version }}](https://git.ryujinx.app/ryubing/ryujinx/-/compare/Canary-${{ steps.version_info.outputs.prev_build_version }}...Canary-${{ steps.version_info.outputs.build_version }})"
 
       - name: Send notification webhook
         run: |
-          gli --access-token=${{ secrets.GITLAB_TOKEN }} --project=ryubing/canary --command=SendUpdateMessage "${{ steps.version_info.outputs.build_version }}|FF4500|${{ secrets.CANARY_DISCORD_WEBHOOK }}|https://avatars.githubusercontent.com/u/192939710?s=200&v=4|false"
+          gli send-update-message -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/canary -t ${{ steps.version_info.outputs.build_version }} -c FF4500 -w ${{ secrets.CANARY_DISCORD_WEBHOOK }} -i https://avatars.githubusercontent.com/u/192939710?s=200&v=4
 
       - name: Notify update server of new builds
         run: |
-          curl 'https://update.ryujinx.app/api/v1/admin/refresh_cache?rc=canary' -X PATCH -H 'accept: */*' -H 'Authorization: ${{ secrets.UPDATE_SERVER_ADMIN_TOKEN }}'
+          gli refresh-version-cache -T ${{ secrets.UPDATE_SERVER_ADMIN_TOKEN }} -c Canary
+          
+      - name: Advance to the next version
+        run: |
+          gli increment-version -T ${{ secrets.UPDATE_SERVER_ADMIN_TOKEN }} -c Canary
