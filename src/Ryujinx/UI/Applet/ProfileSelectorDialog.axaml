@@ -20,7 +20,7 @@
         <StackPanel>
             <ListBox
                 MaxHeight="300"
-                HorizontalAlignment="Stretch"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="Transparent"
                 ItemsSource="{Binding Profiles}"
