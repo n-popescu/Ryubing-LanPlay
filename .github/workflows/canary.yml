@@ -201,8 +201,8 @@ jobs:
 
       - name: Publish macOS Ryujinx
         run: |
-          ./distribution/macos/create_macos_build_ava.sh . publish_tmp_ava publish_ava ./distribution/macos/entitlements.xml "${{ steps.version_info.outputs.build_version }}" "${{ steps.version_info.outputs.git_short_hash }}" Release 1
-          gli upload-generic-package -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/canary -n Ryubing-Canary -v ${{ steps.version_info.outputs.build_version }} -p publish_ava/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-macos_universal.app.tar.gz
+          ./distribution/macos/create_macos_build_ava.sh . publish_tmp_ava publish ./distribution/macos/entitlements.xml "${{ steps.version_info.outputs.build_version }}" "${{ steps.version_info.outputs.git_short_hash }}" Release 1
+          gli upload-generic-package -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/canary -n Ryubing-Canary -v ${{ steps.version_info.outputs.build_version }} -p publish/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-macos_arm64.app.tar.gz
 
   create_gitlab_release:
     name: Create GitLab Release

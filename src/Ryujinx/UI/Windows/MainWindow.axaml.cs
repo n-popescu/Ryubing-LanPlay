@@ -138,7 +138,6 @@ namespace Ryujinx.Ava.UI.Windows
 
             Executor.ExecuteBackgroundAsync(async () =>
             {
-                await ShowIntelMacWarningAsync();
                 if (CommandLineState.FirmwareToInstallPathArg.TryGet(out FilePath fwPath))
                 {
                     if (fwPath is { ExistsAsFile: true, Extension: "xci" or "zip" } || fwPath.ExistsAsDirectory)
@@ -755,20 +754,6 @@ namespace Ryujinx.Ava.UI.Windows
                     LocaleManager.Instance[LocaleKeys.InputDialogOk],
                     (int)Symbol.Checkmark);
             });
-        }
-
-        private static bool _intelMacWarningShown = !RunningPlatform.IsIntelMac;
-
-        public static async Task ShowIntelMacWarningAsync()
-        {
-            if (_intelMacWarningShown)
-                return;
-
-            await Dispatcher.UIThread.InvokeAsync(async () => await ContentDialogHelper.CreateWarningDialog(
-                "Intel Mac Warning",
-                "Intel Macs are not supported and will not work properly.\nIf you continue, do not come to our Discord asking for support;\nand do not report bugs on the GitHub. They will be closed."));
-
-            _intelMacWarningShown = true;
         }
 
         private void AppWindow_OnGotFocus(object sender, GotFocusEventArgs e)
