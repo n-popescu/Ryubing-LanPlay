@@ -18,7 +18,7 @@
     <Design.DataContext>
         <viewModels:UserProfileViewModel />
     </Design.DataContext>
-    <Grid Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowDefinitions="*,Auto">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowDefinitions="*,Auto">
         <StackPanel>
             <ListBox
                 MaxHeight="300"
@@ -126,7 +126,7 @@
         </StackPanel>
         <StackPanel
             Grid.Row="1"
-            Margin="10,30,0,0"
+            Margin="0,30,0,0"
             HorizontalAlignment="Left"
             Orientation="Horizontal"
             Spacing="10">
@@ -136,7 +136,9 @@
             </Button>
             <Button
                 Click="RecoverLostAccounts">
-                <TextBlock Text="{ext:Locale UserProfilesRecoverLostAccounts}" />
+                <TextBlock 
+                    Text="{ext:Locale UserProfilesRecoverLostAccounts}"
+                    ToolTip.Tip="{ext:Locale UserProfilesRecoverLostAccountsToolTip}" />
             </Button>
         </StackPanel>
         <StackPanel

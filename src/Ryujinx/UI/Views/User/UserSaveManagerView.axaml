@@ -19,7 +19,7 @@
     <Design.DataContext>
         <viewModels:UserSaveManagerViewModel />
     </Design.DataContext>
-    <Grid Margin="10" RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*,Auto">
         <Grid
             Grid.Row="0"
             HorizontalAlignment="Stretch" ColumnDefinitions="Auto,*">
