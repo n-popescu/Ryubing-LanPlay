@@ -24,6 +24,7 @@
             <TextBlock Text="{ext:Locale UserProfilesName}" />
             <TextBox
                 Name="NameBox"
+                Margin="0,0,0,5"
                 Width="300"
                 HorizontalAlignment="Stretch"
                 MaxLength="{Binding MaxProfileNameLength}"
