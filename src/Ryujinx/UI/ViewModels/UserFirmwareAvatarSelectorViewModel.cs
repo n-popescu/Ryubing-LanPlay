@@ -29,6 +29,9 @@ namespace Ryujinx.Ava.UI.ViewModels
         public partial ObservableCollection<ProfileImageModel> Images { get; set; }
 
         [ObservableProperty]
+        public partial bool FirmwareFound { get; set; }
+
+        [ObservableProperty]
         public partial Color BackgroundColor { get; set; } = Colors.White;
 
         public UserFirmwareAvatarSelectorViewModel()
