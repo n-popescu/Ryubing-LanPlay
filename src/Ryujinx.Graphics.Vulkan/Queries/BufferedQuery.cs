@@ -155,6 +155,11 @@ namespace Ryujinx.Graphics.Vulkan.Queries
                 }
             }
 
+            if (iterations >= MaxQueryRetries)
+            {
+                Logger.Error?.Print(LogClass.Gpu, $"Error: Query result {_type} timed out. Took more than {MaxQueryRetries} tries.");
+            }
+
             return data;
         }
 
