@@ -3,6 +3,7 @@ using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 using Ryujinx.Ava.UI.Controls;
 using Ryujinx.Ava.UI.Models;
+using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.UI.ViewModels;
 using Ryujinx.HLE.FileSystem;
 using SkiaSharp;
@@ -14,12 +15,14 @@ namespace Ryujinx.Ava.UI.Views.User
     {
         private NavigationDialogHost _parent;
         private TempProfile _profile;
+        private ContentManager _contentManager;
 
         public UserFirmwareAvatarSelectorView(ContentManager contentManager)
         {
             ContentManager = contentManager;
 
             InitializeComponent();
+            AddHandler(Frame.NavigatedToEvent, (s, e) => NavigatedTo(e), RoutingStrategies.Direct);
         }
 
         public UserFirmwareAvatarSelectorView()
@@ -40,9 +43,13 @@ namespace Ryujinx.Ava.UI.Views.User
                 {
                     (_parent, _profile) = ((NavigationDialogHost, TempProfile))arg.Parameter;
                     ContentManager = _parent.ContentManager;
+                    
+                    ((ContentDialog)_parent.Parent).Title = $"{LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle]} - {LocaleManager.Instance[LocaleKeys.ProfileImageSelectionHeader]}";
+
                     if (Program.PreviewerDetached)
                     {
                         ViewModel = new UserFirmwareAvatarSelectorViewModel();
+                        ViewModel.FirmwareFound = ContentManager.GetCurrentFirmwareVersion() != null;
                     }
 
                     DataContext = ViewModel;

@@ -65,6 +65,37 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
                         Source="{Binding Image, Converter={x:Static helpers:BitmapArrayValueConverter.Instance}}" />
+                    <Border
+                        Margin="2"
+                        Height="24"
+                        Width="24"
+                        CornerRadius="12"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Background="{DynamicResource ThemeContentBackgroundColor}">
+                        <Button
+                            MaxHeight="24"
+                            Name="ProfileImageButton"
+                            MaxWidth="24"
+                            MinHeight="24"
+                            MinWidth="24"
+                            CornerRadius="12"
+                            Padding="0">
+                            <Button.Flyout>
+                                <MenuFlyout Placement="Bottom">
+                                    <MenuItem
+                                        Header="{ext:Locale ProfileImageSelectionImportImage}"
+                                        Icon="{ext:Icon fa-solid fa-image}"
+                                        Click="Import_OnClick" />
+                                    <MenuItem
+                                        Header="{ext:Locale ProfileImageSelectionSelectAvatar}"
+                                        Icon="{ext:Icon fa-solid fa-floppy-disk}"
+                                        Click="SelectFirmwareImage_OnClick" />
+                                </MenuFlyout>
+                            </Button.Flyout>
+                            <ui:SymbolIcon Symbol="Edit" />
+                        </Button>
+                    </Border>
                 </Panel>
             </Border>
         </StackPanel>
