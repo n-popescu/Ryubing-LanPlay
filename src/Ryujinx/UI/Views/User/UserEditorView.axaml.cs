@@ -132,7 +132,7 @@ namespace Ryujinx.Ava.UI.Views.User
 
             if (ViewModel.Image == null)
             {
-                DataValidationErrors.SetError(ImageBox, new DataValidationException(LocaleManager.Instance[LocaleKeys.UserProfileEmptyNameError]));
+                DataValidationErrors.SetError(ImageBox, null);
                 ImageBox.BorderBrush = Brushes.Red;
 
                 return;

@@ -18,43 +18,50 @@
         <viewModels:UserFirmwareAvatarSelectorViewModel />
     </Design.DataContext>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowDefinitions="Auto,*,Auto,Auto">
-        <ListBox
+        <Border
             Grid.Row="1"
-            BorderThickness="0"
-            SelectedIndex="{Binding SelectedIndex}"
-            Height="400"
-            ItemsSource="{Binding Images}"
+            Padding="2.5"
+            BorderThickness="1"
+            BorderBrush="{DynamicResource AppListHoverBackgroundColor}"
+            CornerRadius="5"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Center">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel
-                        Orientation="Horizontal"
-                        Margin="0"
-                        HorizontalAlignment="Center" />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.Styles>
-                <Style Selector="ListBoxItem">
-                    <Setter Property="CornerRadius" Value="4" />
-                    <Setter Property="Width" Value="85" />
-                    <Setter Property="MaxWidth" Value="85" />
-                    <Setter Property="MinWidth" Value="85" />
-                </Style>
-                <Style Selector="ListBoxItem /template/ Rectangle#SelectionIndicator">
-                    <Setter Property="MinHeight" Value="70" />
-                </Style>
-            </ListBox.Styles>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Panel
-                        Background="{Binding BackgroundColor}"
-                        Margin="5">
-                        <Image Source="{Binding Data, Converter={x:Static helpers:BitmapArrayValueConverter.Instance}}" />
-                    </Panel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            VerticalAlignment="Stretch">
+            <ListBox
+                Grid.Row="1"
+                Background="Transparent"
+                SelectedIndex="{Binding SelectedIndex}"
+                Height="400"
+                ItemsSource="{Binding Images}">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel
+                            Orientation="Horizontal"
+                            Margin="0"
+                            HorizontalAlignment="Center" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="CornerRadius" Value="4" />
+                        <Setter Property="Width" Value="85" />
+                        <Setter Property="MaxWidth" Value="85" />
+                        <Setter Property="MinWidth" Value="85" />
+                    </Style>
+                    <Style Selector="ListBoxItem /template/ Rectangle#SelectionIndicator">
+                        <Setter Property="MinHeight" Value="70" />
+                    </Style>
+                </ListBox.Styles>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Panel
+                            Background="{Binding BackgroundColor}"
+                            Margin="5">
+                            <Image Source="{Binding Data, Converter={x:Static helpers:BitmapArrayValueConverter.Instance}}" />
+                        </Panel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
         <StackPanel
             Grid.Row="3"
             Orientation="Horizontal"
