@@ -45,13 +45,14 @@
             VerticalAlignment="Stretch"
             Orientation="Vertical">
             <Border
+                Name="ImageBox"
                 BorderBrush="{DynamicResource AppListHoverBackgroundColor}"
                 BorderThickness="1">
                 <Panel>
                     <ui:SymbolIcon
                         FontSize="70"
-                        Width="115"
-                        Height="115"
+                        Width="120"
+                        Height="120"
                         Margin="0"
                         Foreground="{DynamicResource AppListHoverBackgroundColor}"
                         HorizontalAlignment="Stretch"
@@ -59,28 +60,29 @@
                         Symbol="Camera" />
                     <Image
                         Name="ProfileImage"
-                        Width="115"
-                        Height="115"
+                        Width="120"
+                        Height="120"
                         Margin="0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
                         Source="{Binding Image, Converter={x:Static helpers:BitmapArrayValueConverter.Instance}}" />
                     <Border
                         Margin="2"
-                        Height="24"
-                        Width="24"
-                        CornerRadius="12"
+                        Height="27"
+                        Width="27"
+                        CornerRadius="17"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
                         Background="{DynamicResource ThemeContentBackgroundColor}">
                         <Button
-                            MaxHeight="24"
                             Name="ProfileImageButton"
-                            MaxWidth="24"
-                            MinHeight="24"
-                            MinWidth="24"
-                            CornerRadius="12"
+                            MaxHeight="27"
+                            MaxWidth="27"
+                            MinHeight="27"
+                            MinWidth="27"
+                            CornerRadius="17"
                             Padding="0">
+                            <ui:SymbolIcon Symbol="Edit" />
                             <Button.Flyout>
                                 <MenuFlyout Placement="Bottom">
                                     <MenuItem
@@ -93,7 +95,6 @@
                                         Click="SelectFirmwareImage_OnClick" />
                                 </MenuFlyout>
                             </Button.Flyout>
-                            <ui:SymbolIcon Symbol="Edit" />
                         </Button>
                     </Border>
                 </Panel>
@@ -126,16 +127,6 @@
                 Name="DeleteButton"
                 Click="DeleteButton_Click">
                 <TextBlock Text="{ext:Locale UserProfilesDelete}" />
-            </Button>
-            <Button
-                Name="ChangePictureButton"
-                Click="ChangePictureButton_Click">
-                <TextBlock Text="{ext:Locale UserProfilesChangeProfileImage}" />
-            </Button>
-            <Button
-                Name="AddPictureButton"
-                Click="ChangePictureButton_Click">
-                <TextBlock Text="{ext:Locale UserProfilesSetProfileImage}" />
             </Button>
             <Button
                 Name="SaveButton"

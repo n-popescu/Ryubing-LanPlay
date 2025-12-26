@@ -11143,31 +11143,6 @@
       }
     },
     {
-      "ID": "UserProfilesChangeProfileImage",
-      "Translations": {
-        "ar_SA": "تغيير الصورة",
-        "de_DE": "Bild ändern",
-        "el_GR": "Αλλαγή εικόνας",
-        "en_US": "Change Image",
-        "es_ES": "Cambiar imagen",
-        "fr_FR": "Changer l’image",
-        "he_IL": "שנה תמונה",
-        "it_IT": "Cambia immagine",
-        "ja_JP": "画像を変更",
-        "ko_KR": "이미지 변경",
-        "no_NO": "Endre bilde",
-        "pl_PL": "Zmień obraz",
-        "pt_BR": "Mudar imagem",
-        "ru_RU": "Изменить аватар",
-        "sv_SE": "Byt bild",
-        "th_TH": "เปลี่ยนรูปภาพ",
-        "tr_TR": "Resmi değiştir",
-        "uk_UA": "Змінити аватар",
-        "zh_CN": "更换图片",
-        "zh_TW": "變更圖片"
-      }
-    },
-    {
       "ID": "UserProfilesDelete",
       "Translations": {
         "ar_SA": "حذف",
@@ -11265,31 +11240,6 @@
         "uk_UA": "Виберіть аватара",
         "zh_CN": "选择合适的头像图片",
         "zh_TW": "選擇設定檔圖像"
-      }
-    },
-    {
-      "ID": "ProfileImageSelectionNote",
-      "Translations": {
-        "ar_SA": "يمكنك استيراد صورة مخصصة أو اختيار صورة رمزية من النظام.",
-        "de_DE": "Du kannst ein eigenes Profilbild importieren oder einen Avatar aus der Firmware wählen.",
-        "el_GR": "Μπορείτε να εισάγετε εικόνα προφίλ ή να επιλέξετε avatar από το Firmware.",
-        "en_US": "You may import a custom profile image or select an avatar from system firmware.",
-        "es_ES": "Puedes importar una imagen personalizada o seleccionar un avatar del firmware.",
-        "fr_FR": "Vous pouvez importer une image ou choisir un avatar depuis le firmware.",
-        "he_IL": "אתם יכולים לייבא תמונה מותאמת או לבחור אווטאר מהמערכת.",
-        "it_IT": "Puoi importare un'immagine personalizzata o selezionare un avatar dal firmware.",
-        "ja_JP": "カスタム画像をインポートまたはファームウェア内のアバターを選択できます。",
-        "ko_KR": "사용자 지정 이미지를 가져오거나 시스템 펌웨어에서 아바타 선택.",
-        "no_NO": "Du kan importere et bilde eller velge en avatar fra system firmware.",
-        "pl_PL": "Możesz zaimportować obraz lub wybrać awatar z firmware'u.",
-        "pt_BR": "Você pode importar uma imagem personalizada ou selecionar um avatar do Firmware.",
-        "ru_RU": "Вы можете импортировать изображение или выбрать аватар из прошивки.",
-        "sv_SE": "Du kan importera en bild eller välja en avatar från firmware.",
-        "th_TH": "คุณสามารถนำเข้ารูปหรือเลือกรูปจากระบบ",
-        "tr_TR": "Özel profil resmi içeri aktarabilir veya sistem avatarı seçebilirsiniz.",
-        "uk_UA": "Ви можете імпортувати зображення або вибрати аватар з мікропрограми.",
-        "zh_CN": "您可以导入自定义头像或从系统固件中选择预设头像。",
-        "zh_TW": "您可以匯入自訂圖片或從系統韌體選擇大頭貼。"
       }
     },
     {
@@ -19070,26 +19020,26 @@
     {
       "ID": "LoadSupportedImageFormatDialogTitle",
       "Translations": {
-        "ar_SA": "اختر تنسيق صورة مدعوم",
-        "de_DE": "Wählen Sie ein unterstütztes Bildformat",
-        "el_GR": "Επιλέξτε μια υποστηριζόμενη μορφή εικόνας",
-        "en_US": "Choose a supported image format",
-        "es_ES": "Elige un formato de imagen compatible",
-        "fr_FR": "Choisissez un format d'image pris en charge",
-        "he_IL": "בחר פורמט תמונה נתמך",
-        "it_IT": "Scegli un formato immagine supportato",
-        "ja_JP": "サポートされている画像フォーマットを選択",
-        "ko_KR": "지원되는 이미지 형식을 선택하세요",
-        "no_NO": "Velg et støttet bildeformat",
-        "pl_PL": "Wybierz obsługiwany format obrazu",
-        "pt_BR": "Escolha um formato de imagem compatível",
-        "ru_RU": "Выберите поддерживаемый формат изображения",
-        "sv_SE": "Välj ett stödjat bildformat",
-        "th_TH": "เลือกฟอร์แมตรูปภาพที่รองรับ",
-        "tr_TR": "Desteklenen bir resim formatı seçin",
-        "uk_UA": "Виберіть підтримуваний формат зображення",
-        "zh_CN": "选择一个支持的图片格式",
-        "zh_TW": "選擇一個支持的圖片格式"
+        "ar_SA": "اختر إما JPG أو JPEG أو PNG أو BMP",
+        "de_DE": "Wählen Sie entweder ein JPG, JPEG, PNG oder BMP",
+        "el_GR": "Επιλέξτε είτε JPG, JPEG, PNG ή BMP",
+        "en_US": "Choose either a JPG, JPEG, PNG, or BMP",
+        "es_ES": "Elige ya sea JPG, JPEG, PNG o BMP",
+        "fr_FR": "Choisissez soit un JPG, JPEG, PNG ou BMP",
+        "he_IL": "בחר את JPG, JPEG, PNG או BMP",
+        "it_IT": "Scegli tra JPG, JPEG, PNG o BMP",
+        "ja_JP": "JPG、JPEG、PNG、またはBMPのいずれかを選択してください",
+        "ko_KR": "JPG, JPEG, PNG 또는 BMP 중에서 선택하세요",
+        "no_NO": "Velg enten et JPG, JPEG, PNG eller BMP",
+        "pl_PL": "Wybierz JPG, JPEG, PNG lub BMP",
+        "pt_BR": "Escolha JPG, JPEG, PNG ou BMP",
+        "ru_RU": "Выберите либо JPG, JPEG, PNG, или BMP",
+        "sv_SE": "Välj antingen ett JPG, JPEG, PNG eller BMP",
+        "th_TH": "เลือก JPG, JPEG, PNG หรือ BMP",
+        "tr_TR": "JPG, JPEG, PNG veya BMP seçin",
+        "uk_UA": "Виберіть або JPG, JPEG, PNG, або BMP",
+        "zh_CN": "选择 JPG、JPEG、PNG 或 BMP",
+        "zh_TW": "選擇 JPG、JPEG、PNG 或 BMP"
       }
     },
     {
@@ -20840,31 +20790,6 @@
         "uk_UA": "Призупинено",
         "zh_CN": "已暂停",
         "zh_TW": "暫停"
-      }
-    },
-    {
-      "ID": "UserProfilesSetProfileImage",
-      "Translations": {
-        "ar_SA": "تعيين صورة",
-        "de_DE": "Bild festlegen",
-        "el_GR": "Ορισμός Εικόνας",
-        "en_US": "Set Image",
-        "es_ES": "Elegir Imagen",
-        "fr_FR": "Définir l’Image",
-        "he_IL": "הגדר תמונה",
-        "it_IT": "Imposta immagine",
-        "ja_JP": "画像を設定",
-        "ko_KR": "이미지 설정",
-        "no_NO": "Angi bilde",
-        "pl_PL": "Ustaw obraz",
-        "pt_BR": "Definir Imagem",
-        "ru_RU": "Установить аватар",
-        "sv_SE": "Välj bild",
-        "th_TH": "ตั้งค่ารูปภาพ",
-        "tr_TR": "Resim Ayarla",
-        "uk_UA": "Встановити аватар",
-        "zh_CN": "设置图片",
-        "zh_TW": "設定圖片"
       }
     },
     {

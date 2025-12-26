@@ -15,8 +15,7 @@ namespace Ryujinx.Ava.UI.Views.User
     {
         private NavigationDialogHost _parent;
         private TempProfile _profile;
-        private ContentManager _contentManager;
-
+        
         public UserFirmwareAvatarSelectorView(ContentManager contentManager)
         {
             ContentManager = contentManager;

@@ -1,6 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.Platform.Storage;
+using Avalonia.VisualTree;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 using Ryujinx.Ava.Common.Locale;
@@ -8,13 +11,11 @@ using Ryujinx.Ava.UI.Controls;
 using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Ava.UI.Models;
 using Ryujinx.HLE.HOS.Services.Account.Acc;
-using UserProfile = Ryujinx.Ava.UI.Models.UserProfile;
-using Avalonia.Platform.Storage;
 using Ryujinx.HLE.FileSystem;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.IO;
-using Avalonia.VisualTree;
+using UserProfile = Ryujinx.Ava.UI.Models.UserProfile;
 
 namespace Ryujinx.Ava.UI.Views.User
 {
@@ -61,8 +62,6 @@ namespace Ryujinx.Ava.UI.Views.User
                 ((ContentDialog)_parent.Parent).Title = $"{LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle]} - " +
                                                         $"{(_isNewUser ? LocaleManager.Instance[LocaleKeys.UserEditorTitleNewUser] : UserEditorTitle)}";
 
-                AddPictureButton.IsVisible = _isNewUser;
-                ChangePictureButton.IsVisible = !_isNewUser;
                 IdLabel.IsVisible = _profile != null;
                 IdText.IsVisible = _profile != null;
                 if (!_isNewUser && IsDeletable)
@@ -122,6 +121,7 @@ namespace Ryujinx.Ava.UI.Views.User
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             DataValidationErrors.ClearErrors(NameBox);
+            DataValidationErrors.ClearErrors(ImageBox);
 
             if (string.IsNullOrWhiteSpace(ViewModel.Name))
             {
@@ -132,7 +132,8 @@ namespace Ryujinx.Ava.UI.Views.User
 
             if (ViewModel.Image == null)
             {
-                _parent.Navigate(typeof(UserProfileImageSelectorView), (_parent, ViewModel));
+                DataValidationErrors.SetError(ImageBox, new DataValidationException(LocaleManager.Instance[LocaleKeys.UserProfileEmptyNameError]));
+                ImageBox.BorderBrush = Brushes.Red;
 
                 return;
             }
@@ -157,19 +158,6 @@ namespace Ryujinx.Ava.UI.Views.User
             _parent?.GoBack();
         }
 
-        public void SelectProfileImage()
-        {
-            _parent.Navigate(typeof(UserProfileImageSelectorView), (_parent, ViewModel));
-        }
-
-        private void ChangePictureButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (_profile != null || _isNewUser)
-            {
-                SelectProfileImage();
-            }
-        }
-
         private async void SelectFirmwareImage_OnClick(object sender, RoutedEventArgs e)
         {
             if (ViewModel.FirmwareFound)
@@ -180,7 +168,7 @@ namespace Ryujinx.Ava.UI.Views.User
 
         private async void Import_OnClick(object sender, RoutedEventArgs e)
         {
-            var result = await ((Window)this.GetVisualRoot()!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions 
+            var result = await ((Window)this.GetVisualRoot()!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 Title = LocaleManager.Instance[LocaleKeys.LoadSupportedImageFormatDialogTitle],
                 AllowMultiple = false,
@@ -191,30 +179,6 @@ namespace Ryujinx.Ava.UI.Views.User
                         Patterns = ["*.jpg", "*.jpeg", "*.png", "*.bmp"],
                         AppleUniformTypeIdentifiers = ["public.jpeg", "public.png", "com.microsoft.bmp"],
                         MimeTypes = ["image/jpeg", "image/png", "image/bmp"],
-                    },
-                    new("JPG")
-                    {
-                        Patterns = ["*.jpg"],
-                        AppleUniformTypeIdentifiers = ["public.jpeg"],
-                        MimeTypes = ["image/jpeg"],
-                    },
-                    new("JPEG")
-                    {
-                        Patterns = ["*.jpeg"],
-                        AppleUniformTypeIdentifiers = ["public.jpeg"],
-                        MimeTypes = ["image/jpeg"],
-                    },
-                    new("PNG")
-                    {
-                        Patterns = ["*.png"],
-                        AppleUniformTypeIdentifiers = ["public.png"],
-                        MimeTypes = ["image/png"],
-                    },
-                    new("BMP")
-                    {
-                        Patterns = ["*.bmp"],
-                        AppleUniformTypeIdentifiers = ["com.microsoft.bmp"],
-                        MimeTypes = ["image/bmp"],
                     },
                 },
             });
