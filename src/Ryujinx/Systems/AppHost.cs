@@ -610,18 +610,18 @@ namespace Ryujinx.Ava.Systems
 
             _isActive = false;
 
+            DisplaySleep.Restore();
+
+            NpadManager.Dispose();
+            TouchScreenManager.Dispose();
+            Device.Dispose();
+            
             // NOTE: The render loop is allowed to stay alive until the renderer itself is disposed, as it may handle resource dispose.
             // We only need to wait for all commands submitted during the main gpu loop to be processed, unless the GPU event is cancelled.
 
             WaitHandle.WaitAny(new []{_gpuDoneEvent, _gpuCancellationTokenSource.Token.WaitHandle});
             _gpuCancellationTokenSource.Dispose();
             _gpuDoneEvent.Dispose();
-
-            DisplaySleep.Restore();
-
-            NpadManager.Dispose();
-            TouchScreenManager.Dispose();
-            Device.Dispose();
             
             DisposeGpu();
             AppExit?.Invoke(this, EventArgs.Empty);
