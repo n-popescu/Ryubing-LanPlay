@@ -1165,9 +1165,10 @@ namespace Ryujinx.Ava.Systems.AppLibrary
             string metadataFile = Path.Combine(metadataFolder, "metadata.json");
 
             ApplicationMetadata appMetadata;
-
+            
             if (!File.Exists(metadataFile))
             {
+                Logger.Info?.Print(LogClass.Application, $"Metadata file does not exist. Creating metadata for {titleId}...");
                 Directory.CreateDirectory(metadataFolder);
 
                 appMetadata = new ApplicationMetadata();
@@ -1177,12 +1178,12 @@ namespace Ryujinx.Ava.Systems.AppLibrary
 
             try
             {
+                Logger.Debug?.Print(LogClass.Application, $"Deserializing metadata for {titleId}...");
                 appMetadata = JsonHelper.DeserializeFromFile(metadataFile, _serializerContext.ApplicationMetadata);
             }
             catch (JsonException)
             {
                 Logger.Warning?.Print(LogClass.Application, $"Failed to parse metadata json for {titleId}. Loading defaults.");
-
                 appMetadata = new ApplicationMetadata();
             }
 
