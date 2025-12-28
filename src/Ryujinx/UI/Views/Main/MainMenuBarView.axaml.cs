@@ -85,29 +85,16 @@ namespace Ryujinx.Ava.UI.Views.Main
 
         private static IEnumerable<MenuItem> GenerateLanguageMenuItems()
         {
-            const string LocalePath = "Ryujinx/Assets/Locale.json";
+            const string LanguagesPath = "Ryujinx/Assets/Languages.json";
 
-            string languageJson = EmbeddedResources.ReadAllText(LocalePath);
+            string languageJson = EmbeddedResources.ReadAllText(LanguagesPath);
             string currentLanguageCode = LocaleManager.Instance.CurrentLanguageCode;
 
-            LocalesJson locales = JsonHelper.Deserialize(languageJson, LocalesJsonContext.Default.LocalesJson);
+            LanguagesJson languages = JsonHelper.Deserialize(languageJson, LanguagesJsonContext.Default.LanguagesJson);
 
-            foreach (string language in locales.Languages)
+            foreach ((string code, string language) in languages.Languages)
             {
-                int index = locales.Locales.FindIndex(x => x.ID == "Language");
-                string languageName;
-
-                if (index == -1)
-                {
-                    languageName = language;
-                }
-                else
-                {
-                    string tr = locales.Locales[index].Translations[language];
-                    languageName = string.IsNullOrEmpty(tr)
-                        ? language
-                        : tr;
-                }
+                string languageName = string.IsNullOrEmpty(language) ? code : language;
 
                 MenuItem menuItem = new()
                 {

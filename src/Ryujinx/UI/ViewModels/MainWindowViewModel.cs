@@ -1333,7 +1333,10 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
-        public void TakeScreenshot() => AppHost.ScreenshotRequested = true;
+        public void TakeScreenshot()
+        {
+            AppHost.ScreenshotRequested = true;
+        }
 
         public void HideUi() => ShowMenuAndStatusBar = false;
 

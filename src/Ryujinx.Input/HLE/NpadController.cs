@@ -532,8 +532,6 @@ namespace Ryujinx.Input.HLE
 
                 hidKeyboard.Modifier |= value << entry.Target;
             }
-            
-            ArrayPool<bool>.Shared.Return(keyboardState.KeysState);
 
             return hidKeyboard;
 

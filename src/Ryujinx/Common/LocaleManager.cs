@@ -8,6 +8,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace Ryujinx.Ava.Common.Locale
@@ -158,52 +160,86 @@ namespace Ryujinx.Ava.Common.Locale
             LocaleChanged?.Invoke();
         }
 
-        private static LocalesJson? _localeData;
+        private static LocalesData? _localeData;
 
         private static Dictionary<LocaleKeys, string> LoadJsonLanguage(string languageCode)
         {
             Dictionary<LocaleKeys, string> localeStrings = new();
 
-            _localeData ??= EmbeddedResources.ReadAllText("Ryujinx/Assets/Locale.json")
-                .Into(it => JsonHelper.Deserialize(it, LocalesJsonContext.Default.LocalesJson));
-
-            foreach (LocalesEntry locale in _localeData.Value.Locales)
+            if (_localeData is null)
             {
-                if (locale.Translations.Count < _localeData.Value.Languages.Count)
+                Dictionary<string, LocalesJson> locales = [];
+
+                foreach (string uri in EmbeddedResources.GetAllAvailableResources("Ryujinx/Assets/Locales", ".json"))
                 {
-                    throw new Exception(
-                        $"Locale key {{{locale.ID}}} is missing languages! Has {locale.Translations.Count} translations, expected {_localeData.Value.Languages.Count}!");
+                    string path = uri[..^".json".Length];
+                    path = path.Replace('.', '/');
+                    path = path.Append(".json");
+                    
+                    locales.TryAdd(Path.GetFileName(path), EmbeddedResources.ReadAllText(path)
+                            .Into(it => JsonHelper.Deserialize(it, LocalesJsonContext.Default.LocalesJson)));
                 }
-
-                if (locale.Translations.Count > _localeData.Value.Languages.Count)
+                
+                _localeData = new LocalesData
                 {
-                    throw new Exception(
-                        $"Locale key {{{locale.ID}}} has too many languages! Has {locale.Translations.Count} translations, expected {_localeData.Value.Languages.Count}!");
-                }
+                    Languages = EmbeddedResources.ReadAllText("Ryujinx/Assets/Languages.json")
+                        .Into(it => JsonHelper.Deserialize(it, LanguagesJsonContext.Default.LanguagesJson)).Languages.Keys.ToList(),
+                    LocalesFiles = locales
+                };
+                
 
-                if (!Enum.TryParse<LocaleKeys>(locale.ID, out LocaleKeys localeKey))
-                    continue;
+            }
 
-                string str = locale.Translations.TryGetValue(languageCode, out string val) && !string.IsNullOrEmpty(val)
-                    ? val
-                    : locale.Translations[DefaultLanguageCode];
-
-                if (string.IsNullOrEmpty(str))
+            foreach (LocalesJson file in _localeData.Value.LocalesFiles.Values)
+            {
+                foreach (LocalesEntry locale in file.Locales)
                 {
-                    throw new Exception(
-                        $"Locale key '{locale.ID}' has no valid translations for desired language {languageCode}! {DefaultLanguageCode} is an empty string or null");
-                }
+                    if (locale.Translations.Count < _localeData.Value.Languages.Count)
+                    {
+                        throw new Exception(
+                            $"Locale key {{{locale.ID}}} is missing languages! Has {locale.Translations.Count} translations, expected {_localeData.Value.Languages.Count}!");
+                    }
 
-                localeStrings[localeKey] = str;
+                    if (locale.Translations.Count > _localeData.Value.Languages.Count)
+                    {
+                        throw new Exception(
+                            $"Locale key {{{locale.ID}}} has too many languages! Has {locale.Translations.Count} translations, expected {_localeData.Value.Languages.Count}!");
+                    }
+
+                    if (!Enum.TryParse<LocaleKeys>(locale.ID, out LocaleKeys localeKey))
+                        continue;
+
+                    string str = locale.Translations.TryGetValue(languageCode, out string val) && !string.IsNullOrEmpty(val)
+                        ? val
+                        : locale.Translations[DefaultLanguageCode];
+
+                    if (string.IsNullOrEmpty(str))
+                    {
+                        throw new Exception(
+                            $"Locale key '{locale.ID}' has no valid translations for desired language {languageCode}! {DefaultLanguageCode} is an empty string or null");
+                    }
+
+                    localeStrings[localeKey] = str;
+                }
             }
 
             return localeStrings;
         }
     }
 
-    public struct LocalesJson
+    public struct LocalesData
     {
         public List<string> Languages { get; set; }
+        public Dictionary<string, LocalesJson> LocalesFiles { get; set; }
+    }
+
+    public struct LanguagesJson
+    {
+        public Dictionary<string, string> Languages { get; set; }
+    }
+
+    public struct LocalesJson
+    {
         public List<LocalesEntry> Locales { get; set; }
     }
 
@@ -216,4 +252,8 @@ namespace Ryujinx.Ava.Common.Locale
     [JsonSourceGenerationOptions(WriteIndented = true)]
     [JsonSerializable(typeof(LocalesJson))]
     internal partial class LocalesJsonContext : JsonSerializerContext;
+    
+    [JsonSourceGenerationOptions(WriteIndented = true)]
+    [JsonSerializable(typeof(LanguagesJson))]
+    internal partial class LanguagesJsonContext : JsonSerializerContext;
 }
