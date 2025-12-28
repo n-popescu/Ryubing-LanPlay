@@ -1741,7 +1741,6 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             application.Name ??= AppHost.Device.Processes.ActiveApplication.Name;
             
-            // notate this
             SelectedIcon ??= ApplicationLibrary.GetApplicationIcon(application.Path,
                 ConfigurationState.Instance.System.Language, application.Id);
 
@@ -1768,9 +1767,8 @@ namespace Ryujinx.Ava.UI.ViewModels
             });
 
         public static void UpdateGameMetadata(string titleId, TimeSpan playTime) 
-            =>ApplicationLibrary.LoadAndSaveMetaData(titleId, appMetadata => appMetadata.UpdatePostGame(playTime));
-            
-
+            => ApplicationLibrary.LoadAndSaveMetaData(titleId, appMetadata => appMetadata.UpdatePostGame(playTime));
+        
         public void RefreshFirmwareStatus()
         {
             SystemVersion version = null;
