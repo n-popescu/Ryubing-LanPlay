@@ -61,7 +61,7 @@ using VSyncMode = Ryujinx.Common.Configuration.VSyncMode;
 
 namespace Ryujinx.Ava.Systems
 {
-    internal class AppHost : IDisposable // notate this
+    internal class AppHost : IDisposable
     {
         private const int CursorHideIdleTime = 5; // Hide Cursor seconds.
         private const float MaxResolutionScale = 4.0f; // Max resolution hotkeys can scale to before wrapping.
@@ -437,7 +437,7 @@ namespace Ryujinx.Ava.Systems
 
                         SaveBitmapAsPng(bitmapToSave, path);
 
-                        Logger.Notice.Print(LogClass.Application, $"Screenshot saved to {path}.", "Screenshot");
+                        Logger.Notice.Print(LogClass.Application, $"Screenshot saved to '{path}'.", "Screenshot");
                     }
                 });
             }
@@ -611,9 +611,9 @@ namespace Ryujinx.Ava.Systems
             _isActive = false;
 
             // NOTE: The render loop is allowed to stay alive until the renderer itself is disposed, as it may handle resource dispose.
-            // We only need to wait for all commands submitted during the main gpu loop to be processed.
+            // We only need to wait for all commands submitted during the main gpu loop to be processed, unless the GPU event is cancelled.
 
-            WaitHandle.WaitAny(new []{_gpuDoneEvent, _gpuCancellationTokenSource.Token.WaitHandle}); // notate this
+            WaitHandle.WaitAny(new []{_gpuDoneEvent, _gpuCancellationTokenSource.Token.WaitHandle});
             _gpuCancellationTokenSource.Dispose();
             _gpuDoneEvent.Dispose();
 
@@ -627,11 +627,14 @@ namespace Ryujinx.Ava.Systems
             AppExit?.Invoke(this, EventArgs.Empty);
         }
 
-        public void Dispose() // notate this
+        // MUST be public to inherit from IDisposable
+        public void Dispose()
         {
             if (Device.Processes != null)
             {
-                MainWindowViewModel.UpdateGameMetadata(Device.Processes.ActiveApplication?.ProgramIdText ?? "<INVALID>", // notate this
+                // If the ActiveApplication is null, then the ProgramIdText should be <INVALID>
+                // so that we aren't arbitrarily applying metadata to something that doesn't exist.
+                MainWindowViewModel.UpdateGameMetadata(Device.Processes.ActiveApplication?.ProgramIdText ?? "<INVALID>", 
                     _playTimer.Elapsed);
             }
             
