@@ -1159,8 +1159,15 @@ namespace Ryujinx.Ava.Systems.AppLibrary
             ApplicationCountUpdated?.Invoke(null, e);
         }
 
-        public static ApplicationMetadata LoadAndSaveMetaData(string titleId, Action<ApplicationMetadata> modifyFunction = null)
+        public static ApplicationMetadata? LoadAndSaveMetaData(string titleId, Action<ApplicationMetadata> modifyFunction = null)
         {
+
+            if (titleId is null)
+            {
+                Logger.Warning?.PrintMsg(LogClass.Application, "Cannot save metadata because title ID is invalid.");
+                return null;
+            }
+            
             string metadataFolder = Path.Combine(AppDataManager.GamesDirPath, titleId, "gui");
             string metadataFile = Path.Combine(metadataFolder, "metadata.json");
 

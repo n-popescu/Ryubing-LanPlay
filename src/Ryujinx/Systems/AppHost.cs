@@ -640,16 +640,8 @@ namespace Ryujinx.Ava.Systems
         {
             if (Device.Processes != null)
             {
-                // If the ActiveApplication is null, then the ProgramIdText is invalid.
-                if (Device.Processes.ActiveApplication is not null)
-                {
-                    MainWindowViewModel.UpdateGameMetadata(Device.Processes.ActiveApplication.ProgramIdText, 
-                        _playTimer.Elapsed);
-                }
-                else
-                {
-                    Logger.Error?.PrintMsg(LogClass.Application, "Cannot save metadata because title ID is invalid.");
-                }
+                MainWindowViewModel.UpdateGameMetadata(Device.Processes.ActiveApplication?.ProgramIdText, 
+                    _playTimer.Elapsed);
             }
             
             ConfigurationState.Instance.System.IgnoreMissingServices.Event -= UpdateIgnoreMissingServicesState;
