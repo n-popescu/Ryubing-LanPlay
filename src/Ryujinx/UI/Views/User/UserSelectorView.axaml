@@ -24,20 +24,21 @@
                 MaxHeight="300"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
+                Padding="-3"
                 SelectionChanged="ProfilesList_SelectionChanged"
                 Background="Transparent"
                 ItemsSource="{Binding Profiles}">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel
-                            HorizontalAlignment="Left"
+                            HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
-                        <Setter Property="Margin" Value="5,0,0,0" />
+                        <Setter Property="Margin" Value="0,0,0,0" />
                         <Setter Property="CornerRadius" Value="5" />
                     </Style>
                     <Style Selector="Rectangle#SelectionIndicator">
