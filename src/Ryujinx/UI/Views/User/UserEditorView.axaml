@@ -8,25 +8,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="clr-namespace:Ryujinx.Ava.UI.Helpers"
     xmlns:models="clr-namespace:Ryujinx.Ava.UI.Models"
-    Margin="0"
     MinWidth="500"
-    Padding="0"
     mc:Ignorable="d"
     Focusable="True"
     x:DataType="models:TempProfile">
     <Grid Margin="0,10,0,0" ColumnDefinitions="Auto,*" RowDefinitions="*,Auto">
-        <StackPanel
-            Grid.Row="0"
-            Grid.Column="0"
-            HorizontalAlignment="Stretch"
-            Orientation="Vertical"
-            Spacing="10">
+        <StackPanel Spacing="10">
             <TextBlock Text="{ext:Locale UserProfilesName}" />
             <TextBox
                 Name="NameBox"
                 Margin="0,0,0,5"
                 Width="300"
-                HorizontalAlignment="Stretch"
                 MaxLength="{Binding MaxProfileNameLength}"
                 Watermark="{ext:Locale ProfileNameSelectionWatermark}"
                 Text="{Binding Name}" />
@@ -34,16 +26,10 @@
             <TextBox
                 Name="IdLabel"
                 Width="300"
-                HorizontalAlignment="Stretch"
                 IsReadOnly="True"
                 Text="{Binding UserIdString}" />
         </StackPanel>
-        <StackPanel
-            Grid.Row="0"
-            Grid.Column="1"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Stretch"
-            Orientation="Vertical">
+        <StackPanel Grid.Column="1" HorizontalAlignment="Right">
             <Border
                 Name="ImageBox"
                 BorderBrush="{DynamicResource AppListHoverBackgroundColor}"
@@ -53,33 +39,27 @@
                         FontSize="70"
                         Width="120"
                         Height="120"
-                        Margin="0"
                         Foreground="{DynamicResource AppListHoverBackgroundColor}"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Top"
                         Symbol="Camera" />
                     <Image
                         Name="ProfileImage"
                         Width="120"
                         Height="120"
-                        Margin="0"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Top"
                         Source="{Binding Image, Converter={x:Static helpers:BitmapArrayValueConverter.Instance}}" />
                     <Border
                         Margin="2"
                         Height="27"
                         Width="27"
                         CornerRadius="17"
-                        HorizontalAlignment="Right"
                         VerticalAlignment="Top"
+                        HorizontalAlignment="Right"
                         Background="{DynamicResource ThemeContentBackgroundColor}">
                         <Button
                             Name="ProfileImageButton"
                             MaxHeight="27"
                             MaxWidth="27"
-                            MinHeight="27"
                             MinWidth="27"
+                            MinHeight="27"
                             CornerRadius="17"
                             Padding="0">
                             <ui:SymbolIcon Symbol="Edit" />
@@ -102,35 +82,25 @@
         </StackPanel>
         <StackPanel
             Grid.Row="1"
-            Grid.Column="0"
             Grid.ColumnSpan="2"
-            HorizontalAlignment="Left"
             Orientation="Horizontal"
             Margin="0,30,0,0"
             Spacing="10">
-            <Button
-                Width="50"
-                MinWidth="50"
-                Click="BackButton_Click">
+            <Button MinWidth="50" Width="50" Click="BackButton_Click">
                 <ui:SymbolIcon Symbol="Back" />
             </Button>
         </StackPanel>
         <StackPanel
             Grid.Row="1"
-            Grid.Column="0"
             Grid.ColumnSpan="2"
             HorizontalAlignment="Right"
             Orientation="Horizontal"
             Margin="0,30,0,0"
             Spacing="10">
-            <Button
-                Name="DeleteButton"
-                Click="DeleteButton_Click">
+            <Button Name="DeleteButton" Click="DeleteButton_Click">
                 <TextBlock Text="{ext:Locale UserProfilesDelete}" />
             </Button>
-            <Button
-                Name="SaveButton"
-                Click="SaveButton_Click">
+            <Button Name="SaveButton" Click="SaveButton_Click">
                 <TextBlock Text="{ext:Locale Save}" />
             </Button>
         </StackPanel>

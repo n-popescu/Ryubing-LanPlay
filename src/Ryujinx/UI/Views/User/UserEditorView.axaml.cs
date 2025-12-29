@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.VisualTree;
@@ -32,84 +33,65 @@ namespace Ryujinx.Ava.UI.Views.User
         public UserEditorView()
         {
             InitializeComponent();
-            AddHandler(Frame.NavigatedToEvent, (s, e) =>
-            {
-                NavigatedTo(e);
-            }, RoutingStrategies.Direct);
+            AddHandler(Frame.NavigatedToEvent, (s, e) => NavigatedTo(e), RoutingStrategies.Direct);
         }
 
         private void NavigatedTo(NavigationEventArgs arg)
         {
-            if (Program.PreviewerDetached)
+            if (!Program.PreviewerDetached)
+                return;
+
+            if (arg.NavigationMode == NavigationMode.New)
             {
-                switch (arg.NavigationMode)
-                {
-                    case NavigationMode.New:
-                        (NavigationDialogHost parent, UserProfile profile, bool isNewUser) = ((NavigationDialogHost parent, UserProfile profile, bool isNewUser))arg.Parameter;
-                        _isNewUser = isNewUser;
-                        _profile = profile;
-                        ViewModel = new TempProfile(_profile);
-                        _tempProfile = ViewModel; // <-- this is critical
+                (NavigationDialogHost parent, UserProfile profile, bool isNewUser) =
+                    ((NavigationDialogHost parent, UserProfile profile, bool isNewUser))arg.Parameter;
 
-                        _parent = parent;
+                _parent = parent;
+                _profile = profile;
+                _isNewUser = isNewUser;
 
-                        _contentManager = _parent.ContentManager;
-                        ViewModel.FirmwareFound = _contentManager.GetCurrentFirmwareVersion() != null;
+                DataValidationErrors.ClearErrors(NameBox); 
+                DataValidationErrors.ClearErrors(ImageBox);
+                ImageBox.Bind(Border.BorderBrushProperty, new DynamicResourceExtension("AppListHoverBackgroundColor"));
 
-                        break;
-                }
+                ViewModel = new TempProfile(_profile);
+                _tempProfile = ViewModel;
 
-                ((ContentDialog)_parent.Parent).Title = $"{LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle]} - " +
-                                                        $"{(_isNewUser ? LocaleManager.Instance[LocaleKeys.UserEditorTitleNewUser] : UserEditorTitle)}";
-
-                IdLabel.IsVisible = _profile != null;
-                IdText.IsVisible = _profile != null;
-                if (!_isNewUser && IsDeletable)
-                {
-                    DeleteButton.IsVisible = true;
-                }
-                else
-                {
-                    DeleteButton.IsVisible = false;
-                }
+                _contentManager = _parent.ContentManager;
+                ViewModel.FirmwareFound = _contentManager.GetCurrentFirmwareVersion() != null;
             }
+
+            ((ContentDialog)_parent.Parent).Title =
+                $"{LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle]} - " +
+                $"{(_isNewUser ? LocaleManager.Instance[LocaleKeys.UserEditorTitleNewUser] : UserEditorTitle)}";
+
+            bool hasProfile = _profile != null;
+            IdLabel.IsVisible = hasProfile;
+            IdText.IsVisible = hasProfile;
+
+            DeleteButton.IsVisible = !_isNewUser && IsDeletable;
         }
 
         private async void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_isNewUser)
+            bool hasUnsavedChanges =
+                _isNewUser
+                    ? (ViewModel.Name != string.Empty || ViewModel.Image != null)
+                    : (_profile.Name != ViewModel.Name || _profile.Image != ViewModel.Image);
+
+            if (hasUnsavedChanges)
             {
-                if (ViewModel.Name != string.Empty || ViewModel.Image != null)
-                {
-                    if (await ContentDialogHelper.CreateChoiceDialog(
-                            LocaleManager.Instance[LocaleKeys.DialogUserProfileUnsavedChangesTitle],
-                            LocaleManager.Instance[LocaleKeys.DialogUserProfileUnsavedChangesMessage],
-                            LocaleManager.Instance[LocaleKeys.DialogUserProfileUnsavedChangesSubMessage]))
-                    {
-                        _parent?.GoBack();
-                    }
-                }
-                else
-                {
+                bool confirm = await ContentDialogHelper.CreateChoiceDialog(
+                    LocaleManager.Instance[LocaleKeys.DialogUserProfileUnsavedChangesTitle],
+                    LocaleManager.Instance[LocaleKeys.DialogUserProfileUnsavedChangesMessage],
+                    LocaleManager.Instance[LocaleKeys.DialogUserProfileUnsavedChangesSubMessage]);
+
+                if (confirm)
                     _parent?.GoBack();
-                }
             }
             else
             {
-                if (_profile.Name != ViewModel.Name || _profile.Image != ViewModel.Image)
-                {
-                    if (await ContentDialogHelper.CreateChoiceDialog(
-                            LocaleManager.Instance[LocaleKeys.DialogUserProfileUnsavedChangesTitle],
-                            LocaleManager.Instance[LocaleKeys.DialogUserProfileUnsavedChangesMessage],
-                            LocaleManager.Instance[LocaleKeys.DialogUserProfileUnsavedChangesSubMessage]))
-                    {
-                        _parent?.GoBack();
-                    }
-                }
-                else
-                {
-                    _parent?.GoBack();
-                }
+                _parent?.GoBack();
             }
         }
 
@@ -122,19 +104,27 @@ namespace Ryujinx.Ava.UI.Views.User
         {
             DataValidationErrors.ClearErrors(NameBox);
             DataValidationErrors.ClearErrors(ImageBox);
+            ImageBox.Bind(Border.BorderBrushProperty, new DynamicResourceExtension("AppListHoverBackgroundColor"));
 
-            if (string.IsNullOrWhiteSpace(ViewModel.Name))
+            bool nameEmpty = string.IsNullOrWhiteSpace(ViewModel.Name); 
+            bool imageMissing = ViewModel.Image == null;
+
+            if (nameEmpty && imageMissing) 
+            { 
+                DataValidationErrors.SetError(NameBox, new DataValidationException(LocaleManager.Instance[LocaleKeys.UserProfileEmptyNameError])); 
+                DataValidationErrors.SetError(ImageBox, new DataValidationException(""));
+                ImageBox.BorderBrush = Brush.Parse("#ff99a4");
+                return; 
+            }
+            else if (nameEmpty)
             {
-                DataValidationErrors.SetError(NameBox, new DataValidationException(LocaleManager.Instance[LocaleKeys.UserProfileEmptyNameError]));
-
+                DataValidationErrors.SetError(NameBox,new DataValidationException(LocaleManager.Instance[LocaleKeys.UserProfileEmptyNameError]));
                 return;
             }
-
-            if (ViewModel.Image == null)
+            else if (imageMissing)
             {
-                DataValidationErrors.SetError(ImageBox, null);
-                ImageBox.BorderBrush = Brushes.Red;
-
+                DataValidationErrors.SetError(ImageBox, new DataValidationException(""));
+                ImageBox.BorderBrush = Brush.Parse("#ff99a4");
                 return;
             }
 
@@ -143,6 +133,7 @@ namespace Ryujinx.Ava.UI.Views.User
                 _profile.Name = ViewModel.Name;
                 _profile.Image = ViewModel.Image;
                 _profile.UpdateState();
+
                 _parent.AccountManager.SetUserName(_profile.UserId, _profile.Name);
                 _parent.AccountManager.SetUserImage(_profile.UserId, _profile.Image);
             }
@@ -158,7 +149,7 @@ namespace Ryujinx.Ava.UI.Views.User
             _parent?.GoBack();
         }
 
-        private async void SelectFirmwareImage_OnClick(object sender, RoutedEventArgs e)
+        private void SelectFirmwareImage_OnClick(object sender, RoutedEventArgs e)
         {
             if (ViewModel.FirmwareFound)
             {
@@ -168,7 +159,8 @@ namespace Ryujinx.Ava.UI.Views.User
 
         private async void Import_OnClick(object sender, RoutedEventArgs e)
         {
-            var result = await ((Window)this.GetVisualRoot()!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            var window = (Window)this.GetVisualRoot()!;
+            var result = await window.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 Title = LocaleManager.Instance[LocaleKeys.LoadSupportedImageFormatDialogTitle],
                 AllowMultiple = false,
@@ -183,10 +175,7 @@ namespace Ryujinx.Ava.UI.Views.User
                 },
             });
 
-            if (result.Count == 0)
-                return;
-
-            if (DataContext is not TempProfile temp)
+            if (result.Count == 0 || DataContext is not TempProfile temp)
                 return;
 
             temp.Image = ProcessProfileImage(File.ReadAllBytes(result[0].Path.LocalPath));
@@ -198,7 +187,6 @@ namespace Ryujinx.Ava.UI.Views.User
         private static byte[] ProcessProfileImage(byte[] buffer)
         {
             using SKBitmap bitmap = SKBitmap.Decode(buffer);
-
             SKBitmap resizedBitmap = bitmap.Resize(new SKImageInfo(256, 256), SKFilterQuality.High);
 
             using MemoryStream streamJpg = new();
@@ -207,7 +195,6 @@ namespace Ryujinx.Ava.UI.Views.User
             {
                 using SKImage image = SKImage.FromBitmap(resizedBitmap);
                 using SKData dataJpeg = image.Encode(SKEncodedImageFormat.Jpeg, 100);
-
                 dataJpeg.SaveTo(streamJpg);
             }
 
