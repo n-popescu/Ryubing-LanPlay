@@ -617,10 +617,18 @@ namespace Ryujinx.Ava.Systems
             Device.Dispose();
             
             // NOTE: The render loop is allowed to stay alive until the renderer itself is disposed, as it may handle resource dispose.
-            // We only need to wait for all commands submitted during the main gpu loop to be processed, unless the GPU event is cancelled.
+            // We only need to wait for all commands submitted during the main gpu loop to be processed.
+            // If the GPU has no work and is cancelled, we need to handle that as well.
 
-            WaitHandle.WaitAny(new []{_gpuDoneEvent, _gpuCancellationTokenSource.Token.WaitHandle});
+            WaitHandle.WaitAny(new[] { _gpuDoneEvent, _gpuCancellationTokenSource.Token.WaitHandle });
             _gpuCancellationTokenSource.Dispose();
+            
+            // Waiting for work to be finished before we dispose.
+            if (_renderingStarted)
+            {
+                Device.Gpu.WaitUntilGpuReady();
+            }
+            
             _gpuDoneEvent.Dispose();
             
             DisposeGpu();
@@ -632,10 +640,16 @@ namespace Ryujinx.Ava.Systems
         {
             if (Device.Processes != null)
             {
-                // If the ActiveApplication is null, then the ProgramIdText should be <INVALID>
-                // so that we aren't arbitrarily applying metadata to something that doesn't exist.
-                MainWindowViewModel.UpdateGameMetadata(Device.Processes.ActiveApplication?.ProgramIdText ?? "<INVALID>", 
-                    _playTimer.Elapsed);
+                // If the ActiveApplication is null, then the ProgramIdText is invalid.
+                if (Device.Processes.ActiveApplication is not null)
+                {
+                    MainWindowViewModel.UpdateGameMetadata(Device.Processes.ActiveApplication.ProgramIdText, 
+                        _playTimer.Elapsed);
+                }
+                else
+                {
+                    Logger.Error?.PrintMsg(LogClass.Application, "Cannot save metadata because title ID is invalid.");
+                }
             }
             
             ConfigurationState.Instance.System.IgnoreMissingServices.Event -= UpdateIgnoreMissingServicesState;
@@ -677,6 +691,12 @@ namespace Ryujinx.Ava.Systems
             }
             else
             {
+                // No use waiting on something that never started work
+                if (_renderingStarted)
+                {
+                    Device.Gpu.WaitUntilGpuReady();
+                }
+                
                 Device.DisposeGpu();
             }
         }
@@ -1115,7 +1135,9 @@ namespace Ryujinx.Ava.Systems
                 // Make sure all commands in the run loop are fully executed before leaving the loop.
                 if (Device.Gpu.Renderer is ThreadedRenderer threaded)
                 {
+                    Logger.Info?.PrintMsg(LogClass.Gpu, "Flushing threaded commands...");
                     threaded.FlushThreadedCommands();
+                    Logger.Info?.PrintMsg(LogClass.Gpu, "Flushed!");
                 }
 
                 _gpuDoneEvent.Set();

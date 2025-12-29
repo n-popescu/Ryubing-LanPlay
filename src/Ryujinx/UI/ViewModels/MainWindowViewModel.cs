@@ -1717,7 +1717,6 @@ namespace Ryujinx.Ava.UI.ViewModels
                 this,
                 TopLevel);
             
-            // Needs a new name to better fit code styling
             CancellationTokenSource cts = new CancellationTokenSource();
 
             try
