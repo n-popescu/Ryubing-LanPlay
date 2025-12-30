@@ -1029,7 +1029,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 string dialogMessage =
                     LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.DialogKeysInstallerKeysInstallMessage);
 
-                if (ContentManager.AreKeysAlredyPresent(systemDirectory))
+                if (ContentManager.AreKeysAlreadyPresent(systemDirectory))
                 {
                     dialogMessage +=
                         LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys

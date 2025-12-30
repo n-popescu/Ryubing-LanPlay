@@ -849,7 +849,8 @@ namespace Ryujinx.Ava.Systems.AppLibrary
 
             foreach (ApplicationData installedApplication in Applications.Items)
             {
-                temporary += LoadAndSaveMetaData(installedApplication.IdString).TimePlayed;
+                // this should always exist... should...
+                temporary += LoadAndSaveMetaData(installedApplication.IdString).Value.TimePlayed;
             }
 
             TotalTimePlayed = temporary;
@@ -1159,9 +1160,8 @@ namespace Ryujinx.Ava.Systems.AppLibrary
             ApplicationCountUpdated?.Invoke(null, e);
         }
 
-        public static ApplicationMetadata? LoadAndSaveMetaData(string titleId, Action<ApplicationMetadata> modifyFunction = null)
+        public static Gommon.Optional<ApplicationMetadata> LoadAndSaveMetaData(string titleId, Action<ApplicationMetadata> modifyFunction = null)
         {
-
             if (titleId is null)
             {
                 Logger.Warning?.PrintMsg(LogClass.Application, "Cannot save metadata because title ID is invalid.");

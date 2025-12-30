@@ -1059,7 +1059,7 @@ namespace Ryujinx.HLE.FileSystem
             }
         }
 
-        public static bool AreKeysAlredyPresent(string pathToCheck)
+        public static bool AreKeysAlreadyPresent(string pathToCheck)
         {
             string[] fileNames = ["prod.keys", "title.keys", "console.keys", "dev.keys"];
             foreach (string file in fileNames)
