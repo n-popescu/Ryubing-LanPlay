@@ -53,17 +53,35 @@ namespace Ryujinx.Ava
             {
                 if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
                 {
-                    _ = Win32NativeInterop.MessageBoxA(nint.Zero, "You are running an outdated version of Windows.\n\nRyujinx supports Windows 10 version 20H1 and newer.\n", $"Ryujinx {Version}", MbIconwarning);
+                    _ = Win32NativeInterop.MessageBoxA(nint.Zero,
+                        "You are running an outdated version of Windows.\n\nRyujinx supports Windows 10 version 20H1 and newer.\n",
+                        $"Ryujinx {Version}", MbIconwarning);
                     return 0;
                 }
 
-                var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-                var programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+                string onedriveFiles = Environment.GetEnvironmentVariable("Onedrive");
+                string onedriveConsumerFiles = Environment.GetEnvironmentVariable("OnedriveConsumer");
+                string onedriveCommercialFiles = Environment.GetEnvironmentVariable("OnedriveCommercial");
+
+                if (Environment.CurrentDirectory.StartsWithIgnoreCase(onedriveFiles)
+                    || Environment.CurrentDirectory.StartsWithIgnoreCase(onedriveConsumerFiles)
+                    || Environment.CurrentDirectory.StartsWithIgnoreCase(onedriveCommercialFiles))
+                {
+                    _ = Win32NativeInterop.MessageBoxA(nint.Zero,
+                        "Ryujinx is not intended to be run from a OneDrive folder. Please move it out and relaunch.",
+                        $"Ryujinx {Version}", MbIconwarning);
+                    return 0;
+                }
+
+                string programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+                string programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
 
                 if (Environment.CurrentDirectory.StartsWithIgnoreCase(programFiles) ||
                     Environment.CurrentDirectory.StartsWithIgnoreCase(programFilesX86))
                 {
-                    _ = Win32NativeInterop.MessageBoxA(nint.Zero, "Ryujinx is not intended to be run from the Program Files folder. Please move it out and relaunch.", $"Ryujinx {Version}", MbIconwarning);
+                    _ = Win32NativeInterop.MessageBoxA(nint.Zero,
+                        "Ryujinx is not intended to be run from the Program Files folder. Please move it out and relaunch.",
+                        $"Ryujinx {Version}", MbIconwarning);
                     return 0;
                 }
 
@@ -73,8 +91,76 @@ namespace Ryujinx.Ava
                 // ...but this reads like it checks if the current is in/has the Windows admin role? lol
                 if (new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
                 {
-                    _ = Win32NativeInterop.MessageBoxA(nint.Zero, "Ryujinx is not intended to be run as administrator.", $"Ryujinx {Version}", MbIconwarning);
+                    _ = Win32NativeInterop.MessageBoxA(nint.Zero, "Ryujinx is not intended to be run as administrator.",
+                        $"Ryujinx {Version}", MbIconwarning);
                     return 0;
+                }
+            }
+            else
+            {
+
+                // Unix
+                [DllImport("libc")]
+                static extern uint geteuid();
+
+                bool root = geteuid().Equals(0);
+
+                if (OperatingSystem.IsMacOS())
+                {
+                    // If you add a check here, please, for the love of god, check it BEFORE loading the dialog.
+                    if (root)
+                    {
+                        // Grab what we need to make the message box.
+                        const string ObjCRuntime = "/usr/lib/libobjc.A.dylib";
+                        const string FoundationFramework = "/System/Library/Frameworks/Foundation.framework/Foundation";
+                        
+                        [DllImport(ObjCRuntime, EntryPoint = "sel_registerName")]
+                        static extern IntPtr GetSelector(string name);
+
+                        [DllImport(ObjCRuntime, EntryPoint = "objc_getClass")]
+                        static extern IntPtr GetClass(string name);
+
+                        [DllImport(FoundationFramework, EntryPoint = "objc_msgSend")]
+                        static extern IntPtr SendMessage(IntPtr target, IntPtr selector);
+
+                        [DllImport(FoundationFramework, EntryPoint = "objc_msgSend")]
+                        static extern IntPtr SendMessageWithParameter(IntPtr target, IntPtr selector, IntPtr param);
+
+                        IntPtr NSStringClass = GetClass("NSString");
+                        IntPtr Selector = GetSelector("stringWithUTF8String:");
+                        IntPtr AlertInstance = SendMessage(SendMessage(GetClass("NSAlert"), GetSelector("alloc")), GetSelector("init"));
+                        
+                        // Create caption and text.
+                        IntPtr caption = SendMessageWithParameter(NSStringClass, Selector, Marshal.StringToHGlobalAnsi($"Ryujinx {Version}"));
+                        IntPtr text = SendMessageWithParameter(NSStringClass, Selector, Marshal.StringToHGlobalAnsi("Ryujinx is not intended to be run as administrator."));
+
+                        // Set up the message box.
+                        SendMessageWithParameter(AlertInstance, GetSelector("setMessageText:"), caption);
+                        SendMessageWithParameter(AlertInstance, GetSelector("setInformativeText:"), text);
+                        SendMessageWithParameter(AlertInstance, GetSelector("addButtonWithTitle:"), Marshal.StringToHGlobalAnsi("OK"));
+                        
+                        // Send prompt to user, then clean up.
+                        SendMessage(AlertInstance, GetSelector("runModal"));
+                        
+                        SendMessage(AlertInstance, GetSelector("release"));
+                        
+                        return 0;
+                    }
+                }
+
+                if (OperatingSystem.IsLinux())
+                {
+                    if (root)
+                    {
+                        Console.WriteLine($"Ryujinx {Version}: Ryujinx is not intended to be run as administrator. Exiting...");
+                        return 0;
+                    }
+
+                    if (Environment.GetEnvironmentVariable("container").EqualsIgnoreCase("flatpak"))
+                    {
+                        Logger.Warning?.PrintMsg(LogClass.Application, "This is very likely an unofficial build, Ryujinx does NOT have a flatpak!");
+                        Logger.Info?.PrintMsg(LogClass.Application, "Please visit https://ryujinx.app/ for our official AppImage or tarball.");
+                    }
                 }
             }
 
