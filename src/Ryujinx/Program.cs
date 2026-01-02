@@ -110,13 +110,16 @@ namespace Ryujinx.Ava
                     // If you add a check here, please, for the love of god, check it BEFORE loading the dialog.
                     if (root)
                     {
+                        Console.WriteLine($"Ryujinx {Version}: Ryujinx is not intended to be run as administrator. Exiting...");
                         // Grab what we need to make the message box.
                         const string ObjCRuntime = "/usr/lib/libobjc.A.dylib";
                         const string FoundationFramework = "/System/Library/Frameworks/Foundation.framework/Foundation";
                         
+                        Console.Write("Set strings for library fetch.");
+                        
                         [DllImport(ObjCRuntime, EntryPoint = "sel_registerName")]
                         static extern IntPtr GetSelector(string name);
-
+                        
                         [DllImport(ObjCRuntime, EntryPoint = "objc_getClass")]
                         static extern IntPtr GetClass(string name);
 
@@ -125,10 +128,14 @@ namespace Ryujinx.Ava
 
                         [DllImport(FoundationFramework, EntryPoint = "objc_msgSend")]
                         static extern IntPtr SendMessageWithParameter(IntPtr target, IntPtr selector, IntPtr param);
+                        
+                        Console.Write("Set up DLL Imports.");
 
                         IntPtr NSStringClass = GetClass("NSString");
                         IntPtr Selector = GetSelector("stringWithUTF8String:");
                         IntPtr AlertInstance = SendMessage(SendMessage(GetClass("NSAlert"), GetSelector("alloc")), GetSelector("init"));
+                        
+                        Console.Write("Set up necessary classes and instances.");
                         
                         // Create caption and text.
                         IntPtr caption = SendMessageWithParameter(NSStringClass, Selector, Marshal.StringToHGlobalAnsi($"Ryujinx {Version}"));
@@ -142,7 +149,13 @@ namespace Ryujinx.Ava
                         // Send prompt to user, then clean up.
                         SendMessage(AlertInstance, GetSelector("runModal"));
                         
+                        Console.Write($"AlertInstance: {AlertInstance}");
+                        
+                        Console.Write("Sent message box to macOS.");
+                        
                         SendMessage(AlertInstance, GetSelector("release"));
+                        
+                        Console.Write("Cleaned up.");
                         
                         return 0;
                     }
@@ -159,11 +172,13 @@ namespace Ryujinx.Ava
                     if (Environment.GetEnvironmentVariable("container").EqualsIgnoreCase("flatpak"))
                     {
                         Logger.Warning?.PrintMsg(LogClass.Application, "This is very likely an unofficial build, Ryujinx does NOT have a flatpak!");
+                        Logger.Info?.PrintMsg(LogClass.Application, "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
                         Logger.Info?.PrintMsg(LogClass.Application, "Please visit https://ryujinx.app/ for our official builds.");
                         Logger.Info?.PrintMsg(LogClass.Application,
-                            "AppImage >> https://update.ryujinx.app/download/query?os=linuxappimage&arch=x64&rc=stable");
+                            "    AppImage >> https://update.ryujinx.app/download/query?os=linuxappimage&arch=x64&rc=stable");
                         Logger.Info?.PrintMsg(LogClass.Application,
-                            "Tarball >> http://update.ryujinx.app/download/query?os=linux&arch=x64&rc=stable");
+                            "    Tarball >> http://update.ryujinx.app/download/query?os=linux&arch=x64&rc=stable");
+                        Logger.Info?.PrintMsg(LogClass.Application, "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
                     }
                 }
             }
@@ -204,6 +219,8 @@ namespace Ryujinx.Ava
                 .UsePlatformDetect()
                 .With(new X11PlatformOptions
                 {
+                    UseDBusMenu = false,
+                    UseDBusFilePicker = false,
                     EnableMultiTouch = true,
                     EnableIme = true,
                     EnableInputFocusProxy = Environment.GetEnvironmentVariable("XDG_CURRENT_DESKTOP") == "gamescope",
