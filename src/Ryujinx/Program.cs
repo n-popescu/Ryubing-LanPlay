@@ -17,6 +17,8 @@ using Ryujinx.Common.Configuration;
 using Ryujinx.Common.GraphicsDriver;
 using Ryujinx.Common.Logging;
 using Ryujinx.Common.SystemInterop;
+using Ryujinx.Common.Utilities;
+using Ryujinx.Graphics.RenderDocApi;
 using Ryujinx.Graphics.Vulkan.MoltenVK;
 using Ryujinx.Headless;
 using Ryujinx.SDL3.Common;
@@ -46,7 +48,7 @@ namespace Ryujinx.Ava
         public static int Main(string[] args)
         {
             Version = ReleaseInformation.Version;
-            
+
             if (OperatingSystem.IsWindows())
             {
                 if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
@@ -55,8 +57,11 @@ namespace Ryujinx.Ava
                     return 0;
                 }
 
-                if (Environment.CurrentDirectory.StartsWithIgnoreCase("C:\\Program Files") || 
-                    Environment.CurrentDirectory.StartsWithIgnoreCase("C:\\Program Files (x86)"))
+                var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+                var programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+
+                if (Environment.CurrentDirectory.StartsWithIgnoreCase(programFiles) ||
+                    Environment.CurrentDirectory.StartsWithIgnoreCase(programFilesX86))
                 {
                     _ = Win32NativeInterop.MessageBoxA(nint.Zero, "Ryujinx is not intended to be run from the Program Files folder. Please move it out and relaunch.", $"Ryujinx {Version}", MbIconwarning);
                     return 0;
@@ -73,11 +78,23 @@ namespace Ryujinx.Ava
                 }
             }
 
+            bool noGuiArg = ConsumeCommandLineArgument(ref args, "--no-gui") || ConsumeCommandLineArgument(ref args, "nogui");
+            bool coreDumpArg = ConsumeCommandLineArgument(ref args, "--core-dumps");
+
+            // TODO: Ryujinx causes core dumps on Linux when it exits "uncleanly", eg. through an unhandled exception.
+            //       This is undesirable and causes very odd behavior during development (the process stops responding, 
+            //       the .NET debugger freezes or suddenly detaches, /tmp/ gets filled etc.), unless explicitly requested by the user.
+            //       This needs to be investigated, but calling prctl() is better than modifying system-wide settings or leaving this be.
+            if (!coreDumpArg)
+            {
+                OsUtils.SetCoreDumpable(false);
+            }
+
             PreviewerDetached = true;
 
-            if (args.Length > 0 && args[0] is "--no-gui" or "nogui")
+            if (noGuiArg)
             {
-                HeadlessRyujinx.Entrypoint(args[1..]);
+                HeadlessRyujinx.Entrypoint(args);
                 return 0;
             }
 
@@ -111,6 +128,14 @@ namespace Ryujinx.Ava
                         ? [Win32RenderingMode.AngleEgl, Win32RenderingMode.Software]
                         : [Win32RenderingMode.Software]
                 });
+
+        private static bool ConsumeCommandLineArgument(ref string[] args, string targetArgument)
+        {
+            List<string> argList = [.. args];
+            bool found = argList.Remove(targetArgument);
+            args = argList.ToArray();
+            return found;
+        }
 
         private static void Initialize(string[] args)
         {
@@ -177,7 +202,6 @@ namespace Ryujinx.Ava
             }
         }
 
-
         public static string GetDirGameUserConfig(string gameId, bool changeFolderForGame = false)
         {
             if (string.IsNullOrEmpty(gameId))
@@ -196,22 +220,26 @@ namespace Ryujinx.Ava
             return gameDir;
         }
 
-        public static void ReloadConfig()
+        public static void ReloadConfig(bool isRunGameWithCustomConfig = false)
         {
 
             string localConfigurationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ReleaseInformation.ConfigName);
             string appDataConfigurationPath = Path.Combine(AppDataManager.BaseDirPath, ReleaseInformation.ConfigName);
 
-            // Now load the configuration as the other subsystems are now registered
-            if (File.Exists(localConfigurationPath))
-            {
-                ConfigurationPath = localConfigurationPath;
-            }
-            else if (File.Exists(appDataConfigurationPath))
-            {
-                ConfigurationPath = appDataConfigurationPath;
-            }
 
+            if (!isRunGameWithCustomConfig) // To return settings from the game folder if the user configuration exists
+            {
+                // Now load the configuration as the other subsystems are now registered
+                if (File.Exists(localConfigurationPath))
+                {
+                    ConfigurationPath = localConfigurationPath;
+                }
+                else if (File.Exists(appDataConfigurationPath))
+                {
+                    ConfigurationPath = appDataConfigurationPath;
+                }
+            }
+        
             if (ConfigurationPath == null)
             {
                 // No configuration, we load the default values and save it to disk

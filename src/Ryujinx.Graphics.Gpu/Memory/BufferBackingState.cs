@@ -56,7 +56,7 @@ namespace Ryujinx.Graphics.Gpu.Memory
         /// <param name="parent">Parent buffer</param>
         /// <param name="stage">Initial buffer stage</param>
         /// <param name="baseBuffers">Buffers to inherit state from</param>
-        public BufferBackingState(GpuContext context, Buffer parent, BufferStage stage, RangeItem<Buffer>[] baseBuffers)
+        public BufferBackingState(GpuContext context, Buffer parent, BufferStage stage, Buffer[] baseBuffers)
         {
             _size = (int)parent.Size;
             _systemMemoryType = context.Capabilities.MemoryType;
@@ -102,9 +102,9 @@ namespace Ryujinx.Graphics.Gpu.Memory
 
                 if (baseBuffers.Length != 0)
                 {
-                    foreach (RangeItem<Buffer> item in baseBuffers)
+                    foreach (Buffer item in baseBuffers)
                     {
-                        CombineState(item.Value.BackingState);
+                        CombineState(item.BackingState);
                     }
                 }
             }

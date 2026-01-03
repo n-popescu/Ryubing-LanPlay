@@ -454,8 +454,9 @@ namespace Ryujinx.HLE.HOS.Services
 
                 response.RawData = _responseDataStream.ToArray();
 
-                using RecyclableMemoryStream responseStream = response.GetStreamTipc();
+                RecyclableMemoryStream responseStream = response.GetStreamTipc();
                 _selfProcess.CpuMemory.Write(_selfThread.TlsAddress, responseStream.GetReadOnlySequence());
+                MemoryStreamManager.Shared.ReleaseStream(responseStream);
             }
             else
             {
@@ -464,8 +465,9 @@ namespace Ryujinx.HLE.HOS.Services
 
             if (!isTipcCommunication)
             {
-                using RecyclableMemoryStream responseStream = response.GetStream((long)_selfThread.TlsAddress, recvListAddr | ((ulong)PointerBufferSize << 48));
+                RecyclableMemoryStream responseStream = response.GetStream((long)_selfThread.TlsAddress, recvListAddr | ((ulong)PointerBufferSize << 48));
                 _selfProcess.CpuMemory.Write(_selfThread.TlsAddress, responseStream.GetReadOnlySequence());
+                MemoryStreamManager.Shared.ReleaseStream(responseStream);
             }
 
             return shouldReply;

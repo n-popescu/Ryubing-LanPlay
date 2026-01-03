@@ -580,5 +580,10 @@ namespace Ryujinx.Headless
         {
             return AccountSaveDataManager.GetLastUsedUser();
         }
+        
+        public void TakeScreenshot()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
