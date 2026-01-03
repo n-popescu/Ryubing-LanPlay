@@ -111,11 +111,11 @@ namespace Ryujinx.Ava
                     if (root)
                     {
                         Console.WriteLine($"Ryujinx {Version}: Ryujinx is not intended to be run as administrator. Exiting...");
+                        
                         // Grab what we need to make the message box.
                         const string ObjCRuntime = "/usr/lib/libobjc.A.dylib";
                         const string FoundationFramework = "/System/Library/Frameworks/Foundation.framework/Foundation";
-                        
-                        Console.Write("Set strings for library fetch.");
+                        const string AppKitFramework = "/System/Library/Frameworks/AppKit.framework/AppKit";
                         
                         [DllImport(ObjCRuntime, EntryPoint = "sel_registerName")]
                         static extern IntPtr GetSelector(string name);
@@ -128,34 +128,37 @@ namespace Ryujinx.Ava
 
                         [DllImport(FoundationFramework, EntryPoint = "objc_msgSend")]
                         static extern IntPtr SendMessageWithParameter(IntPtr target, IntPtr selector, IntPtr param);
-                        
-                        Console.Write("Set up DLL Imports.");
 
+                        [DllImport(ObjCRuntime)]
+                        static extern IntPtr dlopen(string path, int mode);
+
+                        dlopen(AppKitFramework, 0x1); // have to invoke AppKit so that NSAlert doesn't return a null pointer
+                        
                         IntPtr NSStringClass = GetClass("NSString");
                         IntPtr Selector = GetSelector("stringWithUTF8String:");
-                        IntPtr AlertInstance = SendMessage(SendMessage(GetClass("NSAlert"), GetSelector("alloc")), GetSelector("init"));
+                        IntPtr SharedApp = SendMessage(GetClass("NSApplication"), GetSelector("sharedApplication"));
+                        IntPtr NSAlert = SendMessage(GetClass("NSAlert"), GetSelector("alloc"));
+                        IntPtr AlertInstance = SendMessage(NSAlert, GetSelector("init"));
                         
-                        Console.Write("Set up necessary classes and instances.");
-                        
-                        // Create caption and text.
+                        // Create caption, text, and button text.
+                        // If you add a check, you can switch text with the check reason.
                         IntPtr caption = SendMessageWithParameter(NSStringClass, Selector, Marshal.StringToHGlobalAnsi($"Ryujinx {Version}"));
                         IntPtr text = SendMessageWithParameter(NSStringClass, Selector, Marshal.StringToHGlobalAnsi("Ryujinx is not intended to be run as administrator."));
-
+                        IntPtr button = SendMessageWithParameter(NSStringClass, Selector, Marshal.StringToHGlobalAnsi("OK"));
+                        
+                        // Set up the window.
+                        SendMessageWithParameter(SharedApp, GetSelector("setActivationPolicy:"), (IntPtr) 0); // Give it a window.
+                        SendMessageWithParameter(SharedApp, GetSelector("activateIgnoringOtherApps:"), (IntPtr) 1); // Force it to the front.
+                        
                         // Set up the message box.
+                        SendMessageWithParameter(AlertInstance, GetSelector("setAlertStyle:"), (IntPtr)0); // Set style to warning.
                         SendMessageWithParameter(AlertInstance, GetSelector("setMessageText:"), caption);
                         SendMessageWithParameter(AlertInstance, GetSelector("setInformativeText:"), text);
-                        SendMessageWithParameter(AlertInstance, GetSelector("addButtonWithTitle:"), Marshal.StringToHGlobalAnsi("OK"));
+                        SendMessageWithParameter(AlertInstance, GetSelector("addButtonWithTitle:"), button);
                         
                         // Send prompt to user, then clean up.
                         SendMessage(AlertInstance, GetSelector("runModal"));
-                        
-                        Console.Write($"AlertInstance: {AlertInstance}");
-                        
-                        Console.Write("Sent message box to macOS.");
-                        
                         SendMessage(AlertInstance, GetSelector("release"));
-                        
-                        Console.Write("Cleaned up.");
                         
                         return 0;
                     }
@@ -163,9 +166,27 @@ namespace Ryujinx.Ava
 
                 if (OperatingSystem.IsLinux())
                 {
-                    if (root)
+                    if (!root)
                     {
-                        Console.WriteLine($"Ryujinx {Version}: Ryujinx is not intended to be run as administrator. Exiting...");
+                        
+                        Console.WriteLine(
+                            $"Ryujinx {Version}: Ryujinx is not intended to be run as administrator. Exiting...");
+
+                        const string sdl = "SDL2";
+                        
+                        [DllImport(sdl)]
+                        static extern int SDL_Init(uint flags);
+                        
+                        [DllImport(sdl, CallingConvention = CallingConvention.Cdecl)]
+                        static extern int SDL_ShowSimpleMessageBox(uint flags, string title, string message, IntPtr window);
+                        
+                        [DllImport(sdl)]
+                        static extern void SDL_Quit();
+                        
+                        SDL_Init(0); 
+                        SDL_ShowSimpleMessageBox(32 /* 32 = warning style */, $"Ryujinx {Version}", "Ryujinx is not intended to be run as administrator.", IntPtr.Zero);
+                        SDL_Quit();
+                        
                         return 0;
                     }
 
@@ -177,7 +198,7 @@ namespace Ryujinx.Ava
                         Logger.Info?.PrintMsg(LogClass.Application,
                             "    AppImage >> https://update.ryujinx.app/download/query?os=linuxappimage&arch=x64&rc=stable");
                         Logger.Info?.PrintMsg(LogClass.Application,
-                            "    Tarball >> http://update.ryujinx.app/download/query?os=linux&arch=x64&rc=stable");
+                            "    Tarball >> https://update.ryujinx.app/download/query?os=linux&arch=x64&rc=stable");
                         Logger.Info?.PrintMsg(LogClass.Application, "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
                     }
                 }
@@ -414,7 +435,7 @@ namespace Ryujinx.Ava
                     "never" => HideCursorMode.Never,
                     "onidle" => HideCursorMode.OnIdle,
                     "always" => HideCursorMode.Always,
-                    _ => ConfigurationState.Instance.HideCursor,
+                    _ => ConfigurationState.Instance.HideCursor
                 };
 
             // Check if memoryManagerMode was overridden. 
