@@ -27,7 +27,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         private readonly AccountManager _accountManager;
 
-        public string SaveManagerHeading => LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.SaveManagerHeading, _accountManager.LastOpenedUser.Name, _accountManager.LastOpenedUser.UserId);
+        public string UserProfiles_SaveManagerHeading => LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.UserProfiles_SaveManagerHeading, _accountManager.LastOpenedUser.Name, _accountManager.LastOpenedUser.UserId);
 
         public UserSaveManagerViewModel(AccountManager accountManager)
         {

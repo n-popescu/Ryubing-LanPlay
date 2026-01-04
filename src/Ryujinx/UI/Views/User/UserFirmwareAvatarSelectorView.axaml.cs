@@ -48,8 +48,8 @@ namespace Ryujinx.Ava.UI.Views.User
             ContentManager = _parent.ContentManager;
 
             ((ContentDialog)_parent.Parent).Title =
-                $"{LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle]} - " +
-                $"{LocaleManager.Instance[LocaleKeys.ProfileImageSelectionHeader]}";
+                $"{LocaleManager.Instance[LocaleKeys.UserProfiles_WindowTitle]} - " +
+                $"{LocaleManager.Instance[LocaleKeys.UserProfiles_AvatarSelectionTitle]}";
 
             _ = Task.Run(() =>
             {

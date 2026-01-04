@@ -29,7 +29,7 @@ namespace Ryujinx.Ava.UI.Views.User
         private bool _isNewUser;
         public static uint MaxProfileNameLength => 0x20;
         public bool IsDeletable => _profile.UserId != AccountManager.DefaultUserId;
-        public string UserEditorTitle => LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.UserEditorTitle, _profile.Name);
+        public string UserEditorTitle => LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.UserProfiles_UserEditorTitle, _profile.Name);
         public UserEditorView()
         {
             InitializeComponent();
@@ -62,8 +62,8 @@ namespace Ryujinx.Ava.UI.Views.User
             }
 
             ((ContentDialog)_parent.Parent).Title =
-                $"{LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle]} - " +
-                $"{(_isNewUser ? LocaleManager.Instance[LocaleKeys.UserEditorTitleNewUser] : UserEditorTitle)}";
+                $"{LocaleManager.Instance[LocaleKeys.UserProfiles_WindowTitle]} - " +
+                $"{(_isNewUser ? LocaleManager.Instance[LocaleKeys.UserProfiles_UserEditorTitleNewUser] : UserEditorTitle)}";
 
             bool hasProfile = _profile != null;
             IdLabel.IsVisible = hasProfile;
@@ -82,9 +82,9 @@ namespace Ryujinx.Ava.UI.Views.User
             if (hasUnsavedChanges)
             {
                 bool confirm = await ContentDialogHelper.CreateChoiceDialog(
-                    LocaleManager.Instance[LocaleKeys.DialogUserProfileUnsavedChangesTitle],
-                    LocaleManager.Instance[LocaleKeys.DialogUserProfileUnsavedChangesMessage],
-                    LocaleManager.Instance[LocaleKeys.DialogUserProfileUnsavedChangesSubMessage]);
+                    LocaleManager.Instance[LocaleKeys.UserProfiles_DialogUserProfileUnsavedChangesTitle],
+                    LocaleManager.Instance[LocaleKeys.UserProfiles_DialogUserProfileUnsavedChangesMessage],
+                    LocaleManager.Instance[LocaleKeys.UserProfiles_DialogUserProfileUnsavedChangesSubMessage]);
 
                 if (confirm)
                     _parent?.GoBack();
@@ -111,14 +111,14 @@ namespace Ryujinx.Ava.UI.Views.User
 
             if (nameEmpty && imageMissing) 
             { 
-                DataValidationErrors.SetError(NameBox, new DataValidationException(LocaleManager.Instance[LocaleKeys.UserProfileEmptyNameError])); 
+                DataValidationErrors.SetError(NameBox, new DataValidationException(LocaleManager.Instance[LocaleKeys.UserProfiles_EmptyNameError])); 
                 DataValidationErrors.SetError(ImageBox, new DataValidationException(""));
                 ImageBox.BorderBrush = Brush.Parse("#ff99a4");
                 return; 
             }
             else if (nameEmpty)
             {
-                DataValidationErrors.SetError(NameBox,new DataValidationException(LocaleManager.Instance[LocaleKeys.UserProfileEmptyNameError]));
+                DataValidationErrors.SetError(NameBox,new DataValidationException(LocaleManager.Instance[LocaleKeys.UserProfiles_EmptyNameError]));
                 return;
             }
             else if (imageMissing)
@@ -162,7 +162,7 @@ namespace Ryujinx.Ava.UI.Views.User
             var window = (Window)this.GetVisualRoot()!;
             var result = await window.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
-                Title = LocaleManager.Instance[LocaleKeys.LoadSupportedImageFormatDialogTitle],
+                Title = LocaleManager.Instance[LocaleKeys.UserProfiles_SupportedImageFormatDialogTitle],
                 AllowMultiple = false,
                 FileTypeFilter = new List<FilePickerFileType>
                 {

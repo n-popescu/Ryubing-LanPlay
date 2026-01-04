@@ -55,7 +55,7 @@ namespace Ryujinx.Ava.UI.Views.User
                 }
 
                 DataContext = ViewModel = new UserSaveManagerViewModel(_accountManager);
-                ((ContentDialog)_parent.Parent).Title = $"{LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle]} - {ViewModel.SaveManagerHeading}";
+                ((ContentDialog)_parent.Parent).Title = $"{LocaleManager.Instance[LocaleKeys.UserProfiles_WindowTitle]} - {ViewModel.UserProfiles_SaveManagerHeading}";
 
                 Task.Run(LoadSaves);
             }
@@ -127,8 +127,8 @@ namespace Ryujinx.Ava.UI.Views.User
             {
                 if (button.DataContext is SaveModel saveModel)
                 {
-                    UserResult result = await ContentDialogHelper.CreateConfirmationDialog(LocaleManager.Instance[LocaleKeys.DeleteUserSave],
-                        LocaleManager.Instance[LocaleKeys.IrreversibleActionNote],
+                    UserResult result = await ContentDialogHelper.CreateConfirmationDialog(LocaleManager.Instance[LocaleKeys.UserProfiles_DeleteUserSave],
+                        LocaleManager.Instance[LocaleKeys.UserProfiles_IrreversibleActionNote],
                         LocaleManager.Instance[LocaleKeys.InputDialogYes],
                         LocaleManager.Instance[LocaleKeys.InputDialogNo],
                         string.Empty);

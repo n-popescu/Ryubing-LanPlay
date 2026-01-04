@@ -136,7 +136,7 @@
                 <MenuItem
                     Command="{Binding ManageProfiles}"
                     Padding="0"
-                    Header="{ext:Locale MenuBarOptionsManageUserProfiles}"
+                    Header="{ext:Locale UserProfiles_MenuBarOptions_OpenUserProfiles}"
                     Icon="{ext:Icon fa-solid fa-user}"
                     IsEnabled="{Binding EnableNonGameRunningControls}"
                     Classes="withCheckbox">

@@ -33,9 +33,9 @@
                           HorizontalContentAlignment="Left"
                           MinWidth="100">
                     <ComboBoxItem
-                        Content="{ext:Locale Name}" />
+                        Content="{ext:Locale UserProfiles_ManageSaves_SortByName}" />
                     <ComboBoxItem
-                        Content="{ext:Locale Size}" />
+                        Content="{ext:Locale UserProfiles_ManageSaves_SortBySize}" />
                     <ComboBox.Styles>
                         <Style Selector="ContentControl#ContentPresenter">
                             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -46,9 +46,9 @@
                           HorizontalContentAlignment="Left"
                           MinWidth="150">
                     <ComboBoxItem
-                        Content="{ext:Locale OrderAscending}" />
+                        Content="{ext:Locale UserProfiles_ManageSaves_SortOrderAscending}" />
                     <ComboBoxItem
-                        Content="{ext:Locale OrderDescending}" />
+                        Content="{ext:Locale UserProfiles_ManageSaves_SortOrderDescending}" />
                     <ComboBox.Styles>
                         <Style Selector="ContentControl#ContentPresenter">
                             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -65,7 +65,7 @@
                     Grid.Column="1"
                     HorizontalAlignment="Stretch"
                     Text="{Binding Search}"
-                    Watermark="{ext:Locale Search}" />
+                    Watermark="{ext:Locale UserProfiles_ManageSaves_Search}" />
             </Grid>
         </Grid>
         <Border

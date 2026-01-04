@@ -71,7 +71,7 @@ namespace Ryujinx.Ava.UI.Controls
             NavigationDialogHost content = new(ownerAccountManager, ownerContentManager, ownerVirtualFileSystem, ownerHorizonClient);
             ContentDialog contentDialog = new()
             {
-                Title = LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle],
+                Title = LocaleManager.Instance[LocaleKeys.UserProfiles_WindowTitle],
                 PrimaryButtonText = string.Empty,
                 SecondaryButtonText = string.Empty,
                 CloseButtonText = string.Empty,

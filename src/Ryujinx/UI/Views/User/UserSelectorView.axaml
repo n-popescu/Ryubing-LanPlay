@@ -133,13 +133,13 @@
             Spacing="10">
             <Button
                 Click="ManageSaves">
-                <TextBlock Text="{ext:Locale UserProfilesManageSaves}" />
+                <TextBlock Text="{ext:Locale UserProfiles_ManageSaves}" />
             </Button>
             <Button
                 Click="RecoverLostAccounts">
                 <TextBlock 
-                    Text="{ext:Locale UserProfilesRecoverLostAccounts}"
-                    ToolTip.Tip="{ext:Locale UserProfilesRecoverLostAccountsToolTip}" />
+                    Text="{ext:Locale UserProfiles_RecoverLostProfiles}"
+                    ToolTip.Tip="{ext:Locale UserProfiles_RecoverLostProfiles_ToolTip}" />
             </Button>
         </StackPanel>
         <StackPanel
@@ -149,7 +149,7 @@
             Orientation="Horizontal">
             <Button
                 Click="Close">
-                <TextBlock Text="{ext:Locale SettingsButtonClose}" />
+                <TextBlock Text="{ext:Locale UserProfiles_ButtonClose}" />
             </Button>
         </StackPanel>
     </Grid>

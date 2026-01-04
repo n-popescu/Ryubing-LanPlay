@@ -57,7 +57,7 @@
                                             Margin="5"
                                             Command="{Binding Recover}"
                                             CommandParameter="{Binding}">
-                                            <TextBlock Text="{ext:Locale Recover}" />
+                                            <TextBlock Text="{ext:Locale UserProfiles_RecoverProfile}" />
                                     </Button>
                                 </Grid>
                             </Border>
@@ -67,7 +67,7 @@
                 <TextBlock
                     IsVisible="{Binding IsEmpty}"
                     TextAlignment="Center"
-                    Text="{ext:Locale UserProfilesRecoverEmptyList}"/>
+                    Text="{ext:Locale UserProfiles_RecoverProfile_EmptyList}"/>
             </Panel>
         </Border>
         <StackPanel

@@ -32,7 +32,7 @@ namespace Ryujinx.Ava.UI.Views.User
 
                         _parent = parent;
 
-                        ((ContentDialog)_parent.Parent).Title = $"{LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle]} - {LocaleManager.Instance[LocaleKeys.UserProfilesRecoverLostAccounts]}";
+                        ((ContentDialog)_parent.Parent).Title = $"{LocaleManager.Instance[LocaleKeys.UserProfiles_WindowTitle]} - {LocaleManager.Instance[LocaleKeys.UserProfiles_RecoverLostProfiles]}";
 
                         break;
                 }

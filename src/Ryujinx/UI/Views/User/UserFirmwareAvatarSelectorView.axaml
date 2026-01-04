@@ -99,10 +99,10 @@
                 </ui:ColorPickerButton.Styles>
             </ui:ColorPickerButton>
             <Button
-                Content="{ext:Locale AvatarChoose}"
+                Content="{ext:Locale UserProfiles_AvatarChoose}"
                 Height="37"
                 Click="ChooseButton_OnClick">
-                <TextBlock Text="{ext:Locale AvatarChoose}" /> 
+                <TextBlock Text="{ext:Locale UserProfiles_AvatarChoose}" /> 
             </Button>
         </StackPanel>
     </Grid>
