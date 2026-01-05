@@ -17,21 +17,16 @@
         <viewModels:ProfileSelectorDialogViewModel />
     </Design.DataContext>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowDefinitions="*,Auto">
-        <StackPanel>
+        <Border BorderThickness="0" Padding="-3">
             <ListBox
-                MaxHeight="300"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Padding="-3"
                 Background="Transparent"
                 ItemsSource="{Binding Profiles}"
                 SelectionChanged="ProfilesList_SelectionChanged">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal" />
+                       <UniformGrid Columns="5" /> 
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
                 <ListBox.Styles>
@@ -82,6 +77,6 @@
                     </DataTemplate>
                 </ListBox.DataTemplates>
             </ListBox>
-        </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

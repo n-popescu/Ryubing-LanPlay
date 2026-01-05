@@ -46,17 +46,15 @@ namespace Ryujinx.Ava.UI.ViewModels
             };
         }
 
+        private int _selectedIndex = -1;
+        
         public int SelectedIndex
         {
-            get;
+            get => _selectedIndex;
             set
             {
-                field = value;
-
-                SelectedImage = field == -1 
-                    ? null 
-                    : Images[field].Data;
-
+                _selectedIndex = value;
+                SelectedImage = value == -1 ? null : Images[value].Data;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(SelectedImage));
             }

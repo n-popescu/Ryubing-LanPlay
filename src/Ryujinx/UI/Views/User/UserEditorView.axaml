@@ -29,22 +29,27 @@
                 IsReadOnly="True"
                 Text="{Binding UserIdString}" />
         </StackPanel>
-        <StackPanel Grid.Column="1" HorizontalAlignment="Right">
+        <Grid Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Stretch">
             <Border
                 Name="ImageBox"
                 BorderBrush="{DynamicResource AppListHoverBackgroundColor}"
-                BorderThickness="1">
-                <Panel>
+                BorderThickness="1"
+                VerticalAlignment="Stretch">
+                <Grid>
                     <ui:SymbolIcon
                         FontSize="70"
                         Width="120"
                         Height="120"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
                         Foreground="{DynamicResource AppListHoverBackgroundColor}"
                         Symbol="Camera" />
                     <Image
                         Name="ProfileImage"
                         Width="120"
                         Height="120"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
                         Source="{Binding Image, Converter={x:Static helpers:BitmapArrayValueConverter.Instance}}" />
                     <Border
                         Margin="2"
@@ -65,21 +70,19 @@
                             <ui:SymbolIcon Symbol="Edit" />
                             <Button.Flyout>
                                 <MenuFlyout Placement="Bottom">
-                                    <MenuItem
-                                        Header="{ext:Locale UserProfiles_ProfileImage_Import}"
-                                        Icon="{ext:Icon fa-solid fa-image}"
-                                        Click="Import_OnClick" />
-                                    <MenuItem
-                                        Header="{ext:Locale UserProfiles_ProfileImage_SelectAvatar}"
-                                        Icon="{ext:Icon fa-solid fa-floppy-disk}"
-                                        Click="SelectFirmwareImage_OnClick" />
+                                    <MenuItem Header="{ext:Locale UserProfiles_ProfileImage_Import}"
+                                            Icon="{ext:Icon fa-solid fa-image}"
+                                            Click="Import_OnClick" />
+                                    <MenuItem Header="{ext:Locale UserProfiles_ProfileImage_SelectAvatar}"
+                                            Icon="{ext:Icon fa-solid fa-floppy-disk}"
+                                            Click="SelectFirmwareImage_OnClick" />
                                 </MenuFlyout>
                             </Button.Flyout>
                         </Button>
                     </Border>
-                </Panel>
+                </Grid>
             </Border>
-        </StackPanel>
+        </Grid>
         <StackPanel
             Grid.Row="1"
             Grid.ColumnSpan="2"
