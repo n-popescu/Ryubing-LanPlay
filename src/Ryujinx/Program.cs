@@ -180,7 +180,6 @@ namespace Ryujinx.Ava
                 .UsePlatformDetect()
                 .With(new X11PlatformOptions
                 {
-                    UseDBusMenu = false,
                     UseDBusFilePicker = false,
                     EnableMultiTouch = true,
                     EnableIme = true,
