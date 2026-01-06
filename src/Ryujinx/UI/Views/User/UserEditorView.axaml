@@ -101,10 +101,10 @@
             Margin="0,30,0,0"
             Spacing="10">
             <Button Name="DeleteButton" Click="DeleteButton_Click">
-                <TextBlock Text="{ext:Locale UserProfiles_Delete}" />
+                <TextBlock Text="{ext:Locale UserProfiles_ButtonDelete}" />
             </Button>
             <Button Name="SaveButton" Click="SaveButton_Click">
-                <TextBlock Text="{ext:Locale UserProfiles_Save}" />
+                <TextBlock Text="{ext:Locale UserProfiles_ButtonSave}" />
             </Button>
         </StackPanel>
     </Grid>

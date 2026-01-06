@@ -76,7 +76,7 @@
       }
     },
     {
-      "ID": "DeleteUserSave",
+      "ID": "DeleteSaveNote",
       "Translations": {
         "ar_SA": "هل حذف بيانات حفظ المستخدم لهذه اللعبة؟",
         "de_DE": "Löschen Sie die gespeicherten Spielstände dieses Spiels?",
@@ -101,7 +101,7 @@
       }
     },
     {
-      "ID": "SaveManagerHeading",
+      "ID": "SaveManagerTitle",
       "Translations": {
         "ar_SA": "حفظات {0}",
         "de_DE": "{0}s Speicherstände",
@@ -551,7 +551,7 @@
       }
     },
     {
-      "ID": "AvatarSelectionTitle",
+      "ID": "SelectAvatarTitle",
       "Translations": {
         "ar_SA": "تحديد أفاتار البرنامج الثابت",
         "de_DE": "Firmware-Avatar auswählen",
@@ -576,7 +576,7 @@
       }
     },
     {
-      "ID": "AvatarChoose",
+      "ID": "ButtonChooseAvatar",
       "Translations": {
         "ar_SA": "اختر الأفاتار",
         "de_DE": "Wähle Avatar",
@@ -676,7 +676,7 @@
       }
     },
     {
-      "ID": "Delete",
+      "ID": "ButtonDelete",
       "Translations": {
         "ar_SA": "حذف",
         "de_DE": "Löschen",
@@ -701,7 +701,7 @@
       }
     },
     {
-      "ID": "Save",
+      "ID": "ButtonSave",
       "Translations": {
         "ar_SA": "حفظ",
         "de_DE": "Speichern",
