@@ -19,7 +19,7 @@
         <viewModels:UserProfileViewModel />
     </Design.DataContext>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowDefinitions="*,Auto">
-        <Border BorderThickness="0" Padding="-3">
+        <Border Padding="-3" BorderThickness="0">
             <ListBox
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
@@ -28,7 +28,10 @@
                 SelectionChanged="ProfilesList_SelectionChanged">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="5" /> 
+                        <WrapPanel
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
                 <ListBox.Styles>
@@ -100,7 +103,7 @@
                     <DataTemplate
                         DataType="viewModels:BaseModel">
                         <Panel
-                            Height="120"
+                            Height="146"
                             Width="106">
                             <Button
                                 MinWidth="50"

@@ -49,6 +49,10 @@
                     </Style>
                     <Style Selector="ListBoxItem /template/ Rectangle#SelectionIndicator">
                         <Setter Property="MinHeight" Value="70" />
+                        <Setter Property="IsVisible" Value="False" />
+                    </Style>
+                    <Style Selector="ListBoxItem:selected /template/ Rectangle#SelectionIndicator">
+                        <Setter Property="IsVisible" Value="True" />
                     </Style>
                 </ListBox.Styles>
                 <ListBox.ItemTemplate>
