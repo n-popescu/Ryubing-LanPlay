@@ -26,7 +26,10 @@
                 SelectionChanged="ProfilesList_SelectionChanged">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                       <UniformGrid Columns="5" /> 
+                        <WrapPanel
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
                 <ListBox.Styles>
