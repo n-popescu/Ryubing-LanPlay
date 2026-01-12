@@ -7,6 +7,7 @@ using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Common.Models;
 using Ryujinx.Ava.Systems.AppLibrary;
 using Ryujinx.Ava.UI.Helpers;
+using Ryujinx.Common.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -148,6 +149,8 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public async Task Add()
         {
+            OsUtils.SetCoreDumpable(true);
+
             IReadOnlyList<IStorageFile> result = await _storageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 AllowMultiple = true,
@@ -176,6 +179,11 @@ namespace Ryujinx.Ava.UI.ViewModels
             if (totalUpdatesAdded > 0)
             {
                 await ShowNewUpdatesAddedDialog(totalUpdatesAdded);
+            }
+            
+            if (!Program.CoreDumpArg)
+            {
+                OsUtils.SetCoreDumpable(false);
             }
         }
 
