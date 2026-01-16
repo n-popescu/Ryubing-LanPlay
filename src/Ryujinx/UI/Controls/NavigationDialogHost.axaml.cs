@@ -156,7 +156,7 @@ namespace Ryujinx.Ava.UI.Controls
                 {
                     _ = Dispatcher.UIThread.InvokeAsync(async ()
                         => await ContentDialogHelper.CreateErrorDialog(
-                            LocaleManager.Instance[LocaleKeys.DialogUserProfileDeletionWarningMessage]));
+                            LocaleManager.Instance[LocaleKeys.UserProfiles_DialogUserProfileDeletionWarningMessage]));
 
                     return;
                 }

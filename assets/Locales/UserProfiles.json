@@ -701,6 +701,31 @@
       }
     },
     {
+      "ID": "DialogUserProfileDeletionWarningMessage",
+      "Translations": {
+        "ar_SA": "لن تكون هناك ملفات الشخصية أخرى لفتحها إذا تم حذف الملف الشخصي المحدد.",
+        "de_DE": "Es können keine anderen Profile geöffnet werden, wenn das ausgewählte Profil gelöscht wird.",
+        "el_GR": "Δεν θα υπάρχουν άλλα προφίλ εάν διαγραφεί το επιλεγμένο.",
+        "en_US": "There would be no other profiles to be opened if selected profile is deleted.",
+        "es_ES": "Si eliminas el perfil seleccionado no quedará ningún otro perfil.",
+        "fr_FR": "Il n'y aurait aucun autre profil à ouvrir si le profil sélectionné est supprimé.",
+        "he_IL": "לא יהיו פרופילים אחרים שייפתחו אם הפרופיל שנבחר יימחק.",
+        "it_IT": "Non ci sarebbero altri profili da aprire se il profilo selezionato venisse cancellato.",
+        "ja_JP": "選択されたプロファイルを削除すると,プロファイルがひとつも存在しなくなります.",
+        "ko_KR": "선택한 프로필을 삭제하면 다른 프로필을 열 수 없음.",
+        "no_NO": "Det vil ikke være noen profiler å åpnes hvis valgt profil blir slettet.",
+        "pl_PL": "Nie będzie innych profili do otwarcia, jeśli wybrany profil zostanie usunięty.",
+        "pt_BR": "Não haveria nenhum perfil selecionado se o perfil atual fosse deletado.",
+        "ru_RU": "Если выбранный профиль будет удален, другие профили не будут открываться.",
+        "sv_SE": "Det skulle inte finnas några andra profiler att öppnas om angiven profil tas bort.",
+        "th_TH": "จะไม่มีโปรไฟล์อื่นให้เปิดหากโปรไฟล์ที่เลือกถูกลบ",
+        "tr_TR": "Seçilen profil silinirse kullanılabilen başka profil kalmayacak.",
+        "uk_UA": "Якщо вибраний профіль буде видалено, інші профілі не відкриватимуться.",
+        "zh_CN": "删除后将没有可用的账户。",
+        "zh_TW": "如果刪除選取的設定檔，將無法開啟其他設定檔。"
+      }
+    },
+    {
       "ID": "ButtonDelete",
       "Translations": {
         "ar_SA": "حذف",
