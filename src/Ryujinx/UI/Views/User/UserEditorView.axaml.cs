@@ -172,6 +172,30 @@ namespace Ryujinx.Ava.UI.Views.User
                         AppleUniformTypeIdentifiers = ["public.jpeg", "public.png", "com.microsoft.bmp"],
                         MimeTypes = ["image/jpeg", "image/png", "image/bmp"],
                     },
+                    new("JPG")
+                    {
+                        Patterns = ["*.jpg"],
+                        AppleUniformTypeIdentifiers = ["public.jpeg"],
+                        MimeTypes = ["image/jpeg"],
+                    },
+                    new("JPEG")
+                    {
+                        Patterns = ["*.jpeg"],
+                        AppleUniformTypeIdentifiers = ["public.jpeg"],
+                        MimeTypes = ["image/jpeg"],
+                    },
+                    new("PNG")
+                    {
+                        Patterns = ["*.png"],
+                        AppleUniformTypeIdentifiers = ["public.png"],
+                        MimeTypes = ["image/png"],
+                    },
+                    new("BMP")
+                    {
+                        Patterns = ["*.bmp"],
+                        AppleUniformTypeIdentifiers = ["com.microsoft.bmp"],
+                        MimeTypes = ["image/bmp"],
+                    },
                 },
             });
 
