@@ -11276,31 +11276,6 @@
       }
     },
     {
-      "ID": "AvatarChoose",
-      "Translations": {
-        "ar_SA": "اختر الأفاتار",
-        "de_DE": "Wähle Avatar",
-        "el_GR": "Επιλέξτε Avatar",
-        "en_US": "Choose Avatar",
-        "es_ES": "Elegir Avatar",
-        "fr_FR": "Choisir un Avatar",
-        "he_IL": "בחרו אוואטר",
-        "it_IT": "Scegli Avatar",
-        "ja_JP": "アバターを選択",
-        "ko_KR": "아바타 선택",
-        "no_NO": "Velg avatar",
-        "pl_PL": "Wybierz awatar",
-        "pt_BR": "Escolher Avatar",
-        "ru_RU": "Выбрать аватар",
-        "sv_SE": "Välj avatar",
-        "th_TH": "เลือกอวาต้าของคุณ",
-        "tr_TR": "Avatar Seç",
-        "uk_UA": "Вибрати аватар",
-        "zh_CN": "选择头像",
-        "zh_TW": "選擇大頭貼"
-      }
-    },
-    {
       "ID": "AvatarSetBackgroundColor",
       "Translations": {
         "ar_SA": "تعيين لون الخلفية",
