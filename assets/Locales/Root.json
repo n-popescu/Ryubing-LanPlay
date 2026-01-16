@@ -13851,31 +13851,6 @@
       }
     },
     {
-      "ID": "DialogUserProfileDeletionConfirmMessage",
-      "Translations": {
-        "ar_SA": "هل حذف الملف الشخصي المحدد؟",
-        "de_DE": "Löschen Sie das ausgewählte Profil?",
-        "el_GR": "Διαγραφή του επιλεγμένου προφίλ;",
-        "en_US": "Delete the selected profile?",
-        "es_ES": "¿Eliminar el perfil seleccionado?",
-        "fr_FR": "Supprimer le profil sélectionné ?",
-        "he_IL": "האם למחוק את הפרופיל שנבחר?",
-        "it_IT": "Eliminare il profilo selezionato?",
-        "ja_JP": "選択されたプロファイルを削除しますか？",
-        "ko_KR": "선택한 프로필을 삭제하시겠습니까?",
-        "no_NO": "Slette den valgte profilen?",
-        "pl_PL": "Usunąć wybrany profil?",
-        "pt_BR": "Excluir o perfil selecionado?",
-        "ru_RU": "Удалить выбранный профиль?",
-        "sv_SE": "Ta bort den valda profilen?",
-        "th_TH": "ลบโปรไฟล์ที่เลือก?",
-        "tr_TR": "Seçilen profili silmek?",
-        "uk_UA": "Видалити вибраний профіль?",
-        "zh_CN": "删除所选账户？",
-        "zh_TW": "刪除所選設定檔？"
-      }
-    },
-    {
       "ID": "DialogControllerSettingsModifiedConfirmMessage",
       "Translations": {
         "ar_SA": "تم تحديث إعدادات وحدة التحكم الحالية.",

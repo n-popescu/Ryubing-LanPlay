@@ -165,7 +165,7 @@ namespace Ryujinx.Ava.UI.Controls
             }
 
             UserResult result = await ContentDialogHelper.CreateConfirmationDialog(
-                LocaleManager.Instance[LocaleKeys.DialogUserProfileDeletionConfirmMessage],
+                LocaleManager.Instance[LocaleKeys.UserProfiles_DialogUserProfileDeletionConfirmMessage],
                 LocaleManager.Instance[LocaleKeys.IrreversibleActionNote],
                 LocaleManager.Instance[LocaleKeys.InputDialogYes],
                 LocaleManager.Instance[LocaleKeys.InputDialogNo],
