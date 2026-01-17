@@ -17,7 +17,7 @@
         <viewModels:ProfileSelectorDialogViewModel />
     </Design.DataContext>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowDefinitions="*,Auto">
-        <Border BorderThickness="0" Padding="-3">
+        <Border Padding="-3" BorderThickness="0">
             <ListBox
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"

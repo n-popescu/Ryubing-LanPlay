@@ -1,19 +1,19 @@
 <UserControl
+    x:Class="Ryujinx.Ava.UI.Views.User.UserRecovererView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ext="clr-namespace:Ryujinx.Ava.Common.Markup"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
+    xmlns:viewModels="clr-namespace:Ryujinx.Ava.UI.ViewModels"
     d:DesignWidth="550"
     d:DesignHeight="450"
+    mc:Ignorable="d"
     Width="500"
     Height="400"
-    xmlns:ext="clr-namespace:Ryujinx.Ava.Common.Markup"
-    xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
-    xmlns:viewModels="clr-namespace:Ryujinx.Ava.UI.ViewModels"
-    x:Class="Ryujinx.Ava.UI.Views.User.UserRecovererView"
-    x:DataType="viewModels:UserProfileViewModel"
-    Focusable="True">
+    Focusable="True"
+    x:DataType="viewModels:UserProfileViewModel">
     <Design.DataContext>
         <viewModels:UserProfileViewModel />
     </Design.DataContext>

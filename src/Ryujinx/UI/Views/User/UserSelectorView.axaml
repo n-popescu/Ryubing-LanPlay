@@ -4,15 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ext="clr-namespace:Ryujinx.Ava.Common.Markup"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="clr-namespace:Ryujinx.Ava.UI.Helpers"
     xmlns:models="clr-namespace:Ryujinx.Ava.UI.Models"
     xmlns:viewModels="clr-namespace:Ryujinx.Ava.UI.ViewModels"
-    xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
     d:DesignHeight="450"
-    MinWidth="500"
     d:DesignWidth="800"
     mc:Ignorable="d"
+    MinWidth="500"
     Focusable="True"
     x:DataType="viewModels:UserProfileViewModel">
     <Design.DataContext>
@@ -88,10 +88,10 @@
                                 Background="{DynamicResource ThemeContentBackgroundColor}"
                                 IsVisible="{Binding IsPointerOver}">
                                 <Button
-                                    MaxHeight="24"
-                                    MaxWidth="24"
                                     MinHeight="24"
                                     MinWidth="24"
+                                    MaxHeight="24"
+                                    MaxWidth="24"
                                     CornerRadius="12"
                                     Padding="0"
                                     Click="EditUser">

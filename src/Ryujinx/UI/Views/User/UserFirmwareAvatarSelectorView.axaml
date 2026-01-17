@@ -1,19 +1,19 @@
 <UserControl
+    x:Class="Ryujinx.Ava.UI.Views.User.UserFirmwareAvatarSelectorView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ext="clr-namespace:Ryujinx.Ava.Common.Markup"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="clr-namespace:Ryujinx.Ava.UI.Helpers"
+    xmlns:viewModels="clr-namespace:Ryujinx.Ava.UI.ViewModels"
+    d:DesignHeight="350"
+    d:DesignWidth="578"
     mc:Ignorable="d"
     Width="528"
-    d:DesignWidth="578"
-    d:DesignHeight="350"
-    x:Class="Ryujinx.Ava.UI.Views.User.UserFirmwareAvatarSelectorView"
-    xmlns:ext="clr-namespace:Ryujinx.Ava.Common.Markup"
-    xmlns:viewModels="clr-namespace:Ryujinx.Ava.UI.ViewModels"
-    xmlns:helpers="clr-namespace:Ryujinx.Ava.UI.Helpers"
-    x:DataType="viewModels:UserFirmwareAvatarSelectorViewModel"
-    Focusable="True">
+    Focusable="True"
+    x:DataType="viewModels:UserFirmwareAvatarSelectorViewModel">
     <Design.DataContext>
         <viewModels:UserFirmwareAvatarSelectorViewModel />
     </Design.DataContext>
