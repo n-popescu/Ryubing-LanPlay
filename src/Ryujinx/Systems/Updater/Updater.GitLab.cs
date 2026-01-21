@@ -7,6 +7,7 @@ using Ryujinx.Common.Logging;
 using Ryujinx.Systems.Update.Client;
 using Ryujinx.Systems.Update.Common;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -45,6 +46,12 @@ namespace Ryujinx.Ava.Systems
             {
                 return Return<VersionResponse>.Failure(
                     new MessageError("DNS resolution error occurred. Is your internet down?"));
+            }
+            catch (HttpRequestException hre)
+                when (hre.StatusCode is HttpStatusCode.BadGateway)
+            {
+                return Return<VersionResponse>.Failure(
+                    new MessageError("Could not connect to the update server, but it appears like you have internet. It seems like the update server is offline, try again later."));
             }
         }
 
