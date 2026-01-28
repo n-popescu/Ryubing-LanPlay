@@ -180,7 +180,6 @@ namespace Ryujinx.Ava
                 .UsePlatformDetect()
                 .With(new X11PlatformOptions
                 {
-                    UseDBusFilePicker = false,
                     EnableMultiTouch = true,
                     EnableIme = true,
                     EnableInputFocusProxy = Environment.GetEnvironmentVariable("XDG_CURRENT_DESKTOP") == "gamescope",
