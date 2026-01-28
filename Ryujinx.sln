@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ryujinx.Graphics.Vic", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ryujinx.Graphics.Video", "src\Ryujinx.Graphics.Video\Ryujinx.Graphics.Video.csproj", "{FD4A2C14-8E3D-4957-ABBE-3C38897B3E2D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ryujinx.Audio.Backends.Apple", "src\Ryujinx.Audio.Backends.Apple\Ryujinx.Audio.Backends.Apple.csproj", "{AC26EFF0-8593-4184-9A09-98E37EFFB32E}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ryujinx.Audio.Backends.SDL3", "src\Ryujinx.Audio.Backends.SDL3\Ryujinx.Audio.Backends.SDL3.csproj", "{988E6191-82E1-4E13-9DDB-CB9FA2FDAF29}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ryujinx.Audio.Backends.OpenAL", "src\Ryujinx.Audio.Backends.OpenAL\Ryujinx.Audio.Backends.OpenAL.csproj", "{0BE11899-DF2D-4BDE-B9EE-2489E8D35E7D}"
@@ -569,6 +571,8 @@ Global
 		{D58FA894-27D5-4EAA-9042-AD422AD82931}.Release|x64.Build.0 = Release|Any CPU
 		{D58FA894-27D5-4EAA-9042-AD422AD82931}.Release|x86.ActiveCfg = Release|Any CPU
 		{D58FA894-27D5-4EAA-9042-AD422AD82931}.Release|x86.Build.0 = Release|Any CPU
+		{AC26EFF0-8593-4184-9A09-98E37EFFB32E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC26EFF0-8593-4184-9A09-98E37EFFB32E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
