@@ -4851,6 +4851,31 @@
       }
     },
     {
+      "ID": "SettingsTabSystemAudioBackendAudioToolbox",
+      "Translations": {
+        "ar_SA": null,
+        "de_DE": null,
+        "el_GR": null,
+        "en_US": "Apple Audio (macOS only)",
+        "es_ES": null,
+        "fr_FR": null,
+        "he_IL": null,
+        "it_IT": null,
+        "ja_JP": null,
+        "ko_KR": null,
+        "no_NO": null,
+        "pl_PL": null,
+        "pt_BR": null,
+        "ru_RU": null,
+        "sv_SE": null,
+        "th_TH": null,
+        "tr_TR": null,
+        "uk_UA": null,
+        "zh_CN": null,
+        "zh_TW": null
+      }
+    },
+    {
       "ID": "SettingsTabSystemHacks",
       "Translations": {
         "ar_SA": "هاكات",
