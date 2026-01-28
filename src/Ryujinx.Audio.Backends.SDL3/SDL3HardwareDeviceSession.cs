@@ -12,10 +12,7 @@ using System.Runtime.InteropServices;
 
 namespace Ryujinx.Audio.Backends.SDL3
 {
-
-
-
-    unsafe class SDL3HardwareDeviceSession : HardwareDeviceSessionOutputBase
+    sealed unsafe class SDL3HardwareDeviceSession : HardwareDeviceSessionOutputBase
     {
         private readonly SDL3HardwareDeviceDriver _driver;
         private readonly ConcurrentQueue<SDL3AudioBuffer> _queuedBuffers;
@@ -226,7 +223,7 @@ namespace Ryujinx.Audio.Backends.SDL3
             return driverBuffer.DriverIdentifier != buffer.DataPointer;
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing && _driver.Unregister(this))
             {
