@@ -1895,7 +1895,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             _palmaOperationCompleteEvent.WritableEvent.Signal();
             return ResultCode.Success;
         }
-        
+
         [CommandCmif(515)] // 5.0.0+
         // WritePalmaWaveEntry(nn::hid::PalmaConnectionHandle, nn::hid::PalmaWaveSet, u64, u64, u64) with copy handle for TransferMemory
         public ResultCode WritePalmaWaveEntry(ServiceCtx context)
