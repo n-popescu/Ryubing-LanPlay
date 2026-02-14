@@ -78,6 +78,42 @@
                         Stretch="Uniform"
                         Source="{Binding JoyconRightImage}"
                         IsVisible="{Binding SupportsRightJoycon}" />
+                    <Image
+                        Height="50"
+                        Width="50"
+                        Stretch="Uniform"
+                        Source="{Binding PokeballImage}"
+                        IsVisible="{Binding SupportsPokeball}" />
+                    <Image
+                        Height="50"
+                        Width="50"
+                        Stretch="Uniform"
+                        Source="{Binding NESImage}"
+                        IsVisible="{Binding SupportsNES}" />
+                    <Image
+                        Height="50"
+                        Width="50"
+                        Stretch="Uniform"
+                        Source="{Binding SNESImage}"
+                        IsVisible="{Binding SupportsSNES}" />
+                    <Image
+                        Height="50"
+                        Width="50"
+                        Stretch="Uniform"
+                        Source="{Binding N64Image}"
+                        IsVisible="{Binding SupportsN64}" />
+                    <Image
+                        Height="50"
+                        Width="50"
+                        Stretch="Uniform"
+                        Source="{Binding GenesisImage}"
+                        IsVisible="{Binding SupportsGenesis}" />
+                    <Image
+                        Height="50"
+                        Width="50"
+                        Stretch="Uniform"
+                        Source="{Binding GamecubeImage}"
+                        IsVisible="{Binding SupportsGamecube}" />
                 </StackPanel>
             </StackPanel>
         </Border>

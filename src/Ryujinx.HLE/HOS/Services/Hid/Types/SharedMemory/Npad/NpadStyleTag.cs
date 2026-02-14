@@ -39,11 +39,6 @@ namespace Ryujinx.HLE.HOS.Services.Hid.Types.SharedMemory.Npad
         JoyRight = 1 << 4,
 
         /// <summary>
-        /// GameCube controller.
-        /// </summary>
-        Gc = 1 << 5,
-
-        /// <summary>
         /// Poké Ball Plus controller.
         /// </summary>
         Palma = 1 << 6,
@@ -62,6 +57,16 @@ namespace Ryujinx.HLE.HOS.Services.Hid.Types.SharedMemory.Npad
         /// SNES controller.
         /// </summary>
         Lucia = 1 << 9,
+        
+        // <summary>
+        // N64 controller.
+        // </summary>
+        Lagon = 1 << 10,
+        
+        // <summary
+        // Sega Genesis controller.
+        // </summary>
+        Lager = 1 << 11,
 
         /// <summary>
         /// Generic external controller.
@@ -72,5 +77,25 @@ namespace Ryujinx.HLE.HOS.Services.Hid.Types.SharedMemory.Npad
         /// Generic controller.
         /// </summary>
         System = 1 << 30,
+        
+        
+        // 0 	NpadStyleFullKey (Pro Controller)
+        // 1 	NpadStyleHandheld (Joy-Con controller in handheld mode)
+        // 2 	NpadStyleJoyDual (Joy-Con controller in dual mode)
+        // 3 	NpadStyleJoyLeft (Joy-Con left controller in single mode)
+        // 4 	NpadStyleJoyRight (Joy-Con right controller in single mode)
+        // 5 	NpadStyleGc (GameCube controller)
+        // 6 	NpadStylePalma (Poké Ball Plus controller)
+        // 7 	NpadStyleLark (NES/Famicom controller)
+        // 8 	NpadStyleHandheldLark (NES/Famicom controller in handheld mode)
+        // 9 	NpadStyleLucia (SNES controller)
+        // 10 	[12.0.0+] NpadStyleLagon (N64 controller)
+        // 11 	[13.0.0+] NpadStyleLager (Sega Genesis controller)
+        // 12-28 	Reserved
+        // 29 	NpadStyleSystemExt (generic external controller)
+        // 30 	NpadStyleSystem (generic controller)
+        // 31 	Reserved 
+            
+        // 0000 0000 0000 [0000 0000 0000 0000 0]00[0]
     }
 }

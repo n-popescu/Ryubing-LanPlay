@@ -120,7 +120,7 @@ namespace Ryujinx.Input
             }
 
             // NOTE: Update Array size if GamepadInputId is changed.
-            Array28<bool> buttonsState = default;
+            Array31<bool> buttonsState = default;
             Span<bool> buttonsStateSpan = buttonsState.AsSpan();
 
             for (GamepadButtonInputId inputId = GamepadButtonInputId.A; inputId < GamepadButtonInputId.Count; inputId++)

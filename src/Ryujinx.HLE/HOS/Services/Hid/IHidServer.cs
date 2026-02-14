@@ -16,7 +16,6 @@ namespace Ryujinx.HLE.HOS.Services.Hid
     class IHidServer : IpcService
     {
         private readonly KEvent _xpadIdEvent;
-        private readonly KEvent _palmaOperationCompleteEvent;
 
         private int _xpadIdEventHandle;
 
@@ -30,6 +29,11 @@ namespace Ryujinx.HLE.HOS.Services.Hid
 
         private NpadHandheldActivationMode _npadHandheldActivationMode;
         private GyroscopeZeroDriftMode _gyroscopeZeroDriftMode;
+
+        private int _palmaConnectionHandle;
+        private long _palmaOperationType;
+        private bool _palmaConnectable;
+        private readonly KEvent _palmaOperationCompleteEvent;
 
         private long _npadCommunicationMode;
         private uint _accelerometerPlayMode;
@@ -562,11 +566,19 @@ namespace Ryujinx.HLE.HOS.Services.Hid
         // SetGyroscopeZeroDriftMode(nn::hid::SixAxisSensorHandle, uint GyroscopeZeroDriftMode, nn::applet::AppletResourceUserId)
         public ResultCode SetGyroscopeZeroDriftMode(ServiceCtx context)
         {
+            // PID Descriptor
             int sixAxisSensorHandle = context.RequestData.ReadInt32();
-            _gyroscopeZeroDriftMode = (GyroscopeZeroDriftMode)context.RequestData.ReadInt32();
+            uint gyroscopeZeroDriftModeValue = context.RequestData.ReadUInt32();
             long appletResourceUserId = context.RequestData.ReadInt64();
 
-            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { appletResourceUserId, sixAxisSensorHandle, _gyroscopeZeroDriftMode });
+            if (gyroscopeZeroDriftModeValue != 0
+                && gyroscopeZeroDriftModeValue != 1
+                && gyroscopeZeroDriftModeValue != 2)
+            {
+                throw new ArgumentException("Unknown GyroscopeZeroDriftMode value!!", gyroscopeZeroDriftModeValue.ToString());
+            }
+
+            context.Device.Hid.Npads.setSixAxisMode((GyroscopeZeroDriftMode) gyroscopeZeroDriftModeValue);
 
             return ResultCode.Success;
         }
@@ -575,13 +587,12 @@ namespace Ryujinx.HLE.HOS.Services.Hid
         // GetGyroscopeZeroDriftMode(nn::applet::AppletResourceUserId, nn::hid::SixAxisSensorHandle) -> int GyroscopeZeroDriftMode
         public ResultCode GetGyroscopeZeroDriftMode(ServiceCtx context)
         {
+            // PID Descriptor
             int sixAxisSensorHandle = context.RequestData.ReadInt32();
             context.RequestData.BaseStream.Position += 4; // Padding
             long appletResourceUserId = context.RequestData.ReadInt64();
 
-            context.ResponseData.Write((int)_gyroscopeZeroDriftMode);
-
-            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { appletResourceUserId, sixAxisSensorHandle, _gyroscopeZeroDriftMode });
+            context.ResponseData.Write((int) context.Device.Hid.Npads.getSixAxisMode());
 
             return ResultCode.Success;
         }
@@ -590,13 +601,19 @@ namespace Ryujinx.HLE.HOS.Services.Hid
         // ResetGyroscopeZeroDriftMode(nn::hid::SixAxisSensorHandle, nn::applet::AppletResourceUserId)
         public ResultCode ResetGyroscopeZeroDriftMode(ServiceCtx context)
         {
+            // PID
             int sixAxisSensorHandle = context.RequestData.ReadInt32();
             context.RequestData.BaseStream.Position += 4; // Padding
             long appletResourceUserId = context.RequestData.ReadInt64();
 
-            _gyroscopeZeroDriftMode = GyroscopeZeroDriftMode.Standard;
+            GyroscopeZeroDriftMode previousMode = context.Device.Hid.Npads.getSixAxisMode();
+            context.Device.Hid.Npads.setSixAxisMode(GyroscopeZeroDriftMode.Standard);
+            GyroscopeZeroDriftMode currentMode = context.Device.Hid.Npads.getSixAxisMode();
 
-            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { appletResourceUserId, sixAxisSensorHandle, _gyroscopeZeroDriftMode });
+            if (currentMode != GyroscopeZeroDriftMode.Standard)
+            {
+                Logger.Warning?.PrintMsg(LogClass.ServiceHid, $"ResetGyroscopeZeroDriftMode failed!! Previous:  {previousMode}, Current: {currentMode}");
+            }
 
             return ResultCode.Success;
         }
@@ -605,30 +622,30 @@ namespace Ryujinx.HLE.HOS.Services.Hid
         // IsSixAxisSensorAtRest(nn::hid::SixAxisSensorHandle, nn::applet::AppletResourceUserId) -> bool IsAtRest
         public ResultCode IsSixAxisSensorAtRest(ServiceCtx context)
         {
-            int sixAxisSensorHandle = context.RequestData.ReadInt32();
-            
+            uint sixAxisSensorHandle = context.RequestData.ReadUInt32();
+
             // 4 byte struct w/ 4-byte alignment
-            
-            // uint typeValue = (uint) sixAxisSensorHandle;                 // 0x0 	0x4 	TypeValue
-            // uint npadStyleIndex = (uint) sixAxisSensorHandle & 0xff;     // 0x0 	0x1 	NpadStyleIndex
-            int playerNumber = (sixAxisSensorHandle << 8) & 0xff;           // 0x1 	0x1 	PlayerNumber
-            // uint deviceIdx= ((uint) sixAxisSensorHandle << 16) & 0xff;   // 0x2 	0x1 	DeviceIdx 
-            // uint unknown = ((uint) sixAxisSensorHandle << 24) & 0xff;
-            
+
+            // uint typeValue = sixAxisSensorHandle;                 // 0x0 	0x4 	TypeValue
+            // uint npadStyleIndex = sixAxisSensorHandle & 0xff;     // 0x0 	0x1 	NpadStyleIndex
+            uint playerNumber = (sixAxisSensorHandle << 8) & 0xff;   // 0x1 	0x1 	PlayerNumber
+            // uint deviceIdx= (sixAxisSensorHandle << 16) & 0xff;   // 0x2 	0x1 	DeviceIdx
+            // uint unknown = (sixAxisSensorHandle << 24) & 0xff;
+
             // 32bit sign extension padding -> if = 0, + offset, else - offset
-            
+
             // npadStyleIndex = ((npadStyleIndex & 0x8000) == 0) ? npadStyleIndex | 0xFFFF0000 : npadStyleIndex & 0xFFFF0000;
             // playerNumber = ((playerNumber & 0x8000) == 0) ? playerNumber | 0xFFFF0000 : playerNumber & 0xFFFF0000;
             // deviceIdx = ((deviceIdx & 0x8000) == 0) ? deviceIdx | 0xFFFF0000 : deviceIdx & 0xFFFF0000;
             // unknown = ((unknown & 0x8000) == 0) ? unknown | 0xFFFF0000 : unknown & 0xFFFF0000;
-            
+
             context.RequestData.BaseStream.Position += 4; // Padding
             long appletResourceUserId = context.RequestData.ReadInt64();
-            
+
             // TODO: link to context.Device.Hid.Npads.SixAxisActive when properly implemented
             // We currently do not support stopping or starting SixAxisTracking.
-            
-            context.ResponseData.Write(context.Device.Hid.Npads.isAtRest(playerNumber));
+
+            context.ResponseData.Write(context.Device.Hid.Npads.isAtRest((int) playerNumber));
             return ResultCode.Success;
         }
 
@@ -643,7 +660,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             context.ResponseData.Write(_isFirmwareUpdateAvailableForSixAxisSensor);
 
             Logger.Stub?.PrintStub(LogClass.ServiceHid, new { appletResourceUserId, sixAxisSensorHandle, _isFirmwareUpdateAvailableForSixAxisSensor });
-            
+
             return ResultCode.Success;
         }
 
@@ -1643,17 +1660,20 @@ namespace Ryujinx.HLE.HOS.Services.Hid
         }
 
         [CommandCmif(500)] // 5.0.0+
-        // GetPalmaConnectionHandle(uint Unknown0, nn::applet::AppletResourceUserId) -> nn::hid::PalmaConnectionHandle
+        // GetPalmaConnectionHandle(uint nn::hid::NpadIdType, nn::applet::AppletResourceUserId) -> nn::hid::PalmaConnectionHandle
         public ResultCode GetPalmaConnectionHandle(ServiceCtx context)
         {
-            int unknown0 = context.RequestData.ReadInt32();
+            uint npadIdType = context.RequestData.ReadUInt32();
             long appletResourceUserId = context.RequestData.ReadInt64();
 
-            int palmaConnectionHandle = 0;
+            if (context.Process.HandleTable.GenerateHandle(_palmaOperationCompleteEvent.ReadableEvent, out _palmaConnectionHandle) !=
+                Result.Success) {
+                throw new InvalidOperationException("Out of handles!");
+            }
 
-            context.ResponseData.Write(palmaConnectionHandle);
+            context.ResponseData.Write(_palmaConnectionHandle);
 
-            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { appletResourceUserId, unknown0, palmaConnectionHandle });
+            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { appletResourceUserId, npadIdType, _palmaConnectionHandle });
 
             return ResultCode.Success;
         }
@@ -1666,7 +1686,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
 
             Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle });
 
-            _palmaOperationCompleteEvent.ReadableEvent.Signal();
+            _palmaOperationCompleteEvent.ReadableEvent. Signal();
 
             return ResultCode.Success;
         }
@@ -1677,12 +1697,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
         {
             int palmaConnectionHandle = context.RequestData.ReadInt32();
 
-            if (context.Process.HandleTable.GenerateHandle(_palmaOperationCompleteEvent.ReadableEvent, out int handle) != Result.Success)
-            {
-                throw new InvalidOperationException("Out of handles!");
-            }
-
-            context.Response.HandleDesc = IpcHandleDesc.MakeCopy(handle);
+            context.Response.HandleDesc = IpcHandleDesc.MakeCopy(palmaConnectionHandle);
 
             Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle });
 
@@ -1690,16 +1705,34 @@ namespace Ryujinx.HLE.HOS.Services.Hid
         }
 
         [CommandCmif(503)] // 5.0.0+
-        // GetPalmaOperationInfo(nn::hid::PalmaConnectionHandle) -> long Unknown0, buffer<Unknown>
+        // GetPalmaOperationInfo(nn::hid::PalmaConnectionHandle, 0x6 output buffer) -> (u64) nn::hid::PalmaOperationType
         public ResultCode GetPalmaOperationInfo(ServiceCtx context)
         {
             int palmaConnectionHandle = context.RequestData.ReadInt32();
 
-            long unknown0 = 0; //Counter?
+            uint outputBuffer = context.RequestData.ReadUInt32();
 
-            context.ResponseData.Write(unknown0);
+            // 0  0000 0000 	PlayActivity
+            // 1  0000 0001 	SetFrModeType
+            // 2  0000 0010	    ReadStep
+            // 3  0000 0011	    EnableStep
+            // 4  0000 0100	    ResetStep
+            // 5  0000 0101	    ReadApplicationSection
+            // 6  0000 0110	    WriteApplicationSection
+            // 7  0000 0111	    ReadUniqueCode
+            // 8  0000 1000	    SetUniqueCodeInvalid
+            // 9  0000 1001	    WriteActivityEntry
+            // 10 0000 1010	    WriteRgbLedPatternEntry
+            // 11 0000 1011	    WriteWaveEntry
+            // 12 0000 1100	    ReadDataBaseIdentificationVersion
+            // 13 0000 1101	    WriteDataBaseIdentificationVersion
+            // 14 0000 1110	    SuspendFeature
+            // 15 0000 1111	    ReadPlayLog [5.1.0+]
+            // 16 0001 0000	    ResetPlayLog [5.1.0+]
 
-            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle, unknown0 });
+            context.ResponseData.Write(_palmaOperationType);
+
+            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle, outputBuffer, _palmaOperationType });
 
             return ResultCode.Success;
         }
@@ -1794,6 +1827,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
 
             Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle, unknown0, unknown1 });
 
+            // if write is disabled, we need to toss this data
             _palmaOperationCompleteEvent.ReadableEvent.Signal();
 
             return ResultCode.Success;
@@ -1821,15 +1855,159 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             return ResultCode.Success;
         }
 
+        [CommandCmif(513)]
+        // Takes an input #PalmaConnectionHandle, an u64, an u64, an u64, an u64, no output.
+        public ResultCode WritePalmaActivityEntry(ServiceCtx context)
+        {
+            int palmaConnectionHandle = context.RequestData.ReadInt32();
+            ulong unknown0 = context.RequestData.ReadUInt64();
+            ulong unknown1 = context.RequestData.ReadUInt64();
+            ulong unknown2 = context.RequestData.ReadUInt64();
+            ulong unknown3 = context.RequestData.ReadUInt64();
+
+            Logger.Stub?.PrintStub(LogClass.ServiceHid, new
+            {
+                palmaConnectionHandle,
+                unknown0,
+                unknown1,
+                unknown2,
+                unknown3
+            });
+
+            _palmaOperationType = 9; // WritePalmaActivityEntry = OperationType 9
+            // if write is disabled, we need to toss this data
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
+            return ResultCode.Success;
+        }
+
+        [CommandCmif((514))]
+        // Takes an input #PalmaConnectionHandle, an u64, a type-0x5 input buffer, no output.
+        public ResultCode WritePalmaRgbLedEntry(ServiceCtx context)
+        {
+            int palmaConnectionHandle = context.RequestData.ReadInt32();
+            ulong unknown0 = context.RequestData.ReadUInt64();
+            byte[] inputBuffer = context.RequestData.ReadBytes(5);
+
+            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle, unknown0, inputBuffer });
+
+            _palmaOperationType = 10; // WritePalmaRgbLedEntry = OperationType 10
+            // if write is disabled, we need to toss this data
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
+            return ResultCode.Success;
+        }
+
+        [CommandCmif(515)] // ?
+        // WritePalmaWaveEntry( (u32) nn::hid::PalmaConnectionHandle, (u64) nn::hid::PalmaWaveSet, (u64 exposed as u16) unknown, (struct?) TransferMemory handle, (u64) tmem_size, (u64) size)
+        public ResultCode WritePalmaWaveEntry(ServiceCtx context)
+        {
+            int palmaConnectionHandle = context.RequestData.ReadInt32();
+            context.RequestData.ReadUInt32(); // Padding Pt. 1
+            ulong palmaWaveSet = context.RequestData.ReadUInt64();
+            UInt16 unknown0 = context.RequestData.ReadUInt16();
+            context.RequestData.ReadUInt32(); // Padding Pt. 2
+            context.RequestData.ReadUInt16(); // Padding Pt. 3
+            ulong tmem_handle = context.RequestData.ReadUInt64();
+            ulong tmem_size = context.RequestData.ReadUInt64();
+            ulong size = context.RequestData.ReadUInt64();
+
+            // The TransferMemory is created from a user-specified buffer with permissions=R--
+            Logger.Stub?.PrintStub(LogClass.ServiceHid,
+                new
+                {
+                    palmaConnectionHandle,
+                    palmaWaveSet,
+                    unknown0,
+                    tmem_handle,
+                    tmem_size,
+                    size
+                });
+
+            _palmaOperationType = 11; // WritePalmaWaveEntry = OperationType 11
+            // if write is disabled, we need to toss this data
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
+            return ResultCode.Success;
+        }
+
+        [CommandCmif(517)] // 5.1.0+
+        // GetPalmaDatabaseIdentificationVersion(nn::hid::PalmaConnectionHandle)
+        public ResultCode GetPalmaDatabaseIdentificationVersion(ServiceCtx context)
+        {
+            int palmaConnectionHandle = context.RequestData.ReadInt32();
+            int palmaDatabaseIdentificationVersion = 1;
+
+            _palmaOperationType = 12; // ReadDatabaseIdentificationVersion = OperationType 12
+
+            context.ResponseData.Write(palmaDatabaseIdentificationVersion);
+            _palmaOperationCompleteEvent.ReadableEvent.Signal();
+
+            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle, palmaDatabaseIdentificationVersion });
+
+            return ResultCode.Success;
+        }
+
+        [CommandCmif(518)] // 5.1.0+
+        // SuspendPalmaFeature(nn::util::BitFlagSet<32, nn::hid::PalmaFeature>, nn::hid::PalmaConnectionHandle)
+        public ResultCode SuspendPalmaFeature(ServiceCtx context)
+        {
+
+            // 32 bit flag
+            uint palmaFeature = context.RequestData.ReadUInt32();
+
+            uint frMode = palmaFeature << 0;
+            uint rumbleFeedback = palmaFeature << 1;
+            uint step = palmaFeature << 2;
+            uint muteSwitch = palmaFeature << 3;
+
+            if (frMode != 0     // Off
+                && frMode != 1  // B01
+                && frMode != 2  // B02
+                && frMode != 3  // B03
+                && frMode != 4) // Downloaded
+            {
+                throw new ArgumentException($"FrMode must be a value between 0 and 4!! FrMode: {frMode}");
+            }
+
+            int palmaConnectionHandle = context.RequestData.ReadInt32();
+
+            Logger.Stub?.PrintStub(LogClass.ServiceHid, new
+            {
+                palmaFeature,
+                frMode,
+                rumbleFeedback,
+                step,
+                muteSwitch,
+                palmaConnectionHandle
+            });
+
+            _palmaOperationType = 14; // SuspendFeature = OperationType 14
+            _palmaOperationCompleteEvent.ReadableEvent.Signal();
+
+            return ResultCode.Success;
+        }
+
+
+        [CommandCmif(519)] // 5.1.0+
+        // GetPalmaOperationResult(nn::hid::PalmaConnectionHandle)
+        public ResultCode GetPalmaOperationResult(ServiceCtx context)
+        {
+            int palmaConnectionHandle = context.RequestData.ReadInt32();
+            // _palmaOperationCompleteEvent.ReadableEvent.Signal();
+
+            bool palmaResult = true;
+            context.ResponseData.Write(palmaResult);
+
+            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle, _palmaOperationType, palmaResult });
+            return ResultCode.Success;
+        }
+
         [CommandCmif(522)] // 5.1.0+
         // SetIsPalmaAllConnectable(nn::applet::AppletResourceUserId, bool, pid)
         public ResultCode SetIsPalmaAllConnectable(ServiceCtx context)
         {
             long appletResourceUserId = context.RequestData.ReadInt64();
-            long unknownBool = context.RequestData.ReadInt64();
+            _palmaConnectable = context.RequestData.ReadBoolean();
 
-            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { appletResourceUserId, unknownBool });
-
+            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { appletResourceUserId, _palmaConnectable });
             return ResultCode.Success;
         }
 
@@ -1837,6 +2015,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
         // SetPalmaBoostMode(bool)
         public ResultCode SetPalmaBoostMode(ServiceCtx context)
         {
+            bool palmaBoostMode = context.RequestData.ReadBoolean();
             // NOTE: Stubbed in system module.
 
             return ResultCode.Success;

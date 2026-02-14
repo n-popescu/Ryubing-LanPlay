@@ -12,14 +12,14 @@ namespace Ryujinx.Input
         // NOTE: Update Array size if JoystickInputId is changed.
         private Array3<Array2<float>> _joysticksState;
         // NOTE: Update Array size if GamepadInputId is changed.
-        private Array28<bool> _buttonsState;
+        private Array31<bool> _buttonsState;
 
         /// <summary>
         /// Create a new instance of <see cref="GamepadStateSnapshot"/>.
         /// </summary>
         /// <param name="joysticksState">The joysticks state</param>
         /// <param name="buttonsState">The buttons state</param>
-        public GamepadStateSnapshot(Array3<Array2<float>> joysticksState, Array28<bool> buttonsState)
+        public GamepadStateSnapshot(Array3<Array2<float>> joysticksState, Array31<bool> buttonsState)
         {
             _joysticksState = joysticksState;
             _buttonsState = buttonsState;

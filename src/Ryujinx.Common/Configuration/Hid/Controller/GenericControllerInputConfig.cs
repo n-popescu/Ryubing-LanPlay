@@ -22,6 +22,11 @@ namespace Ryujinx.Common.Configuration.Hid.Controller
         /// Right JoyCon Controller Stick Bindings
         /// </summary>
         public JoyconConfigControllerStick<TButton, TStick> RightJoyconStick { get; set; }
+        
+        /// <summary>
+        /// Pokeball Plus Controller Stick Bindings
+        /// </summary>
+        public PokeballControllerInputConfig<TButton, TStick> Pokeball { get; set; }
 
         /// <summary>
         /// Controller Left Analog Stick Deadzone

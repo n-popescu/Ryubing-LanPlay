@@ -20,17 +20,36 @@ namespace Ryujinx.Ava.UI.Applet
         private const string JoyConPairResource = "Ryujinx/Assets/Icons/Controller_JoyConPair.svg";
         private const string JoyConLeftResource = "Ryujinx/Assets/Icons/Controller_JoyConLeft.svg";
         private const string JoyConRightResource = "Ryujinx/Assets/Icons/Controller_JoyConRight.svg";
+        private const string PokeballResource = "Ryujinx/Assets/Icons/Controller_Pokeball.svg";
+        private const string NESResource = "Ryujinx/Assets/Icons/Controller_NES.svg";
+        private const string SNESResource = "Ryujinx/Assets/Icons/Controller_SNES.svg";
+        private const string N64Resource = "Ryujinx/Assets/Icons/Controller_N64.svg";
+        private const string GenesisResource = "Ryujinx/Assets/Icons/Controller_Genesis.svg";
+        private const string GamecubeResource = "Ryujinx/Assets/Icons/Controller_Gamecube.svg";
+        // TODO: Make actual graphics -- currently they're all SDL controllers.
 
         public static SvgImage ProControllerImage => GetResource(ProControllerResource);
         public static SvgImage JoyconPairImage => GetResource(JoyConPairResource);
         public static SvgImage JoyconLeftImage => GetResource(JoyConLeftResource);
         public static SvgImage JoyconRightImage => GetResource(JoyConRightResource);
+        public static SvgImage PokeballImage => GetResource(PokeballResource);
+        public static SvgImage NESImage => GetResource(NESResource);
+        public static SvgImage SNESImage => GetResource(SNESResource);
+        public static SvgImage N64Image => GetResource(N64Resource);
+        public static SvgImage GenesisImage => GetResource(GenesisResource);
+        public static SvgImage GamecubeImage => GetResource(GamecubeResource);
 
         public string PlayerCount { get; set; } = string.Empty;
         public bool SupportsProController { get; set; }
         public bool SupportsLeftJoycon { get; set; }
         public bool SupportsRightJoycon { get; set; }
         public bool SupportsJoyconPair { get; set; }
+        public bool SupportsPokeball { get; set; }
+        public bool SupportsNES { get; set; }
+        public bool SupportsSNES {  get; set; }
+        public bool SupportsN64 { get; set; }
+        public bool SupportsGenesis { get; set; }
+        public bool SupportsGamecube { get; set; }
         public bool IsDocked { get; set; }
 
         private readonly MainWindow _mainWindow;
@@ -45,6 +64,12 @@ namespace Ryujinx.Ava.UI.Applet
             SupportsLeftJoycon = (args.SupportedStyles & ControllerType.JoyconLeft) != 0;
             SupportsRightJoycon = (args.SupportedStyles & ControllerType.JoyconRight) != 0;
             SupportsJoyconPair = (args.SupportedStyles & ControllerType.JoyconPair) != 0;
+            SupportsPokeball = (args.SupportedStyles & ControllerType.Pokeball) != 0;
+            SupportsNES = (args.SupportedStyles & ControllerType.NES) != 0;
+            SupportsSNES = (args.SupportedStyles & ControllerType.SNES) != 0;
+            SupportsN64 = (args.SupportedStyles & ControllerType.N64) != 0;
+            SupportsGenesis = (args.SupportedStyles & ControllerType.SegaGenesis) != 0;
+            SupportsGamecube = (args.SupportedStyles & ControllerType.Gamecube) != 0;
 
             IsDocked = args.IsDocked;
 

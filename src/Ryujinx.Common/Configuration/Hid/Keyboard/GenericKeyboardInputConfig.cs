@@ -11,5 +11,10 @@ namespace Ryujinx.Common.Configuration.Hid.Keyboard
         /// Right JoyCon Controller Stick Bindings
         /// </summary>
         public JoyconConfigKeyboardStick<TKey> RightJoyconStick { get; set; }
+        
+        /// <summary>
+        /// Pokeball Plus Controller Stick Bindings
+        /// </summary>
+        public PokeballConfigKeyboardStick<TKey> Pokeball { get; set; }
     }
 }

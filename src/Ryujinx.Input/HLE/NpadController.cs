@@ -304,6 +304,7 @@ namespace Ryujinx.Input.HLE
 
                             if (controllerConfig.ControllerType == ConfigControllerType.JoyconPair)
                             {
+                                // TODO: Include HandheldLark
                                 if (gamepad.Id == "JoyConPair")
                                 {
                                     Vector3 rightAccelerometer = gamepad.GetMotionData(MotionInputId.SecondAccelerometer);

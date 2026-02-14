@@ -34,13 +34,21 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 {
     public partial class InputViewModel : BaseModel, IDisposable
     {
-        private const string Disabled = "disabled";
         private const string ProControllerResource = "Ryujinx/Assets/Icons/Controller_ProCon.svg";
         private const string JoyConPairResource = "Ryujinx/Assets/Icons/Controller_JoyConPair.svg";
         private const string JoyConLeftResource = "Ryujinx/Assets/Icons/Controller_JoyConLeft.svg";
         private const string JoyConRightResource = "Ryujinx/Assets/Icons/Controller_JoyConRight.svg";
+        private const string PokeballResource = "Ryujinx/Assets/Icons/Controller_Pokeball.svg";
+        private const string NESResource = "Ryujinx/Assets/Icons/Controller_NES.svg";
+        private const string SNESResource = "Ryujinx/Assets/Icons/Controller_SNES.svg";
+        private const string N64Resource = "Ryujinx/Assets/Icons/Controller_N64.svg";
+        private const string GenesisResource = "Ryujinx/Assets/Icons/Controller_Genesis.svg";
+        private const string GamecubeResource = "Ryujinx/Assets/Icons/Controller_Gamecube.svg";
+        
+        private const string Disabled = "disabled";
         private const string KeyboardString = "keyboard";
         private const string ControllerString = "controller";
+        
         private readonly MainWindow _mainWindow;
 
         private PlayerIndex _playerId;
@@ -49,6 +57,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         private string _controllerImage;
         private int _device;
         private bool _isChangeTrackingActive;
+        
         [ObservableProperty]
         public partial bool IsModified { get; set; }
 
@@ -210,6 +219,24 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                             ControllerImage = JoyConRightResource;
                             IsLeft = false;
                             break;
+                        case ControllerType.Pokeball:
+                            ControllerImage = PokeballResource;
+                            break;
+                        case ControllerType.NES:
+                            ControllerImage = NESResource;
+                            break;
+                        case ControllerType.SNES:
+                            ControllerImage = SNESResource;
+                            break;
+                        case ControllerType.N64:
+                            ControllerImage = N64Resource;
+                            break;
+                        case ControllerType.SegaGenesis:
+                            ControllerImage = GenesisResource;
+                            break;
+                        case ControllerType.Gamecube:
+                            ControllerImage = GamecubeResource;
+                            break;
                     }
 
                     LoadInputDriver();
@@ -238,7 +265,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             get
             {
                 SvgImage image = new();
-
+                Logger.Info?.PrintMsg(LogClass.UI, $"Loading controller image: {_controllerImage}");
                 if (!string.IsNullOrWhiteSpace(_controllerImage))
                 {
                     SvgSource source = SvgSource.LoadFromStream(EmbeddedResources.GetStream(_controllerImage));
@@ -509,7 +536,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             if (_playerId == PlayerIndex.Handheld)
             {
                 Controllers.Add(new(ControllerType.Handheld, LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypeHandheld]));
-
+                Controllers.Add(new(ControllerType.NESHandheld, "NES Handheld" /*LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypeHandheld]*/));
                 Controller = 0;
             }
             else
@@ -518,6 +545,12 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 Controllers.Add(new(ControllerType.JoyconPair, LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypeJoyConPair]));
                 Controllers.Add(new(ControllerType.JoyconLeft, LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypeJoyConLeft]));
                 Controllers.Add(new(ControllerType.JoyconRight, LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypeJoyConRight]));
+                Controllers.Add(new (ControllerType.Pokeball, "Pokéball Plus" /*LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypePokeball]*/));
+                Controllers.Add(new (ControllerType.NES, "NES - Nintendo Entertainment System Controller" /*LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypeNES]*/));
+                Controllers.Add(new (ControllerType.SNES, "SNES - Super Nintendo Entertainment System Controller" /*LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypeSNES]*/));
+                Controllers.Add(new (ControllerType.N64, "Nintendo 64 Controller" /*LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypeN64]*/));
+                Controllers.Add(new (ControllerType.SegaGenesis, "Sega Genesis Controller" /*LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypeGenesis]*/));
+                Controllers.Add(new (ControllerType.Gamecube, "Gamecube Controller" /*LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypeGamecube]*/));
 
                 if (Config != null && Controllers.ToList().FindIndex(x => x.Type == Config.ControllerType) != -1)
                 {
@@ -526,6 +559,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                     // Avalonia bug: setting a newly instanced ComboBox to 0
                     // causes the selected item to show up blank
                     // Workaround: set the box to 1 and then 0
+                    // https://github.com/AvaloniaUI/Avalonia/issues/13281
                     if (controllerIndex == 0)
                     {
                         Controller = 1;
@@ -718,11 +752,21 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                         StickRight = Key.L,
                         StickButton = Key.H,
                     },
+                    Pokeball = new PokeballConfigKeyboardStick<Key>
+                    {
+                        StickUp = Key.I,
+                        StickDown = Key.K,
+                        StickLeft = Key.J,
+                        StickRight = Key.L,
+                        StickButton = Key.H,
+                        TopButton = Key.X,
+                    },
                 };
             }
             else if (activeDevice.Type == DeviceType.Controller)
             {
-                bool isNintendoStyle = Devices.ToList().FirstOrDefault(x => x.Id == activeDevice.Id).Name.Contains("Nintendo");
+                bool isNintendoStyle = Devices.ToList().FirstOrDefault(x => x.Id == activeDevice.Id).Name.Contains("Nintendo")
+                    | Devices.ToList().FirstOrDefault(x => x.Id == activeDevice.Id).Name.Contains("Pokemon");
 
                 string id = activeDevice.Id.Split(" ")[0];
                 string name = activeDevice.Name;
@@ -776,6 +820,12 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                         StickButton = ConfigGamepadInputId.RightStick,
                         InvertStickX = false,
                         InvertStickY = false,
+                    },
+                    Pokeball = new PokeballControllerInputConfig<ConfigGamepadInputId, ConfigStickInputId>
+                    {
+                        Joystick = ConfigStickInputId.Left,
+                        StickButton = isNintendoStyle ? ConfigGamepadInputId.A : ConfigGamepadInputId.B,
+                        TopButton = isNintendoStyle ? ConfigGamepadInputId.B : ConfigGamepadInputId.A,
                     },
                     Motion = new StandardMotionConfigController
                     {

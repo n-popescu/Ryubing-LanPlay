@@ -1,3 +1,4 @@
+using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Ipc;
 using Ryujinx.HLE.HOS.Kernel.Threading;
 using Ryujinx.HLE.HOS.Services.Bluetooth.BluetoothDriver;
@@ -96,6 +97,34 @@ namespace Ryujinx.HLE.HOS.Services.Bluetooth
             }
 
             context.Response.HandleDesc = IpcHandleDesc.MakeCopy(initializeEventHandle);
+
+            return ResultCode.Success;
+        }
+
+        [CommandCmif(57)]
+        // Takes a type-0x19 input buffer containing a #BleAdvertiseFilter, no output. 
+        public ResultCode AddBleScanFilterCondition(ServiceCtx context)
+        {
+
+            byte[] inputBuffer = context.RequestData.ReadBytes(25);
+            
+            // struct: BleAdvertiseFilter
+
+            // ulong filterId = inputBuffer;                                                   // 0x0 	0x1 	FilterId
+            // ulong condDataSize = (inputBuffer << 0) & 0xff;                                 // 0x1 	0x1 	CondDataSize. Only used with CondType Manu.
+            // ulong condType = (inputBuffer << 8) & 0xff;                                     // 0x2 	0x1 	CondType
+            // ulong condData = (inputBuffer << 16) & 0xff;                                    // 0x3 	0x1D 	CondData, content depends on CondType.
+            // ulong mask = (inputBuffer << 20) & 0xff;                                        // 0x20 0x1D 	Mask. Only used with CondType Manu. +0 = u16 CompanyIdMask, then {pattern mask}.
+            // ulong maskSize = (inputBuffer << 61) & 0xff;                                    // 0x3D 0x1 	MaskSize. Only used with CondType Manu.
+            
+            // CondType:
+            // Value 	Name 	Description
+            // 2-3 		ServiceUuid16. CondData = 16bit UUID which is byteswapped.
+            // 4-5 		ServiceUuid32. CondData = 32bit UUID which is byteswapped.
+            // 6-7 		ServiceUuid128. CondData = 128bit UUID which is copied raw into the param struct.
+            // 255 		Manu. CondData: u16 CompanyId, then {pattern data}. 
+
+            Logger.Stub?.PrintMsg(LogClass.ServiceBtm, $"inputBuffer: {string.Join(", ", inputBuffer)}");
 
             return ResultCode.Success;
         }
