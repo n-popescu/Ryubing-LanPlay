@@ -5,6 +5,9 @@ namespace Ryujinx.Common.Configuration.Hid.Controller
     [JsonConverter(typeof(JsonStringEnumConverter<GamepadInputId>))]
     public enum GamepadInputId : byte
     {
+        
+        // NOTE: Update GamepadStateSnapshot::_buttonState or GamepadStateSnapshot::_joystickState if this is changed.
+        
         Unbound,
         A,
         B,
@@ -35,6 +38,11 @@ namespace Ryujinx.Common.Configuration.Hid.Controller
 
         Guide,
         Misc1,
+        
+        // Pokeball Plus
+        Top,
+        JoystickButton,
+        Joystick,
 
         // Xbox Elite paddle
         Paddle1,

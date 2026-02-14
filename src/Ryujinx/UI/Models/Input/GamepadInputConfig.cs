@@ -17,6 +17,7 @@ namespace Ryujinx.Ava.UI.Models.Input
         public bool MirrorInput { get; set; }
         public int Sensitivity { get; set; }
         public double GyroDeadzone { get; set; }
+        public bool PokeballWrite { get; set; }
 
         public float WeakRumble { get; set; }
         public float StrongRumble { get; set; }

@@ -325,6 +325,15 @@ namespace Ryujinx.Ava.Systems.Configuration
                         StickRight = Key.L,
                         StickButton = Key.H,
                     },
+                    Pokeball = new PokeballConfigKeyboardStick<Key>
+                    {
+                        StickUp = Key.I,
+                        StickDown = Key.K,
+                        StickLeft = Key.J,
+                        StickRight = Key.L,
+                        StickButton = Key.H,
+                        TopButton = Key.X,
+                    },
                 }
             ];
             Debug.EnableGdbStub.Value = false;

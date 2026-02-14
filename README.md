@@ -4,7 +4,7 @@
             <img src="https://raw.githubusercontent.com/Ryubing/Assets/refs/heads/main/RyujinxApp_1024.png" alt="Ryujinx" >
         </td>
         <td align="center" width="75%">
-          
+
 # Ryujinx
 
 [![Latest release](https://git.ryujinx.app/projects/Ryubing/badges/release.svg?label=stable&color=32cd32)](https://update.ryujinx.app/latest/stable)

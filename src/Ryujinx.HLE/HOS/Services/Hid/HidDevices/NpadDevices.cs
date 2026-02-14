@@ -40,9 +40,17 @@ namespace Ryujinx.HLE.HOS.Services.Hid
         {
             _configuredTypes = new ControllerType[MaxControllers];
 
-            SupportedStyleSets = ControllerType.Handheld | ControllerType.JoyconPair |
-                                 ControllerType.JoyconLeft | ControllerType.JoyconRight |
-                                 ControllerType.ProController;
+            SupportedStyleSets = ControllerType.Handheld
+                                 | ControllerType.JoyconPair
+                                 | ControllerType.JoyconLeft
+                                 | ControllerType.JoyconRight
+                                 | ControllerType.ProController
+                                 | ControllerType.Pokeball
+                                 | ControllerType.NES
+                                 | ControllerType.SNES
+                                 | ControllerType.N64
+                                 | ControllerType.SegaGenesis
+                                 | ControllerType.Gamecube;
 
             _supportedPlayers = new bool[MaxControllers];
             _supportedPlayers.AsSpan().Fill(true);
@@ -260,7 +268,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
 #pragma warning disable IDE0055 // Disable formatting
                 case ControllerType.ProController:
                     controller.StyleSet           = NpadStyleTag.FullKey;
-                    controller.DeviceType         = DeviceType.FullKey;
+                    controller.DeviceType         = DeviceType.SwitchProController;
                     controller.SystemProperties  |= NpadSystemProperties.IsAbxyButtonOriented |
                                                     NpadSystemProperties.IsPlusAvailable      |
                                                     NpadSystemProperties.IsMinusAvailable;
@@ -268,8 +276,8 @@ namespace Ryujinx.HLE.HOS.Services.Hid
                     break;
                 case ControllerType.Handheld:
                     controller.StyleSet           = NpadStyleTag.Handheld;
-                    controller.DeviceType         = DeviceType.HandheldLeft |
-                                                    DeviceType.HandheldRight;
+                    controller.DeviceType         = DeviceType.JoyConLeft |
+                                                    DeviceType.JoyConRight;
                     controller.SystemProperties  |= NpadSystemProperties.IsAbxyButtonOriented |
                                                     NpadSystemProperties.IsPlusAvailable      |
                                                     NpadSystemProperties.IsMinusAvailable;
@@ -277,8 +285,8 @@ namespace Ryujinx.HLE.HOS.Services.Hid
                     break;
                 case ControllerType.JoyconPair:
                     controller.StyleSet           = NpadStyleTag.JoyDual;
-                    controller.DeviceType         = DeviceType.JoyLeft |
-                                                    DeviceType.JoyRight;
+                    controller.DeviceType         = DeviceType.JoyConLeft |
+                                                    DeviceType.JoyConRight;
                     controller.SystemProperties  |= NpadSystemProperties.IsAbxyButtonOriented |
                                                     NpadSystemProperties.IsPlusAvailable      |
                                                     NpadSystemProperties.IsMinusAvailable;
@@ -287,7 +295,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
                 case ControllerType.JoyconLeft:
                     controller.StyleSet           = NpadStyleTag.JoyLeft;
                     controller.JoyAssignmentMode  = NpadJoyAssignmentMode.Single;
-                    controller.DeviceType         = DeviceType.JoyLeft;
+                    controller.DeviceType         = DeviceType.JoyConLeft;
                     controller.SystemProperties  |= NpadSystemProperties.IsSlSrButtonOriented |
                                                     NpadSystemProperties.IsMinusAvailable;
                     controller.AppletFooterUiType = _device.System.State.DockedMode ? AppletFooterUiType.JoyDualLeftOnly : AppletFooterUiType.HandheldJoyConLeftOnly;
@@ -295,7 +303,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
                 case ControllerType.JoyconRight:
                     controller.StyleSet           = NpadStyleTag.JoyRight;
                     controller.JoyAssignmentMode  = NpadJoyAssignmentMode.Single;
-                    controller.DeviceType         = DeviceType.JoyRight;
+                    controller.DeviceType         = DeviceType.JoyConRight;
                     controller.SystemProperties  |= NpadSystemProperties.IsSlSrButtonOriented |
                                                     NpadSystemProperties.IsPlusAvailable;
                     controller.AppletFooterUiType = _device.System.State.DockedMode ? AppletFooterUiType.JoyDualRightOnly : AppletFooterUiType.HandheldJoyConRightOnly;
@@ -303,8 +311,46 @@ namespace Ryujinx.HLE.HOS.Services.Hid
                 case ControllerType.Pokeball:
                     controller.StyleSet           = NpadStyleTag.Palma;
                     controller.DeviceType         = DeviceType.Palma;
-                    controller.AppletFooterUiType = AppletFooterUiType.None;
+                    controller.AppletFooterUiType = AppletFooterUiType.Palma;
                     break;
+                case ControllerType.NESHandheld:
+                    controller.StyleSet           = NpadStyleTag.Lark;
+                    controller.DeviceType         = DeviceType.LarkNesLeft
+                                                    | DeviceType.LarkNesRight
+                                                    | DeviceType.LarkHvcLeft
+                                                    | DeviceType.LarkHvcRight;
+                    controller.SystemProperties  |= NpadSystemProperties.IsAbxyButtonOriented |
+                                                    NpadSystemProperties.IsPlusAvailable      |
+                                                    NpadSystemProperties.IsMinusAvailable;
+                    controller.AppletFooterUiType = AppletFooterUiType.HandheldLark;
+                    break;
+                case ControllerType.NES:
+                    controller.StyleSet           = NpadStyleTag.HandheldLark;
+                    controller.JoyAssignmentMode  = NpadJoyAssignmentMode.Dual;
+                    controller.DeviceType         = DeviceType.LarkNesLeft
+                                                    | DeviceType.LarkNesRight
+                                                    | DeviceType.LarkHvcLeft
+                                                    | DeviceType.LarkHvcRight;
+                    controller.SystemProperties  |= NpadSystemProperties.IsSlSrButtonOriented |
+                                                    NpadSystemProperties.IsMinusAvailable;
+                    controller.AppletFooterUiType = AppletFooterUiType.Lark;
+                    break;
+                case ControllerType.SNES:
+                    controller.StyleSet           = NpadStyleTag.Lucia;
+                    controller.DeviceType         = DeviceType.Lucia;
+                    controller.AppletFooterUiType = AppletFooterUiType.Lucia;
+                    break;
+                case ControllerType.N64:
+                    controller.StyleSet           = NpadStyleTag.Lagon;
+                    controller.DeviceType         = DeviceType.Lagon;
+                    controller.AppletFooterUiType = AppletFooterUiType.Lagon;
+                    break;
+                case ControllerType.SegaGenesis:
+                    controller.StyleSet           = NpadStyleTag.Lager;
+                    controller.DeviceType         = DeviceType.Lager;
+                    controller.AppletFooterUiType = AppletFooterUiType.Lager;
+                    break;
+
 #pragma warning restore IDE0055
             }
 
@@ -371,6 +417,18 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             state.SamplingNumber = previousEntry.SamplingNumber + 1;
 
             lifo.Write(ref state);
+        }
+
+        private GyroscopeZeroDriftMode sixAxisMode;
+
+        public void setSixAxisMode(GyroscopeZeroDriftMode mode)
+        {
+            sixAxisMode = mode;
+        }
+
+        public GyroscopeZeroDriftMode getSixAxisMode()
+        {
+            return sixAxisMode;
         }
 
         private void UpdateInput(GamepadInput state)
@@ -504,7 +562,17 @@ namespace Ryujinx.HLE.HOS.Services.Hid
                     return ref npad.JoyLeftSixAxisSensor;
                 case NpadStyleTag.JoyRight:
                     return ref npad.JoyRightSixAxisSensor;
+                case NpadStyleTag.Palma:
+                    return ref npad.PokeballSixAxisSensor;
+                // TODO: Fully flesh out sixAxisSensor for these controllers.
+                case NpadStyleTag.Lark:
+                case NpadStyleTag.HandheldLark:
+                case NpadStyleTag.Lucia:
+                case NpadStyleTag.Lagon:
+                case NpadStyleTag.Lager:
+                    return ref npad.FullKeySixAxisSensor;
                 default:
+                    Logger.Error?.PrintMsg(LogClass.ServiceHid, "Bug: This controller has no reference!!");
                     throw new NotImplementedException($"{npad.StyleSet}");
             }
         }
@@ -581,7 +649,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
 
             return needUpdateRight;
         }
-        
+
         public bool isAtRest(int playerNumber)
         {
             ref NpadInternalState currentNpad = ref _device.Hid.SharedMemory.Npads[playerNumber].InternalState;
@@ -590,9 +658,9 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             {
                 return true; // it will always be at rest because it cannot move.
             }
-            
+
             ref SixAxisSensorState storage = ref GetSixAxisSensorLifo(ref currentNpad, false).GetCurrentEntryRef();
-                
+
             float acceleration = Math.Abs(storage.Acceleration.X)
                                  + Math.Abs(storage.Acceleration.Y)
                                  + Math.Abs(storage.Acceleration.Z);

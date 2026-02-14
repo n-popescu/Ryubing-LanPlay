@@ -22,6 +22,8 @@ namespace Ryujinx.HLE.HOS.Services.Hid.Types.SharedMemory.Npad
         public RingLifo<SixAxisSensorState> JoyDualRightSixAxisSensor;
         public RingLifo<SixAxisSensorState> JoyLeftSixAxisSensor;
         public RingLifo<SixAxisSensorState> JoyRightSixAxisSensor;
+        public RingLifo<SixAxisSensorState> PokeballSixAxisSensor;
+        
         public DeviceType DeviceType;
 #pragma warning disable IDE0051 // Remove unused private member
         private readonly uint _reserved1;
@@ -40,6 +42,10 @@ namespace Ryujinx.HLE.HOS.Services.Hid.Types.SharedMemory.Npad
         public NpadLarkType LarkTypeLeftAndMain;
         public NpadLarkType LarkTypeRight;
         public NpadLuciaType LuciaType;
+        public NpadPalmaType PalmaType;
+        public NpadLagonType  LagonType;
+        public NpadLagerType LagerType;
+        
         public uint Unknown43EC;
         public ulong SixAxisSensorPropertiesArray;
 
