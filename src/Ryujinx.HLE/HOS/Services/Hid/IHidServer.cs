@@ -1686,7 +1686,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
 
             Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle });
 
-            _palmaOperationCompleteEvent.ReadableEvent. Signal();
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
 
             return ResultCode.Success;
         }
@@ -1746,7 +1746,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
 
             Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle, unknown0 });
 
-            _palmaOperationCompleteEvent.ReadableEvent.Signal();
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
 
             return ResultCode.Success;
         }
@@ -1760,7 +1760,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
 
             Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle, frModeType });
 
-            _palmaOperationCompleteEvent.ReadableEvent.Signal();
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
 
             return ResultCode.Success;
         }
@@ -1785,7 +1785,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
 
             Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle, enabledPalmaStep });
 
-            _palmaOperationCompleteEvent.ReadableEvent.Signal();
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
 
             return ResultCode.Success;
         }
@@ -1798,7 +1798,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
 
             Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle });
 
-            _palmaOperationCompleteEvent.ReadableEvent.Signal();
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
 
             return ResultCode.Success;
         }
@@ -1828,7 +1828,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle, unknown0, unknown1 });
 
             // if write is disabled, we need to toss this data
-            _palmaOperationCompleteEvent.ReadableEvent.Signal();
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
 
             return ResultCode.Success;
         }
@@ -1895,35 +1895,51 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             _palmaOperationCompleteEvent.WritableEvent.Signal();
             return ResultCode.Success;
         }
-
-        [CommandCmif(515)] // ?
-        // WritePalmaWaveEntry( (u32) nn::hid::PalmaConnectionHandle, (u64) nn::hid::PalmaWaveSet, (u64 exposed as u16) unknown, (struct?) TransferMemory handle, (u64) tmem_size, (u64) size)
+        
+        [CommandCmif(515)] // 5.0.0+
+        // WritePalmaWaveEntry(nn::hid::PalmaConnectionHandle, nn::hid::PalmaWaveSet, u64, u64, u64) with copy handle for TransferMemory
         public ResultCode WritePalmaWaveEntry(ServiceCtx context)
         {
             int palmaConnectionHandle = context.RequestData.ReadInt32();
-            context.RequestData.ReadUInt32(); // Padding Pt. 1
+            context.RequestData.ReadUInt32(); // Padding
             ulong palmaWaveSet = context.RequestData.ReadUInt64();
-            UInt16 unknown0 = context.RequestData.ReadUInt16();
-            context.RequestData.ReadUInt32(); // Padding Pt. 2
-            context.RequestData.ReadUInt16(); // Padding Pt. 3
-            ulong tmem_handle = context.RequestData.ReadUInt64();
-            ulong tmem_size = context.RequestData.ReadUInt64();
+            ulong unknown0 = context.RequestData.ReadUInt64();
+            ulong tmemSize = context.RequestData.ReadUInt64();
             ulong size = context.RequestData.ReadUInt64();
 
-            // The TransferMemory is created from a user-specified buffer with permissions=R--
+            // The TransferMemory handle is passed as an IPC copy handle, not in the raw data.
+            // Close it immediately since we don't use the wave data in our stub.
+            if (context.Request.HandleDesc != null && context.Request.HandleDesc.ToCopy.Length > 0)
+            {
+                context.Device.System.KernelContext.Syscall.CloseHandle(context.Request.HandleDesc.ToCopy[0]);
+            }
+
             Logger.Stub?.PrintStub(LogClass.ServiceHid,
                 new
                 {
                     palmaConnectionHandle,
                     palmaWaveSet,
                     unknown0,
-                    tmem_handle,
-                    tmem_size,
+                    tmemSize,
                     size
                 });
 
             _palmaOperationType = 11; // WritePalmaWaveEntry = OperationType 11
-            // if write is disabled, we need to toss this data
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
+            return ResultCode.Success;
+        }
+
+        [CommandCmif(516)] // 5.0.0+
+        // SetPalmaDataBaseIdentificationVersion(nn::hid::PalmaConnectionHandle, s64 DatabaseIdentificationVersion)
+        public ResultCode SetPalmaDataBaseIdentificationVersion(ServiceCtx context)
+        {
+            // CMIF orders parameters by alignment: s64 (8-byte) before u32 (4-byte)
+            long palmaDatabaseIdentificationVersion = context.RequestData.ReadInt64();
+            int palmaConnectionHandle = context.RequestData.ReadInt32();
+
+            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle, palmaDatabaseIdentificationVersion });
+
+            _palmaOperationType = 13; // WriteDataBaseIdentificationVersion = OperationType 13
             _palmaOperationCompleteEvent.WritableEvent.Signal();
             return ResultCode.Success;
         }
@@ -1938,7 +1954,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             _palmaOperationType = 12; // ReadDatabaseIdentificationVersion = OperationType 12
 
             context.ResponseData.Write(palmaDatabaseIdentificationVersion);
-            _palmaOperationCompleteEvent.ReadableEvent.Signal();
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
 
             Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle, palmaDatabaseIdentificationVersion });
 
@@ -1980,7 +1996,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             });
 
             _palmaOperationType = 14; // SuspendFeature = OperationType 14
-            _palmaOperationCompleteEvent.ReadableEvent.Signal();
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
 
             return ResultCode.Success;
         }
@@ -2000,6 +2016,32 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             return ResultCode.Success;
         }
 
+        [CommandCmif(520)] // 5.1.0+
+        // ReadPalmaPlayLog(nn::hid::PalmaConnectionHandle, u16)
+        public ResultCode ReadPalmaPlayLog(ServiceCtx context)
+        {
+            int palmaConnectionHandle = context.RequestData.ReadInt32();
+
+            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle });
+
+            _palmaOperationType = 15; // ReadPlayLog = OperationType 15
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
+            return ResultCode.Success;
+        }
+
+        [CommandCmif(521)] // 5.1.0+
+        // ResetPalmaPlayLog(nn::hid::PalmaConnectionHandle, u16)
+        public ResultCode ResetPalmaPlayLog(ServiceCtx context)
+        {
+            int palmaConnectionHandle = context.RequestData.ReadInt32();
+
+            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle });
+
+            _palmaOperationType = 16; // ResetPlayLog = OperationType 16
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
+            return ResultCode.Success;
+        }
+
         [CommandCmif(522)] // 5.1.0+
         // SetIsPalmaAllConnectable(nn::applet::AppletResourceUserId, bool, pid)
         public ResultCode SetIsPalmaAllConnectable(ServiceCtx context)
@@ -2008,6 +2050,29 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             _palmaConnectable = context.RequestData.ReadBoolean();
 
             Logger.Stub?.PrintStub(LogClass.ServiceHid, new { appletResourceUserId, _palmaConnectable });
+            return ResultCode.Success;
+        }
+
+        [CommandCmif(523)] // 5.1.0+
+        // SetIsPalmaPairedConnectable(nn::applet::AppletResourceUserId, bool, pid)
+        public ResultCode SetIsPalmaPairedConnectable(ServiceCtx context)
+        {
+            long appletResourceUserId = context.RequestData.ReadInt64();
+            bool isPairedConnectable = context.RequestData.ReadBoolean();
+
+            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { appletResourceUserId, isPairedConnectable });
+            return ResultCode.Success;
+        }
+
+        [CommandCmif(524)] // 5.1.0+
+        // PairPalma(nn::hid::PalmaConnectionHandle)
+        public ResultCode PairPalma(ServiceCtx context)
+        {
+            int palmaConnectionHandle = context.RequestData.ReadInt32();
+
+            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { palmaConnectionHandle });
+
+            _palmaOperationCompleteEvent.WritableEvent.Signal();
             return ResultCode.Success;
         }
 
