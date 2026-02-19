@@ -56,12 +56,15 @@ namespace Ryujinx.Ava.UI.Windows
         private static bool _startFullscreen;
         private IDisposable _appLibraryAppsSubscription;
 
+        private IDisposable _isActiveSubscription;
+        private IDisposable _windowStateSubscription;
+        private IDisposable _widthSubscription;
+        private IDisposable _heightSubscription;
+
         public VirtualFileSystem VirtualFileSystem { get; private set; }
         public ContentManager ContentManager { get; private set; }
         public AccountManager AccountManager { get; private set; }
-
         public LibHacHorizonManager LibHacHorizonManager { get; private set; }
-
         public InputManager InputManager { get; private set; }
 
         public SettingsWindow SettingsWindow { get; set; }
@@ -69,18 +72,21 @@ namespace Ryujinx.Ava.UI.Windows
         public static bool ShowKeyErrorOnLoad { get; set; }
         public ApplicationLibrary ApplicationLibrary { get; set; }
 
-        // Correctly size window when 'TitleBar' is enabled (Nov. 14, 2024)
         public readonly double TitleBarHeight;
-
         public readonly double StatusBarHeight;
         public readonly double MenuBarHeight;
 
-        public MainWindow() : base(useCustomTitleBar: true)
+        // Persist last-known NORMAL bounds in DIPs so non-normal (fullscreen/maximized) doesn't poison saved placement.
+        private Point _lastNormalPositionDip;
+        private double _lastNormalWidth;
+        private double _lastNormalHeight;
+        private bool _hasLastNormalBounds;
+
+        private double _lastRenderScaling;
+
+        public MainWindow() : base(true)
         {
-            DataContext = ViewModel = new MainWindowViewModel
-            {
-                Window = this
-            };
+            DataContext = ViewModel = new MainWindowViewModel { Window = this };
 
             InitializeComponent();
             Load();
@@ -96,19 +102,23 @@ namespace Ryujinx.Ava.UI.Windows
             TitleBar.Height = MenuBarHeight;
 
             // Correctly size window when 'TitleBar' is enabled (Nov. 14, 2024)
-            TitleBarHeight = (ConfigurationState.Instance.ShowOldUI ? TitleBar.Height : 0);
+            TitleBarHeight = ConfigurationState.Instance.ShowOldUI ? TitleBar.Height : 0;
 
             ApplicationList.DataContext = DataContext;
             ApplicationGrid.DataContext = DataContext;
 
             SetWindowSizePosition();
+            InitializeWindowBoundsTracking();
+
+            _lastRenderScaling = RenderScaling;
+            ScalingChanged += OnScalingChanged;
 
             if (Program.PreviewerDetached)
             {
                 InputManager = new InputManager(new AvaloniaKeyboardDriver(this), new SDL3GamepadDriver());
 
-                _ = this.GetObservable(IsActiveProperty).Subscribe(it => ViewModel.IsActive = it);
-                this.ScalingChanged += OnScalingChanged;
+                _isActiveSubscription = this.GetObservable(IsActiveProperty)
+                    .Subscribe(it => ViewModel.IsActive = it);
             }
         }
 
@@ -118,12 +128,31 @@ namespace Ryujinx.Ava.UI.Windows
         private static void OnPlatformColorValuesChanged(object sender, PlatformColorValues e)
         {
             if (Application.Current is RyujinxApp app)
+            {
                 app.ApplyConfiguredTheme(ConfigurationState.Instance.UI.BaseStyle);
+            }
         }
 
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
+
+            _isActiveSubscription?.Dispose();
+            _isActiveSubscription = null;
+
+            _windowStateSubscription?.Dispose();
+            _windowStateSubscription = null;
+
+            _widthSubscription?.Dispose();
+            _widthSubscription = null;
+
+            _heightSubscription?.Dispose();
+            _heightSubscription = null;
+
+            PositionChanged -= OnPositionChangedForBoundsTracking;
+
+            ScalingChanged -= OnScalingChanged;
+
             if (PlatformSettings != null)
             {
                 PlatformSettings.ColorValuesChanged -= OnPlatformColorValuesChanged;
@@ -148,19 +177,54 @@ namespace Ryujinx.Ava.UI.Windows
                         CommandLineState.FirmwareToInstallPathArg = default;
                     }
                     else
-                        Logger.Notice.Print(LogClass.UI, "Invalid firmware type provided. Path must be a directory, or a .zip or .xci file.");
+                    {
+                        Logger.Notice.Print(LogClass.UI,
+                            "Invalid firmware type provided. Path must be a directory, or a .zip or .xci file.");
+                    }
                 }
             });
         }
 
         private void OnScalingChanged(object sender, EventArgs e)
         {
-            Program.DesktopScaleFactor = this.RenderScaling;
+            double newScale = RenderScaling;
+
+            if (Math.Abs(newScale - _lastRenderScaling) < 0.0001)
+            {
+                return;
+            }
+
+            _lastRenderScaling = newScale;
+            Program.DesktopScaleFactor = newScale;
+
+            // Only clamp + refresh cached NORMAL bounds when we're in Normal.
+            if (WindowState != WindowState.Normal)
+            {
+                return;
+            }
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (WindowState != WindowState.Normal)
+                {
+                    return;
+                }
+
+                Screen screen = GetBestScreenForPoint(Position);
+                if (screen != null)
+                {
+                    PixelSize windowSizePx = GetWindowPixelSize(Width, Height);
+                    Position = ClampToWorkingArea(Position, screen.WorkingArea, windowSizePx);
+                }
+
+                UpdateLastNormalBoundsIfSafe();
+            }, DispatcherPriority.Background);
         }
 
         private void ApplicationLibrary_ApplicationCountUpdated(object sender, ApplicationCountUpdatedEventArgs e)
         {
-            LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBarGamesLoaded, e.NumAppsLoaded, e.NumAppsFound);
+            LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBarGamesLoaded, e.NumAppsLoaded,
+                e.NumAppsFound);
 
             Dispatcher.UIThread.Post(() =>
             {
@@ -187,7 +251,8 @@ namespace Ryujinx.Ava.UI.Windows
                 ViewModel.UsableLdnData.Clear();
                 foreach (ApplicationData application in ViewModel.Applications.Where(it => it.HasControlHolder))
                 {
-                    ViewModel.UsableLdnData[application.IdString] = LdnGameModel.GetArrayForApp(e.LdnData, ref application.ControlHolder.Value);
+                    ViewModel.UsableLdnData[application.IdString] =
+                        LdnGameModel.GetArrayForApp(e.LdnData, ref application.ControlHolder.Value);
 
                     UpdateApplicationWithLdnData(application);
                 }
@@ -198,7 +263,8 @@ namespace Ryujinx.Ava.UI.Windows
 
         private void UpdateApplicationWithLdnData(ApplicationData application)
         {
-            if (application.HasControlHolder && ViewModel.UsableLdnData.TryGetValue(application.IdString, out LdnGameModel.Array ldnGameDatas))
+            if (application.HasControlHolder &&
+                ViewModel.UsableLdnData.TryGetValue(application.IdString, out LdnGameModel.Array ldnGameDatas))
             {
                 application.PlayerCount = ldnGameDatas.PlayerCount;
                 application.GameCount = ldnGameDatas.GameCount;
@@ -222,7 +288,8 @@ namespace Ryujinx.Ava.UI.Windows
             args.Handled = true;
         }
 
-        internal static void DeferLoadApplication(string launchPathArg, string launchApplicationId, bool startFullscreenArg)
+        internal static void DeferLoadApplication(string launchPathArg, string launchApplicationId,
+            bool startFullscreenArg)
         {
             _deferLoad = true;
             _launchPath = launchPathArg;
@@ -266,10 +333,11 @@ namespace Ryujinx.Ava.UI.Windows
             LibHacHorizonManager.InitializeBcatServer();
             LibHacHorizonManager.InitializeSystemClients();
 
-            ApplicationLibrary = new ApplicationLibrary(VirtualFileSystem, ConfigurationState.Instance.System.IntegrityCheckLevel)
-            {
-                DesiredLanguage = ConfigurationState.Instance.System.Language,
-            };
+            ApplicationLibrary =
+                new ApplicationLibrary(VirtualFileSystem, ConfigurationState.Instance.System.IntegrityCheckLevel)
+                {
+                    DesiredLanguage = ConfigurationState.Instance.System.Language
+                };
 
             // Save data created before we supported extra data in directory save data will not work properly if
             // given empty extra data. Luckily some of that extra data can be created using the data from the
@@ -318,26 +386,32 @@ namespace Ryujinx.Ava.UI.Windows
             switch (response)
             {
                 case UserResult.Ok:
-                    rc = LinuxHelper.RunPkExec($"echo {LinuxHelper.RecommendedVmMaxMapCount} > {LinuxHelper.VmMaxMapCountPath}");
+                    rc = LinuxHelper.RunPkExec(
+                        $"echo {LinuxHelper.RecommendedVmMaxMapCount} > {LinuxHelper.VmMaxMapCountPath}");
                     if (rc == 0)
                     {
-                        Logger.Info?.Print(LogClass.Application, $"vm.max_map_count set to {LinuxHelper.VmMaxMapCount} until the next restart.");
+                        Logger.Info?.Print(LogClass.Application,
+                            $"vm.max_map_count set to {LinuxHelper.VmMaxMapCount} until the next restart.");
                     }
                     else
                     {
-                        Logger.Error?.Print(LogClass.Application, $"Unable to change vm.max_map_count. Process exited with code: {rc}");
+                        Logger.Error?.Print(LogClass.Application,
+                            $"Unable to change vm.max_map_count. Process exited with code: {rc}");
                     }
 
                     break;
                 case UserResult.No:
-                    rc = LinuxHelper.RunPkExec($"echo \"vm.max_map_count = {LinuxHelper.RecommendedVmMaxMapCount}\" > {LinuxHelper.SysCtlConfigPath} && sysctl -p {LinuxHelper.SysCtlConfigPath}");
+                    rc = LinuxHelper.RunPkExec(
+                        $"echo \"vm.max_map_count = {LinuxHelper.RecommendedVmMaxMapCount}\" > {LinuxHelper.SysCtlConfigPath} && sysctl -p {LinuxHelper.SysCtlConfigPath}");
                     if (rc == 0)
                     {
-                        Logger.Info?.Print(LogClass.Application, $"vm.max_map_count set to {LinuxHelper.VmMaxMapCount}. Written to config: {LinuxHelper.SysCtlConfigPath}");
+                        Logger.Info?.Print(LogClass.Application,
+                            $"vm.max_map_count set to {LinuxHelper.VmMaxMapCount}. Written to config: {LinuxHelper.SysCtlConfigPath}");
                     }
                     else
                     {
-                        Logger.Error?.Print(LogClass.Application, $"Unable to write new value for vm.max_map_count to config. Process exited with code: {rc}");
+                        Logger.Error?.Print(LogClass.Application,
+                            $"Unable to write new value for vm.max_map_count to config. Process exited with code: {rc}");
                     }
 
                     break;
@@ -348,7 +422,8 @@ namespace Ryujinx.Ava.UI.Windows
         {
             if (OperatingSystem.IsLinux() && LinuxHelper.VmMaxMapCount < LinuxHelper.RecommendedVmMaxMapCount)
             {
-                Logger.Warning?.Print(LogClass.Application, $"The value of vm.max_map_count is lower than {LinuxHelper.RecommendedVmMaxMapCount}. ({LinuxHelper.VmMaxMapCount})");
+                Logger.Warning?.Print(LogClass.Application,
+                    $"The value of vm.max_map_count is lower than {LinuxHelper.RecommendedVmMaxMapCount}. ({LinuxHelper.VmMaxMapCount})");
 
                 if (LinuxHelper.PkExecPath is not null)
                 {
@@ -366,13 +441,15 @@ namespace Ryujinx.Ava.UI.Windows
                 {
                     _deferLoad = false;
 
-                    if (ApplicationLibrary.TryGetApplicationsFromFile(_launchPath, out List<ApplicationData> applications))
+                    if (ApplicationLibrary.TryGetApplicationsFromFile(_launchPath,
+                            out List<ApplicationData> applications))
                     {
                         ApplicationData applicationData;
 
                         if (_launchApplicationId != null)
                         {
-                            applicationData = applications.FirstOrDefault(application => application.IdString == _launchApplicationId);
+                            applicationData = applications.FirstOrDefault(application =>
+                                application.IdString == _launchApplicationId);
 
                             if (applicationData != null)
                             {
@@ -381,8 +458,10 @@ namespace Ryujinx.Ava.UI.Windows
                             }
                             else
                             {
-                                Logger.Error?.Print(LogClass.Application, $"Couldn't find requested application id '{_launchApplicationId}' in '{_launchPath}'.");
-                                await Dispatcher.UIThread.InvokeAsync(async () => await UserErrorDialog.ShowUserErrorDialog(UserError.ApplicationNotFound));
+                                Logger.Error?.Print(LogClass.Application,
+                                    $"Couldn't find requested application id '{_launchApplicationId}' in '{_launchPath}'.");
+                                await Dispatcher.UIThread.InvokeAsync(async () =>
+                                    await UserErrorDialog.ShowUserErrorDialog(UserError.ApplicationNotFound));
                             }
                         }
                         else
@@ -395,7 +474,8 @@ namespace Ryujinx.Ava.UI.Windows
                     else
                     {
                         Logger.Error?.Print(LogClass.Application, $"Couldn't find any application in '{_launchPath}'.");
-                        await Dispatcher.UIThread.InvokeAsync(async () => await UserErrorDialog.ShowUserErrorDialog(UserError.ApplicationNotFound));
+                        await Dispatcher.UIThread.InvokeAsync(async () =>
+                            await UserErrorDialog.ShowUserErrorDialog(UserError.ApplicationNotFound));
                     }
                 }
             }
@@ -403,11 +483,14 @@ namespace Ryujinx.Ava.UI.Windows
             {
                 ShowKeyErrorOnLoad = false;
 
-                await Dispatcher.UIThread.InvokeAsync(async () => await UserErrorDialog.ShowUserErrorDialog(UserError.NoKeys));
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                    await UserErrorDialog.ShowUserErrorDialog(UserError.NoKeys));
             }
 
             if (!Updater.CanUpdate() || CommandLineState.HideAvailableUpdates)
+            {
                 return;
+            }
 
             switch (ConfigurationState.Instance.UpdateCheckerType.Value)
             {
@@ -418,7 +501,8 @@ namespace Ryujinx.Ava.UI.Windows
                 case UpdaterType.CheckInBackground:
                     if ((await Updater.CheckVersionAsync()).TryGet(out (Version Current, Version Incoming) versions))
                     {
-                        Dispatcher.UIThread.Post(() => RyujinxApp.MainWindow.ViewModel.UpdateAvailable = versions.Current < versions.Incoming);
+                        Dispatcher.UIThread.Post(() =>
+                            RyujinxApp.MainWindow.ViewModel.UpdateAvailable = versions.Current < versions.Incoming);
                     }
 
                     break;
@@ -435,12 +519,113 @@ namespace Ryujinx.Ava.UI.Windows
             ApplicationList.ApplicationOpened += Application_Opened;
         }
 
+        private void InitializeWindowBoundsTracking()
+        {
+            Dispatcher.UIThread.Post(CaptureNormalBoundsFromCurrent, DispatcherPriority.Background);
+
+            _windowStateSubscription = this.GetObservable(WindowStateProperty)
+                .Subscribe(_ => UpdateLastNormalBoundsIfSafe());
+
+            PositionChanged += OnPositionChangedForBoundsTracking;
+
+            _widthSubscription = this.GetObservable(WidthProperty)
+                .Subscribe(_ => UpdateLastNormalBoundsIfSafe());
+
+            _heightSubscription = this.GetObservable(HeightProperty)
+                .Subscribe(_ => UpdateLastNormalBoundsIfSafe());
+        }
+
+        private void OnPositionChangedForBoundsTracking(object sender, PixelPointEventArgs e)
+        {
+            UpdateLastNormalBoundsIfSafe();
+        }
+
+        private void CaptureNormalBoundsFromCurrent()
+        {
+            if (WindowState != WindowState.Normal)
+            {
+                return;
+            }
+
+            double scale = Math.Max(0.0001, RenderScaling);
+
+            _lastNormalPositionDip = new Point(Position.X / scale, Position.Y / scale);
+            _lastNormalWidth = Width;
+            _lastNormalHeight = Height;
+            _hasLastNormalBounds = true;
+        }
+
+        private void UpdateLastNormalBoundsIfSafe()
+        {
+            if (WindowState != WindowState.Normal)
+            {
+                return;
+            }
+
+            CaptureNormalBoundsFromCurrent();
+        }
+
+        private Screen GetBestScreenForPoint(PixelPoint p)
+        {
+            Screen match = Screens.All.FirstOrDefault(s => s.WorkingArea.Contains(p));
+            return match ?? Screens.Primary ?? Screens.All.FirstOrDefault();
+        }
+
+        private PixelPoint ClampToWorkingArea(PixelPoint p, PixelRect workingArea, PixelSize windowSizePx)
+        {
+            int x = p.X;
+            int y = p.Y;
+
+            int workingWidth = Math.Max(1, workingArea.Width);
+            int workingHeight = Math.Max(1, workingArea.Height);
+
+            int windowWidth = Math.Max(1, windowSizePx.Width);
+            int windowHeight = Math.Max(1, windowSizePx.Height);
+
+            windowWidth = Math.Min(windowWidth, workingWidth);
+            windowHeight = Math.Min(windowHeight, workingHeight);
+
+            int maxX = workingArea.Right - windowWidth;
+            int maxY = workingArea.Bottom - windowHeight;
+
+            if (x < workingArea.X)
+            {
+                x = workingArea.X;
+            }
+            else if (x > maxX)
+            {
+                x = maxX;
+            }
+
+            if (y < workingArea.Y)
+            {
+                y = workingArea.Y;
+            }
+            else if (y > maxY)
+            {
+                y = maxY;
+            }
+
+            return new PixelPoint(x, y);
+        }
+
+        private PixelSize GetWindowPixelSize(double widthDip, double heightDip)
+        {
+            double scale = RenderScaling;
+
+            int w = (int)Math.Max(1, Math.Round(widthDip * scale));
+            int h = (int)Math.Max(1, Math.Round(heightDip * scale));
+
+            return new PixelSize(w, h);
+        }
+
         private void SetWindowSizePosition()
         {
             if (!ConfigurationState.Instance.RememberWindowState)
             {
                 // Correctly size window when 'TitleBar' is enabled (Nov. 14, 2024)
-                ViewModel.WindowHeight = (720 + StatusBarHeight + MenuBarHeight + TitleBarHeight) * Program.WindowScaleFactor;
+                ViewModel.WindowHeight =
+                    (720 + StatusBarHeight + MenuBarHeight + TitleBarHeight) * Program.WindowScaleFactor;
                 ViewModel.WindowWidth = 1280 * Program.WindowScaleFactor;
 
                 WindowState = WindowState.Normal;
@@ -450,39 +635,86 @@ namespace Ryujinx.Ava.UI.Windows
             }
 
             PixelPoint savedPoint = new(ConfigurationState.Instance.UI.WindowStartup.WindowPositionX,
-                                        ConfigurationState.Instance.UI.WindowStartup.WindowPositionY);
+                ConfigurationState.Instance.UI.WindowStartup.WindowPositionY);
 
-            ViewModel.WindowHeight = ConfigurationState.Instance.UI.WindowStartup.WindowSizeHeight * Program.WindowScaleFactor;
-            ViewModel.WindowWidth = ConfigurationState.Instance.UI.WindowStartup.WindowSizeWidth * Program.WindowScaleFactor;
+            ViewModel.WindowHeight = ConfigurationState.Instance.UI.WindowStartup.WindowSizeHeight *
+                                     Program.WindowScaleFactor;
+            ViewModel.WindowWidth =
+                ConfigurationState.Instance.UI.WindowStartup.WindowSizeWidth * Program.WindowScaleFactor;
 
-            ViewModel.WindowState = ConfigurationState.Instance.UI.WindowStartup.WindowMaximized.Value ? WindowState.Maximized : WindowState.Normal;
+            ViewModel.WindowState = ConfigurationState.Instance.UI.WindowStartup.WindowMaximized.Value
+                ? WindowState.Maximized
+                : WindowState.Normal;
 
-            if (Screens.All.Any(screen => screen.Bounds.Contains(savedPoint)))
+            Screen screen = GetBestScreenForPoint(savedPoint);
+            if (screen != null)
             {
-                Position = savedPoint;
+                PixelSize windowSizePx = GetWindowPixelSize(ViewModel.WindowWidth, ViewModel.WindowHeight);
+                Position = ClampToWorkingArea(savedPoint, screen.WorkingArea, windowSizePx);
+                return;
             }
-            else
-            {
-                Logger.Warning?.Print(LogClass.Application, "Failed to find valid start-up coordinates. Defaulting to primary monitor center.");
-                WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            }
+
+            Logger.Warning?.Print(LogClass.Application,
+                "Failed to find screen for saved start-up coordinates. Defaulting to primary monitor center.");
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         private void SaveWindowSizePosition()
         {
             ConfigurationState.Instance.UI.WindowStartup.WindowMaximized.Value = WindowState == WindowState.Maximized;
 
-            // Only save rectangle properties if the window is not in a maximized state.
-            if (WindowState != WindowState.Maximized)
+            if (WindowState == WindowState.Maximized)
             {
-                // Since scaling is being applied to the loaded settings from disk (see SetWindowSizePosition() above), scaling should be removed from width/height before saving out to disk
-                // as well - otherwise anyone not using a 1.0 scale factor their window will increase in size with every subsequent launch of the program when scaling is applied (Nov. 14, 2024)
-                ConfigurationState.Instance.UI.WindowStartup.WindowSizeHeight.Value = (int)(Height / Program.WindowScaleFactor);
-                ConfigurationState.Instance.UI.WindowStartup.WindowSizeWidth.Value = (int)(Width / Program.WindowScaleFactor);
-
-                ConfigurationState.Instance.UI.WindowStartup.WindowPositionX.Value = Position.X;
-                ConfigurationState.Instance.UI.WindowStartup.WindowPositionY.Value = Position.Y;
+                MainWindowViewModel.SaveConfig();
+                return;
             }
+
+            PixelPoint posPx;
+            double widthDip;
+            double heightDip;
+
+            if (WindowState == WindowState.Normal)
+            {
+                posPx = Position;
+                widthDip = Width;
+                heightDip = Height;
+
+                CaptureNormalBoundsFromCurrent();
+            }
+            else
+            {
+                if (!_hasLastNormalBounds)
+                {
+                    _lastNormalPositionDip = new Point(0, 0);
+                    _lastNormalWidth = Width;
+                    _lastNormalHeight = Height;
+                    _hasLastNormalBounds = true;
+                }
+
+                double scale = Math.Max(0.0001, RenderScaling);
+
+                posPx = new PixelPoint(
+                    (int)Math.Round(_lastNormalPositionDip.X * scale),
+                    (int)Math.Round(_lastNormalPositionDip.Y * scale));
+
+                widthDip = _lastNormalWidth;
+                heightDip = _lastNormalHeight;
+            }
+
+            Screen screen = GetBestScreenForPoint(posPx);
+            if (screen != null)
+            {
+                PixelSize windowSizePx = GetWindowPixelSize(widthDip, heightDip);
+                posPx = ClampToWorkingArea(posPx, screen.WorkingArea, windowSizePx);
+            }
+
+            ConfigurationState.Instance.UI.WindowStartup.WindowSizeHeight.Value =
+                (int)(heightDip / Program.WindowScaleFactor);
+            ConfigurationState.Instance.UI.WindowStartup.WindowSizeWidth.Value =
+                (int)(widthDip / Program.WindowScaleFactor);
+
+            ConfigurationState.Instance.UI.WindowStartup.WindowPositionX.Value = posPx.X;
+            ConfigurationState.Instance.UI.WindowStartup.WindowPositionY.Value = posPx.Y;
 
             MainWindowViewModel.SaveConfig();
         }
@@ -513,11 +745,11 @@ namespace Ryujinx.Ava.UI.Windows
             ApplicationLibrary.ApplicationCountUpdated += ApplicationLibrary_ApplicationCountUpdated;
             _appLibraryAppsSubscription?.Dispose();
             _appLibraryAppsSubscription = ApplicationLibrary.Applications
-                    .Connect()
-                    .ObserveOn(SynchronizationContext.Current!)
-                    .Bind(ViewModel.Applications)
-                    .OnItemAdded(UpdateApplicationWithLdnData)
-                    .Subscribe();
+                .Connect()
+                .ObserveOn(SynchronizationContext.Current!)
+                .Bind(ViewModel.Applications)
+                .OnItemAdded(UpdateApplicationWithLdnData)
+                .Subscribe();
             ApplicationLibrary.LdnGameDataReceived += ApplicationLibrary_LdnGameDataReceived;
 
             ConfigurationState.Instance.Multiplayer.Mode.Event += (sender, evt) =>
@@ -561,14 +793,14 @@ namespace Ryujinx.Ava.UI.Windows
         public static void UpdateGraphicsConfig()
         {
 #pragma warning disable IDE0055 // Disable formatting
-            GraphicsConfig.ResScale                   = ConfigurationState.Instance.Graphics.ResScale == -1 
-                ? ConfigurationState.Instance.Graphics.ResScaleCustom 
+            GraphicsConfig.ResScale = ConfigurationState.Instance.Graphics.ResScale == -1
+                ? ConfigurationState.Instance.Graphics.ResScaleCustom
                 : ConfigurationState.Instance.Graphics.ResScale;
-            GraphicsConfig.MaxAnisotropy              = ConfigurationState.Instance.Graphics.MaxAnisotropy;
-            GraphicsConfig.ShadersDumpPath            = ConfigurationState.Instance.Graphics.ShadersDumpPath;
-            GraphicsConfig.EnableShaderCache          = ConfigurationState.Instance.Graphics.EnableShaderCache;
+            GraphicsConfig.MaxAnisotropy = ConfigurationState.Instance.Graphics.MaxAnisotropy;
+            GraphicsConfig.ShadersDumpPath = ConfigurationState.Instance.Graphics.ShadersDumpPath;
+            GraphicsConfig.EnableShaderCache = ConfigurationState.Instance.Graphics.EnableShaderCache;
             GraphicsConfig.EnableTextureRecompression = ConfigurationState.Instance.Graphics.EnableTextureRecompression;
-            GraphicsConfig.EnableMacroHLE             = ConfigurationState.Instance.Graphics.EnableMacroHLE;
+            GraphicsConfig.EnableMacroHLE = ConfigurationState.Instance.Graphics.EnableMacroHLE;
 #pragma warning restore IDE0055
         }
 
@@ -709,7 +941,8 @@ namespace Ryujinx.Ava.UI.Windows
                 ApplicationLibrary.LoadApplications(ConfigurationState.Instance.UI.GameDirs);
 
                 List<string> autoloadDirs = ConfigurationState.Instance.UI.AutoloadDirs.Value;
-                autoloadDirs.ForEach(dir => Logger.Info?.Print(LogClass.Application, $"Auto loading DLC & updates from: {dir}"));
+                autoloadDirs.ForEach(dir =>
+                    Logger.Info?.Print(LogClass.Application, $"Auto loading DLC & updates from: {dir}"));
                 if (autoloadDirs.Count > 0)
                 {
                     int updatesLoaded = ApplicationLibrary.AutoLoadTitleUpdates(autoloadDirs, out int updatesRemoved);
@@ -721,28 +954,35 @@ namespace Ryujinx.Ava.UI.Windows
                 Executor.ExecuteBackgroundAsync(ApplicationLibrary.RefreshTotalTimePlayedAsync);
 
                 _isLoading = false;
-            })
-            {
-                Name = "GUI.ApplicationLibraryThread",
-                IsBackground = true,
-            };
+            }) { Name = "GUI.ApplicationLibraryThread", IsBackground = true };
             applicationLibraryThread.Start();
         }
 
-        private static void ShowNewContentAddedDialog(int numDlcAdded, int numDlcRemoved, int numUpdatesAdded, int numUpdatesRemoved)
+        private static void ShowNewContentAddedDialog(int numDlcAdded, int numDlcRemoved, int numUpdatesAdded,
+            int numUpdatesRemoved)
         {
             string[] messages =
             [
-                numDlcRemoved > 0 ? string.Format(LocaleManager.Instance[LocaleKeys.AutoloadDlcRemovedMessage], numDlcRemoved): null,
-                numDlcAdded > 0 ? string.Format(LocaleManager.Instance[LocaleKeys.AutoloadDlcAddedMessage], numDlcAdded): null,
-                numUpdatesRemoved > 0 ? string.Format(LocaleManager.Instance[LocaleKeys.AutoloadUpdateRemovedMessage], numUpdatesRemoved): null,
-                numUpdatesAdded > 0 ? string.Format(LocaleManager.Instance[LocaleKeys.AutoloadUpdateAddedMessage], numUpdatesAdded) : null
+                numDlcRemoved > 0
+                    ? string.Format(LocaleManager.Instance[LocaleKeys.AutoloadDlcRemovedMessage], numDlcRemoved)
+                    : null,
+                numDlcAdded > 0
+                    ? string.Format(LocaleManager.Instance[LocaleKeys.AutoloadDlcAddedMessage], numDlcAdded)
+                    : null,
+                numUpdatesRemoved > 0
+                    ? string.Format(LocaleManager.Instance[LocaleKeys.AutoloadUpdateRemovedMessage], numUpdatesRemoved)
+                    : null,
+                numUpdatesAdded > 0
+                    ? string.Format(LocaleManager.Instance[LocaleKeys.AutoloadUpdateAddedMessage], numUpdatesAdded)
+                    : null
             ];
 
-            string msg = String.Join("\r\n", messages);
+            string msg = string.Join("\r\n", messages);
 
-            if (String.IsNullOrWhiteSpace(msg))
+            if (string.IsNullOrWhiteSpace(msg))
+            {
                 return;
+            }
 
             Dispatcher.UIThread.InvokeAsync(async () =>
             {
@@ -762,7 +1002,9 @@ namespace Ryujinx.Ava.UI.Windows
         public static async Task ShowIntelMacWarningAsync()
         {
             if (_intelMacWarningShown)
+            {
                 return;
+            }
 
             await Dispatcher.UIThread.InvokeAsync(async () => await ContentDialogHelper.CreateWarningDialog(
                 "Intel Mac Warning",
@@ -774,10 +1016,14 @@ namespace Ryujinx.Ava.UI.Windows
         private void AppWindow_OnGotFocus(object sender, GotFocusEventArgs e)
         {
             if (ViewModel.AppHost is null)
+            {
                 return;
+            }
 
             if (!_focusLoss.Active)
+            {
                 return;
+            }
 
             switch (_focusLoss.Type)
             {
@@ -809,7 +1055,9 @@ namespace Ryujinx.Ava.UI.Windows
                 case FocusLostType.BlockInputAndMuteAudio:
                     {
                         if (!ViewModel.AppHost.Device.IsAudioMuted())
+                        {
                             goto case FocusLostType.BlockInput;
+                        }
 
                         ViewModel.AppHost.Device.SetVolume(ViewModel.VolumeBeforeMute);
                         ViewModel.AppHost.NpadManager.UnblockInputUpdates();
@@ -838,17 +1086,23 @@ namespace Ryujinx.Ava.UI.Windows
         private void AppWindow_OnLostFocus(object sender, RoutedEventArgs e)
         {
             if (ConfigurationState.Instance.FocusLostActionType.Value is FocusLostType.DoNothing)
+            {
                 return;
+            }
 
             if (ViewModel.AppHost is null)
+            {
                 return;
+            }
 
             switch (ConfigurationState.Instance.FocusLostActionType.Value)
             {
                 case FocusLostType.BlockInput:
                     {
                         if (ViewModel.AppHost.NpadManager.InputUpdatesBlocked)
+                        {
                             return;
+                        }
 
                         ViewModel.AppHost.NpadManager.BlockInputUpdates();
                         _focusLoss = (FocusLostType.BlockInput, ViewModel.AppHost.NpadManager.InputUpdatesBlocked);
@@ -857,7 +1111,9 @@ namespace Ryujinx.Ava.UI.Windows
                 case FocusLostType.MuteAudio:
                     {
                         if (ViewModel.AppHost.Device.GetVolume() is 0)
+                        {
                             return;
+                        }
 
                         ViewModel.VolumeBeforeMute = ViewModel.AppHost.Device.GetVolume();
                         ViewModel.AppHost.Device.SetVolume(0);
@@ -867,18 +1123,24 @@ namespace Ryujinx.Ava.UI.Windows
                 case FocusLostType.BlockInputAndMuteAudio:
                     {
                         if (ViewModel.AppHost.Device.GetVolume() is 0)
+                        {
                             goto case FocusLostType.BlockInput;
+                        }
 
                         ViewModel.VolumeBeforeMute = ViewModel.AppHost.Device.GetVolume();
                         ViewModel.AppHost.Device.SetVolume(0);
                         ViewModel.AppHost.NpadManager.BlockInputUpdates();
-                        _focusLoss = (FocusLostType.BlockInputAndMuteAudio, ViewModel.AppHost.Device.GetVolume() is 0f && ViewModel.AppHost.NpadManager.InputUpdatesBlocked);
+                        _focusLoss = (FocusLostType.BlockInputAndMuteAudio,
+                            ViewModel.AppHost.Device.GetVolume() is 0f &&
+                            ViewModel.AppHost.NpadManager.InputUpdatesBlocked);
                         break;
                     }
                 case FocusLostType.PauseEmulation:
                     {
                         if (ViewModel.AppHost.Device.System.IsPaused)
+                        {
                             return;
+                        }
 
                         ViewModel.AppHost.Pause();
                         _focusLoss = (FocusLostType.PauseEmulation, ViewModel.AppHost.Device.System.IsPaused);
