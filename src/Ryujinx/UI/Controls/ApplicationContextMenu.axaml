@@ -9,11 +9,11 @@
         Command="{Binding RunApplication}"
         CommandParameter="{Binding}"
         Header="{ext:Locale GameListContextMenuRunApplication}"
-        Icon="{ext:Icon fa-solid fa-play}"/>
+        Icon="{ext:Icon fa-solid fa-play}" />
     <MenuItem
         Command="{Binding ToggleFavorite}"
         CommandParameter="{Binding}"
-        Header="{ext:Locale GameListContextMenuToggleFavorite}"
+        Header="{Binding FavoriteStatusText}"
         Icon="{ext:Icon fa-solid fa-star}" />
     <MenuItem
         Command="{Binding CreateApplicationShortcut}"
@@ -30,15 +30,15 @@
         ToolTip.Tip="{ext:Locale EditCustomConfigurationToolTip}" />
     <MenuItem
         Command="{Binding EditGameConfiguration}"
-       CommandParameter="{Binding}"
-       IsVisible="{Binding !SelectedApplication.HasIndependentConfiguration}"
-       Header="{ext:Locale GameListContextMenuCreateCustomConfiguration}"
-       Icon="{ext:Icon fa-solid fa-gear}"
-       ToolTip.Tip="{ext:Locale CreateCustomConfigurationToolTip}" />
+        CommandParameter="{Binding}"
+        IsVisible="{Binding !SelectedApplication.HasIndependentConfiguration}"
+        Header="{ext:Locale GameListContextMenuCreateCustomConfiguration}"
+        Icon="{ext:Icon fa-solid fa-gear}"
+        ToolTip.Tip="{ext:Locale CreateCustomConfigurationToolTip}" />
     <MenuItem
-        IsVisible="{Binding HasCompatibilityEntry}"
         Command="{Binding OpenApplicationCompatibility}"
         CommandParameter="{Binding}"
+        IsVisible="{Binding HasCompatibilityEntry}"
         Header="{ext:Locale GameListContextMenuShowCompatEntry}"
         Icon="{ext:Icon fa-solid fa-database}"
         ToolTip.Tip="{ext:Locale GameListContextMenuShowCompatEntryToolTip}"/>
@@ -104,8 +104,8 @@
         Command="{Binding TrimXci}"
         CommandParameter="{Binding}"
 		Header="{ext:Locale GameListContextMenuTrimXCI}"
-        IsEnabled="{Binding TrimXCIEnabled}"
         Icon="{ext:Icon fa-solid fa-scissors}"
+        IsEnabled="{Binding TrimXCIEnabled}"
 		ToolTip.Tip="{ext:Locale GameListContextMenuTrimXCIToolTip}" />
     <MenuItem Header="{ext:Locale GameListContextMenuCacheManagement}" Icon="{ext:Icon fa-solid fa-memory}">
         <MenuItem
@@ -151,9 +151,9 @@
             Header="{ext:Locale GameListContextMenuExtractDataRomFS}"
             ToolTip.Tip="{ext:Locale GameListContextMenuExtractDataRomFSToolTip}" />
         <MenuItem
-            IsVisible="{Binding HasDlc}"
             Command="{Binding ExtractApplicationAocRomFs}"
             CommandParameter="{Binding}"
+            IsVisible="{Binding HasDlc}"
             Header="{ext:Locale GameListContextMenuExtractDataAocRomFS}"
             ToolTip.Tip="{ext:Locale GameListContextMenuExtractDataAocRomFSToolTip}" />
         <MenuItem

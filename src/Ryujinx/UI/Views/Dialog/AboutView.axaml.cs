@@ -27,7 +27,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
             {
                 PrimaryButtonText = string.Empty,
                 SecondaryButtonText = string.Empty,
-                CloseButtonText = LocaleManager.Instance[LocaleKeys.UserProfilesClose],
+                CloseButtonText = LocaleManager.Instance[LocaleKeys.SettingsButtonClose],
                 Content = new AboutView { ViewModel = viewModel }
             };
 

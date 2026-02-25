@@ -94,7 +94,7 @@ namespace Ryujinx.Ava.UI.Applet
 
             ContentDialog contentDialog = new()
             {
-                Title = LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle],
+                Title = LocaleManager.Instance[LocaleKeys.UserProfiles_WindowTitle],
                 PrimaryButtonText = LocaleManager.Instance[LocaleKeys.Continue],
                 SecondaryButtonText = string.Empty,
                 CloseButtonText = LocaleManager.Instance[LocaleKeys.Cancel],

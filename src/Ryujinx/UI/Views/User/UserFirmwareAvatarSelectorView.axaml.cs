@@ -1,12 +1,15 @@
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
+using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.UI.Controls;
 using Ryujinx.Ava.UI.Models;
 using Ryujinx.Ava.UI.ViewModels;
 using Ryujinx.HLE.FileSystem;
 using SkiaSharp;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Ryujinx.Ava.UI.Views.User
 {
@@ -14,43 +17,52 @@ namespace Ryujinx.Ava.UI.Views.User
     {
         private NavigationDialogHost _parent;
         private TempProfile _profile;
+        public ContentManager ContentManager { get; private set; }
+        public UserFirmwareAvatarSelectorView()
+        {
+            InitializeComponent();
+            ViewModel = new UserFirmwareAvatarSelectorViewModel();
+            DataContext = ViewModel;
+            AddHandler(Frame.NavigatedToEvent, (s, e) => NavigatedTo(e), RoutingStrategies.Direct);
+        }
 
         public UserFirmwareAvatarSelectorView(ContentManager contentManager)
         {
             ContentManager = contentManager;
 
             InitializeComponent();
-        }
-
-        public UserFirmwareAvatarSelectorView()
-        {
-            InitializeComponent();
-
-            AddHandler(Frame.NavigatedToEvent, (s, e) =>
-            {
-                NavigatedTo(e);
-            }, RoutingStrategies.Direct);
+            ViewModel = new UserFirmwareAvatarSelectorViewModel();
+            DataContext = ViewModel;
+            AddHandler(Frame.NavigatedToEvent, (s, e) => NavigatedTo(e), RoutingStrategies.Direct);
         }
 
         private void NavigatedTo(NavigationEventArgs arg)
         {
-            if (Program.PreviewerDetached)
+            if (!Program.PreviewerDetached)
+                return;
+
+            if (arg.NavigationMode != NavigationMode.New)
+                return;
+
+            (_parent, _profile) = ((NavigationDialogHost, TempProfile))arg.Parameter;
+            ContentManager = _parent.ContentManager;
+
+            ((ContentDialog)_parent.Parent).Title =
+                $"{LocaleManager.Instance[LocaleKeys.UserProfiles_WindowTitle]} - " +
+                $"{LocaleManager.Instance[LocaleKeys.UserProfiles_SelectAvatarTitle]}";
+            
+            ViewModel.SelectedIndex = -1;
+
+            _ = Task.Run(() =>
             {
-                if (arg.NavigationMode == NavigationMode.New)
+                bool found = ContentManager.GetCurrentFirmwareVersion() != null;
+
+                Dispatcher.UIThread.Post(() =>
                 {
-                    (_parent, _profile) = ((NavigationDialogHost, TempProfile))arg.Parameter;
-                    ContentManager = _parent.ContentManager;
-                    if (Program.PreviewerDetached)
-                    {
-                        ViewModel = new UserFirmwareAvatarSelectorViewModel();
-                    }
-
-                    DataContext = ViewModel;
-                }
-            }
+                    ViewModel.FirmwareFound = found;
+                });
+            });
         }
-
-        public ContentManager ContentManager { get; private set; }
 
         private void GoBack(object sender, RoutedEventArgs e)
         {
@@ -59,32 +71,31 @@ namespace Ryujinx.Ava.UI.Views.User
 
         private void ChooseButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.SelectedImage != null)
+            if (ViewModel.SelectedImage == null)
+                return;
+
+            using MemoryStream streamJpg = new();
+            using SKBitmap bitmap = SKBitmap.Decode(ViewModel.SelectedImage);
+            using SKBitmap newBitmap = new(bitmap.Width, bitmap.Height);
+
+            using (SKCanvas canvas = new(newBitmap))
             {
-                using MemoryStream streamJpg = new();
-                using SKBitmap bitmap = SKBitmap.Decode(ViewModel.SelectedImage);
-                using SKBitmap newBitmap = new(bitmap.Width, bitmap.Height);
-
-                using (SKCanvas canvas = new(newBitmap))
-                {
-                    canvas.Clear(new SKColor(
-                        ViewModel.BackgroundColor.R,
-                        ViewModel.BackgroundColor.G,
-                        ViewModel.BackgroundColor.B,
-                        ViewModel.BackgroundColor.A));
-                    canvas.DrawBitmap(bitmap, 0, 0);
-                }
-
-                using (SKImage image = SKImage.FromBitmap(newBitmap))
-                using (SKData dataJpeg = image.Encode(SKEncodedImageFormat.Jpeg, 100))
-                {
-                    dataJpeg.SaveTo(streamJpg);
-                }
-
-                _profile.Image = streamJpg.ToArray();
-
-                _parent.GoBack();
+                canvas.Clear(new SKColor(
+                    ViewModel.BackgroundColor.R,
+                    ViewModel.BackgroundColor.G,
+                    ViewModel.BackgroundColor.B,
+                    ViewModel.BackgroundColor.A));
+                canvas.DrawBitmap(bitmap, 0, 0);
             }
+
+            using (SKImage image = SKImage.FromBitmap(newBitmap))
+            using (SKData dataJpeg = image.Encode(SKEncodedImageFormat.Jpeg, 100))
+            {
+                dataJpeg.SaveTo(streamJpg);
+            }
+
+            _profile.Image = streamJpg.ToArray();
+            _parent.GoBack();
         }
     }
 }

@@ -8,107 +8,102 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="clr-namespace:Ryujinx.Ava.UI.Helpers"
     xmlns:models="clr-namespace:Ryujinx.Ava.UI.Models"
-    Margin="0"
-    MinWidth="500"
-    Padding="0"
     mc:Ignorable="d"
+    MinWidth="500"
     Focusable="True"
     x:DataType="models:TempProfile">
-    <Grid Margin="0" ColumnDefinitions="Auto,*" RowDefinitions="*,Auto">
-        <StackPanel
-            Grid.Row="0"
-            Grid.Column="0"
-            HorizontalAlignment="Stretch"
-            Orientation="Vertical"
-            Spacing="10">
-            <TextBlock Text="{ext:Locale UserProfilesName}" />
+    <Grid Margin="0,10,0,0" ColumnDefinitions="Auto,*" RowDefinitions="*,Auto">
+        <StackPanel Spacing="10">
+            <TextBlock Text="{ext:Locale UserProfiles_NameLabel}" />
             <TextBox
                 Name="NameBox"
+                Margin="0,0,0,5"
                 Width="300"
-                HorizontalAlignment="Stretch"
                 MaxLength="{Binding MaxProfileNameLength}"
-                Watermark="{ext:Locale ProfileNameSelectionWatermark}"
+                Watermark="{ext:Locale UserProfiles_ProfileNameSelectionWatermark}"
                 Text="{Binding Name}" />
-            <TextBlock Name="IdText" Text="{ext:Locale UserProfilesUserId}" />
+            <TextBlock Name="IdText" Text="{ext:Locale UserProfiles_UserIdLabel}" />
             <TextBox
                 Name="IdLabel"
                 Width="300"
-                HorizontalAlignment="Stretch"
                 IsReadOnly="True"
                 Text="{Binding UserIdString}" />
         </StackPanel>
-        <StackPanel
-            Grid.Row="0"
-            Grid.Column="1"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Stretch"
-            Orientation="Vertical">
+        <Grid Grid.Column="1">
             <Border
+                Name="ImageBox"
                 BorderBrush="{DynamicResource AppListHoverBackgroundColor}"
-                BorderThickness="1">
+                BorderThickness="1"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Right">
                 <Panel>
                     <ui:SymbolIcon
-                        FontSize="60"
-                        Width="96"
-                        Height="96"
-                        Margin="0"
+                        FontSize="70"
+                        Width="120"
+                        Height="120"
                         Foreground="{DynamicResource AppListHoverBackgroundColor}"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Top"
                         Symbol="Camera" />
                     <Image
                         Name="ProfileImage"
-                        Width="96"
-                        Height="96"
-                        Margin="0"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Top"
+                        Width="120"
+                        Height="120"
                         Source="{Binding Image, Converter={x:Static helpers:BitmapArrayValueConverter.Instance}}" />
+                    <Border
+                        Margin="2"
+                        Height="27"
+                        Width="27"
+                        CornerRadius="17"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right"
+                        Background="{DynamicResource ThemeContentBackgroundColor}">
+                        <Button
+                            Name="ProfileImageButton"
+                            MaxHeight="27"
+                            MaxWidth="27"
+                            MinWidth="27"
+                            MinHeight="27"
+                            CornerRadius="17"
+                            Padding="0">
+                            <ui:SymbolIcon Symbol="Edit" />
+                            <Button.Flyout>
+                                <MenuFlyout Placement="Bottom">
+                                    <MenuItem
+                                        Header="{ext:Locale UserProfiles_ProfileImage_Import}"
+                                        Icon="{ext:Icon fa-solid fa-image}"
+                                        Click="Import_OnClick" />
+                                    <MenuItem
+                                        Header="{ext:Locale UserProfiles_ProfileImage_SelectAvatar}"
+                                        Icon="{ext:Icon fa-solid fa-floppy-disk}"
+                                        Click="SelectFirmwareImage_OnClick" />
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
+                    </Border>
                 </Panel>
             </Border>
-        </StackPanel>
+        </Grid>
         <StackPanel
             Grid.Row="1"
-            Grid.Column="0"
             Grid.ColumnSpan="2"
-            HorizontalAlignment="Left"
             Orientation="Horizontal"
-            Margin="0 24 0 0"
+            Margin="0,30,0,0"
             Spacing="10">
-            <Button
-                Width="50"
-                MinWidth="50"
-                Click="BackButton_Click">
+            <Button MinWidth="50" Width="50" Click="BackButton_Click">
                 <ui:SymbolIcon Symbol="Back" />
             </Button>
         </StackPanel>
         <StackPanel
             Grid.Row="1"
-            Grid.Column="0"
             Grid.ColumnSpan="2"
             HorizontalAlignment="Right"
             Orientation="Horizontal"
-            Margin="0 24 0 0"
+            Margin="0,30,0,0"
             Spacing="10">
-            <Button
-                Name="DeleteButton"
-                Click="DeleteButton_Click">
-                <TextBlock Text="{ext:Locale UserProfilesDelete}" />
+            <Button Name="DeleteButton" Click="DeleteButton_Click">
+                <TextBlock Text="{ext:Locale UserProfiles_ButtonDelete}" />
             </Button>
-            <Button
-                Name="ChangePictureButton"
-                Click="ChangePictureButton_Click">
-                <TextBlock Text="{ext:Locale UserProfilesChangeProfileImage}" />
-            </Button>
-            <Button
-                Name="AddPictureButton"
-                Click="ChangePictureButton_Click">
-                <TextBlock Text="{ext:Locale UserProfilesSetProfileImage}" />
-            </Button>
-            <Button
-                Name="SaveButton"
-                Click="SaveButton_Click">
-                <TextBlock Text="{ext:Locale UserProfilesSetProfileImage}" />
+            <Button Name="SaveButton" Click="SaveButton_Click">
+                <TextBlock Text="{ext:Locale UserProfiles_ButtonSave}" />
             </Button>
         </StackPanel>
     </Grid>

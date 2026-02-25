@@ -71,7 +71,7 @@ namespace Ryujinx.Ava.UI.Controls
             NavigationDialogHost content = new(ownerAccountManager, ownerContentManager, ownerVirtualFileSystem, ownerHorizonClient);
             ContentDialog contentDialog = new()
             {
-                Title = LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle],
+                Title = LocaleManager.Instance[LocaleKeys.UserProfiles_WindowTitle],
                 PrimaryButtonText = string.Empty,
                 SecondaryButtonText = string.Empty,
                 CloseButtonText = string.Empty,
@@ -156,7 +156,7 @@ namespace Ryujinx.Ava.UI.Controls
                 {
                     _ = Dispatcher.UIThread.InvokeAsync(async ()
                         => await ContentDialogHelper.CreateErrorDialog(
-                            LocaleManager.Instance[LocaleKeys.DialogUserProfileDeletionWarningMessage]));
+                            LocaleManager.Instance[LocaleKeys.UserProfiles_DialogUserProfileDeletionWarningMessage]));
 
                     return;
                 }
@@ -165,8 +165,8 @@ namespace Ryujinx.Ava.UI.Controls
             }
 
             UserResult result = await ContentDialogHelper.CreateConfirmationDialog(
-                LocaleManager.Instance[LocaleKeys.DialogUserProfileDeletionConfirmMessage],
-                string.Empty,
+                LocaleManager.Instance[LocaleKeys.UserProfiles_DialogUserProfileDeletionConfirmMessage],
+                LocaleManager.Instance[LocaleKeys.IrreversibleActionNote],
                 LocaleManager.Instance[LocaleKeys.InputDialogYes],
                 LocaleManager.Instance[LocaleKeys.InputDialogNo],
                 string.Empty);

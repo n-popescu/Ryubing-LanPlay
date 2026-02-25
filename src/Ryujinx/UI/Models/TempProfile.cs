@@ -11,6 +11,9 @@ namespace Ryujinx.Ava.UI.Models
         public partial byte[] Image { get; set; }
 
         [ObservableProperty]
+        public partial bool FirmwareFound { get; set; }
+
+        [ObservableProperty]
         public partial string Name { get; set; } = string.Empty;
 
         public static uint MaxProfileNameLength => 0x20;

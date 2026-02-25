@@ -1,10 +1,11 @@
 <UserControl
+    x:Class="Ryujinx.Ava.UI.Views.User.UserSaveManagerView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
     xmlns:ext="clr-namespace:Ryujinx.Ava.Common.Markup"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="clr-namespace:Ryujinx.Ava.UI.Helpers"
     xmlns:models="clr-namespace:Ryujinx.Ava.UI.Models"
     xmlns:viewModels="clr-namespace:Ryujinx.Ava.UI.ViewModels"
@@ -13,7 +14,6 @@
     d:DesignHeight="500"
     Height="450"
     Width="550"
-    x:Class="Ryujinx.Ava.UI.Views.User.UserSaveManagerView"
     x:DataType="viewModels:UserSaveManagerViewModel"
     Focusable="True">
     <Design.DataContext>
@@ -22,9 +22,9 @@
     <Grid RowDefinitions="Auto,*,Auto">
         <Grid
             Grid.Row="0"
-            Margin="0,0,0,5"
             HorizontalAlignment="Stretch" ColumnDefinitions="Auto,*">
             <StackPanel
+                Margin="0,0,0,10"
                 Spacing="10"
                 Orientation="Horizontal"
                 HorizontalAlignment="Left"
@@ -33,9 +33,9 @@
                           HorizontalContentAlignment="Left"
                           MinWidth="100">
                     <ComboBoxItem
-                        Content="{ext:Locale Name}" />
+                        Content="{ext:Locale UserProfiles_ManageSaves_SortByName}" />
                     <ComboBoxItem
-                        Content="{ext:Locale Size}" />
+                        Content="{ext:Locale UserProfiles_ManageSaves_SortBySize}" />
                     <ComboBox.Styles>
                         <Style Selector="ContentControl#ContentPresenter">
                             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -46,9 +46,9 @@
                           HorizontalContentAlignment="Left"
                           MinWidth="150">
                     <ComboBoxItem
-                        Content="{ext:Locale OrderAscending}" />
+                        Content="{ext:Locale UserProfiles_ManageSaves_SortOrderAscending}" />
                     <ComboBoxItem
-                        Content="{ext:Locale OrderDescending}" />
+                        Content="{ext:Locale UserProfiles_ManageSaves_SortOrderDescending}" />
                     <ComboBox.Styles>
                         <Style Selector="ContentControl#ContentPresenter">
                             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -59,18 +59,18 @@
             <Grid
                 Grid.Column="1"
                 HorizontalAlignment="Stretch"
-                Margin="10,0, 0, 0" ColumnDefinitions="Auto,*">
-                <TextBlock Text="{ext:Locale Search}" VerticalAlignment="Center" />
+                Margin="20,0,0,10" ColumnDefinitions="Auto,*">
                 <TextBox
-                    Margin="10,0,0,0"
+                    Margin="5,0,0,0"
                     Grid.Column="1"
                     HorizontalAlignment="Stretch"
-                    Text="{Binding Search}" />
+                    Text="{Binding Search}"
+                    Watermark="{ext:Locale UserProfiles_ManageSaves_Search}" />
             </Grid>
         </Grid>
         <Border
             Grid.Row="1"
-            Margin="0,5"
+            Padding="2.5"
             BorderThickness="1"
             BorderBrush="{DynamicResource AppListHoverBackgroundColor}"
             CornerRadius="5"
@@ -84,7 +84,7 @@
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
                         <Setter Property="Padding" Value="10" />
-                        <Setter Property="Margin" Value="5" />
+                        <Setter Property="Margin" Value="0" />
                         <Setter Property="CornerRadius" Value="4" />
                     </Style>
                     <Style Selector="ListBoxItem:selected /template/ Rectangle#SelectionIndicator">
@@ -168,7 +168,7 @@
         </Border>
         <StackPanel
             Grid.Row="2"
-            Margin="0 24 0 0"
+            Margin="0,30,0,0"
             Orientation="Horizontal">
             <Button
                 Width="50"
