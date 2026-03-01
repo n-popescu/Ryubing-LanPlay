@@ -701,6 +701,56 @@
       }
     },
     {
+      "ID": "MenuBarActionsScanSkylander",
+      "Translations": {
+        "ar_SA": "‫فحص Skylander",
+        "de_DE": "Skylander scannen",
+        "el_GR": "Σάρωση Skylander",
+        "en_US": "Scan A Skylander",
+        "es_ES": "Escanear Skylander",
+        "fr_FR": "Scanner un Skylander",
+        "he_IL": "סרוק אמיבו",
+        "it_IT": "Scansiona un Skylander",
+        "ja_JP": "Skylander をスキャン",
+        "ko_KR": "Skylander 스캔",
+        "no_NO": "Skann en Skylander",
+        "pl_PL": "Skanuj Skylander",
+        "pt_BR": "Escanear um Skylander",
+        "ru_RU": "Сканировать Skylander",
+        "sv_SE": "Skanna en Skylander",
+        "th_TH": "สแกนหา Skylander",
+        "tr_TR": "Bir Skylander Tara",
+        "uk_UA": "Сканувати Skylander",
+        "zh_CN": "扫描 Skylander",
+        "zh_TW": "掃描 Skylander"
+      }
+    },
+    {
+      "ID": "MenuBarActionsRemoveSkylander",
+      "Translations": {
+        "ar_SA": "إزالة Skylander",
+        "de_DE": "Skylander entfernen",
+        "el_GR": "Αφαίρεση Skylander",
+        "en_US": "Remove Skylander",
+        "es_ES": "Eliminar Skylander",
+        "fr_FR": "Supprimer un Skylander",
+        "he_IL": "הסר Skylander",
+        "it_IT": "Rimuovi Skylander",
+        "ja_JP": "Skylander を削除",
+        "ko_KR": "Skylander 제거",
+        "no_NO": "Fjern Skylander",
+        "pl_PL": "Usuń Skylander",
+        "pt_BR": "Remover um Skylander",
+        "ru_RU": "Удалить Skylander",
+        "sv_SE": "Ta bort Skylander",
+        "th_TH": "ลบ Skylander",
+        "tr_TR": "Skylander'ı Kaldır",
+        "uk_UA": "Видалити Skylander",
+        "zh_CN": "移除 Skylander",
+        "zh_TW": "移除 Skylander"
+      }
+    },
+    {
       "ID": "MenuBarActionsScanAmiiboBin",
       "Translations": {
         "ar_SA": "مسح Amiibo (.BIN)",

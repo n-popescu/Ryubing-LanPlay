@@ -193,6 +193,20 @@ namespace Ryujinx.Ava.UI.Views.Main
                 ViewModel.IsAmiiboBinRequested = ViewModel.IsAmiiboRequested && AmiiboBinReader.HasAmiiboKeyFile;
         }
 
+        private void ScanSkylanderMenuItem_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            if (sender is MenuItem)
+                ViewModel.IsSkylanderRequested = ViewModel.AppHost.Device.System.SearchingForSkylander(out _);
+                ViewModel.ShowSkylanderActions = string.Equals(ViewModel.AppHost.Device.Processes.ActiveApplication.ProgramIdText.ToUpper(), "0100CCC0002E6000");
+        }
+
+        private void RemoveSkylanderMenuItem_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            if (sender is MenuItem)
+                ViewModel.HasSkylander = ViewModel.AppHost.Device.System.HasSkylander(out _);
+                ViewModel.ShowSkylanderActions = string.Equals(ViewModel.AppHost.Device.Processes.ActiveApplication.ProgramIdText.ToUpper(), "0100CCC0002E6000");
+        }
+
         private async Task InstallFileTypes()
         {
             ViewModel.AreMimeTypesRegistered = FileAssociationHelper.Install();
