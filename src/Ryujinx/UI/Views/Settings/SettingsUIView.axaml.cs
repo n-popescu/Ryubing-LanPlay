@@ -7,7 +7,6 @@ using Ryujinx.Ava.UI.Controls;
 using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Ava.UI.ViewModels;
 using Ryujinx.Ava.Utilities;
-using Ryujinx.Common.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,8 +27,6 @@ namespace Ryujinx.Ava.UI.Views.Settings
 
         private async Task AddDirButton(TextBox addDirBox, AvaloniaList<string> directories)
         {
-            OsUtils.SetCoreDumpable(true);
-
             string path = addDirBox.Text;
 
             if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path) && !directories.Contains(path))
@@ -50,11 +47,6 @@ namespace Ryujinx.Ava.UI.Views.Settings
 
                     ViewModel.GameListNeedsRefresh = true;
                 }
-            }
-
-            if (!Program.CoreDumpArg)
-            {
-                OsUtils.SetCoreDumpable(false);
             }
         }
 
