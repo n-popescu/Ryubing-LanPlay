@@ -140,6 +140,32 @@
                                 Content="{ext:Locale SettingsTabGeneralThemeDark}" />
                             </ComboBox>
                             <TextBlock Classes="globalConfigMarker" IsVisible="{Binding IsGameTitleNotNull}" />
+                        </StackPanel>                        
+                        <StackPanel
+                            IsEnabled="{Binding !IsGameTitleNotNull}"
+                            Opacity="{Binding PanelOpacity}"
+                            Margin="0, 15, 0, 10"
+                            ToolTip.Tip="{ext:Locale SettingsTabGeneralIconTooltip}"
+                            Orientation="Horizontal">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Text="{ext:Locale SettingsTabGeneralIcon}"
+                                Width="150" />
+                            <ComboBox
+                                MinWidth="100"
+                                HorizontalAlignment="Left"
+                                ItemsSource="{Binding ApplicationIcons}"
+                                SelectedIndex="{Binding AppIconSelectedIndex}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" >
+                                            <Image Source="{Binding Icon}" Width="24" Height="24" Margin="0,0,8,0" />
+                                            <TextBlock Text="{Binding Name}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <TextBlock Classes="globalConfigMarker" IsVisible="{Binding IsGameTitleNotNull}" />
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>

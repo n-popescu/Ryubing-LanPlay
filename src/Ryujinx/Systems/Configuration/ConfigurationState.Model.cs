@@ -152,6 +152,11 @@ namespace Ryujinx.Ava.Systems.Configuration
             public ReactiveObject<string> BaseStyle { get; private set; }
 
             /// <summary>
+            /// The currently selected window icon.
+            /// </summary>
+            public ReactiveObject<string> SelectedWindowIcon { get; private set; }
+
+            /// <summary>
             /// Start games in fullscreen mode
             /// </summary>
             public ReactiveObject<bool> StartFullscreen { get; private set; }
@@ -200,6 +205,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 ShownFileTypes = new ShownFileTypeSettings();
                 WindowStartup = new WindowStartupSettings();
                 BaseStyle = new ReactiveObject<string>();
+                SelectedWindowIcon = new ReactiveObject<string>();
                 StartFullscreen = new ReactiveObject<bool>();
                 StartNoUI = new ReactiveObject<bool>();
                 GameListViewMode = new ReactiveObject<int>();

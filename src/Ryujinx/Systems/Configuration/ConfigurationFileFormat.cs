@@ -357,6 +357,11 @@ namespace Ryujinx.Ava.Systems.Configuration
         public string BaseStyle { get; set; }
 
         /// <summary>
+        /// The name of the currently selected window icon
+        /// </summary>
+        public string SelectedWindowIcon { get; set; }
+
+        /// <summary>
         /// Chooses the view mode of the game list // Not Used
         /// </summary>
         public int GameListViewMode { get; set; }
