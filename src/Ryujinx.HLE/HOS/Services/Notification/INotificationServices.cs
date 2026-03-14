@@ -1,9 +1,9 @@
 namespace Ryujinx.HLE.HOS.Services.Notification
 {
     [Service("notif:s")] // 9.0.0+
-    class INotificationServicesForSystem : IpcService
+    class INotificationServices : IpcService
     {
-        public INotificationServicesForSystem(ServiceCtx context) { }
+        public INotificationServices(ServiceCtx context) { }
         
         [CommandCmif(1000)] // 9.0.0+
         // GetNotificationCount() -> nn::notification::server::INotificationSystemEventAccessor
