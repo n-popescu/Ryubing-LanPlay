@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.UI.Controls;
@@ -30,19 +31,17 @@ namespace Ryujinx.UI.Views.Input
             InitializeComponent();
         }
 
-        private void ColorPickerButton_OnColorChanged(ColorPickerButton sender, ColorButtonColorChangedEventArgs args)
+        private void ColorPicker_OnColorChanged(object sender, ColorChangedEventArgs args)
         {
-            if (!args.NewColor.HasValue)
-                return;
             if (!ViewModel.EnableLedChanging)
                 return;
             if (ViewModel.TurnOffLed)
                 return;
 
-            ViewModel.ParentModel.SelectedGamepad.SetLed(args.NewColor.Value.ToUInt32());
+            ViewModel.ParentModel.SelectedGamepad.SetLed(args.NewColor.ToUInt32());
         }
 
-        private void ColorPickerButton_OnAttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        private void ColorPicker_OnAttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
             if (!ViewModel.EnableLedChanging)
                 return;

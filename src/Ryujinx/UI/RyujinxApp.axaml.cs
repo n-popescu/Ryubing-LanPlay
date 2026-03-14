@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using FluentAvalonia.Core;
 using FluentAvalonia.UI.Windowing;
 using Gommon;
 using Ryujinx.Ava.Common.Locale;
@@ -52,6 +53,9 @@ namespace Ryujinx.Ava
         public override void Initialize()
         {
             Name = FormatTitle();
+
+            // Disable menu animations
+            FAUISettings.SetAnimationsEnabledAtAppLevel(false);
 
             AvaloniaXamlLoader.Load(this);
 
