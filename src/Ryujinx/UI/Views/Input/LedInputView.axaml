@@ -47,18 +47,13 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal" IsEnabled="{Binding ShowLedColorPicker}">
             <TextBlock MinWidth="75" MaxWidth="200" Text="{ext:Locale ControllerSettingsLedColor}" />
-            <ui:ColorPickerButton
+            <ColorPicker
                 Margin="5"
-                IsMoreButtonVisible="False"
-                UseColorPalette="False"
-                UseColorTriangle="False"
-                UseColorWheel="False"
-                ShowAcceptDismissButtons="False"
                 IsAlphaEnabled="False"
-                AttachedToVisualTree="ColorPickerButton_OnAttachedToVisualTree"
-                ColorChanged="ColorPickerButton_OnColorChanged"
+                AttachedToVisualTree="ColorPicker_OnAttachedToVisualTree"
+                ColorChanged="ColorPicker_OnColorChanged"
                 Color="{Binding LedColor, Mode=TwoWay}">
-            </ui:ColorPickerButton>
+            </ColorPicker>
         </StackPanel>
     </StackPanel>
 </UserControl>
