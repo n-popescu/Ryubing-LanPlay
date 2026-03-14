@@ -2050,7 +2050,9 @@
 010003C00B868000,"Ninjin: Clash of Carrots",online-broken,playable,2024-07-10 05:12:26
 0100746010E4C000,"NinNinDays",,playable,2022-11-20 15:17:29
 0100C9A00ECE6000,"Nintendo 64™ – Nintendo Switch Online",gpu;vulkan,ingame,2024-04-23 20:21:07
+010057D00ECE4000,"Nintendo 64™ – Nintendo Switch Online",gpu;vulkan,ingame,2024-04-23 20:21:07
 0100e0601c632000,"Nintendo 64™ – Nintendo Switch Online: MATURE 17+",,ingame,2025-02-03 22:27:00
+010037A0170D2000,"NINTENDO 64™ – Nintendo Switch Online 18+",,ingame,2025-02-03 22:27:00
 0100D870045B6000,"Nintendo Entertainment System™ - Nintendo Switch Online",online,playable,2022-07-01 15:45:06
 0100C4B0034B2000,"Nintendo Labo Toy-Con 01 Variety Kit",gpu,ingame,2022-08-07 12:56:07
 01001E9003502000,"Nintendo Labo Toy-Con 03 Vehicle Kit",services;crash,menus,2022-08-03 17:20:11
@@ -2638,6 +2640,7 @@
 0100B16009C10000,"SINNER: Sacrifice for Redemption",nvdec;UE4;vulkan-backend-bug,playable,2022-08-12 20:37:33
 0100E9201410E000,"Sir Lovelot",,playable,2021-04-05 16:21:46
 0100134011E32000,"Skate City",,playable,2022-11-04 11:37:39
+0100a8501b66e000,"Skateboard Drifting with Maxwell Cat: The Game Simulator",,playable,2026-02-17 19:05:00
 0100B2F008BD8000,"Skee-Ball",,playable,2020-11-16 04:44:07
 01001A900F862000,"Skelattack",,playable,2021-06-09 15:26:26
 01008E700F952000,"Skelittle: A Giant Party!",,playable,2021-06-09 19:08:34
@@ -3307,6 +3310,7 @@
 0100AFA011068000,"Voxel Pirates",,playable,2022-09-28 22:55:02
 0100BFB00D1F4000,"Voxel Sword",,playable,2022-08-30 14:57:27
 01004E90028A2000,"Vroom in the night sky",Needs Update;vulkan-backend-bug,playable,2023-02-20 02:32:29
+0100BFC01D976000,"Virtual Boy – Nintendo Classics",services,nothing,2026-02-17 11:26:59
 0100C7C00AE6C000,"VSR: Void Space Racing",,playable,2021-01-27 14:08:59
 0100B130119D0000,"Waifu Uncovered",crash,ingame,2023-02-27 01:17:46
 0100E29010A4A000,"Wanba Warriors",,playable,2020-10-04 17:56:22

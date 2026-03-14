@@ -41,7 +41,7 @@
     <PackageVersion Include="Ryujinx.Audio.OpenAL.Dependencies" Version="1.21.0.1" />
     <PackageVersion Include="Ryujinx.Graphics.Nvdec.Dependencies.AllArch" Version="6.1.2-build3" />
     <PackageVersion Include="Ryujinx.Graphics.Vulkan.Dependencies.MoltenVK" Version="1.2.0" />
-    <PackageVersion Include="Ryujinx.LibHac" Version="0.21.0-alpha.126" />
+    <PackageVersion Include="Ryujinx.LibHac" Version="0.21.0-alpha.129" />
     <PackageVersion Include="Ryujinx.UpdateClient" Version="1.0.44" />
     <PackageVersion Include="Ryujinx.Systems.Update.Common" Version="1.0.44" />
     <PackageVersion Include="Gommon" Version="2.8.0.1" />
@@ -56,7 +56,6 @@
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="2.88.9" />
     <PackageVersion Include="SPB" Version="0.0.4-build32" />
     <PackageVersion Include="System.IO.Hashing" Version="9.0.2" />
-    <PackageVersion Include="System.Management" Version="9.0.2" />
     <PackageVersion Include="UnicornEngine.Unicorn" Version="2.0.2-rc1-fb78016" />
   </ItemGroup>
 </Project>

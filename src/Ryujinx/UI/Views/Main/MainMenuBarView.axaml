@@ -185,6 +185,22 @@
                     InputGesture="Ctrl + B"
                     IsEnabled="{Binding IsAmiiboBinRequested}" />
                 <MenuItem
+                    Command="{Binding OpenSkylanderWindow}"
+                    AttachedToVisualTree="ScanSkylanderMenuItem_AttachedToVisualTree"
+                    Header="{ext:Locale MenuBarActionsScanSkylander}"
+                    Icon="{ext:Icon fa-solid fa-cube}"
+                    IsVisible="{Binding ShowSkylanderActions}"
+                    InputGesture="Ctrl + S"
+                    IsEnabled="{Binding IsSkylanderRequested}" />
+                <MenuItem
+                    Command="{Binding RemoveSkylander}"
+                    AttachedToVisualTree="RemoveSkylanderMenuItem_AttachedToVisualTree"
+                    Header="{ext:Locale MenuBarActionsRemoveSkylander}"
+                    Icon="{ext:Icon fa-solid fa-cube}"
+                    IsVisible="{Binding ShowSkylanderActions}"
+                    InputGesture="Ctrl + D"
+                    IsEnabled="{Binding HasSkylander}" />
+                <MenuItem
                     Command="{Binding TakeScreenshot}"
                     Header="{ext:Locale MenuBarFileToolsTakeScreenshot}"
                     Icon="{ext:Icon fa-solid fa-camera}"

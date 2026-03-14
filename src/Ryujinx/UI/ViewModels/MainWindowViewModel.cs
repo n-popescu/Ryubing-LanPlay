@@ -370,6 +370,39 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public bool CanScanAmiiboBinaries => AmiiboBinReader.HasAmiiboKeyFile;
 
+        public bool IsSkylanderRequested
+        {
+            get => field && _isGameRunning;
+            set
+            {
+                field = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public bool HasSkylander
+        {
+            get => field && _isGameRunning;
+            set
+            {
+                field = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ShowSkylanderActions
+        {
+            get => field && _isGameRunning;
+            set
+            {
+                field = value;
+
+                OnPropertyChanged();
+            }
+        }
+
         public bool ShowLoadProgress
         {
             get;
@@ -1863,6 +1896,46 @@ namespace Ryujinx.Ava.UI.ViewModels
                     AppHost.Device.System.ScanAmiiboFromBin(result.Value.Path.LocalPath);
                 }
             }
+        }
+        public async Task OpenSkylanderWindow()
+        {
+            if (AppHost.Device.System.SearchingForSkylander(out int deviceId))
+            {
+                Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(
+                    new FilePickerOpenOptions
+                {
+                    Title = LocaleManager.Instance[LocaleKeys.OpenFileDialogTitle],
+                    FileTypeFilter = new List<FilePickerFileType>
+                {
+                    new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
+                    {
+                        Patterns = ["*.sky", "*.bin", "*.dmp", "*.dump"],
+                    },
+                },
+                });
+                if (result.HasValue)
+                {
+                    // Open reading stream from the first file.
+                    await using var stream = await result.Value.OpenReadAsync();
+                    using var streamReader = new BinaryReader(stream);
+                    // Reads all the content of file as a text.
+                    byte[] data = new byte[1024];
+                    var count = streamReader.Read(data, 0, 1024);
+                    if (count < 1024)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        AppHost.Device.System.ScanSkylander(deviceId, data);
+                    }
+                }
+            }
+        }
+
+        public async Task RemoveSkylander()
+        {
+            AppHost.Device.System.RemoveSkylander();
         }
 
         public void ReloadRenderDocApi()
