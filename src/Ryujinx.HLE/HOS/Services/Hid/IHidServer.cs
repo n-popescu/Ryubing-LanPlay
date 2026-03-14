@@ -602,19 +602,33 @@ namespace Ryujinx.HLE.HOS.Services.Hid
         }
 
         [CommandCmif(82)]
-        // IsSixAxisSensorAtRest(nn::hid::SixAxisSensorHandle, nn::applet::AppletResourceUserId) -> bool IsAsRest
+        // IsSixAxisSensorAtRest(nn::hid::SixAxisSensorHandle, nn::applet::AppletResourceUserId) -> bool IsAtRest
         public ResultCode IsSixAxisSensorAtRest(ServiceCtx context)
         {
             int sixAxisSensorHandle = context.RequestData.ReadInt32();
+            
+            // 4 byte struct w/ 4-byte alignment
+            
+            // uint typeValue = (uint) sixAxisSensorHandle;                 // 0x0 	0x4 	TypeValue
+            // uint npadStyleIndex = (uint) sixAxisSensorHandle & 0xff;     // 0x0 	0x1 	NpadStyleIndex
+            int playerNumber = (sixAxisSensorHandle << 8) & 0xff;           // 0x1 	0x1 	PlayerNumber
+            // uint deviceIdx= ((uint) sixAxisSensorHandle << 16) & 0xff;   // 0x2 	0x1 	DeviceIdx 
+            // uint unknown = ((uint) sixAxisSensorHandle << 24) & 0xff;
+            
+            // 32bit sign extension padding -> if = 0, + offset, else - offset
+            
+            // npadStyleIndex = ((npadStyleIndex & 0x8000) == 0) ? npadStyleIndex | 0xFFFF0000 : npadStyleIndex & 0xFFFF0000;
+            // playerNumber = ((playerNumber & 0x8000) == 0) ? playerNumber | 0xFFFF0000 : playerNumber & 0xFFFF0000;
+            // deviceIdx = ((deviceIdx & 0x8000) == 0) ? deviceIdx | 0xFFFF0000 : deviceIdx & 0xFFFF0000;
+            // unknown = ((unknown & 0x8000) == 0) ? unknown | 0xFFFF0000 : unknown & 0xFFFF0000;
+            
             context.RequestData.BaseStream.Position += 4; // Padding
             long appletResourceUserId = context.RequestData.ReadInt64();
-
-            bool isAtRest = true;
-
-            context.ResponseData.Write(isAtRest);
-
-            Logger.Stub?.PrintStub(LogClass.ServiceHid, new { appletResourceUserId, sixAxisSensorHandle, isAtRest });
-
+            
+            // TODO: link to context.Device.Hid.Npads.SixAxisActive when properly implemented
+            // We currently do not support stopping or starting SixAxisTracking.
+            
+            context.ResponseData.Write(context.Device.Hid.Npads.isAtRest(playerNumber));
             return ResultCode.Success;
         }
 
@@ -629,7 +643,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             context.ResponseData.Write(_isFirmwareUpdateAvailableForSixAxisSensor);
 
             Logger.Stub?.PrintStub(LogClass.ServiceHid, new { appletResourceUserId, sixAxisSensorHandle, _isFirmwareUpdateAvailableForSixAxisSensor });
-
+            
             return ResultCode.Success;
         }
 

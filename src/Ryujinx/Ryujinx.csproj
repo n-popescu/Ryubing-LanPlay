@@ -49,7 +49,7 @@
     <PackageReference Include="Svg.Controls.Avalonia" />
     <PackageReference Include="Svg.Controls.Skia.Avalonia" />
     <PackageReference Include="DynamicData" />
-    <PackageReference Include="FluentAvaloniaUI.NoAnim" />
+    <PackageReference Include="FluentAvaloniaUI" />
     <PackageReference Include="CommandLineParser" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="DiscordRichPresence" />
