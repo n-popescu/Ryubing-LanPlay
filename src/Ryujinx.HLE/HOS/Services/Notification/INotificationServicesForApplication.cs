@@ -23,10 +23,10 @@ namespace Ryujinx.HLE.HOS.Services.Notification
         // Initialize(PID-descriptor, u64 pid_reserved)
         public ResultCode Intialize(ServiceCtx context)
         {
-            ulong PID = context.Device.Processes.ActiveApplication.ProgramId;
-            ulong pid_reserved = context.Device.Processes.ActiveApplication.ProcessId;
+            ulong pid = context.Request.HandleDesc.PId;
+            context.RequestData.ReadUInt64(); // pid placeholder, zero
             
-            Logger.Stub?.PrintStub(LogClass.ServiceNotification, new { PID, pid_reserved });
+            Logger.Stub?.PrintStub(LogClass.ServiceNotification, new { pid });
             return ResultCode.Success;
         }
     }
