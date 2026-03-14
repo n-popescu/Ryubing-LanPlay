@@ -56,6 +56,7 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             _activeCount = 0;
 
             JoyHold = NpadJoyHoldType.Vertical;
+            SixAxisActive = false;
         }
 
         internal ref KEvent GetStyleSetUpdateEvent(PlayerIndex player)
@@ -579,6 +580,24 @@ namespace Ryujinx.HLE.HOS.Services.Hid
             }
 
             return needUpdateRight;
+        }
+        
+        public bool isAtRest(int playerNumber)
+        {
+            
+            ref NpadInternalState currentNpad = ref _device.Hid.SharedMemory.Npads[playerNumber].InternalState;
+            ref SixAxisSensorState storage = ref GetSixAxisSensorLifo(ref currentNpad, false).GetCurrentEntryRef();
+                
+            float acceleration = Math.Abs(storage.Acceleration.X)
+                                 + Math.Abs(storage.Acceleration.Y)
+                                 + Math.Abs(storage.Acceleration.Z);
+
+            float angularVelocity = Math.Abs(storage.AngularVelocity.X)
+                                    + Math.Abs(storage.AngularVelocity.Y)
+                                    + Math.Abs(storage.AngularVelocity.Z);
+
+            // TODO: check against config deadzone and add sensitivity setting
+            return ((acceleration <= 1.0F) && (angularVelocity <= 1.0F));
         }
 
         private void UpdateDisconnectedInputSixAxis(PlayerIndex index)
