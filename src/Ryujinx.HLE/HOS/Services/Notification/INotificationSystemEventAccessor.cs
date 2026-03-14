@@ -10,7 +10,7 @@ namespace Ryujinx.HLE.HOS.Services.Notification
         // GetNotificationSendingNotifier() -> nn::notification::server::INotificationSystemEventAccessor
         public ResultCode GetSystemEvent(ServiceCtx context)
         {
-            Logger.Stub?.PrintStub(LogClass.Service);
+            Logger.Stub?.PrintStub(LogClass.ServiceNotification);
             return ResultCode.Success;
         }
     }
