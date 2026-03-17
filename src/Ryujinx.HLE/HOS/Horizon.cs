@@ -20,6 +20,7 @@ using Ryujinx.HLE.HOS.Services.Mii;
 using Ryujinx.HLE.HOS.Services.Nfc.AmiiboDecryption;
 using Ryujinx.HLE.HOS.Services.Nfc.Nfp;
 using Ryujinx.HLE.HOS.Services.Nfc.Nfp.NfpManager;
+using Ryujinx.HLE.HOS.Services.Nfc.Mifare.MifareManager;
 using Ryujinx.HLE.HOS.Services.Nv;
 using Ryujinx.HLE.HOS.Services.Nv.NvDrvServices.NvHostCtrl;
 using Ryujinx.HLE.HOS.Services.Pcv.Bpc;
@@ -65,6 +66,8 @@ namespace Ryujinx.HLE.HOS
         internal AppletStateMgr AppletState { get; private set; }
 
         internal List<NfpDevice> NfpDevices { get; private set; }
+
+        internal List<NfcDevice> NfcDevices { get; private set; }
 
         internal SmRegistry SmRegistry { get; private set; }
 
@@ -132,6 +135,7 @@ namespace Ryujinx.HLE.HOS
             PerformanceState = new PerformanceState();
 
             NfpDevices = [];
+            NfcDevices = [];
 
             // Note: This is not really correct, but with HLE of services, the only memory
             // region used that is used is Application, so we can use the other ones for anything.
@@ -372,6 +376,15 @@ namespace Ryujinx.HLE.HOS
             }
         }
 
+        public void ScanSkylander(int nfcDeviceId, byte[] data)
+        {
+            if (NfcDevices[nfcDeviceId].State == NfcDeviceState.SearchingForTag)
+            {
+                NfcDevices[nfcDeviceId].State = NfcDeviceState.TagFound;
+                NfcDevices[nfcDeviceId].Data = data;
+            }
+        }
+
         public bool SearchingForAmiibo(out int nfpDeviceId)
         {
             nfpDeviceId = default;
@@ -387,6 +400,53 @@ namespace Ryujinx.HLE.HOS
             }
 
             return false;
+        }
+
+        public bool SearchingForSkylander(out int nfcDeviceId)
+        {
+            nfcDeviceId = default;
+
+            for (int i = 0; i < NfcDevices.Count; i++)
+            {
+                if (NfcDevices[i].State == NfcDeviceState.SearchingForTag)
+                {
+                    nfcDeviceId = i;
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool HasSkylander(out int nfcDeviceId)
+        {
+            nfcDeviceId = default;
+
+            for (int i = 0; i < NfcDevices.Count; i++)
+            {
+                if (NfcDevices[i].State == NfcDeviceState.TagFound)
+                {
+                    nfcDeviceId = i;
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void RemoveSkylander()
+        {
+            for (int i = 0; i < NfcDevices.Count; i++)
+            {
+                if (NfcDevices[i].State == NfcDeviceState.TagFound)
+                {
+                    NfcDevices[i].State = NfcDeviceState.Initialized;
+                    NfcDevices[i].SignalDeactivate();
+                    Thread.Sleep(100); // NOTE: Simulate skylander scanning delay.
+                }
+            }
         }
 
         public void SignalDisplayResolutionChange()

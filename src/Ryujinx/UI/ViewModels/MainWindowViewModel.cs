@@ -38,6 +38,7 @@ using Ryujinx.Common.Logging;
 using Ryujinx.Common.UI;
 using Ryujinx.Common.Utilities;
 using Ryujinx.Cpu;
+using Ryujinx.Graphics.RenderDocApi;
 using Ryujinx.HLE;
 using Ryujinx.HLE.FileSystem;
 using Ryujinx.HLE.HOS;
@@ -104,7 +105,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         [ObservableProperty] public partial Brush ProgressBarForegroundColor { get; set; }
 
         [ObservableProperty] public partial Brush ProgressBarBackgroundColor { get; set; }
-        
+
 #pragma warning disable MVVMTK0042 // Must stay a normal observable field declaration since this is used as an out parameter target
         [ObservableProperty] private ReadOnlyObservableCollection<ApplicationData> _appsObservableList;
 #pragma warning restore MVVMTK0042
@@ -129,8 +130,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         [ObservableProperty] public partial string LastScannedAmiiboId { get; set; }
 
-        [ObservableProperty]
-        public partial long LastFullscreenToggle { get; set; } = Environment.TickCount64;
+        [ObservableProperty] public partial long LastFullscreenToggle { get; set; } = Environment.TickCount64;
         [ObservableProperty] public partial bool ShowContent { get; set; } = true;
 
         [ObservableProperty] public partial float VolumeBeforeMute { get; set; }
@@ -174,6 +174,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         private string _screenshotKey = "F8";
         private float _volume;
         private ApplicationData _currentApplicationData;
+        private bool _pendingRestart;
         private readonly AutoResetEvent _rendererWaitEvent;
         private int _customVSyncInterval;
         private int _customVSyncIntervalPercentageProxy;
@@ -369,6 +370,39 @@ namespace Ryujinx.Ava.UI.ViewModels
         }
 
         public bool CanScanAmiiboBinaries => AmiiboBinReader.HasAmiiboKeyFile;
+
+        public bool IsSkylanderRequested
+        {
+            get => field && _isGameRunning;
+            set
+            {
+                field = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public bool HasSkylander
+        {
+            get => field && _isGameRunning;
+            set
+            {
+                field = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ShowSkylanderActions
+        {
+            get => field && _isGameRunning;
+            set
+            {
+                field = value;
+
+                OnPropertyChanged();
+            }
+        }
 
         public bool ShowLoadProgress
         {
@@ -1029,7 +1063,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 string dialogMessage =
                     LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.DialogKeysInstallerKeysInstallMessage);
 
-                if (ContentManager.AreKeysAlredyPresent(systemDirectory))
+                if (ContentManager.AreKeysAlreadyPresent(systemDirectory))
                 {
                     dialogMessage +=
                         LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys
@@ -1217,12 +1251,35 @@ namespace Ryujinx.Ava.UI.ViewModels
 
                 await LoadApplication(_currentApplicationData);
             }
+            else if (_pendingRestart)
+            {
+                _pendingRestart = false;
+
+                Logger.Info?.Print(LogClass.Application, $"Restarting emulation for '{_currentApplicationData.Name}'");
+
+                await LoadApplication(_currentApplicationData);
+            }
             else
             {
                 // Otherwise, clear state.
                 UserChannelPersistence = new UserChannelPersistence();
                 _currentApplicationData = null;
             }
+        }
+
+        public void RestartEmulation()
+        {
+            if (AppHost is null || _currentApplicationData is null)
+            {
+                Logger.Warning?.Print(LogClass.Application, "RestartEmulation called but no application is running.");
+
+                return;
+            }
+
+            Logger.Info?.Print(LogClass.Application, $"Restart requested for '{_currentApplicationData.Name}'");
+
+            _pendingRestart = true;
+            AppHost.Stop();
         }
 
         private void Update_StatusBar(object sender, StatusUpdatedEventArgs args)
@@ -1864,6 +1921,69 @@ namespace Ryujinx.Ava.UI.ViewModels
                 }
             }
         }
+        public async Task OpenSkylanderWindow()
+        {
+            if (AppHost.Device.System.SearchingForSkylander(out int deviceId))
+            {
+                Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(
+                    new FilePickerOpenOptions
+                {
+                    Title = LocaleManager.Instance[LocaleKeys.OpenFileDialogTitle],
+                    FileTypeFilter = new List<FilePickerFileType>
+                {
+                    new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
+                    {
+                        Patterns = ["*.sky", "*.bin", "*.dmp", "*.dump"],
+                    },
+                },
+                });
+                if (result.HasValue)
+                {
+                    // Open reading stream from the first file.
+                    await using var stream = await result.Value.OpenReadAsync();
+                    using var streamReader = new BinaryReader(stream);
+                    // Reads all the content of file as a text.
+                    byte[] data = new byte[1024];
+                    var count = streamReader.Read(data, 0, 1024);
+                    if (count < 1024)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        AppHost.Device.System.ScanSkylander(deviceId, data);
+                    }
+                }
+            }
+        }
+
+        public async Task RemoveSkylander()
+        {
+            AppHost.Device.System.RemoveSkylander();
+        }
+
+        public void ReloadRenderDocApi()
+        {
+            RenderDoc.ReloadApi(ignoreAlreadyLoaded: true);
+
+            OnPropertiesChanged(nameof(ShowStartCaptureButton), nameof(ShowEndCaptureButton), nameof(RenderDocIsAvailable));
+
+            if (RenderDoc.IsAvailable)
+                RenderDocIsCapturing = RenderDoc.IsFrameCapturing;
+
+            NotificationHelper.ShowInformation(
+                "RenderDoc API reloaded",
+                RenderDoc.IsAvailable ? "RenderDoc is now available." : "RenderDoc is no longer available."
+            );
+        }
+
+        public void ToggleCapture()
+        {
+            if (ShowLoadProgress) return;
+
+            AppHost.RendererHost.EmbeddedWindow.ToggleRenderDocCapture(AppHost.Device);
+            RenderDocIsCapturing = RenderDoc.IsFrameCapturing;
+        }
 
         public void ToggleFullscreen()
         {
@@ -1955,7 +2075,8 @@ namespace Ryujinx.Ava.UI.ViewModels
             if (ConfigurationState.Instance.Debug.EnableGdbStub)
             {
                 NotificationHelper.ShowInformation(
-                    LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.NotificationLaunchCheckGdbStubTitle, ConfigurationState.Instance.Debug.GdbStubPort.Value),
+                    LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.NotificationLaunchCheckGdbStubTitle,
+                        ConfigurationState.Instance.Debug.GdbStubPort.Value),
                     LocaleManager.Instance[LocaleKeys.NotificationLaunchCheckGdbStubMessage]);
             }
 
@@ -1964,10 +2085,12 @@ namespace Ryujinx.Ava.UI.ViewModels
                 var memoryConfigurationLocaleKey = ConfigurationState.Instance.System.DramSize.Value switch
                 {
                     MemoryConfiguration.MemoryConfiguration4GiB or
-                    MemoryConfiguration.MemoryConfiguration4GiBAppletDev or
-                    MemoryConfiguration.MemoryConfiguration4GiBSystemDev => LocaleKeys.SettingsTabSystemDramSize4GiB,
+                        MemoryConfiguration.MemoryConfiguration4GiBAppletDev or
+                        MemoryConfiguration.MemoryConfiguration4GiBSystemDev =>
+                        LocaleKeys.SettingsTabSystemDramSize4GiB,
                     MemoryConfiguration.MemoryConfiguration6GiB or
-                    MemoryConfiguration.MemoryConfiguration6GiBAppletDev => LocaleKeys.SettingsTabSystemDramSize6GiB,
+                        MemoryConfiguration.MemoryConfiguration6GiBAppletDev =>
+                        LocaleKeys.SettingsTabSystemDramSize6GiB,
                     MemoryConfiguration.MemoryConfiguration8GiB => LocaleKeys.SettingsTabSystemDramSize8GiB,
                     MemoryConfiguration.MemoryConfiguration12GiB => LocaleKeys.SettingsTabSystemDramSize12GiB,
                     _ => LocaleKeys.SettingsTabSystemDramSize4GiB,
@@ -1975,9 +2098,9 @@ namespace Ryujinx.Ava.UI.ViewModels
 
                 NotificationHelper.ShowWarning(
                     LocaleManager.Instance.UpdateAndGetDynamicValue(
-                        LocaleKeys.NotificationLaunchCheckDramSizeTitle, 
+                        LocaleKeys.NotificationLaunchCheckDramSizeTitle,
                         LocaleManager.Instance[memoryConfigurationLocaleKey]
-                        ),
+                    ),
                     LocaleManager.Instance[LocaleKeys.NotificationLaunchCheckDramSizeMessage]);
             }
         }
@@ -2460,6 +2583,67 @@ namespace Ryujinx.Ava.UI.ViewModels
                     using SKData png = bitmap.Encode(SKEncodedImageFormat.Png, 100);
 
                     png.SaveTo(fileStream);
+                });
+
+        public bool ShowStartCaptureButton => !RenderDocIsCapturing && RenderDoc.IsAvailable;
+        public bool ShowEndCaptureButton => RenderDocIsCapturing && RenderDoc.IsAvailable;
+        public static bool RenderDocIsAvailable => RenderDoc.IsAvailable;
+
+        public bool RenderDocIsCapturing
+        {
+            get;
+            set
+            {
+                field = value;
+                OnPropertyChanged();
+                OnPropertiesChanged(nameof(ShowStartCaptureButton), nameof(ShowEndCaptureButton));
+            }
+        }
+
+        public static RelayCommand<MainWindowViewModel> StartRenderDocCapture { get; } =
+            Commands.CreateConditional<MainWindowViewModel>(vm => RenderDoc.IsAvailable && !vm.ShowLoadProgress,
+                viewModel =>
+                {
+                    if (!RenderDoc.IsFrameCapturing)
+                    {
+                        if (viewModel.AppHost.RendererHost
+                            .EmbeddedWindow.StartRenderDocCapture(viewModel.AppHost.Device))
+                        {
+                            Logger.Info?.Print(LogClass.Application, "Starting RenderDoc capture.");
+                        }
+                    }
+
+                    viewModel.RenderDocIsCapturing = RenderDoc.IsFrameCapturing;
+                });
+
+        public static RelayCommand<MainWindowViewModel> EndRenderDocCapture { get; } =
+            Commands.CreateConditional<MainWindowViewModel>(vm => RenderDoc.IsAvailable && !vm.ShowLoadProgress,
+                viewModel =>
+                {
+                    if (RenderDoc.IsFrameCapturing)
+                    {
+                        if (viewModel.AppHost.RendererHost.EmbeddedWindow.EndRenderDocCapture())
+                        {
+                            Logger.Info?.Print(LogClass.Application, "Ended RenderDoc capture.");
+                        }
+                    }
+
+                    viewModel.RenderDocIsCapturing = RenderDoc.IsFrameCapturing;
+                });
+
+        public static RelayCommand<MainWindowViewModel> DiscardRenderDocCapture { get; } =
+            Commands.CreateConditional<MainWindowViewModel>(vm => RenderDoc.IsAvailable  && !vm.ShowLoadProgress,
+                viewModel =>
+                {
+                    if (RenderDoc.IsFrameCapturing)
+                    {
+                        if (viewModel.AppHost.RendererHost.EmbeddedWindow.DiscardRenderDocCapture())
+                        {
+                            Logger.Info?.Print(LogClass.Application, "Discarded RenderDoc capture.");
+                        }
+                    }
+
+                    viewModel.RenderDocIsCapturing = RenderDoc.IsFrameCapturing;
                 });
 
         #endregion

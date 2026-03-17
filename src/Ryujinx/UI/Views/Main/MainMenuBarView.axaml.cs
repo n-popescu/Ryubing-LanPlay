@@ -43,6 +43,7 @@ namespace Ryujinx.Ava.UI.Views.Main
             PauseEmulationMenuItem.Command = Commands.Create(() => ViewModel.AppHost?.Pause());
             ResumeEmulationMenuItem.Command = Commands.Create(() => ViewModel.AppHost?.Resume());
             StopEmulationMenuItem.Command = Commands.Create(() => ViewModel.AppHost?.ShowExitPrompt().OrCompleted());
+            RestartEmulationMenuItem.Command = Commands.Create(() => ViewModel.RestartEmulation());
             CheatManagerMenuItem.Command = Commands.CreateSilentFail(OpenCheatManagerForCurrentApp);
             InstallFileTypesMenuItem.Command = Commands.Create(InstallFileTypes);
             UninstallFileTypesMenuItem.Command = Commands.Create(UninstallFileTypes);
@@ -85,37 +86,24 @@ namespace Ryujinx.Ava.UI.Views.Main
 
         private static IEnumerable<MenuItem> GenerateLanguageMenuItems()
         {
-            const string LocalePath = "Ryujinx/Assets/Locale.json";
+            const string LanguagesPath = "Ryujinx/Assets/Languages.json";
 
-            string languageJson = EmbeddedResources.ReadAllText(LocalePath);
+            string languageJson = EmbeddedResources.ReadAllText(LanguagesPath);
             string currentLanguageCode = LocaleManager.Instance.CurrentLanguageCode;
 
-            LocalesJson locales = JsonHelper.Deserialize(languageJson, LocalesJsonContext.Default.LocalesJson);
+            LanguagesJson languages = JsonHelper.Deserialize(languageJson, LanguagesJsonContext.Default.LanguagesJson);
 
-            foreach (string language in locales.Languages)
+            foreach ((string code, string language) in languages.Languages)
             {
-                int index = locales.Locales.FindIndex(x => x.ID == "Language");
-                string languageName;
-
-                if (index == -1)
-                {
-                    languageName = language;
-                }
-                else
-                {
-                    string tr = locales.Locales[index].Translations[language];
-                    languageName = string.IsNullOrEmpty(tr)
-                        ? language
-                        : tr;
-                }
+                string languageName = string.IsNullOrEmpty(language) ? code : language;
 
                 MenuItem menuItem = new()
                 {
                     Padding = new Thickness(15, 0, 0, 0),
                     Margin = new Thickness(3, 0, 3, 0),
                     HorizontalAlignment = HorizontalAlignment.Stretch,
-                    Header = language == currentLanguageCode ? $"{languageName}  ✔" : languageName,
-                    Command = Commands.Create(() => MainWindowViewModel.ChangeLanguage(language))
+                    Header = code == currentLanguageCode ? $"{languageName}  ✔" : languageName,
+                    Command = Commands.Create(() => MainWindowViewModel.ChangeLanguage(code))
                 };
 
                 yield return menuItem;
@@ -204,6 +192,20 @@ namespace Ryujinx.Ava.UI.Views.Main
         {
             if (sender is MenuItem)
                 ViewModel.IsAmiiboBinRequested = ViewModel.IsAmiiboRequested && AmiiboBinReader.HasAmiiboKeyFile;
+        }
+
+        private void ScanSkylanderMenuItem_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            if (sender is MenuItem)
+                ViewModel.IsSkylanderRequested = ViewModel.AppHost.Device.System.SearchingForSkylander(out _);
+                ViewModel.ShowSkylanderActions = string.Equals(ViewModel.AppHost.Device.Processes.ActiveApplication.ProgramIdText.ToUpper(), "0100CCC0002E6000");
+        }
+
+        private void RemoveSkylanderMenuItem_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            if (sender is MenuItem)
+                ViewModel.HasSkylander = ViewModel.AppHost.Device.System.HasSkylander(out _);
+                ViewModel.ShowSkylanderActions = string.Equals(ViewModel.AppHost.Device.Processes.ActiveApplication.ProgramIdText.ToUpper(), "0100CCC0002E6000");
         }
 
         private async Task InstallFileTypes()

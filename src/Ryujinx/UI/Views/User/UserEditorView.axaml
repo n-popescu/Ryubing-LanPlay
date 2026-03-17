@@ -108,7 +108,7 @@
             <Button
                 Name="SaveButton"
                 Click="SaveButton_Click">
-                <TextBlock Text="{ext:Locale UserProfilesSetProfileImage}" />
+                <TextBlock Text="{ext:Locale UserProfilesSave}" />
             </Button>
         </StackPanel>
     </Grid>

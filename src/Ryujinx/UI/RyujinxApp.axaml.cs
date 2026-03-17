@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using FluentAvalonia.Core;
 using FluentAvalonia.UI.Windowing;
 using Gommon;
 using Ryujinx.Ava.Common.Locale;
@@ -15,6 +16,7 @@ using Ryujinx.Ava.UI.Windows;
 using Ryujinx.Ava.Utilities;
 using Ryujinx.Common;
 using Ryujinx.Common.Logging;
+using Ryujinx.Graphics.RenderDocApi;
 using System;
 using System.Diagnostics;
 
@@ -52,10 +54,15 @@ namespace Ryujinx.Ava
         {
             Name = FormatTitle();
 
+            // Disable menu animations
+            FAUISettings.SetAnimationsEnabledAtAppLevel(false);
+
             AvaloniaXamlLoader.Load(this);
 
             if (OperatingSystem.IsMacOS())
             {
+                // Switches macOS key held behavior to repeat the input key instead of showing the character accents menu (like doing on an iOS keyboard would).
+                // https://macos-defaults.com/keyboard/applepressandholdenabled.html
                 Process.Start("/usr/bin/defaults", "write org.ryujinx.Ryujinx ApplePressAndHoldEnabled -bool false");
             }
         }

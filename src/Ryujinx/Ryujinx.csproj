@@ -28,11 +28,6 @@
     <PublishTrimmed>true</PublishTrimmed>
     <TrimMode>partial</TrimMode>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'win-arm64'">
-    <PublishSingleFile>true</PublishSingleFile>
-    <PublishTrimmed>false</PublishTrimmed>
-  </PropertyGroup>
   
   <!--
     FluentAvalonia, used in the Avalonia UI, requires a workaround for the json serializer used internally when using .NET 8+ System.Text.Json.
@@ -54,7 +49,7 @@
     <PackageReference Include="Svg.Controls.Avalonia" />
     <PackageReference Include="Svg.Controls.Skia.Avalonia" />
     <PackageReference Include="DynamicData" />
-    <PackageReference Include="FluentAvaloniaUI.NoAnim" />
+    <PackageReference Include="FluentAvaloniaUI" />
     <PackageReference Include="CommandLineParser" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="DiscordRichPresence" />
@@ -77,16 +72,18 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Ryujinx.Audio.Backends.SDL3\Ryujinx.Audio.Backends.SDL3.csproj" />
-    <ProjectReference Include="..\Ryujinx.Graphics.Vulkan\Ryujinx.Graphics.Vulkan.csproj" />
+    <ProjectReference Include="..\Ryujinx.Graphics.RenderDocApi\Ryujinx.Graphics.RenderDocApi.csproj" />
+    <ProjectReference Include="..\Ryujinx.Graphics.Vulkan/Ryujinx.Graphics.Vulkan.csproj" />
+    <ProjectReference Include="..\Ryujinx.Graphics.OpenGL/Ryujinx.Graphics.OpenGL.csproj" />
     <ProjectReference Include="..\Ryujinx.Input\Ryujinx.Input.csproj" />
     <ProjectReference Include="..\Ryujinx.Input.SDL3\Ryujinx.Input.SDL3.csproj" />
+    <ProjectReference Include="..\Ryujinx.Audio.Backends.Apple\Ryujinx.Audio.Backends.Apple.csproj" />
+    <ProjectReference Include="..\Ryujinx.Audio.Backends.SDL3\Ryujinx.Audio.Backends.SDL3.csproj" />
     <ProjectReference Include="..\Ryujinx.Audio.Backends.OpenAL\Ryujinx.Audio.Backends.OpenAL.csproj" />
     <ProjectReference Include="..\Ryujinx.Audio.Backends.SoundIo\Ryujinx.Audio.Backends.SoundIo.csproj" />
     <ProjectReference Include="..\Ryujinx.Common\Ryujinx.Common.csproj" />
     <ProjectReference Include="..\Ryujinx.HLE\Ryujinx.HLE.csproj" />
     <ProjectReference Include="..\ARMeilleure\ARMeilleure.csproj" />
-    <ProjectReference Include="..\Ryujinx.Graphics.OpenGL\Ryujinx.Graphics.OpenGL.csproj" />
     <ProjectReference Include="..\Ryujinx.Graphics.Gpu\Ryujinx.Graphics.Gpu.csproj" />
     <ProjectReference Include="..\Ryujinx.UI.LocaleGenerator\Ryujinx.UI.LocaleGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
@@ -134,7 +131,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Assets\locales.json" />
+    <None Remove="Assets\**\*.json" />
     <None Remove="Assets\Styles\Styles.xaml" />
     <None Remove="Assets\Styles\Themes.xaml" />
     <None Remove="Assets\Icons\Controller_JoyConLeft.svg" />
@@ -156,8 +153,8 @@
     <EmbeddedResource Include="..\..\docs\compatibility.csv" LogicalName="RyujinxGameCompatibilityList">
       <Link>Assets\RyujinxGameCompatibility.csv</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\..\assets\locales.json">
-      <Link>Assets\Locale.json</Link>
+    <EmbeddedResource Include="..\..\assets\**\*.json">
+      <LinkBase>Assets</LinkBase>
     </EmbeddedResource>
     <EmbeddedResource Include="Assets\Styles\Styles.xaml" />
     <EmbeddedResource Include="Assets\Icons\Controller_JoyConLeft.svg" />
@@ -178,6 +175,6 @@
     <EmbeddedResource Include="Assets\UIImages\Logo_Ryujinx_AntiAlias.png" />
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles Include="..\..\assets\locales.json" />
+    <AdditionalFiles Include="..\..\assets\Locales\*.json" />
   </ItemGroup>
 </Project>

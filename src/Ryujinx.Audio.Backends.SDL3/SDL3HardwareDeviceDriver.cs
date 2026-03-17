@@ -17,7 +17,7 @@ namespace Ryujinx.Audio.Backends.SDL3
 
     using unsafe SDL_AudioStreamCallbackPointer = delegate* unmanaged[Cdecl]<nint, SDL_AudioStream*, int, int, void>;
 
-    public class SDL3HardwareDeviceDriver : IHardwareDeviceDriver
+    public sealed class SDL3HardwareDeviceDriver : IHardwareDeviceDriver
     {
         private readonly ManualResetEvent _updateRequiredEvent;
         private readonly ManualResetEvent _pauseEvent;
@@ -162,7 +162,7 @@ namespace Ryujinx.Audio.Backends.SDL3
             Dispose(true);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
