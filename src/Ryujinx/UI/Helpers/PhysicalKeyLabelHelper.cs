@@ -3,6 +3,7 @@ using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Input;
 using Ryujinx.Common.Configuration.Hid;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using AvaPhysicalKey = Avalonia.Input.PhysicalKey;
 using ConfigPhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;
@@ -12,6 +13,8 @@ namespace Ryujinx.Ava.UI.Helpers
 {
     internal static class PhysicalKeyLabelHelper
     {
+        private static readonly ConcurrentDictionary<ConfigPhysicalKey, string> _observedLayoutLabels = new();
+
         private static readonly Dictionary<ConfigPhysicalKey, LocaleKeys> _localizedKeysMap = new()
         {
             [ConfigPhysicalKey.Unknown] = LocaleKeys.KeyboardLayout_KeyUnknown,
@@ -70,12 +73,36 @@ namespace Ryujinx.Ava.UI.Helpers
                 return GetLocalizedString(localeKey);
             }
 
+            if (_observedLayoutLabels.TryGetValue(key, out string observedLabel))
+            {
+                return observedLabel;
+            }
+
             if (TryGetPrintableKeySymbol(key, out string label))
             {
                 return label;
             }
 
             return key.ToString();
+        }
+
+        public static void UpdateFromEvent(KeyEventArgs args)
+        {
+            if (args.KeyModifiers != KeyModifiers.None)
+            {
+                return;
+            }
+
+            InputKey inputKey = AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey);
+            if (!TryConvertToConfigPhysicalKey(inputKey, out ConfigPhysicalKey physicalKey) || _localizedKeysMap.ContainsKey(physicalKey))
+            {
+                return;
+            }
+
+            if (TryNormalizePrintableSymbol(args.KeySymbol, out string label))
+            {
+                _observedLayoutLabels[physicalKey] = label;
+            }
         }
 
         private static bool TryGetPrintableKeySymbol(ConfigPhysicalKey key, out string label)
@@ -107,6 +134,33 @@ namespace Ryujinx.Ava.UI.Helpers
             }
 
             return true;
+        }
+
+        private static bool TryNormalizePrintableSymbol(string keySymbol, out string label)
+        {
+            if (string.IsNullOrEmpty(keySymbol) || keySymbol.Length != 1 || char.IsControl(keySymbol[0]))
+            {
+                label = string.Empty;
+                return false;
+            }
+
+            label = char.IsLetter(keySymbol[0])
+                ? char.ToUpperInvariant(keySymbol[0]).ToString()
+                : keySymbol;
+
+            return true;
+        }
+
+        private static bool TryConvertToConfigPhysicalKey(InputKey key, out ConfigPhysicalKey physicalKey)
+        {
+            if (key is >= InputKey.Unknown and < InputKey.Count)
+            {
+                physicalKey = (ConfigPhysicalKey)(int)key;
+                return true;
+            }
+
+            physicalKey = ConfigPhysicalKey.Unknown;
+            return false;
         }
 
         private static string GetLocalizedString(LocaleKeys localeKey)
