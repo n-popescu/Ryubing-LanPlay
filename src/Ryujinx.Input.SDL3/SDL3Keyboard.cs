@@ -3,13 +3,10 @@ using Ryujinx.Common.Configuration.Hid.Keyboard;
 using Ryujinx.Common.Logging;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using SDL;
 using static SDL.SDL3;
-
-using ConfigPhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;
 
 namespace Ryujinx.Input.SDL3
 {
@@ -264,36 +261,6 @@ namespace Ryujinx.Input.SDL3
             return value * ConvertRate;
         }
 
-        private static (short, short) GetStickValues(ref KeyboardStateSnapshot snapshot, JoyconConfigKeyboardStick<ConfigPhysicalKey> stickConfig)
-        {
-            short stickX = 0;
-            short stickY = 0;
-
-            if (snapshot.IsPressed(stickConfig.StickUp.ToInputKey()))
-            {
-                stickY += 1;
-            }
-
-            if (snapshot.IsPressed(stickConfig.StickDown.ToInputKey()))
-            {
-                stickY -= 1;
-            }
-
-            if (snapshot.IsPressed(stickConfig.StickRight.ToInputKey()))
-            {
-                stickX += 1;
-            }
-
-            if (snapshot.IsPressed(stickConfig.StickLeft.ToInputKey()))
-            {
-                stickX -= 1;
-            }
-
-            Vector2 stick = Vector2.Normalize(new Vector2(stickX, stickY));
-
-            return ((short)(stick.X * short.MaxValue), (short)(stick.Y * short.MaxValue));
-        }
-
         public GamepadStateSnapshot GetMappedStateSnapshot()
         {
             KeyboardStateSnapshot rawState = GetKeyboardStateSnapshot();
@@ -320,8 +287,8 @@ namespace Ryujinx.Input.SDL3
                     }
                 }
 
-                (short leftStickX, short leftStickY) = GetStickValues(ref rawState, _configuration.LeftJoyconStick);
-                (short rightStickX, short rightStickY) = GetStickValues(ref rawState, _configuration.RightJoyconStick);
+                (short leftStickX, short leftStickY) = KeyboardInputMappingHelper.GetStickValues(ref rawState, _configuration.LeftJoyconStick);
+                (short rightStickX, short rightStickY) = KeyboardInputMappingHelper.GetStickValues(ref rawState, _configuration.RightJoyconStick);
 
                 result.SetStick(StickInputId.Left, ConvertRawStickValue(leftStickX), ConvertRawStickValue(leftStickY));
                 result.SetStick(StickInputId.Right, ConvertRawStickValue(rightStickX), ConvertRawStickValue(rightStickY));
@@ -357,32 +324,12 @@ namespace Ryujinx.Input.SDL3
             {
                 _configuration = (StandardKeyboardInputConfig)configuration;
 
-                // First clear the buttons mapping
                 _buttonsUserMapping.Clear();
 
-                // Then configure left joycon
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.LeftStick, _configuration.LeftJoyconStick.StickButton.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.DpadUp, _configuration.LeftJoycon.DpadUp.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.DpadDown, _configuration.LeftJoycon.DpadDown.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.DpadLeft, _configuration.LeftJoycon.DpadLeft.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.DpadRight, _configuration.LeftJoycon.DpadRight.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.Minus, _configuration.LeftJoycon.ButtonMinus.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.LeftShoulder, _configuration.LeftJoycon.ButtonL.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.LeftTrigger, _configuration.LeftJoycon.ButtonZl.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.SingleRightTrigger0, _configuration.LeftJoycon.ButtonSr.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.SingleLeftTrigger0, _configuration.LeftJoycon.ButtonSl.ToInputKey()));
-
-                // Finally configure right joycon
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.RightStick, _configuration.RightJoyconStick.StickButton.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.A, _configuration.RightJoycon.ButtonA.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.B, _configuration.RightJoycon.ButtonB.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.X, _configuration.RightJoycon.ButtonX.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.Y, _configuration.RightJoycon.ButtonY.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.Plus, _configuration.RightJoycon.ButtonPlus.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.RightShoulder, _configuration.RightJoycon.ButtonR.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.RightTrigger, _configuration.RightJoycon.ButtonZr.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.SingleRightTrigger1, _configuration.RightJoycon.ButtonSr.ToInputKey()));
-                _buttonsUserMapping.Add(new ButtonMappingEntry(GamepadButtonInputId.SingleLeftTrigger1, _configuration.RightJoycon.ButtonSl.ToInputKey()));
+                foreach (KeyboardInputMappingHelper.KeyboardButtonMapping mapping in KeyboardInputMappingHelper.BuildButtonMappings(_configuration))
+                {
+                    _buttonsUserMapping.Add(new ButtonMappingEntry(mapping.To, mapping.From));
+                }
             }
         }
 

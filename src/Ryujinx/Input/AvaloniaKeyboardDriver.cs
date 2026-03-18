@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Ryujinx.Ava.Common.Locale;
-using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Input;
 using System;
 using System.Collections.Generic;
@@ -82,18 +81,13 @@ namespace Ryujinx.Ava.Input
 
         protected void OnKeyPress(object sender, KeyEventArgs args)
         {
-            UpdateKeyState(_semanticPressedKeys, GetInputKey(args, KeyboardInputMode.Semantic), true);
-            UpdateKeyState(_physicalPressedKeys, GetInputKey(args, KeyboardInputMode.Physical), true);
-            PhysicalKeyLabelHelper.UpdateFromEvent(args);
-
+            UpdateKeyStates(args, isPressed: true);
             KeyPressed?.Invoke(this, args);
         }
 
         protected void OnKeyRelease(object sender, KeyEventArgs args)
         {
-            UpdateKeyState(_semanticPressedKeys, GetInputKey(args, KeyboardInputMode.Semantic), false);
-            UpdateKeyState(_physicalPressedKeys, GetInputKey(args, KeyboardInputMode.Physical), false);
-
+            UpdateKeyStates(args, isPressed: false);
             KeyRelease?.Invoke(this, args);
         }
 
@@ -155,6 +149,12 @@ namespace Ryujinx.Ava.Input
                     pressedKeys[key] = currentCount - 1;
                 }
             }
+        }
+
+        private void UpdateKeyStates(KeyEventArgs args, bool isPressed)
+        {
+            UpdateKeyState(_semanticPressedKeys, GetInputKey(args, KeyboardInputMode.Semantic), isPressed);
+            UpdateKeyState(_physicalPressedKeys, GetInputKey(args, KeyboardInputMode.Physical), isPressed);
         }
 
         private static Key GetInputKey(KeyEventArgs args, KeyboardInputMode mode)
