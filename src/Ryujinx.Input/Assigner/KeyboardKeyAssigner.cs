@@ -33,6 +33,13 @@ namespace Ryujinx.Input.Assigner
 
         public Button? GetPressedButton()
         {
+            // On some layouts (for example AltGr on Windows), Right Alt is reported as Ctrl+Alt.
+            // Prefer AltRight in that case so the binding reflects the physical key used.
+            if (_keyboardState.IsPressed(Key.ControlLeft) && _keyboardState.IsPressed(Key.AltRight))
+            {
+                return !ShouldCancel() ? new Button(Key.AltRight) : null;
+            }
+
             Button? keyPressed = null;
 
             for (Key key = Key.Unknown; key < Key.Count; key++)
