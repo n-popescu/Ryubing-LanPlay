@@ -152,6 +152,9 @@ namespace Ryujinx.Ava.UI.Helpers
                     }
 
                     break;
+                case PhysicalKey physicalKey:
+                    keyString = PhysicalKeyLabelHelper.GetString(physicalKey);
+                    break;
                 case GamepadInputId gamepadInputId:
                     if (_gamepadInputIdMap.TryGetValue(gamepadInputId, out localeKey))
                     {
