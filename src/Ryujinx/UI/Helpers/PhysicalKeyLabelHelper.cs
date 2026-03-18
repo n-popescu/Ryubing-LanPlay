@@ -66,7 +66,7 @@ namespace Ryujinx.Ava.UI.Helpers
             [ConfigPhysicalKey.Unbound] = LocaleKeys.KeyboardLayout_KeyUnbound,
         };
 
-        public static string GetString(ConfigPhysicalKey key)
+        public static string GetDisplayString(ConfigPhysicalKey key)
         {
             if (_localizedKeysMap.TryGetValue(key, out LocaleKeys localeKey))
             {
@@ -78,7 +78,7 @@ namespace Ryujinx.Ava.UI.Helpers
                 return observedLabel;
             }
 
-            if (TryGetPrintableKeySymbol(key, out string label))
+            if (TryGetFallbackPrintableKeyLabel(key, out string label))
             {
                 return label;
             }
@@ -86,7 +86,7 @@ namespace Ryujinx.Ava.UI.Helpers
             return key.ToString();
         }
 
-        public static void UpdateFromEvent(KeyEventArgs args)
+        public static void ObserveKeyPress(object sender, KeyEventArgs args)
         {
             if (args.KeyModifiers != KeyModifiers.None)
             {
@@ -99,13 +99,13 @@ namespace Ryujinx.Ava.UI.Helpers
                 return;
             }
 
-            if (TryNormalizePrintableSymbol(args.KeySymbol, out string label))
+            if (TryNormalizeObservedPrintableLabel(args.KeySymbol, out string label))
             {
                 _observedLayoutLabels[physicalKey] = label;
             }
         }
 
-        private static bool TryGetPrintableKeySymbol(ConfigPhysicalKey key, out string label)
+        private static bool TryGetFallbackPrintableKeyLabel(ConfigPhysicalKey key, out string label)
         {
             // The legacy enum name for the ISO extra key is misleading, so give it a distinct physical label.
             if (key == ConfigPhysicalKey.Grave)
@@ -136,7 +136,7 @@ namespace Ryujinx.Ava.UI.Helpers
             return true;
         }
 
-        private static bool TryNormalizePrintableSymbol(string keySymbol, out string label)
+        private static bool TryNormalizeObservedPrintableLabel(string keySymbol, out string label)
         {
             if (string.IsNullOrEmpty(keySymbol) || keySymbol.Length != 1 || char.IsControl(keySymbol[0]))
             {

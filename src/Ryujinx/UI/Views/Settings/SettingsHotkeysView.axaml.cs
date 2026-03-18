@@ -35,6 +35,7 @@ namespace Ryujinx.Ava.UI.Views.Settings
             }
 
             _avaloniaKeyboardDriver = new AvaloniaKeyboardDriver(this, KeyboardInputMode.Semantic);
+            _avaloniaKeyboardDriver.KeyPressed += PhysicalKeyLabelHelper.ObserveKeyPress;
         }
 
         protected override void OnPointerReleased(PointerReleasedEventArgs e)

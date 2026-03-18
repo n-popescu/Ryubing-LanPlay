@@ -291,6 +291,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 _mainWindow = RyujinxApp.MainWindow;
 
                 AvaloniaKeyboardDriver = new AvaloniaKeyboardDriver(owner, KeyboardInputMode.Physical);
+                AvaloniaKeyboardDriver.KeyPressed += PhysicalKeyLabelHelper.ObserveKeyPress;
 
                 _mainWindow.InputManager.GamepadDriver.OnGamepadConnected += HandleOnGamepadConnected;
                 _mainWindow.InputManager.GamepadDriver.OnGamepadDisconnected += HandleOnGamepadDisconnected;
