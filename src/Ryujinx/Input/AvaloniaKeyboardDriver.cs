@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Ryujinx.Ava.Common.Locale;
+using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Input;
 using System;
 using System.Collections.Generic;
@@ -83,6 +84,7 @@ namespace Ryujinx.Ava.Input
         {
             UpdateKeyState(_semanticPressedKeys, GetInputKey(args, KeyboardInputMode.Semantic), true);
             UpdateKeyState(_physicalPressedKeys, GetInputKey(args, KeyboardInputMode.Physical), true);
+            PhysicalKeyLabelHelper.UpdateFromEvent(args);
 
             KeyPressed?.Invoke(this, args);
         }
