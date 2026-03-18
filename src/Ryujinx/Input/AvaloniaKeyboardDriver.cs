@@ -4,7 +4,6 @@ using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Input;
 using System;
 using System.Collections.Generic;
-using AvaKey = Avalonia.Input.Key;
 using Key = Ryujinx.Input.Key;
 
 namespace Ryujinx.Ava.Input
@@ -13,7 +12,7 @@ namespace Ryujinx.Ava.Input
     {
         private static readonly string[] _keyboardIdentifers = ["0"];
         private readonly Control _control;
-        private readonly HashSet<AvaKey> _pressedKeys;
+        private readonly Dictionary<Key, int> _pressedKeys;
 
         public event EventHandler<KeyEventArgs> KeyPressed;
         public event EventHandler<KeyEventArgs> KeyRelease;
@@ -65,21 +64,48 @@ namespace Ryujinx.Ava.Input
         {
             if (disposing)
             {
-                _control.KeyUp -= OnKeyPress;
-                _control.KeyDown -= OnKeyRelease;
+                _control.KeyDown -= OnKeyPress;
+                _control.KeyUp -= OnKeyRelease;
             }
         }
 
         protected void OnKeyPress(object sender, KeyEventArgs args)
         {
-            _pressedKeys.Add(args.Key);
+            Key key = AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey, args.Key);
+
+            if (key != Key.Unknown)
+            {
+                if (_pressedKeys.TryGetValue(key, out int count))
+                {
+                    _pressedKeys[key] = count + 1;
+                }
+                else
+                {
+                    _pressedKeys[key] = 1;
+                }
+            }
 
             KeyPressed?.Invoke(this, args);
         }
 
         protected void OnKeyRelease(object sender, KeyEventArgs args)
         {
-            _pressedKeys.Remove(args.Key);
+            Key key = AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey, args.Key);
+
+            if (key != Key.Unknown)
+            {
+                if (_pressedKeys.TryGetValue(key, out int count))
+                {
+                    if (count <= 1)
+                    {
+                        _pressedKeys.Remove(key);
+                    }
+                    else
+                    {
+                        _pressedKeys[key] = count - 1;
+                    }
+                }
+            }
 
             KeyRelease?.Invoke(this, args);
         }
@@ -91,9 +117,7 @@ namespace Ryujinx.Ava.Input
                 return false;
             }
 
-            AvaloniaKeyboardMappingHelper.TryGetAvaKey(key, out AvaKey nativeKey);
-
-            return _pressedKeys.Contains(nativeKey);
+            return _pressedKeys.ContainsKey(key);
         }
 
         public void Clear()
