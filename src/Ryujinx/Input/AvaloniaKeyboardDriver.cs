@@ -8,11 +8,13 @@ using Key = Ryujinx.Input.Key;
 
 namespace Ryujinx.Ava.Input
 {
-    internal class AvaloniaKeyboardDriver : IGamepadDriver
+    internal class AvaloniaKeyboardDriver : IKeyboardModeDriver
     {
         private static readonly string[] _keyboardIdentifers = ["0"];
         private readonly Control _control;
-        private readonly Dictionary<Key, int> _pressedKeys;
+        private readonly Dictionary<Key, int> _semanticPressedKeys;
+        private readonly Dictionary<Key, int> _physicalPressedKeys;
+        private readonly KeyboardInputMode _defaultMode;
 
         public event EventHandler<KeyEventArgs> KeyPressed;
         public event EventHandler<KeyEventArgs> KeyRelease;
@@ -21,10 +23,12 @@ namespace Ryujinx.Ava.Input
         public string DriverName => "AvaloniaKeyboardDriver";
         public ReadOnlySpan<string> GamepadsIds => _keyboardIdentifers;
 
-        public AvaloniaKeyboardDriver(Control control)
+        public AvaloniaKeyboardDriver(Control control, KeyboardInputMode defaultMode = KeyboardInputMode.Semantic)
         {
             _control = control;
-            _pressedKeys = [];
+            _semanticPressedKeys = [];
+            _physicalPressedKeys = [];
+            _defaultMode = defaultMode;
 
             _control.KeyDown += OnKeyPress;
             _control.KeyUp += OnKeyRelease;
@@ -50,12 +54,17 @@ namespace Ryujinx.Ava.Input
 
         public IGamepad GetGamepad(string id)
         {
+            return GetKeyboard(id, _defaultMode);
+        }
+
+        public IKeyboard GetKeyboard(string id, KeyboardInputMode mode)
+        {
             if (!_keyboardIdentifers[0].Equals(id))
             {
                 return null;
             }
 
-            return new AvaloniaKeyboard(this, _keyboardIdentifers[0], LocaleManager.Instance[LocaleKeys.KeyboardLayout_AllKeyboards]);
+            return new AvaloniaKeyboard(this, _keyboardIdentifers[0], LocaleManager.Instance[LocaleKeys.KeyboardLayout_AllKeyboards], mode);
         }
 
         public IEnumerable<IGamepad> GetGamepads() => [GetGamepad("0")];
@@ -66,63 +75,98 @@ namespace Ryujinx.Ava.Input
             {
                 _control.KeyDown -= OnKeyPress;
                 _control.KeyUp -= OnKeyRelease;
+                _control.TextInput -= Control_TextInput;
             }
         }
 
         protected void OnKeyPress(object sender, KeyEventArgs args)
         {
-            Key key = AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey, args.Key);
-
-            if (key != Key.Unknown)
-            {
-                if (_pressedKeys.TryGetValue(key, out int count))
-                {
-                    _pressedKeys[key] = count + 1;
-                }
-                else
-                {
-                    _pressedKeys[key] = 1;
-                }
-            }
+            UpdateKeyState(_semanticPressedKeys, GetInputKey(args, KeyboardInputMode.Semantic), true);
+            UpdateKeyState(_physicalPressedKeys, GetInputKey(args, KeyboardInputMode.Physical), true);
 
             KeyPressed?.Invoke(this, args);
         }
 
         protected void OnKeyRelease(object sender, KeyEventArgs args)
         {
-            Key key = AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey, args.Key);
-
-            if (key != Key.Unknown)
-            {
-                if (_pressedKeys.TryGetValue(key, out int count))
-                {
-                    if (count <= 1)
-                    {
-                        _pressedKeys.Remove(key);
-                    }
-                    else
-                    {
-                        _pressedKeys[key] = count - 1;
-                    }
-                }
-            }
+            UpdateKeyState(_semanticPressedKeys, GetInputKey(args, KeyboardInputMode.Semantic), false);
+            UpdateKeyState(_physicalPressedKeys, GetInputKey(args, KeyboardInputMode.Physical), false);
 
             KeyRelease?.Invoke(this, args);
         }
 
-        internal bool IsPressed(Key key)
+        internal bool IsPressed(Key key, KeyboardInputMode mode)
         {
             if (key is Key.Unbound or Key.Unknown)
             {
                 return false;
             }
 
-            return _pressedKeys.ContainsKey(key);
+            return GetPressedKeys(mode).ContainsKey(key);
+        }
+
+        internal void Clear(KeyboardInputMode mode)
+        {
+            GetPressedKeys(mode).Clear();
         }
 
         public void Clear()
         {
-            _pressedKeys.Clear();
+            _semanticPressedKeys.Clear();
+            _physicalPressedKeys.Clear();
+        }
+
+        private Dictionary<Key, int> GetPressedKeys(KeyboardInputMode mode)
+        {
+            return mode == KeyboardInputMode.Physical ? _physicalPressedKeys : _semanticPressedKeys;
+        }
+
+        private static void UpdateKeyState(Dictionary<Key, int> pressedKeys, Key key, bool isPressed)
+        {
+            if (key is Key.Unknown or Key.Unbound)
+            {
+                return;
+            }
+
+            if (isPressed)
+            {
+                if (pressedKeys.TryGetValue(key, out int count))
+                {
+                    pressedKeys[key] = count + 1;
+                }
+                else
+                {
+                    pressedKeys[key] = 1;
+                }
+
+                return;
+            }
+
+            if (pressedKeys.TryGetValue(key, out int currentCount))
+            {
+                if (currentCount <= 1)
+                {
+                    pressedKeys.Remove(key);
+                }
+                else
+                {
+                    pressedKeys[key] = currentCount - 1;
+                }
+            }
+        }
+
+        private static Key GetInputKey(KeyEventArgs args, KeyboardInputMode mode)
+        {
+            if (mode == KeyboardInputMode.Physical)
+            {
+                Key physicalKey = AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey);
+
+                return physicalKey != Key.Unknown
+                    ? physicalKey
+                    : AvaloniaKeyboardMappingHelper.ToInputKey(args.Key);
+            }
+
+            return AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey, args.Key);
         }
 
         public void Dispose()

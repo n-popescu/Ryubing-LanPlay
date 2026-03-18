@@ -24,7 +24,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using ConfigGamepadInputId = Ryujinx.Common.Configuration.Hid.Controller.GamepadInputId;
 using ConfigStickInputId = Ryujinx.Common.Configuration.Hid.Controller.StickInputId;
-using Key = Ryujinx.Common.Configuration.Hid.Key;
+using PhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;
 
 namespace Ryujinx.Headless
 {
@@ -105,48 +105,48 @@ namespace Ryujinx.Headless
                         Backend = InputBackendType.WindowKeyboard,
                         Id = null,
                         ControllerType = ControllerType.JoyconPair,
-                        LeftJoycon = new LeftJoyconCommonConfig<Key>
+                        LeftJoycon = new LeftJoyconCommonConfig<PhysicalKey>
                         {
-                            DpadUp = Key.Up,
-                            DpadDown = Key.Down,
-                            DpadLeft = Key.Left,
-                            DpadRight = Key.Right,
-                            ButtonMinus = Key.Minus,
-                            ButtonL = Key.E,
-                            ButtonZl = Key.Q,
-                            ButtonSl = Key.Unbound,
-                            ButtonSr = Key.Unbound,
+                            DpadUp = PhysicalKey.Up,
+                            DpadDown = PhysicalKey.Down,
+                            DpadLeft = PhysicalKey.Left,
+                            DpadRight = PhysicalKey.Right,
+                            ButtonMinus = PhysicalKey.Minus,
+                            ButtonL = PhysicalKey.E,
+                            ButtonZl = PhysicalKey.Q,
+                            ButtonSl = PhysicalKey.Unbound,
+                            ButtonSr = PhysicalKey.Unbound,
                         },
 
-                        LeftJoyconStick = new JoyconConfigKeyboardStick<Key>
+                        LeftJoyconStick = new JoyconConfigKeyboardStick<PhysicalKey>
                         {
-                            StickUp = Key.W,
-                            StickDown = Key.S,
-                            StickLeft = Key.A,
-                            StickRight = Key.D,
-                            StickButton = Key.F,
+                            StickUp = PhysicalKey.W,
+                            StickDown = PhysicalKey.S,
+                            StickLeft = PhysicalKey.A,
+                            StickRight = PhysicalKey.D,
+                            StickButton = PhysicalKey.F,
                         },
 
-                        RightJoycon = new RightJoyconCommonConfig<Key>
+                        RightJoycon = new RightJoyconCommonConfig<PhysicalKey>
                         {
-                            ButtonA = Key.Z,
-                            ButtonB = Key.X,
-                            ButtonX = Key.C,
-                            ButtonY = Key.V,
-                            ButtonPlus = Key.Plus,
-                            ButtonR = Key.U,
-                            ButtonZr = Key.O,
-                            ButtonSl = Key.Unbound,
-                            ButtonSr = Key.Unbound,
+                            ButtonA = PhysicalKey.Z,
+                            ButtonB = PhysicalKey.X,
+                            ButtonX = PhysicalKey.C,
+                            ButtonY = PhysicalKey.V,
+                            ButtonPlus = PhysicalKey.Plus,
+                            ButtonR = PhysicalKey.U,
+                            ButtonZr = PhysicalKey.O,
+                            ButtonSl = PhysicalKey.Unbound,
+                            ButtonSr = PhysicalKey.Unbound,
                         },
 
-                        RightJoyconStick = new JoyconConfigKeyboardStick<Key>
+                        RightJoyconStick = new JoyconConfigKeyboardStick<PhysicalKey>
                         {
-                            StickUp = Key.I,
-                            StickDown = Key.K,
-                            StickLeft = Key.J,
-                            StickRight = Key.L,
-                            StickButton = Key.H,
+                            StickUp = PhysicalKey.I,
+                            StickDown = PhysicalKey.K,
+                            StickLeft = PhysicalKey.J,
+                            StickRight = PhysicalKey.L,
+                            StickButton = PhysicalKey.H,
                         },
                     };
                 }

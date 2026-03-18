@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Ryujinx.Input.SDL3
 {
-    public class SDL3KeyboardDriver : IGamepadDriver
+    public class SDL3KeyboardDriver : IKeyboardModeDriver
     {
         public SDL3KeyboardDriver()
         {
@@ -44,6 +44,11 @@ namespace Ryujinx.Input.SDL3
         }
 
         public IGamepad GetGamepad(string id)
+        {
+            return GetKeyboard(id, KeyboardInputMode.Semantic);
+        }
+
+        public IKeyboard GetKeyboard(string id, KeyboardInputMode mode)
         {
             if (!_keyboardIdentifers[0].Equals(id))
             {
