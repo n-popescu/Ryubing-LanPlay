@@ -56,7 +56,7 @@ namespace Ryujinx.Ava.Input
                 return null;
             }
 
-            return new AvaloniaKeyboard(this, _keyboardIdentifers[0], LocaleManager.Instance[LocaleKeys.AllKeyboards]);
+            return new AvaloniaKeyboard(this, _keyboardIdentifers[0], LocaleManager.Instance[LocaleKeys.KeyboardLayout_AllKeyboards]);
         }
 
         public IEnumerable<IGamepad> GetGamepads() => [GetGamepad("0")];
