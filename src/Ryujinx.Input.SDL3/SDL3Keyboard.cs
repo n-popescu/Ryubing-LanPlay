@@ -4,6 +4,7 @@ using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Services.Hid;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using SDL;

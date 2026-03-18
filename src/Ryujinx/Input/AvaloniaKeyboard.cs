@@ -4,6 +4,7 @@ using Ryujinx.Common.Logging;
 using Ryujinx.Input;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Threading;
 using Key = Ryujinx.Input.Key;
 
