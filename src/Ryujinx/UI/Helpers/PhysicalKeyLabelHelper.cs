@@ -14,6 +14,7 @@ namespace Ryujinx.Ava.UI.Helpers
     internal static class PhysicalKeyLabelHelper
     {
         private static readonly ConcurrentDictionary<ConfigPhysicalKey, string> _observedLayoutLabels = new();
+        public static event Action LabelsChanged;
 
         private static readonly Dictionary<ConfigPhysicalKey, LocaleKeys> _localizedKeysMap = new()
         {
@@ -101,7 +102,13 @@ namespace Ryujinx.Ava.UI.Helpers
 
             if (TryNormalizeObservedPrintableLabel(args.KeySymbol, out string label))
             {
+                if (_observedLayoutLabels.TryGetValue(physicalKey, out string existingLabel) && existingLabel == label)
+                {
+                    return;
+                }
+
                 _observedLayoutLabels[physicalKey] = label;
+                LabelsChanged?.Invoke();
             }
         }
 

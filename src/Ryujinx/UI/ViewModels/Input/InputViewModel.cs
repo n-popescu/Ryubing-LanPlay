@@ -1,6 +1,7 @@
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Svg.Skia;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Gommon;
 using Ryujinx.Ava.Common.Locale;
@@ -293,6 +294,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 AvaloniaKeyboardDriver keyboardDriver = new(owner, KeyboardInputMode.Physical);
                 keyboardDriver.KeyPressed += PhysicalKeyLabelHelper.ObserveKeyPress;
                 AvaloniaKeyboardDriver = keyboardDriver;
+                PhysicalKeyLabelHelper.LabelsChanged += OnPhysicalKeyLabelsChanged;
 
                 _mainWindow.InputManager.GamepadDriver.OnGamepadConnected += HandleOnGamepadConnected;
                 _mainWindow.InputManager.GamepadDriver.OnGamepadDisconnected += HandleOnGamepadDisconnected;
@@ -1063,9 +1065,18 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             NotifyChangesEvent?.Invoke();
         }
 
+        private void OnPhysicalKeyLabelsChanged()
+        {
+            if (ConfigViewModel is KeyboardInputViewModel keyboardInputViewModel)
+            {
+                Dispatcher.UIThread.Post(keyboardInputViewModel.Config.NotifyKeyLabelsChanged);
+            }
+        }
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);
+            PhysicalKeyLabelHelper.LabelsChanged -= OnPhysicalKeyLabelsChanged;
 
             _mainWindow.InputManager.GamepadDriver.OnGamepadConnected -= HandleOnGamepadConnected;
             _mainWindow.InputManager.GamepadDriver.OnGamepadDisconnected -= HandleOnGamepadDisconnected;

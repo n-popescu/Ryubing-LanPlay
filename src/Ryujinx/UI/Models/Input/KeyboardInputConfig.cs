@@ -198,5 +198,37 @@ namespace Ryujinx.Ava.UI.Models.Input
 
             return config;
         }
+
+        public void NotifyKeyLabelsChanged()
+        {
+            OnPropertiesChanged(nameof(LeftStickUp),
+                nameof(LeftStickDown),
+                nameof(LeftStickLeft),
+                nameof(LeftStickRight),
+                nameof(LeftStickButton),
+                nameof(RightStickUp),
+                nameof(RightStickDown),
+                nameof(RightStickLeft),
+                nameof(RightStickRight),
+                nameof(RightStickButton),
+                nameof(DpadUp),
+                nameof(DpadDown),
+                nameof(DpadLeft),
+                nameof(DpadRight),
+                nameof(ButtonMinus),
+                nameof(ButtonPlus),
+                nameof(ButtonA),
+                nameof(ButtonB),
+                nameof(ButtonX),
+                nameof(ButtonY),
+                nameof(ButtonL),
+                nameof(ButtonR),
+                nameof(ButtonZl),
+                nameof(ButtonZr),
+                nameof(LeftButtonSl),
+                nameof(LeftButtonSr),
+                nameof(RightButtonSl),
+                nameof(RightButtonSr));
+        }
     }
 }
