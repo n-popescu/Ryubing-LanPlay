@@ -4,6 +4,7 @@ using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Input;
 using System;
 using System.Collections.Generic;
+using ConfigPhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;
 using Key = Ryujinx.Input.Key;
 
 namespace Ryujinx.Ava.Input
@@ -13,7 +14,7 @@ namespace Ryujinx.Ava.Input
         private static readonly string[] _keyboardIdentifers = ["0"];
         private readonly Control _control;
         private readonly Dictionary<Key, int> _semanticPressedKeys;
-        private readonly Dictionary<Key, int> _physicalPressedKeys;
+        private readonly Dictionary<ConfigPhysicalKey, int> _physicalPressedKeys;
         private readonly KeyboardInputMode _defaultMode;
 
         public event EventHandler<KeyEventArgs> KeyPressed;
@@ -98,23 +99,27 @@ namespace Ryujinx.Ava.Input
                 return false;
             }
 
-            return GetPressedKeys(mode).ContainsKey(key);
+            return mode == KeyboardInputMode.Physical
+                ? _physicalPressedKeys.ContainsKey((ConfigPhysicalKey)(int)key)
+                : _semanticPressedKeys.ContainsKey(key);
         }
 
         internal void Clear(KeyboardInputMode mode)
         {
-            GetPressedKeys(mode).Clear();
+            if (mode == KeyboardInputMode.Physical)
+            {
+                _physicalPressedKeys.Clear();
+            }
+            else
+            {
+                _semanticPressedKeys.Clear();
+            }
         }
 
         public void Clear()
         {
             _semanticPressedKeys.Clear();
             _physicalPressedKeys.Clear();
-        }
-
-        private Dictionary<Key, int> GetPressedKeys(KeyboardInputMode mode)
-        {
-            return mode == KeyboardInputMode.Physical ? _physicalPressedKeys : _semanticPressedKeys;
         }
 
         private static void UpdateKeyState(Dictionary<Key, int> pressedKeys, Key key, bool isPressed)
@@ -151,24 +156,53 @@ namespace Ryujinx.Ava.Input
             }
         }
 
-        private void UpdateKeyStates(KeyEventArgs args, bool isPressed)
+        private static void UpdateKeyState(Dictionary<ConfigPhysicalKey, int> pressedKeys, ConfigPhysicalKey key, bool isPressed)
         {
-            UpdateKeyState(_semanticPressedKeys, GetInputKey(args, KeyboardInputMode.Semantic), isPressed);
-            UpdateKeyState(_physicalPressedKeys, GetInputKey(args, KeyboardInputMode.Physical), isPressed);
-        }
-
-        private static Key GetInputKey(KeyEventArgs args, KeyboardInputMode mode)
-        {
-            if (mode == KeyboardInputMode.Physical)
+            if (key is ConfigPhysicalKey.Unknown or ConfigPhysicalKey.Unbound)
             {
-                Key physicalKey = AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey);
-
-                return physicalKey != Key.Unknown
-                    ? physicalKey
-                    : AvaloniaKeyboardMappingHelper.ToInputKey(args.Key);
+                return;
             }
 
-            return AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey, args.Key);
+            if (isPressed)
+            {
+                if (pressedKeys.TryGetValue(key, out int count))
+                {
+                    pressedKeys[key] = count + 1;
+                }
+                else
+                {
+                    pressedKeys[key] = 1;
+                }
+
+                return;
+            }
+
+            if (pressedKeys.TryGetValue(key, out int currentCount))
+            {
+                if (currentCount <= 1)
+                {
+                    pressedKeys.Remove(key);
+                }
+                else
+                {
+                    pressedKeys[key] = currentCount - 1;
+                }
+            }
+        }
+
+        private void UpdateKeyStates(KeyEventArgs args, bool isPressed)
+        {
+            UpdateKeyState(_semanticPressedKeys, AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey, args.Key), isPressed);
+            UpdateKeyState(_physicalPressedKeys, GetPhysicalInputKey(args), isPressed);
+        }
+
+        private static ConfigPhysicalKey GetPhysicalInputKey(KeyEventArgs args)
+        {
+            Key key = AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey);
+
+            return key is >= Key.Unknown and < Key.Count
+                ? (ConfigPhysicalKey)(int)key
+                : ConfigPhysicalKey.Unknown;
         }
 
         public void Dispose()
