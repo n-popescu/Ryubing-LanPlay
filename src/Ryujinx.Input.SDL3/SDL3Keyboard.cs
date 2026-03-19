@@ -9,23 +9,19 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using SDL;
 using static SDL.SDL3;
+using ConfigPhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;
 
 namespace Ryujinx.Input.SDL3
 {
     class SDL3Keyboard : IKeyboard
     {
-        private readonly record struct ButtonMappingEntry(GamepadButtonInputId To, Key From)
-        {
-            public bool IsValid => To is not GamepadButtonInputId.Unbound && From is not Key.Unbound;
-        }
-
         private readonly Lock _userMappingLock = new();
 
 #pragma warning disable IDE0052 // Remove unread private member
         private readonly SDL3KeyboardDriver _driver;
 #pragma warning restore IDE0052
         private StandardKeyboardInputConfig _configuration;
-        private readonly List<ButtonMappingEntry> _buttonsUserMapping;
+        private readonly List<KeyboardInputMappingHelper.KeyboardButtonMapping> _buttonsUserMapping;
 
 
         private static readonly SDL_Keycode[] _keysDriverMapping =
@@ -194,9 +190,9 @@ namespace Ryujinx.Input.SDL3
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private unsafe static int ToSDL3Scancode(Key key)
+        private unsafe static int ToSDL3Scancode(ConfigPhysicalKey key)
         {
-            if (key is >= Key.Unknown and <= Key.Menu)
+            if (key is >= ConfigPhysicalKey.Unknown and <= ConfigPhysicalKey.Menu)
             {
                 return -1;
             }
@@ -204,18 +200,18 @@ namespace Ryujinx.Input.SDL3
             return (int)SDL_GetScancodeFromKey(_keysDriverMapping[(int)key], null);
         }
 
-        private static SDL_Keymod GetKeyboardModifierMask(Key key)
+        private static SDL_Keymod GetKeyboardModifierMask(ConfigPhysicalKey key)
         {
             return key switch
             {
-                Key.ShiftLeft => SDL_Keymod.SDL_KMOD_LSHIFT,
-                Key.ShiftRight => SDL_Keymod.SDL_KMOD_RSHIFT,
-                Key.ControlLeft => SDL_Keymod.SDL_KMOD_LCTRL,
-                Key.ControlRight => SDL_Keymod.SDL_KMOD_RCTRL,
-                Key.AltLeft => SDL_Keymod.SDL_KMOD_LALT,
-                Key.AltRight => SDL_Keymod.SDL_KMOD_RALT,
-                Key.WinLeft => SDL_Keymod.SDL_KMOD_LGUI,
-                Key.WinRight => SDL_Keymod.SDL_KMOD_RGUI,
+                ConfigPhysicalKey.ShiftLeft => SDL_Keymod.SDL_KMOD_LSHIFT,
+                ConfigPhysicalKey.ShiftRight => SDL_Keymod.SDL_KMOD_RSHIFT,
+                ConfigPhysicalKey.ControlLeft => SDL_Keymod.SDL_KMOD_LCTRL,
+                ConfigPhysicalKey.ControlRight => SDL_Keymod.SDL_KMOD_RCTRL,
+                ConfigPhysicalKey.AltLeft => SDL_Keymod.SDL_KMOD_LALT,
+                ConfigPhysicalKey.AltRight => SDL_Keymod.SDL_KMOD_RALT,
+                ConfigPhysicalKey.WinLeft => SDL_Keymod.SDL_KMOD_LGUI,
+                ConfigPhysicalKey.WinRight => SDL_Keymod.SDL_KMOD_RGUI,
                 // NOTE: Menu key isn't supported by SDL3.
                 _ => SDL_Keymod.SDL_KMOD_NONE
             };
@@ -231,9 +227,9 @@ namespace Ryujinx.Input.SDL3
                 rawKeyboardState = SDL_GetKeyboardState(null);
             }
 
-            bool[] keysState = new bool[(int)Key.Count];
+            bool[] keysState = new bool[(int)ConfigPhysicalKey.Count];
 
-            for (Key key = 0; key < Key.Count; key++)
+            for (ConfigPhysicalKey key = 0; key < ConfigPhysicalKey.Count; key++)
             {
                 int index = ToSDL3Scancode(key);
                 if (index == -1)
@@ -275,9 +271,9 @@ namespace Ryujinx.Input.SDL3
                     return result;
                 }
 
-                foreach (ButtonMappingEntry entry in _buttonsUserMapping)
+                foreach (KeyboardInputMappingHelper.KeyboardButtonMapping entry in _buttonsUserMapping)
                 {
-                    if (entry.From == Key.Unknown || entry.From == Key.Unbound || entry.To == GamepadButtonInputId.Unbound)
+                    if (!entry.IsValid)
                     {
                         continue;
                     }
@@ -328,10 +324,7 @@ namespace Ryujinx.Input.SDL3
 
                 _buttonsUserMapping.Clear();
 
-                foreach (KeyboardInputMappingHelper.KeyboardButtonMapping mapping in KeyboardInputMappingHelper.BuildButtonMappings(_configuration))
-                {
-                    _buttonsUserMapping.Add(new ButtonMappingEntry(mapping.To, mapping.From));
-                }
+                _buttonsUserMapping.AddRange(KeyboardInputMappingHelper.BuildButtonMappings(_configuration));
             }
         }
 

@@ -1,5 +1,6 @@
 using System.Buffers;
 using System.Runtime.CompilerServices;
+using ConfigPhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;
 
 namespace Ryujinx.Input
 {
@@ -33,12 +34,12 @@ namespace Ryujinx.Input
         {
             if (_keyState is null)
             {
-                _keyState = new bool[(int)Key.Count];
+                _keyState = new bool[(int)ConfigPhysicalKey.Count];
             }
             
-            for (Key key = 0; key < Key.Count; key++)
+            for (ConfigPhysicalKey key = 0; key < ConfigPhysicalKey.Count; key++)
             {
-                _keyState[(int)key] = keyboard.IsPressed(key);
+                _keyState[(int)key] = keyboard.IsPressed((Key)(int)key);
             }
 
             return new KeyboardStateSnapshot(_keyState);

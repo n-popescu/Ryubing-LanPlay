@@ -12,7 +12,7 @@ namespace Ryujinx.Ava.Input
 {
     internal class AvaloniaKeyboard : IKeyboard
     {
-        private readonly List<ButtonMappingEntry> _buttonsUserMapping;
+        private readonly List<KeyboardInputMappingHelper.KeyboardButtonMapping> _buttonsUserMapping;
         private readonly AvaloniaKeyboardDriver _driver;
         private readonly KeyboardInputMode _mode;
         private StandardKeyboardInputConfig _configuration;
@@ -25,12 +25,6 @@ namespace Ryujinx.Ava.Input
 
         public bool IsConnected => true;
         public GamepadFeaturesFlag Features => GamepadFeaturesFlag.None;
-
-        private readonly record struct ButtonMappingEntry(GamepadButtonInputId To, Key From)
-        {
-            public bool IsValid => To is not GamepadButtonInputId.Unbound && From is not Key.Unknown and not Key.Unbound;
-        }
-
         public AvaloniaKeyboard(AvaloniaKeyboardDriver driver, string id, string name, KeyboardInputMode mode)
         {
             _buttonsUserMapping = [];
@@ -58,7 +52,7 @@ namespace Ryujinx.Ava.Input
                     return result;
                 }
 
-                foreach (ButtonMappingEntry entry in _buttonsUserMapping)
+                foreach (KeyboardInputMappingHelper.KeyboardButtonMapping entry in _buttonsUserMapping)
                 {
                     if (!entry.IsValid)
                     {
@@ -117,10 +111,7 @@ namespace Ryujinx.Ava.Input
 
                 _buttonsUserMapping.Clear();
 
-                foreach (KeyboardInputMappingHelper.KeyboardButtonMapping mapping in KeyboardInputMappingHelper.BuildButtonMappings(_configuration))
-                {
-                    _buttonsUserMapping.Add(new ButtonMappingEntry(mapping.To, mapping.From));
-                }
+                _buttonsUserMapping.AddRange(KeyboardInputMappingHelper.BuildButtonMappings(_configuration));
             }
         }
 
