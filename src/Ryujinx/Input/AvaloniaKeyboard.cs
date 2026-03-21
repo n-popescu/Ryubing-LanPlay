@@ -16,7 +16,6 @@ namespace Ryujinx.Ava.Input
         private readonly AvaloniaKeyboardDriver _driver;
         private readonly KeyboardInputMode _mode;
         private StandardKeyboardInputConfig _configuration;
-        private uint _ledValue;
 
         private readonly Lock _userMappingLock = new();
 
@@ -117,13 +116,6 @@ namespace Ryujinx.Ava.Input
 
         public void SetLed(uint packedRgb)
         {
-            if (_ledValue == packedRgb)
-            {
-                return;
-            }
-
-            _ledValue = packedRgb;
-
             Logger.Debug?.Print(LogClass.UI, "SetLed called on an AvaloniaKeyboard");
         }
 
