@@ -13,8 +13,8 @@ namespace Ryujinx.Ava.Input
     {
         private static readonly string[] _keyboardIdentifers = ["0"];
         private readonly Control _control;
-        private readonly Dictionary<Key, int> _semanticPressedKeys;
-        private readonly Dictionary<ConfigPhysicalKey, int> _physicalPressedKeys;
+        private readonly HashSet<Key> _semanticPressedKeys;
+        private readonly HashSet<ConfigPhysicalKey> _physicalPressedKeys;
         private readonly Dictionary<Key, ConfigPhysicalKey> _observedPhysicalKeysBySemanticKey;
         private readonly KeyboardInputMode _defaultMode;
 
@@ -102,8 +102,8 @@ namespace Ryujinx.Ava.Input
             }
 
             return mode == KeyboardInputMode.Physical
-                ? _physicalPressedKeys.ContainsKey((ConfigPhysicalKey)(int)key)
-                : _semanticPressedKeys.ContainsKey(key);
+                ? _physicalPressedKeys.Contains((ConfigPhysicalKey)(int)key)
+                : _semanticPressedKeys.Contains(key);
         }
 
         internal void Clear(KeyboardInputMode mode)
@@ -124,7 +124,7 @@ namespace Ryujinx.Ava.Input
             _physicalPressedKeys.Clear();
         }
 
-        private static void UpdateKeyState(Dictionary<Key, int> pressedKeys, Key key, bool isPressed)
+        private static void UpdateKeyState(HashSet<Key> pressedKeys, Key key, bool isPressed)
         {
             if (key is Key.Unknown or Key.Unbound)
             {
@@ -133,32 +133,14 @@ namespace Ryujinx.Ava.Input
 
             if (isPressed)
             {
-                if (pressedKeys.TryGetValue(key, out int count))
-                {
-                    pressedKeys[key] = count + 1;
-                }
-                else
-                {
-                    pressedKeys[key] = 1;
-                }
-
+                pressedKeys.Add(key);
                 return;
             }
 
-            if (pressedKeys.TryGetValue(key, out int currentCount))
-            {
-                if (currentCount <= 1)
-                {
-                    pressedKeys.Remove(key);
-                }
-                else
-                {
-                    pressedKeys[key] = currentCount - 1;
-                }
-            }
+            pressedKeys.Remove(key);
         }
 
-        private static void UpdateKeyState(Dictionary<ConfigPhysicalKey, int> pressedKeys, ConfigPhysicalKey key, bool isPressed)
+        private static void UpdateKeyState(HashSet<ConfigPhysicalKey> pressedKeys, ConfigPhysicalKey key, bool isPressed)
         {
             if (key is ConfigPhysicalKey.Unknown or ConfigPhysicalKey.Unbound)
             {
@@ -167,29 +149,11 @@ namespace Ryujinx.Ava.Input
 
             if (isPressed)
             {
-                if (pressedKeys.TryGetValue(key, out int count))
-                {
-                    pressedKeys[key] = count + 1;
-                }
-                else
-                {
-                    pressedKeys[key] = 1;
-                }
-
+                pressedKeys.Add(key);
                 return;
             }
 
-            if (pressedKeys.TryGetValue(key, out int currentCount))
-            {
-                if (currentCount <= 1)
-                {
-                    pressedKeys.Remove(key);
-                }
-                else
-                {
-                    pressedKeys[key] = currentCount - 1;
-                }
-            }
+            pressedKeys.Remove(key);
         }
 
         private void UpdateKeyStates(KeyEventArgs args, bool isPressed)
