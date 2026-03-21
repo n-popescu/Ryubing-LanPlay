@@ -506,6 +506,23 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             return device.Id.Split(" ")[0];
         }
 
+        private string GetCurrentConfigDeviceId()
+        {
+            if (_device < 0 || _device >= Devices.Count)
+            {
+                return null;
+            }
+
+            (DeviceType Type, string Id, string Name) device = Devices[_device];
+
+            return device.Type switch
+            {
+                DeviceType.Keyboard => device.Id,
+                DeviceType.Controller => device.Id.Split(" ")[0],
+                _ => null,
+            };
+        }
+
         public void LoadControllers()
         {
             Controllers.Clear();
@@ -865,7 +882,14 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             {
                 _isLoaded = false;
 
-                config.Id = Config.Id; // Set current device id instead of changing device(independent profiles)
+                string currentDeviceId = Config?.Id ?? GetCurrentConfigDeviceId();
+                if (string.IsNullOrEmpty(currentDeviceId))
+                {
+                    Logger.Warning?.Print(LogClass.Configuration, $"Ignoring profile load for {ProfileName} because no active input device is selected.");
+                    return;
+                }
+
+                config.Id = currentDeviceId; // Set current device id instead of changing device(independent profiles)
 
                 LoadConfiguration(config);
 
