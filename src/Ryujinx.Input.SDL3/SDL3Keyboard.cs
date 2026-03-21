@@ -1,6 +1,5 @@
 using Ryujinx.Common.Configuration.Hid;
 using Ryujinx.Common.Configuration.Hid.Keyboard;
-using Ryujinx.Common.Logging;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -15,10 +14,6 @@ namespace Ryujinx.Input.SDL3
     class SDL3Keyboard : IKeyboard
     {
         private readonly Lock _userMappingLock = new();
-
-#pragma warning disable IDE0052 // Remove unread private member
-        private readonly SDL3KeyboardDriver _driver;
-#pragma warning restore IDE0052
         private StandardKeyboardInputConfig _configuration;
         private readonly List<KeyboardInputMappingHelper.KeyboardButtonMapping> _buttonsUserMapping;
 
@@ -165,9 +160,8 @@ namespace Ryujinx.Input.SDL3
             SDL_Keycode.SDLK_0
         ];
 
-        public SDL3Keyboard(SDL3KeyboardDriver driver, string id, string name)
+        public SDL3Keyboard(string id, string name)
         {
-            _driver = driver;
             Id = id;
             Name = name;
             _buttonsUserMapping = [];
@@ -329,7 +323,7 @@ namespace Ryujinx.Input.SDL3
 
         public void SetLed(uint packedRgb)
         {
-            Logger.Info?.Print(LogClass.UI, "SetLed called on an SDL3Keyboard");
+            // Keyboard LEDs are not supported by this backend.
         }
 
         public void SetTriggerThreshold(float triggerThreshold)

@@ -1,6 +1,5 @@
 using Ryujinx.Common.Configuration.Hid;
 using Ryujinx.Common.Configuration.Hid.Keyboard;
-using Ryujinx.Common.Logging;
 using Ryujinx.Input;
 using System;
 using System.Collections.Generic;
@@ -16,7 +15,6 @@ namespace Ryujinx.Ava.Input
         private readonly AvaloniaKeyboardDriver _driver;
         private readonly KeyboardInputMode _mode;
         private StandardKeyboardInputConfig _configuration;
-        private uint _ledValue;
 
         private readonly Lock _userMappingLock = new();
 
@@ -117,16 +115,7 @@ namespace Ryujinx.Ava.Input
 
         public void SetLed(uint packedRgb)
         {
-            if (_ledValue == packedRgb)
-            {
-                return;
-            }
-
-            _ledValue = packedRgb;
-
-            Logger.Info?.Print(LogClass.UI, "SetLed called on an AvaloniaKeyboard");
-
-            // Keyboard LED is not supported by this backend.
+            // Keyboard LEDs are not supported by this backend.
         }
 
         public void SetTriggerThreshold(float triggerThreshold) { }
