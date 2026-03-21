@@ -640,7 +640,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 }
 
                 DeviceList.AddRange(Devices.Select(x => x.Name));
-                Device = Math.Min(Device, DeviceList.Count);
+                Device = Math.Min(Device, DeviceList.Count - 1);
             }
         }
 

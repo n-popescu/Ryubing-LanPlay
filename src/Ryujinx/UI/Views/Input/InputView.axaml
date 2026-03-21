@@ -168,7 +168,7 @@
                         MinWidth="0"
                         Margin="5,0,0,0"
                         VerticalAlignment="Center"
-                        Command="{Binding LoadDevice}">
+                        Command="{Binding LoadDevices}">
                         <ui:SymbolIcon
                             Symbol="Refresh"
                             FontSize="15"
