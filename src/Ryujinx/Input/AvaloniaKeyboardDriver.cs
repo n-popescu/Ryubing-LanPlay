@@ -15,6 +15,7 @@ namespace Ryujinx.Ava.Input
         private readonly Control _control;
         private readonly Dictionary<Key, int> _semanticPressedKeys;
         private readonly Dictionary<ConfigPhysicalKey, int> _physicalPressedKeys;
+        private readonly Dictionary<Key, ConfigPhysicalKey> _observedPhysicalKeysBySemanticKey;
         private readonly KeyboardInputMode _defaultMode;
 
         public event EventHandler<KeyEventArgs> KeyPressed;
@@ -29,6 +30,7 @@ namespace Ryujinx.Ava.Input
             _control = control;
             _semanticPressedKeys = [];
             _physicalPressedKeys = [];
+            _observedPhysicalKeysBySemanticKey = [];
             _defaultMode = defaultMode;
 
             _control.KeyDown += OnKeyPress;
@@ -192,17 +194,37 @@ namespace Ryujinx.Ava.Input
 
         private void UpdateKeyStates(KeyEventArgs args, bool isPressed)
         {
-            UpdateKeyState(_semanticPressedKeys, AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey, args.Key), isPressed);
-            UpdateKeyState(_physicalPressedKeys, GetPhysicalInputKey(args), isPressed);
+            Key semanticKey = AvaloniaKeyboardMappingHelper.ToInputKey(args.Key);
+            Key resolvedSemanticKey = AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey, args.Key);
+            ConfigPhysicalKey physicalKey = GetPhysicalInputKey(args, semanticKey);
+
+            UpdateKeyState(_semanticPressedKeys, resolvedSemanticKey, isPressed);
+            UpdateKeyState(_physicalPressedKeys, physicalKey, isPressed);
+
+            if (isPressed &&
+                semanticKey is not Key.Unknown and not Key.Unbound &&
+                physicalKey is not ConfigPhysicalKey.Unknown and not ConfigPhysicalKey.Unbound)
+            {
+                _observedPhysicalKeysBySemanticKey[semanticKey] = physicalKey;
+            }
         }
 
-        private static ConfigPhysicalKey GetPhysicalInputKey(KeyEventArgs args)
+        private ConfigPhysicalKey GetPhysicalInputKey(KeyEventArgs args, Key semanticKey)
         {
             Key key = AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey);
 
-            return key is >= Key.Unknown and < Key.Count
-                ? (ConfigPhysicalKey)(int)key
-                : ConfigPhysicalKey.Unknown;
+            if (key is >= Key.Unknown and < Key.Count)
+            {
+                return (ConfigPhysicalKey)(int)key;
+            }
+
+            if (semanticKey is not Key.Unknown and not Key.Unbound &&
+                _observedPhysicalKeysBySemanticKey.TryGetValue(semanticKey, out ConfigPhysicalKey observedPhysicalKey))
+            {
+                return observedPhysicalKey;
+            }
+
+            return ConfigPhysicalKey.Unknown;
         }
 
         public void Dispose()

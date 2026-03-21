@@ -43,6 +43,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         private const string KeyboardString = "keyboard";
         private const string ControllerString = "controller";
         private readonly MainWindow _mainWindow;
+        private Control _keyboardDriverControl;
 
         private PlayerIndex _playerId;
         private PlayerIndex _playerIdChoose;
@@ -66,7 +67,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         private static readonly InputConfigJsonSerializerContext _serializerContext = new(JsonHelper.GetDefaultSerializerOptions());
 
-        public IGamepadDriver AvaloniaKeyboardDriver { get; }
+        public IGamepadDriver AvaloniaKeyboardDriver { get; private set; }
 
         public IGamepad SelectedGamepad
         {
@@ -291,9 +292,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             {
                 _mainWindow = RyujinxApp.MainWindow;
 
-                AvaloniaKeyboardDriver keyboardDriver = new(owner, KeyboardInputMode.Physical);
-                keyboardDriver.KeyPressed += PhysicalKeyLabelHelper.ObserveKeyPress;
-                AvaloniaKeyboardDriver = keyboardDriver;
+                ReplaceKeyboardDriver(owner);
                 PhysicalKeyLabelHelper.LabelsChanged += OnPhysicalKeyLabelsChanged;
 
                 _mainWindow.InputManager.GamepadDriver.OnGamepadConnected += HandleOnGamepadConnected;
@@ -311,6 +310,16 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             }
 
             _isChangeTrackingActive = true;
+        }
+
+        public void RetargetKeyboardDriver(Control owner)
+        {
+            if (!Program.PreviewerDetached)
+            {
+                return;
+            }
+
+            ReplaceKeyboardDriver(owner);
         }
 
         public InputViewModel()
@@ -1097,6 +1106,34 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             }
         }
 
+        private void ReplaceKeyboardDriver(Control owner)
+        {
+            Control target = TopLevel.GetTopLevel(owner) as Control ?? owner;
+
+            if (ReferenceEquals(_keyboardDriverControl, target))
+            {
+                return;
+            }
+
+            if (AvaloniaKeyboardDriver is AvaloniaKeyboardDriver oldKeyboardDriver)
+            {
+                oldKeyboardDriver.KeyPressed -= PhysicalKeyLabelHelper.ObserveKeyPress;
+                oldKeyboardDriver.Dispose();
+            }
+
+            _keyboardDriverControl = target;
+
+            AvaloniaKeyboardDriver keyboardDriver = new(target, KeyboardInputMode.Physical);
+            keyboardDriver.KeyPressed += PhysicalKeyLabelHelper.ObserveKeyPress;
+            AvaloniaKeyboardDriver = keyboardDriver;
+
+            if (_isLoaded && Device > 0 && Device < Devices.Count && Devices[Device].Type == DeviceType.Keyboard)
+            {
+                SelectedGamepad?.Dispose();
+                LoadInputDriver();
+            }
+        }
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);
@@ -1111,7 +1148,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             SelectedGamepad?.Dispose();
 
-            AvaloniaKeyboardDriver.Dispose();
+            AvaloniaKeyboardDriver?.Dispose();
         }
     }
 }
