@@ -1,9 +1,13 @@
 using Avalonia.Input;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Input;
+using Ryujinx.Common.Configuration;
 using Ryujinx.Common.Configuration.Hid;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using AvaPhysicalKey = Avalonia.Input.PhysicalKey;
 using ConfigPhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;
 using InputKey = Ryujinx.Input.Key;
@@ -12,11 +16,22 @@ namespace Ryujinx.Ava.UI.Helpers
 {
     internal static class PhysicalKeyLabelHelper
     {
+        private const string ObservedLabelsFileName = "keyboard_layout_labels.json";
         private static readonly ConcurrentDictionary<ConfigPhysicalKey, string> _observedLayoutLabels = new();
+        private static readonly object _observedLayoutLabelsLock = new();
+        private static readonly JsonSerializerOptions _serializerOptions = new()
+        {
+            WriteIndented = true,
+            AllowTrailingCommas = true,
+            ReadCommentHandling = JsonCommentHandling.Skip
+        };
+        private static bool _observedLayoutLabelsLoaded;
         public static event Action LabelsChanged;
 
         public static string GetDisplayString(ConfigPhysicalKey key)
         {
+            EnsureObservedLayoutLabelsLoaded();
+
             if (KeyboardLayoutLocaleHelper.TryGetPhysicalLabel(key, out string localizedLabel))
             {
                 return localizedLabel;
@@ -37,6 +52,8 @@ namespace Ryujinx.Ava.UI.Helpers
 
         public static void ObserveKeyPress(object sender, KeyEventArgs args)
         {
+            EnsureObservedLayoutLabelsLoaded();
+
             if (args.KeyModifiers != KeyModifiers.None)
             {
                 return;
@@ -62,8 +79,78 @@ namespace Ryujinx.Ava.UI.Helpers
                 }
 
                 _observedLayoutLabels[physicalKey] = label;
+                SaveObservedLayoutLabels();
                 LabelsChanged?.Invoke();
             }
+        }
+
+        private static void EnsureObservedLayoutLabelsLoaded()
+        {
+            if (_observedLayoutLabelsLoaded)
+            {
+                return;
+            }
+
+            lock (_observedLayoutLabelsLock)
+            {
+                if (_observedLayoutLabelsLoaded)
+                {
+                    return;
+                }
+
+                try
+                {
+                    string labelsPath = GetObservedLabelsPath();
+
+                    if (File.Exists(labelsPath))
+                    {
+                        Dictionary<string, string> labels = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(labelsPath), _serializerOptions);
+
+                        if (labels != null)
+                        {
+                            foreach ((string key, string value) in labels)
+                            {
+                                if (Enum.TryParse(key, out ConfigPhysicalKey physicalKey) &&
+                                    !string.IsNullOrEmpty(value))
+                                {
+                                    _observedLayoutLabels[physicalKey] = value;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                }
+
+                _observedLayoutLabelsLoaded = true;
+            }
+        }
+
+        private static void SaveObservedLayoutLabels()
+        {
+            lock (_observedLayoutLabelsLock)
+            {
+                try
+                {
+                    Dictionary<string, string> labels = [];
+
+                    foreach ((ConfigPhysicalKey key, string value) in _observedLayoutLabels)
+                    {
+                        labels[key.ToString()] = value;
+                    }
+
+                    File.WriteAllText(GetObservedLabelsPath(), JsonSerializer.Serialize(labels, _serializerOptions));
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        private static string GetObservedLabelsPath()
+        {
+            return Path.Combine(AppDataManager.BaseDirPath, ObservedLabelsFileName);
         }
 
         private static bool TryGetFallbackPrintableKeyLabel(ConfigPhysicalKey key, out string label)
