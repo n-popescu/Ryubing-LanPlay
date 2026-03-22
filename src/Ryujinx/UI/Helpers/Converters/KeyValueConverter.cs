@@ -38,14 +38,14 @@ namespace Ryujinx.Ava.UI.Helpers
             { GamepadInputId.SingleRightTrigger0, LocaleKeys.GamepadSingleRightTrigger0},
             { GamepadInputId.SingleLeftTrigger1, LocaleKeys.GamepadSingleLeftTrigger1},
             { GamepadInputId.SingleRightTrigger1, LocaleKeys.GamepadSingleRightTrigger1},
-            { GamepadInputId.Unbound, LocaleKeys.KeyboardLayout_KeyUnbound},
+            { GamepadInputId.Unbound, LocaleKeys.KeyboardLayout_Key_Unbound},
         };
 
         private static readonly Dictionary<StickInputId, LocaleKeys> _stickInputIdMap = new()
         {
             { StickInputId.Left, LocaleKeys.StickLeft},
             { StickInputId.Right, LocaleKeys.StickRight},
-            { StickInputId.Unbound, LocaleKeys.KeyboardLayout_KeyUnbound},
+            { StickInputId.Unbound, LocaleKeys.KeyboardLayout_Key_Unbound},
         };
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
