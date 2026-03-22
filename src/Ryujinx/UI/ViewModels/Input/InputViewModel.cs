@@ -348,14 +348,18 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         private void LoadConfiguration(InputConfig inputConfig = null)
         {
+            InputConfig persistedConfig;
+
             if (UseGlobalConfig && Program.UseExtraConfig)
             {
-                Config = inputConfig ?? ConfigurationState.InstanceExtra.Hid.InputConfig.Value.FirstOrDefault(inputConfig => inputConfig.PlayerIndex == _playerId);            
+                persistedConfig = ConfigurationState.InstanceExtra.Hid.InputConfig.Value.FirstOrDefault(inputConfig => inputConfig.PlayerIndex == _playerId);
             }
             else
             {
-                Config = inputConfig ?? ConfigurationState.Instance.Hid.InputConfig.Value.FirstOrDefault(inputConfig => inputConfig.PlayerIndex == _playerId);
+                persistedConfig = ConfigurationState.Instance.Hid.InputConfig.Value.FirstOrDefault(inputConfig => inputConfig.PlayerIndex == _playerId);
             }
+
+            Config = inputConfig ?? GetDisplayedInputConfig(persistedConfig);
 
             if (Config is StandardKeyboardInputConfig keyboardInputConfig)
             {
@@ -366,6 +370,18 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             {
                 ConfigViewModel = new ControllerInputViewModel(this, new GamepadInputConfig(controllerInputConfig), VisualStick);
             }
+        }
+
+        private InputConfig GetDisplayedInputConfig(InputConfig persistedConfig)
+        {
+            if (persistedConfig is not StandardControllerInputConfig)
+            {
+                return persistedConfig;
+            }
+
+            InputConfig activeConfig = _mainWindow?.ViewModel.AppHost?.NpadManager?.GetPlayerInputConfigByIndex((int)_playerId);
+
+            return activeConfig is StandardKeyboardInputConfig ? activeConfig : persistedConfig;
         }
 
         private void FindPairedDeviceInConfigFile()
@@ -475,11 +491,24 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         {
             _isChangeTrackingActive = false; // Disable configuration change tracking
 
+            bool shouldApplyKeyboardFallback = Config is StandardControllerInputConfig controllerConfig && controllerConfig.Id == id;
+
             LoadDevices();
 
-            IsModified = true;
-            RevertChanges();
-            FindPairedDeviceInConfigFile();
+            if (shouldApplyKeyboardFallback)
+            {
+                LoadConfiguration();
+                LoadDevice();
+                NotificationIsVisible = false;
+                IsModified = false;
+                NotifyChanges();
+            }
+            else
+            {
+                IsModified = true;
+                RevertChanges();
+                FindPairedDeviceInConfigFile();
+            }
             
             _isChangeTrackingActive = true; // Enable configuration change tracking
 

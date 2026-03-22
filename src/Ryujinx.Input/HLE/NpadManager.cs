@@ -36,6 +36,7 @@ namespace Ryujinx.Input.HLE
         private bool _isDisposed;
 
         private List<InputConfig> _inputConfig;
+        private List<InputConfig> _requestedInputConfig;
         private bool _enableKeyboard;
         private bool _enableMouse;
         private Switch _device;
@@ -52,6 +53,7 @@ namespace Ryujinx.Input.HLE
             _gamepadDriver = gamepadDriver;
             _mouseDriver = mouseDriver;
             _inputConfig = [];
+            _requestedInputConfig = [];
 
             _gamepadDriver.OnGamepadConnected += HandleOnGamepadConnected;
             _gamepadDriver.OnGamepadDisconnected += HandleOnGamepadDisconnected;
@@ -89,14 +91,14 @@ namespace Ryujinx.Input.HLE
                     }
                 }
 
-                ReloadConfiguration(_inputConfig, _enableKeyboard, _enableMouse);
+                ReloadConfiguration(_requestedInputConfig, _enableKeyboard, _enableMouse);
             }
         }
 
         private void HandleOnGamepadConnected(string id)
         {
             // Force input reload
-            ReloadConfiguration(_inputConfig, _enableKeyboard, _enableMouse);
+            ReloadConfiguration(_requestedInputConfig, _enableKeyboard, _enableMouse);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -127,11 +129,13 @@ namespace Ryujinx.Input.HLE
         {
             lock (_lock)
             {
+                _requestedInputConfig = inputConfig?.ToList() ?? [];
+
                 NpadController[] oldControllers = _controllers.ToArray();
 
                 List<InputConfig> validInputs = [];
 
-                foreach (InputConfig inputConfigEntry in inputConfig)
+                foreach (InputConfig inputConfigEntry in _requestedInputConfig)
                 {
                     NpadController controller;
                     int index = (int)inputConfigEntry.PlayerIndex;
@@ -147,7 +151,17 @@ namespace Ryujinx.Input.HLE
                         controller = new(_cemuHookClient);
                     }
 
-                    bool isValid = DriverConfigurationUpdate(ref controller, inputConfigEntry);
+                    InputConfig activeConfig = inputConfigEntry;
+                    bool isValid = DriverConfigurationUpdate(ref controller, activeConfig);
+
+                    if (!isValid &&
+                        enableKeyboard &&
+                        inputConfigEntry is StandardControllerInputConfig &&
+                        TryGetKeyboardFallback(inputConfigEntry, out StandardKeyboardInputConfig fallbackConfig))
+                    {
+                        activeConfig = fallbackConfig;
+                        isValid = DriverConfigurationUpdate(ref controller, activeConfig);
+                    }
 
                     if (!isValid)
                     {
@@ -157,7 +171,7 @@ namespace Ryujinx.Input.HLE
                     else
                     {
                         _controllers[index] = controller;
-                        validInputs.Add(inputConfigEntry);
+                        validInputs.Add(activeConfig);
                     }
                 }
 
@@ -169,12 +183,85 @@ namespace Ryujinx.Input.HLE
                     oldControllers[i] = null;
                 }
 
-                _inputConfig = inputConfig;
+                _inputConfig = validInputs;
                 _enableKeyboard = enableKeyboard;
                 _enableMouse = enableMouse;
 
                 _device.Hid.RefreshInputConfig(validInputs);
             }
+        }
+
+        private bool TryGetKeyboardFallback(InputConfig inputConfig, out StandardKeyboardInputConfig fallbackConfig)
+        {
+            fallbackConfig = null;
+
+            ReadOnlySpan<string> keyboardIds = _keyboardDriver.GamepadsIds;
+
+            if (keyboardIds.IsEmpty)
+            {
+                return false;
+            }
+
+            string keyboardId = keyboardIds[0];
+
+            using IGamepad keyboard = _keyboardDriver.GetGamepad(keyboardId);
+
+            if (keyboard == null)
+            {
+                return false;
+            }
+
+            fallbackConfig = new StandardKeyboardInputConfig
+            {
+                Version = InputConfig.CurrentVersion,
+                Backend = InputBackendType.WindowKeyboard,
+                Id = keyboardId,
+                Name = keyboard.Name,
+                PlayerIndex = inputConfig.PlayerIndex,
+                ControllerType = inputConfig.ControllerType,
+                LeftJoycon = new LeftJoyconCommonConfig<PhysicalKey>
+                {
+                    DpadUp = PhysicalKey.Up,
+                    DpadDown = PhysicalKey.Down,
+                    DpadLeft = PhysicalKey.Left,
+                    DpadRight = PhysicalKey.Right,
+                    ButtonMinus = PhysicalKey.Minus,
+                    ButtonL = PhysicalKey.E,
+                    ButtonZl = PhysicalKey.Q,
+                    ButtonSl = PhysicalKey.Unbound,
+                    ButtonSr = PhysicalKey.Unbound,
+                },
+                LeftJoyconStick = new JoyconConfigKeyboardStick<PhysicalKey>
+                {
+                    StickUp = PhysicalKey.W,
+                    StickDown = PhysicalKey.S,
+                    StickLeft = PhysicalKey.A,
+                    StickRight = PhysicalKey.D,
+                    StickButton = PhysicalKey.F,
+                },
+                RightJoycon = new RightJoyconCommonConfig<PhysicalKey>
+                {
+                    ButtonA = PhysicalKey.Z,
+                    ButtonB = PhysicalKey.X,
+                    ButtonX = PhysicalKey.C,
+                    ButtonY = PhysicalKey.V,
+                    ButtonPlus = PhysicalKey.Plus,
+                    ButtonR = PhysicalKey.U,
+                    ButtonZr = PhysicalKey.O,
+                    ButtonSl = PhysicalKey.Unbound,
+                    ButtonSr = PhysicalKey.Unbound,
+                },
+                RightJoyconStick = new JoyconConfigKeyboardStick<PhysicalKey>
+                {
+                    StickUp = PhysicalKey.I,
+                    StickDown = PhysicalKey.K,
+                    StickLeft = PhysicalKey.J,
+                    StickRight = PhysicalKey.L,
+                    StickButton = PhysicalKey.H,
+                },
+            };
+
+            return true;
         }
 
         public void UnblockInputUpdates()
@@ -334,7 +421,7 @@ namespace Ryujinx.Input.HLE
             }
         }
 
-        internal InputConfig GetPlayerInputConfigByIndex(int index)
+        public InputConfig GetPlayerInputConfigByIndex(int index)
         {
             lock (_lock)
             {
