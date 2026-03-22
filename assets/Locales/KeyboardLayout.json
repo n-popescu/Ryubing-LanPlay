@@ -1,7 +1,7 @@
 {
   "Locales": [
     {
-      "ID": "KeyUnknown",
+      "ID": "Key_Unknown",
       "Translations": {
         "ar_SA": "مجهول",
         "de_DE": "Unbekannt",
@@ -26,7 +26,7 @@
       }
     },
     {
-      "ID": "KeyShiftLeft",
+      "ID": "Key_ShiftLeft",
       "Translations": {
         "ar_SA": "⇧ يسار",
         "de_DE": "⇧ Links",
@@ -51,7 +51,7 @@
       }
     },
     {
-      "ID": "KeyShiftRight",
+      "ID": "Key_ShiftRight",
       "Translations": {
         "ar_SA": "⇧ يمين",
         "de_DE": "⇧ Rechts",
@@ -76,7 +76,7 @@
       }
     },
     {
-      "ID": "KeyControlLeft",
+      "ID": "Key_ControlLeft",
       "Translations": {
         "ar_SA": "Ctrl الأيسر",
         "de_DE": "Ctrl Links",
@@ -101,7 +101,7 @@
       }
     },
     {
-      "ID": "KeyMacControlLeft",
+      "ID": "Key_Mac_ControlLeft",
       "Translations": {
         "ar_SA": "⌃ الأيسر",
         "de_DE": "⌃ Links",
@@ -126,7 +126,7 @@
       }
     },
     {
-      "ID": "KeyControlRight",
+      "ID": "Key_ControlRight",
       "Translations": {
         "ar_SA": "Ctrl الأيمن",
         "de_DE": "Ctrl Rechts",
@@ -151,7 +151,7 @@
       }
     },
     {
-      "ID": "KeyMacControlRight",
+      "ID": "Key_Mac_ControlRight",
       "Translations": {
         "ar_SA": "⌃ الأيمن",
         "de_DE": "⌃ Rechts",
@@ -176,7 +176,7 @@
       }
     },
     {
-      "ID": "KeyAltLeft",
+      "ID": "Key_AltLeft",
       "Translations": {
         "ar_SA": "Alt الأيسر",
         "de_DE": "Alt Links",
@@ -201,7 +201,7 @@
       }
     },
     {
-      "ID": "KeyMacAltLeft",
+      "ID": "Key_Mac_AltLeft",
       "Translations": {
         "ar_SA": "⌥ الأيسر",
         "de_DE": "⌥ Links",
@@ -226,7 +226,7 @@
       }
     },
     {
-      "ID": "KeyAltRight",
+      "ID": "Key_AltRight",
       "Translations": {
         "ar_SA": "Alt الأيمن",
         "de_DE": "Alt Rechts",
@@ -251,7 +251,7 @@
       }
     },
     {
-      "ID": "KeyMacAltRight",
+      "ID": "Key_Mac_AltRight",
       "Translations": {
         "ar_SA": "⌥ الأيمن",
         "de_DE": "⌥ Rechts",
@@ -276,7 +276,7 @@
       }
     },
     {
-      "ID": "KeyWinLeft",
+      "ID": "Key_WinLeft",
       "Translations": {
         "ar_SA": "⊞ الأيسر",
         "de_DE": "⊞ Links",
@@ -301,7 +301,7 @@
       }
     },
     {
-      "ID": "KeyMacWinLeft",
+      "ID": "Key_Mac_WinLeft",
       "Translations": {
         "ar_SA": "⌘ الأيسر",
         "de_DE": "⌘ Links",
@@ -326,7 +326,7 @@
       }
     },
     {
-      "ID": "KeyWinRight",
+      "ID": "Key_WinRight",
       "Translations": {
         "ar_SA": "⊞ الأيمن",
         "de_DE": "⊞ Rechts",
@@ -351,7 +351,7 @@
       }
     },
     {
-      "ID": "KeyMacWinRight",
+      "ID": "Key_Mac_WinRight",
       "Translations": {
         "ar_SA": "⌘ الأيمن",
         "de_DE": "⌘ Rechts",
@@ -376,7 +376,7 @@
       }
     },
     {
-      "ID": "KeyUp",
+      "ID": "Key_Up",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -401,7 +401,7 @@
       }
     },
     {
-      "ID": "KeyDown",
+      "ID": "Key_Down",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -426,7 +426,7 @@
       }
     },
     {
-      "ID": "KeyLeft",
+      "ID": "Key_Left",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -451,7 +451,7 @@
       }
     },
     {
-      "ID": "KeyRight",
+      "ID": "Key_Right",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -476,7 +476,7 @@
       }
     },
     {
-      "ID": "KeyEnter",
+      "ID": "Key_Enter",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -501,7 +501,7 @@
       }
     },
     {
-      "ID": "KeyEscape",
+      "ID": "Key_Escape",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -526,7 +526,7 @@
       }
     },
     {
-      "ID": "KeySpace",
+      "ID": "Key_Space",
       "Translations": {
         "ar_SA": "مسافة",
         "de_DE": "Leertaste",
@@ -551,7 +551,7 @@
       }
     },
     {
-      "ID": "KeyTab",
+      "ID": "Key_Tab",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -576,7 +576,7 @@
       }
     },
     {
-      "ID": "KeyBackSpace",
+      "ID": "Key_BackSpace",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -601,7 +601,7 @@
       }
     },
     {
-      "ID": "KeyInsert",
+      "ID": "Key_Insert",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -626,7 +626,7 @@
       }
     },
     {
-      "ID": "KeyDelete",
+      "ID": "Key_Delete",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -651,7 +651,7 @@
       }
     },
     {
-      "ID": "KeyPageUp",
+      "ID": "Key_PageUp",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -676,7 +676,7 @@
       }
     },
     {
-      "ID": "KeyPageDown",
+      "ID": "Key_PageDown",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -701,7 +701,7 @@
       }
     },
     {
-      "ID": "KeyHome",
+      "ID": "Key_Home",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -726,7 +726,7 @@
       }
     },
     {
-      "ID": "KeyEnd",
+      "ID": "Key_End",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -751,7 +751,7 @@
       }
     },
     {
-      "ID": "KeyCapsLock",
+      "ID": "Key_CapsLock",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -776,7 +776,7 @@
       }
     },
     {
-      "ID": "KeyScrollLock",
+      "ID": "Key_ScrollLock",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -801,7 +801,7 @@
       }
     },
     {
-      "ID": "KeyPrintScreen",
+      "ID": "Key_PrintScreen",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -826,7 +826,7 @@
       }
     },
     {
-      "ID": "KeyPause",
+      "ID": "Key_Pause",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -851,7 +851,7 @@
       }
     },
     {
-      "ID": "KeyNumLock",
+      "ID": "Key_NumLock",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -876,7 +876,7 @@
       }
     },
     {
-      "ID": "KeyClear",
+      "ID": "Key_Clear",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -901,7 +901,7 @@
       }
     },
     {
-      "ID": "KeyKeypad0",
+      "ID": "Key_Keypad0",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -926,7 +926,7 @@
       }
     },
     {
-      "ID": "KeyKeypad1",
+      "ID": "Key_Keypad1",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -951,7 +951,7 @@
       }
     },
     {
-      "ID": "KeyKeypad2",
+      "ID": "Key_Keypad2",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -976,7 +976,7 @@
       }
     },
     {
-      "ID": "KeyKeypad3",
+      "ID": "Key_Keypad3",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -1001,7 +1001,7 @@
       }
     },
     {
-      "ID": "KeyKeypad4",
+      "ID": "Key_Keypad4",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -1026,7 +1026,7 @@
       }
     },
     {
-      "ID": "KeyKeypad5",
+      "ID": "Key_Keypad5",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -1051,7 +1051,7 @@
       }
     },
     {
-      "ID": "KeyKeypad6",
+      "ID": "Key_Keypad6",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -1076,7 +1076,7 @@
       }
     },
     {
-      "ID": "KeyKeypad7",
+      "ID": "Key_Keypad7",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -1101,7 +1101,7 @@
       }
     },
     {
-      "ID": "KeyKeypad8",
+      "ID": "Key_Keypad8",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -1126,7 +1126,7 @@
       }
     },
     {
-      "ID": "KeyKeypad9",
+      "ID": "Key_Keypad9",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -1151,7 +1151,7 @@
       }
     },
     {
-      "ID": "KeyKeypadDivide",
+      "ID": "Key_KeypadDivide",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -1176,7 +1176,7 @@
       }
     },
     {
-      "ID": "KeyKeypadMultiply",
+      "ID": "Key_KeypadMultiply",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -1201,7 +1201,7 @@
       }
     },
     {
-      "ID": "KeyKeypadSubtract",
+      "ID": "Key_KeypadSubtract",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -1226,7 +1226,7 @@
       }
     },
     {
-      "ID": "KeyKeypadAdd",
+      "ID": "Key_KeypadAdd",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -1251,7 +1251,7 @@
       }
     },
     {
-      "ID": "KeyKeypadDecimal",
+      "ID": "Key_KeypadDecimal",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -1276,7 +1276,7 @@
       }
     },
     {
-      "ID": "KeyKeypadEnter",
+      "ID": "Key_KeypadEnter",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -1301,7 +1301,7 @@
       }
     },
     {
-      "ID": "KeyNumber0",
+      "ID": "Key_Number0",
       "Translations": {
         "ar_SA": "٠",
         "de_DE": "",
@@ -1326,7 +1326,7 @@
       }
     },
     {
-      "ID": "KeyNumber1",
+      "ID": "Key_Number1",
       "Translations": {
         "ar_SA": "١",
         "de_DE": "",
@@ -1351,7 +1351,7 @@
       }
     },
     {
-      "ID": "KeyNumber2",
+      "ID": "Key_Number2",
       "Translations": {
         "ar_SA": "٢",
         "de_DE": "",
@@ -1376,7 +1376,7 @@
       }
     },
     {
-      "ID": "KeyNumber3",
+      "ID": "Key_Number3",
       "Translations": {
         "ar_SA": "٣",
         "de_DE": "",
@@ -1401,7 +1401,7 @@
       }
     },
     {
-      "ID": "KeyNumber4",
+      "ID": "Key_Number4",
       "Translations": {
         "ar_SA": "٤",
         "de_DE": "",
@@ -1426,7 +1426,7 @@
       }
     },
     {
-      "ID": "KeyNumber5",
+      "ID": "Key_Number5",
       "Translations": {
         "ar_SA": "٥",
         "de_DE": "",
@@ -1451,7 +1451,7 @@
       }
     },
     {
-      "ID": "KeyNumber6",
+      "ID": "Key_Number6",
       "Translations": {
         "ar_SA": "٦",
         "de_DE": "",
@@ -1476,7 +1476,7 @@
       }
     },
     {
-      "ID": "KeyNumber7",
+      "ID": "Key_Number7",
       "Translations": {
         "ar_SA": "٧",
         "de_DE": "",
@@ -1501,7 +1501,7 @@
       }
     },
     {
-      "ID": "KeyNumber8",
+      "ID": "Key_Number8",
       "Translations": {
         "ar_SA": "٨",
         "de_DE": "",
@@ -1526,7 +1526,7 @@
       }
     },
     {
-      "ID": "KeyNumber9",
+      "ID": "Key_Number9",
       "Translations": {
         "ar_SA": "٩",
         "de_DE": "",
@@ -1551,7 +1551,7 @@
       }
     },
     {
-      "ID": "KeyTilde",
+      "ID": "Key_Tilde",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -1576,7 +1576,7 @@
       }
     },
     {
-      "ID": "KeyGrave",
+      "ID": "Key_Grave",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -1601,7 +1601,7 @@
       }
     },
     {
-      "ID": "KeyMinus",
+      "ID": "Key_Minus",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -1626,7 +1626,7 @@
       }
     },
     {
-      "ID": "KeyPlus",
+      "ID": "Key_Plus",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -1651,7 +1651,7 @@
       }
     },
     {
-      "ID": "KeyBracketLeft",
+      "ID": "Key_BracketLeft",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -1676,7 +1676,7 @@
       }
     },
     {
-      "ID": "KeyBracketRight",
+      "ID": "Key_BracketRight",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -1701,7 +1701,7 @@
       }
     },
     {
-      "ID": "KeySemicolon",
+      "ID": "Key_Semicolon",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -1726,7 +1726,7 @@
       }
     },
     {
-      "ID": "KeyQuote",
+      "ID": "Key_Quote",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -1751,7 +1751,7 @@
       }
     },
     {
-      "ID": "KeyComma",
+      "ID": "Key_Comma",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -1776,7 +1776,7 @@
       }
     },
     {
-      "ID": "KeyPeriod",
+      "ID": "Key_Period",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -1801,7 +1801,7 @@
       }
     },
     {
-      "ID": "KeySlash",
+      "ID": "Key_Slash",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -1826,7 +1826,7 @@
       }
     },
     {
-      "ID": "KeyBackSlash",
+      "ID": "Key_BackSlash",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -1851,7 +1851,7 @@
       }
     },
     {
-      "ID": "KeyUnbound",
+      "ID": "Key_Unbound",
       "Translations": {
         "ar_SA": "غير مرتبط",
         "de_DE": "Ungebunden",
@@ -1876,7 +1876,7 @@
       }
     },
     {
-      "ID": "AllKeyboards",
+      "ID": "InputType_Keyboard",
       "Translations": {
         "ar_SA": "لوحة المفاتيح",
         "de_DE": "Tastatur",
