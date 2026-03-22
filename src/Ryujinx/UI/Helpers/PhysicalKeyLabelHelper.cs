@@ -51,6 +51,11 @@ namespace Ryujinx.Ava.UI.Helpers
 
             if (TryNormalizeObservedPrintableLabel(args.KeySymbol, out string label))
             {
+                if (IsCapsLockOn() && !char.IsLetter(label[0]))
+                {
+                    return;
+                }
+
                 if (_observedLayoutLabels.TryGetValue(physicalKey, out string existingLabel) && existingLabel == label)
                 {
                     return;
@@ -90,6 +95,18 @@ namespace Ryujinx.Ava.UI.Helpers
             }
 
             return true;
+        }
+
+        private static bool IsCapsLockOn()
+        {
+            try
+            {
+                return OperatingSystem.IsWindows() && Console.CapsLock;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private static bool TryNormalizeObservedPrintableLabel(string keySymbol, out string label)
