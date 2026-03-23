@@ -49,13 +49,9 @@ namespace Ryujinx.Graphics.Gpu.Image
         private const int MinCountForDeletion = 32;
         private const int MaxCapacity = 2048;
         private const ulong GiB = 1024 * 1024 * 1024;
-        private ulong MaxTextureSizeCapacity = 2UL * GiB;
+        private ulong MaxTextureSizeCapacity = 2 * GiB;
         private const ulong MinTextureSizeCapacity = 512 * 1024 * 1024;
         private const ulong DefaultTextureSizeCapacity = 1 * GiB;
-        private const ulong TextureSizeCapacity4GiB = 2 * GiB;
-        private const ulong TextureSizeCapacity6GiB = 4 * GiB;
-        private const ulong TextureSizeCapacity8GiB = 6 * GiB;
-        private const ulong TextureSizeCapacity12GiB = 12 * GiB;
 
         private const float MemoryScaleFactor = 0.50f;
         private ulong _maxCacheMemoryUsage = DefaultTextureSizeCapacity;
@@ -82,19 +78,14 @@ namespace Ryujinx.Graphics.Gpu.Image
         {
             ulong cpuMemorySizeGiB = cpuMemorySize / GiB;
             ulong MaximumGpuMemoryGiB = context.Capabilities.MaximumGpuMemory / GiB;
+            ulong TextureSizeCapacity = cpuMemorySize - (2 * GiB);
 
-            if (context.Capabilities.MaximumGpuMemory == 0 || cpuMemorySizeGiB < 6 && MaximumGpuMemoryGiB < 6)
-            {
-                MaxTextureSizeCapacity = DefaultTextureSizeCapacity;
-            }
-            else
-                MaxTextureSizeCapacity = cpuMemorySizeGiB switch
-                {
-                    < 6 => TextureSizeCapacity4GiB,
-                    6 => TextureSizeCapacity6GiB,
-                    8 => TextureSizeCapacity8GiB,
-                    _ => TextureSizeCapacity12GiB
-                };
+            MaxTextureSizeCapacity =
+                context.Capabilities.MaximumGpuMemory == 0 || cpuMemorySizeGiB < 6 && MaximumGpuMemoryGiB < 6
+                    ? DefaultTextureSizeCapacity
+                    : cpuMemorySizeGiB < 12
+                        ? TextureSizeCapacity
+                        : cpuMemorySize;
 
             ulong cacheMemory = (ulong)(context.Capabilities.MaximumGpuMemory * MemoryScaleFactor);
 
