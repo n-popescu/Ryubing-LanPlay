@@ -44,7 +44,6 @@ namespace Ryujinx.Ava.UI.Views.Main
             ResumeEmulationMenuItem.Command = Commands.Create(() => ViewModel.AppHost?.Resume());
             StopEmulationMenuItem.Command = Commands.Create(() => ViewModel.AppHost?.ShowExitPrompt().OrCompleted());
             RestartEmulationMenuItem.Command = Commands.Create(() => ViewModel.RestartEmulation());
-            CheatManagerMenuItem.Command = Commands.CreateSilentFail(OpenCheatManagerForCurrentApp);
             InstallFileTypesMenuItem.Command = Commands.Create(InstallFileTypes);
             UninstallFileTypesMenuItem.Command = Commands.Create(UninstallFileTypes);
             XciTrimmerMenuItem.Command = Commands.Create(XciTrimmerView.Show);
