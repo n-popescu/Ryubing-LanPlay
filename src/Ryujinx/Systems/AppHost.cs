@@ -476,10 +476,10 @@ namespace Ryujinx.Ava.Systems
 
             TouchScreenManager.Initialize(Device);
 
-            _viewModel.IsGameRunning = true;
-
             Dispatcher.UIThread.InvokeAsync(() =>
             {
+                _viewModel.IsGameRunning = true;
+                _viewModel.IsPaused = false;
                 _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI);
             });
 
@@ -578,6 +578,7 @@ namespace Ryujinx.Ava.Systems
         public void Stop()
         {
             _isActive = false;
+            _viewModel.IsPaused = false;
             _playTimer.Stop();
         }
 

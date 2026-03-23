@@ -173,32 +173,28 @@
                     Icon="{ext:Icon fa-solid fa-rotate-right}"
                     InputGesture="Ctrl + R"
                     IsEnabled="{Binding IsGameRunning}" />
-                <MenuItem 
-                    Command="{Binding SimulateWakeUpMessage}" 
-                    Header="{ext:Locale MenuBarOptionsSimulateWakeUpMessage}" 
-                    Icon="{ext:Icon fa-solid fa-sun}" 
-                    InputGesture="Ctrl + M" />
-                <Separator />
+                <Separator/>
                 <MenuItem
                     Command="{Binding OpenAmiiboWindow}"
                     AttachedToVisualTree="ScanAmiiboMenuItem_AttachedToVisualTree"
                     Header="{ext:Locale MenuBarActionsScanAmiibo}"
-                    Icon="{ext:Icon fa-solid fa-cube}"
+                    Icon="{ext:Icon fa-solid fa-chess-rook}"
                     InputGesture="Ctrl + A"
                     IsEnabled="{Binding IsAmiiboRequested}" />
                 <MenuItem
                     Command="{Binding OpenBinFile}"
                     AttachedToVisualTree="ScanBinAmiiboMenuItem_AttachedToVisualTree"
                     Header="{ext:Locale MenuBarActionsScanAmiiboBin}"
-                    Icon="{ext:Icon fa-solid fa-cube}"
+                    Icon="{ext:Icon fa-solid fa-chess-rook}"
                     IsVisible="{Binding CanScanAmiiboBinaries}"
                     InputGesture="Ctrl + B"
                     IsEnabled="{Binding IsAmiiboBinRequested}" />
+                <Separator IsVisible="{Binding CanScanAmiiboBinaries}"/>
                 <MenuItem
                     Command="{Binding OpenSkylanderWindow}"
                     AttachedToVisualTree="ScanSkylanderMenuItem_AttachedToVisualTree"
                     Header="{ext:Locale MenuBarActionsScanSkylander}"
-                    Icon="{ext:Icon fa-solid fa-cube}"
+                    Icon="{ext:Icon fa-solid fa-dragon}"
                     IsVisible="{Binding ShowSkylanderActions}"
                     InputGesture="Ctrl + S"
                     IsEnabled="{Binding IsSkylanderRequested}" />
@@ -206,10 +202,23 @@
                     Command="{Binding RemoveSkylander}"
                     AttachedToVisualTree="RemoveSkylanderMenuItem_AttachedToVisualTree"
                     Header="{ext:Locale MenuBarActionsRemoveSkylander}"
-                    Icon="{ext:Icon fa-solid fa-cube}"
+                    Icon="{ext:Icon fa-solid fa-dragon}"
                     IsVisible="{Binding ShowSkylanderActions}"
                     InputGesture="Ctrl + D"
                     IsEnabled="{Binding HasSkylander}" />
+                <Separator IsVisible="{Binding ShowSkylanderActions}"/>
+                <MenuItem
+                    Command="{Binding OpenCheatManagerForCurrentApp}"
+                    Header="{ext:Locale GameListContextMenuManageCheat}"
+                    Icon="{ext:Icon fa-solid fa-code}"
+                    InputGesture="Ctrl + C"
+                    IsEnabled="{Binding IsGameRunning}" />
+                <MenuItem 
+                    Command="{Binding SimulateWakeUpMessage}" 
+                    Header="{ext:Locale MenuBarOptionsSimulateWakeUpMessage}" 
+                    Icon="{ext:Icon fa-solid fa-sun}" 
+                    InputGesture="Ctrl + M" />
+                <Separator />
                 <MenuItem
                     Command="{Binding TakeScreenshot}"
                     Header="{ext:Locale MenuBarFileToolsTakeScreenshot}"
@@ -221,12 +230,6 @@
                     Header="{ext:Locale MenuBarFileToolsHideUi}"
                     Icon="{ext:Icon fa-solid fa-eye-slash}"
                     InputGesture="{Binding ShowUiKey}"
-                    IsEnabled="{Binding IsGameRunning}" />
-                <MenuItem
-                    Name="CheatManagerMenuItem"
-                    Header="{ext:Locale GameListContextMenuManageCheat}"
-                    Icon="{ext:Icon fa-solid fa-code}"
-                    InputGesture="Ctrl + C"
                     IsEnabled="{Binding IsGameRunning}" />
                 <Separator IsVisible="{Binding RenderDocIsAvailable}" />
                 <MenuItem
