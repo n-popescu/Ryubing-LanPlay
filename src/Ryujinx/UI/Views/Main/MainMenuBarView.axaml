@@ -222,6 +222,7 @@
                     Name="CheatManagerMenuItem"
                     Header="{ext:Locale GameListContextMenuManageCheat}"
                     Icon="{ext:Icon fa-solid fa-code}"
+                    InputGesture="Ctrl + C"
                     IsEnabled="{Binding IsGameRunning}" />
                 <Separator IsVisible="{Binding RenderDocIsAvailable}" />
                 <MenuItem
