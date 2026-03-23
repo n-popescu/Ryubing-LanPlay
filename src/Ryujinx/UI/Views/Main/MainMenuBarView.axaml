@@ -248,13 +248,13 @@
                     IsEnabled="{Binding IsGameRunning}" />
             </MenuItem>
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBarActions}" IsVisible="{Binding EnableNonGameRunningControls}">
-                <MenuItem Header="{ext:Locale MenuBarActionsInstallKeys}" Icon="{ext:Icon fa-solid fa-key}">
-                    <MenuItem Command="{Binding InstallKeysFromFile}" Header="{ext:Locale MenuBarFileActionsInstallKeysFromFile}" Icon="{ext:Icon fa-solid fa-file-code}" />
-                    <MenuItem Command="{Binding InstallKeysFromFolder}" Header="{ext:Locale MenuBarFileActionsInstallKeysFromFolder}" Icon="{ext:Icon fa-solid fa-folder-closed}" />
+                <MenuItem Header="{ext:Locale Keys_MenuBarActions_Install}" Icon="{ext:Icon fa-solid fa-key}">
+                    <MenuItem Command="{Binding InstallKeysFromFile}" Header="{ext:Locale Keys_MenuBarActions_InstallFromKeys}" Icon="{ext:Icon fa-solid fa-file-code}" />
+                    <MenuItem Command="{Binding InstallKeysFromFolder}" Header="{ext:Locale Keys_MenuBarFileActions_InstallFromFolder}" Icon="{ext:Icon fa-solid fa-folder-closed}" />
                 </MenuItem>
-                <MenuItem Header="{ext:Locale MenuBarActionsInstallFirmware}" Icon="{ext:Icon fa-solid fa-floppy-disk}">
-                    <MenuItem Command="{Binding InstallFirmwareFromFile}" Header="{ext:Locale MenuBarActionsInstallFirmwareFromFile}" Icon="{ext:Icon fa-solid fa-file-code}" />
-                    <MenuItem Command="{Binding InstallFirmwareFromFolder}" Header="{ext:Locale MenuBarActionsInstallFirmwareFromDirectory}" Icon="{ext:Icon fa-solid fa-folder-closed}" />
+                <MenuItem Header="{ext:Locale Firmware_MenuBarActions_Install}" Icon="{ext:Icon fa-solid fa-floppy-disk}">
+                    <MenuItem Command="{Binding InstallFirmwareFromFile}" Header="{ext:Locale Firmware_MenuBarActions_InstallFromFile}" Icon="{ext:Icon fa-solid fa-file-code}" />
+                    <MenuItem Command="{Binding InstallFirmwareFromFolder}" Header="{ext:Locale Firmware_MenuBarActions_InstallFromDirectory}" Icon="{ext:Icon fa-solid fa-folder-closed}" />
                 </MenuItem>
                 <MenuItem Header="{ext:Locale MenuBarActionsManageFileTypes}" IsVisible="{Binding ManageFileTypesVisible}" Icon="{ext:Icon fa-solid fa-clipboard}">
                     <MenuItem Name="InstallFileTypesMenuItem" Header="{ext:Locale MenuBarActionsInstallFileTypes}" IsEnabled="{Binding AreMimeTypesRegistered, Converter={x:Static BoolConverters.Not}}" Icon="{ext:Icon fa-solid fa-square-plus}" />

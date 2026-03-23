@@ -6,7 +6,7 @@ Each json file holds the locales for a specific part of the emulator, e.g. the S
 
 ## Languages
 in the `/assets/` folder you will find the `Languages.json` file, which defines all the languages supported by the emulator. 
-The file includes a table of the langauge codes and their langauge names.
+The file includes a table of the language codes and their language names.
 
     #Example of the format for Languages.json	
     {
@@ -38,12 +38,12 @@ If no json file exists for the specific part of the emulator you're working on, 
     {
       "Locales": [
         {
-          "ID": "MenuBarActionsOpenMiiEditor",
+          "ID": "SettingsTabInputDirectMouseAccess",
           "Translations": {
-            "ar_SA": "",
-            "en_US": "Mii Editor",
+            "ar_SA": "الوصول المباشر للفأرة",
+            "en_US": "Direct Mouse Access",
             ...
-            "zh_TW": "Mii 編輯器"
+            "zh_TW": "滑鼠直接存取"
           }
         },
         {
