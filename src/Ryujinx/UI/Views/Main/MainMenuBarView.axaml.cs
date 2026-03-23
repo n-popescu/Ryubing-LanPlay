@@ -164,24 +164,6 @@ namespace Ryujinx.Ava.UI.Views.Main
             await ViewModel.LoadApplication(appData, ViewModel.IsFullScreen || ViewModel.StartGamesInFullscreen, nacpData);
         }
 
-        public async Task OpenCheatManagerForCurrentApp()
-        {
-            if (!ViewModel.IsGameRunning)
-                return;
-
-            string name = ViewModel.AppHost.Device.Processes.ActiveApplication.ApplicationControlProperties.Title[(int)ViewModel.AppHost.Device.System.State.DesiredTitleLanguage].NameString.ToString();
-
-            await StyleableAppWindow.ShowAsync(
-                new CheatWindow(
-                    Window.VirtualFileSystem,
-                    ViewModel.AppHost.Device.Processes.ActiveApplication.ProgramIdText,
-                    name,
-                    ViewModel.SelectedApplication.Path)
-            );
-
-            ViewModel.AppHost.Device.EnableCheats();
-        }
-
         private void ScanAmiiboMenuItem_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
             if (sender is MenuItem)
