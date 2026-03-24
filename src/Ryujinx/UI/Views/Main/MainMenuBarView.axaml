@@ -265,7 +265,7 @@
                 <Separator />
                 <MenuItem Header="{ext:Locale MenuBar_Actions_ToolsLabel}" Icon="{ext:Icon fa-solid fa-toolbox}">
                     <MenuItem
-                        Name="MiiAppletMenuItem" Header="{ext:Locale MenuBar_Actions_MiiEditorButton}" Icon="{ext:Icon fa-solid fa-face-grin-wide}" ToolTip.Tip="{ext:Locale MenuBarActionsOpenMiiEditorToolTip}" />
+                        Name="MiiAppletMenuItem" Header="{ext:Locale MenuBar_Actions_MiiEditorButton}" Icon="{ext:Icon fa-solid fa-face-grin-wide}" />
                     <MenuItem Name="XciTrimmerMenuItem" Header="{ext:Locale MenuBar_Actions_XCITrimmerButton}" Icon="{ext:Icon fa-solid fa-scissors}" />
                 </MenuItem>
             </MenuItem>
