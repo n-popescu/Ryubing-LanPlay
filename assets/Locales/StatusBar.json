@@ -1,0 +1,29 @@
+{
+  "Locales": [
+    {
+      "ID": "FirmwareVersion",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Firmware Version: {0}",
+        "es_ES": "Versión del Firmware: {0}",
+        "fr_FR": "Version du Firmware : {0}",
+        "he_IL": "",
+        "it_IT": "Versione firmware: {0}",
+        "ja_JP": "",
+        "ko_KR": "펌웨어 버전 : {0}",
+        "no_NO": "Fastvareversjon: {0}",
+        "pl_PL": "",
+        "pt_BR": "Versão do Firmware: {0}",
+        "ru_RU": "Версия прошивки: {0}",
+        "sv_SE": "Firmware-version: {0}",
+        "th_TH": "เวอร์ชันเฟิร์มแวร์: {0}",
+        "tr_TR": "",
+        "uk_UA": "Версія прошивки: {0}",
+        "zh_CN": "系统固件版本：{0}",
+        "zh_TW": "系統韌體版本: {0}"
+      }
+    }
+  ]
+}
