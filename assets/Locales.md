@@ -38,12 +38,12 @@ If no json file exists for the specific part of the emulator you're working on, 
     {
       "Locales": [
         {
-          "ID": "SettingsTabInputDirectMouseAccess",
+          "ID": "MenuBarActionsOpenMiiEditor",
           "Translations": {
-            "ar_SA": "الوصول المباشر للفأرة",
-            "en_US": "Direct Mouse Access",
+            "ar_SA": "",
+            "en_US": "Mii Editor",
             ...
-            "zh_TW": "滑鼠直接存取"
+            "zh_TW": "Mii 編輯器"
           }
         },
         {
