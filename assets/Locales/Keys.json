@@ -26,7 +26,7 @@
       }
     },
     {
-      "ID": "MenuBarActions_InstallFromKeys",
+      "ID": "MenuBarActions_InstallFromFile",
       "Translations": {
         "ar_SA": null,
         "de_DE": null,
@@ -51,7 +51,7 @@
       }
     },
     {
-      "ID": "MenuBarFileActions_InstallFromFolder",
+      "ID": "MenuBarActions_InstallFromFolder",
       "Translations": {
         "ar_SA": "مجلد",
         "de_DE": "Verzeichnis",
@@ -126,7 +126,7 @@
       }
     },
     {
-      "ID": "DialogKeysInstaller_InstallConfirmMessage",
+      "ID": "Installer_ConfirmInstall",
       "Translations": {
         "ar_SA": "\nهل تريد المتابعة؟",
         "de_DE": "\n\nMöchtest du fortfahren?",
@@ -151,32 +151,32 @@
       }
     },
     {
-      "ID": "DialogKeysInstaller_KeysNotFoundErrorMessage",
+      "ID": "Installer_KeysNotFound",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
         "el_GR": "",
-        "en_US": "An invalid Keys file was found in {0}",
-        "es_ES": "Se halló un archivo Keys inválido en {0}",
-        "fr_FR": "Un fichier de Clés invalide a été trouvé dans {0}",
+        "en_US": "An invalid Keys file was found in {0}.",
+        "es_ES": "Se halló un archivo Keys inválido en {0}.",
+        "fr_FR": "Un fichier de Clés invalide a été trouvé dans {0}.",
         "he_IL": "",
-        "it_IT": "È stato trovato un file di chiavi non valido in {0}",
+        "it_IT": "È stato trovato un file di chiavi non valido in {0}.",
         "ja_JP": "",
-        "ko_KR": "{0}에서 잘못된 키 파일이 발견",
+        "ko_KR": "{0}에서 잘못된 키 파일이 발견.",
         "no_NO": "En ugyldig Keys-fil ble funnet i {0}.",
         "pl_PL": "",
-        "pt_BR": "Um arquivo Chaves inválido foi encontrado em {0}",
-        "ru_RU": "В {0} найден некорректный файл ключей",
-        "sv_SE": "En ogiltig nyckelfil hittades i {0}",
-        "th_TH": "พบไฟล์ Keys ที่ไม่ถูกต้องใน {0}",
+        "pt_BR": "Um arquivo Chaves inválido foi encontrado em {0}.",
+        "ru_RU": "В {0} найден некорректный файл ключей.",
+        "sv_SE": "En ogiltig nyckelfil hittades i {0}.",
+        "th_TH": "พบไฟล์ Keys ที่ไม่ถูกต้องใน {0}.",
         "tr_TR": "",
-        "uk_UA": "Виявлено неправильний файл ключів у теці {0}",
-        "zh_CN": "在 {0} 发现了一个无效的密匙文件",
-        "zh_TW": "找到無效的金鑰檔案 {0}"
+        "uk_UA": "Виявлено неправильний файл ключів у теці {0}.",
+        "zh_CN": "在 {0} 发现了一个无效的密匙文件。",
+        "zh_TW": "找到無效的金鑰檔案 {0}。"
       }
     },
     {
-      "ID": "DialogKeysInstaller_KeysInstallMessage",
+      "ID": "Installer_Message_Main",
       "Translations": {
         "ar_SA": "سيتم تثبيت ملف مفاتيح جديد.",
         "de_DE": "Eine neue Schlüsseldatei wird installiert.",
@@ -201,7 +201,7 @@
       }
     },
     {
-      "ID": "DialogKeysInstaller_KeysInstallSubMessage",
+      "ID": "Installer_Message_Sub",
       "Translations": {
         "ar_SA": "\n\nقد يحل هذا محل بعض المفاتيح المثبتة حاليًا.",
         "de_DE": "\n\nDies könnte einige der derzeit installierten Schlüssel ersetzen.",
@@ -221,12 +221,12 @@
         "th_TH": "\n\nสิ่งนี้อาจทำให้ไฟล์ Keys บางส่วนที่ติดตั้งอยู่ถูกแทนที่",
         "tr_TR": "\n\nBu, şu anda kurulu olan anahtarların bazılarının yerine geçebilir.",
         "uk_UA": "\n\nЦе замінить собою поточні файли Ключів.",
-        "zh_CN": "\n\n这也许会替换掉一些当前已安装的密匙",
+        "zh_CN": "\n\n这也许会替换掉一些当前已安装的密匙。",
         "zh_TW": "\n\n這將取代部分已安裝的金鑰。"
       }
     },
     {
-      "ID": "DialogKeysInstaller_KeysInstallWaitMessage",
+      "ID": "Installer_Message_Wait",
       "Translations": {
         "ar_SA": "جارٍ تثبيت المفاتيح...",
         "de_DE": "Schlüssel werden installiert...",
@@ -247,11 +247,11 @@
         "tr_TR": "Anahtarlar yükleniyor...",
         "uk_UA": "Встановлення Ключів...",
         "zh_CN": "安装密匙中。。。",
-        "zh_TW": "正在安裝金鑰..."
+        "zh_TW": "正在安裝金鑰。。。"
       }
     },
     {
-      "ID": "DialogKeysInstaller_KeysInstallSuccessMessage",
+      "ID": "Installer_Message_Success",
       "Translations": {
         "ar_SA": "تم تثبيت ملف المفاتيح الجديد بنجاح.",
         "de_DE": "Neue Schlüsseldatei erfolgreich installiert.",
@@ -271,58 +271,58 @@
         "th_TH": "การติดตั้งไฟล์ Keys ใหม่เสร็จสมบูรณ์แล้ว",
         "tr_TR": "Yeni anahtar dosyası başarıyla yüklendi.",
         "uk_UA": "Нові ключі встановлено.",
-        "zh_CN": "已成功安装新密匙文件",
+        "zh_CN": "已成功安装新密匙文件。",
         "zh_TW": "成功安裝新增的金鑰檔案。"
       }
     },
     {
       "ID": "UserError_NoKeys",
       "Translations": {
-        "ar_SA": "المفاتيح غير موجودة",
-        "de_DE": "Keys nicht gefunden",
-        "el_GR": "Τα κλειδιά δεν βρέθηκαν",
-        "en_US": "Keys not found",
-        "es_ES": "No se encontraron claves",
-        "fr_FR": "Clés non trouvées",
-        "he_IL": "המפתחות לא נמצאו",
-        "it_IT": "Chiavi non trovate",
-        "ja_JP": "Keys がありません",
-        "ko_KR": "키를 찾을 수 없음",
-        "no_NO": "Finner ikke nøkler",
-        "pl_PL": "Nie znaleziono kluczy",
-        "pt_BR": "Chaves não encontradas",
-        "ru_RU": "Ключи не найдены",
-        "sv_SE": "Nycklarna hittades inte",
+        "ar_SA": "المفاتيح غير موجودة.",
+        "de_DE": "Keys nicht gefunden.",
+        "el_GR": "Τα κλειδιά δεν βρέθηκαν.",
+        "en_US": "Keys not found.",
+        "es_ES": "No se encontraron claves.",
+        "fr_FR": "Clés non trouvées.",
+        "he_IL": "המפתחות לא נמצאו.",
+        "it_IT": "Chiavi non trovate.",
+        "ja_JP": "Keys がありません。",
+        "ko_KR": "키를 찾을 수 없음.",
+        "no_NO": "Finner ikke nøkler.",
+        "pl_PL": "Nie znaleziono kluczy.",
+        "pt_BR": "Chaves não encontradas.",
+        "ru_RU": "Ключи не найдены.",
+        "sv_SE": "Nycklarna hittades inte.",
         "th_TH": "ไม่พบ คีย์",
-        "tr_TR": "Keys bulunamadı",
-        "uk_UA": "Ключі не знайдено",
-        "zh_CN": "找不到密钥Keys",
-        "zh_TW": "找不到金鑰"
+        "tr_TR": "Keys bulunamadı.",
+        "uk_UA": "Ключі не знайдено.",
+        "zh_CN": "找不到密钥。",
+        "zh_TW": "找不到金鑰。"
       }
     },
     {
       "ID": "UserError_NoKeys_Description",
       "Translations": {
-        "ar_SA": "لم يتمكن ريوجينكس من العثور على ملف 'prod.keys' الخاص بك",
-        "de_DE": "Ryujinx konnte deine 'prod.keys' Datei nicht finden",
-        "el_GR": "Το Ryujinx δεν κατάφερε να εντοπίσει το αρχείο 'prod.keys'",
-        "en_US": "Ryujinx was unable to find your 'prod.keys' file",
-        "es_ES": "Ryujinx no pudo encontrar tus 'prod.keys'.",
-        "fr_FR": "Ryujinx n'a pas pu trouver votre fichier 'prod.keys'",
-        "he_IL": "ריוג'ינקס לא הצליח למצוא את קובץ ה-'prod.keys' שלך",
-        "it_IT": "Ryujinx non è riuscito a trovare il file 'prod.keys'",
-        "ja_JP": "'prod.keys' が見つかりませんでした",
-        "ko_KR": "Ryujinx가 'prod.keys' 파일을 찾지 못함",
-        "no_NO": "Ryujinx kunne ikke finne 'prod.keys' filen din",
-        "pl_PL": "Ryujinx nie mógł znaleźć twojego pliku 'prod.keys'",
-        "pt_BR": "Ryujinx não conseguiu encontrar o seu arquivo 'prod.keys'",
-        "ru_RU": "Ryujinx не удалось найти ваш 'prod.keys' файл",
-        "sv_SE": "Ryujinx kunde inte hitta din 'prod.keys'-fil",
-        "th_TH": "Ryujinx ไม่พบไฟล์ 'prod.keys' ในเครื่องของคุณ",
-        "tr_TR": "Ryujinx 'prod.keys' dosyasını bulamadı",
-        "uk_UA": "Ryujinx не вдалося знайти ваш файл «prod.keys».",
-        "zh_CN": "Ryujinx 模拟器找不到“prod.keys”密钥文件",
-        "zh_TW": "Ryujinx 無法找到您的「prod.keys」檔案"
+        "ar_SA": "لم يتمكن ريوجينكس من العثور على ملف \"prod.keys\" الخاص بك.",
+        "de_DE": "Ryujinx konnte deine \"prod.keys\" Datei nicht finden.",
+        "el_GR": "Το Ryujinx δεν κατάφερε να εντοπίσει το αρχείο \"prod.keys\".",
+        "en_US": "Ryujinx was unable to find your \"prod.keys\" file.",
+        "es_ES": "Ryujinx no pudo encontrar tus \"prod.keys\".",
+        "fr_FR": "Ryujinx n'a pas pu trouver votre fichier \"prod.keys\".",
+        "he_IL": "ריוג'ינקס לא הצליח למצוא את קובץ ה-\"prod.keys\" שלך.",
+        "it_IT": "Ryujinx non è riuscito a trovare il file \"prod.keys\".",
+        "ja_JP": "\"prod.keys\" が見つかりませんでした。",
+        "ko_KR": "Ryujinx가 '\"prod.keys\" 파일을 찾지 못함.",
+        "no_NO": "Ryujinx kunne ikke finne \"prod.keys\" filen din.",
+        "pl_PL": "Ryujinx nie mógł znaleźć twojego pliku \"prod.keys\".",
+        "pt_BR": "Ryujinx não conseguiu encontrar o seu arquivo '\"prod.keys\".",
+        "ru_RU": "Ryujinx не удалось найти ваш \"prod.keys\" файл.",
+        "sv_SE": "Ryujinx kunde inte hitta din \"prod.keys\"-fil.",
+        "th_TH": "Ryujinx ไม่พบไฟล์ '\"prod.keys\" ในเครื่องของคุณ",
+        "tr_TR": "Ryujinx \"prod.keys\" dosyasını bulamadı.",
+        "uk_UA": "Ryujinx не вдалося знайти ваш файл \"prod.keys\".",
+        "zh_CN": "Ryujinx 模拟器找不到“prod.keys”密钥文件。",
+        "zh_TW": "Ryujinx 無法找到您的「prod.keys」檔案。"
       }
     }
   ]

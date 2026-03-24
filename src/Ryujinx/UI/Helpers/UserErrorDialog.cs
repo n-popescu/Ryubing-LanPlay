@@ -16,7 +16,7 @@ namespace Ryujinx.Ava.UI.Helpers
             {
                 UserError.NoKeys => LocaleManager.Instance[LocaleKeys.Keys_UserError_NoKeys],
                 UserError.NoFirmware => LocaleManager.Instance[LocaleKeys.Firmware_UserError_NoFirmware],
-                UserError.FirmwareParsingFailed => LocaleManager.Instance[LocaleKeys.Firmware_UserError_FirmwareParsingFailed],
+                UserError.FirmwareParsingFailed => LocaleManager.Instance[LocaleKeys.Firmware_UserError_ParsingFailed],
                 UserError.ApplicationNotFound => LocaleManager.Instance[LocaleKeys.UserErrorApplicationNotFound],
                 UserError.Unknown => LocaleManager.Instance[LocaleKeys.UserErrorUnknown],
                 _ => LocaleManager.Instance[LocaleKeys.UserErrorUndefined],
@@ -27,7 +27,7 @@ namespace Ryujinx.Ava.UI.Helpers
             {
                 UserError.NoKeys => LocaleManager.Instance[LocaleKeys.Keys_UserError_NoKeys_Description],
                 UserError.NoFirmware => LocaleManager.Instance[LocaleKeys.Firmware_UserError_NoFirmware_Description],
-                UserError.FirmwareParsingFailed => LocaleManager.Instance[LocaleKeys.Firmware_UserError_FirmwareParsingFailed_Description],
+                UserError.FirmwareParsingFailed => LocaleManager.Instance[LocaleKeys.Firmware_UserError_ParsingFailed_Description],
                 UserError.ApplicationNotFound => LocaleManager.Instance[LocaleKeys.UserErrorApplicationNotFoundDescription],
                 UserError.Unknown => LocaleManager.Instance[LocaleKeys.UserErrorUnknownDescription],
                 _ => LocaleManager.Instance[LocaleKeys.UserErrorUndefinedDescription],

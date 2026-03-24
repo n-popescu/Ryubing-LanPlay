@@ -941,25 +941,25 @@ namespace Ryujinx.Ava.UI.ViewModels
                 {
                     await ContentDialogHelper.CreateErrorDialog(
                         LocaleManager.Instance.UpdateAndGetDynamicValue(
-                            LocaleKeys.Firmware_DialogFirmwareInstaller_FirmwareNotFoundErrorMessage, filename));
+                            LocaleKeys.Firmware_Installer_FirmwareNotFound, filename));
 
                     return;
                 }
 
                 string dialogTitle = LocaleManager.Instance.UpdateAndGetDynamicValue(
-                    LocaleKeys.Firmware_DialogFirmwareInstaller_FirmwareInstallTitle, firmwareVersion.VersionString);
+                    LocaleKeys.Firmware_Installer_Title, firmwareVersion.VersionString);
                 string dialogMessage = LocaleManager.Instance.UpdateAndGetDynamicValue(
-                    LocaleKeys.Firmware_DialogFirmwareInstaller_FirmwareInstallMessage, firmwareVersion.VersionString);
+                    LocaleKeys.Firmware_Installer_Message_Main, firmwareVersion.VersionString);
 
                 SystemVersion currentVersion = ContentManager.GetCurrentFirmwareVersion();
                 if (currentVersion != null)
                 {
                     dialogMessage += LocaleManager.Instance.UpdateAndGetDynamicValue(
-                        LocaleKeys.Firmware_DialogFirmwareInstaller_FirmwareInstallSubMessage, currentVersion.VersionString);
+                        LocaleKeys.Firmware_Installer_Message_Sub, currentVersion.VersionString);
                 }
 
                 dialogMessage +=
-                    LocaleManager.Instance[LocaleKeys.Firmware_DialogFirmwareInstaller_FirmwaresInstallConfirmMessage];
+                    LocaleManager.Instance[LocaleKeys.Firmware_Installer_Message_Confirm];
 
                 UserResult result = await ContentDialogHelper.CreateConfirmationDialog(
                     dialogTitle,
@@ -969,7 +969,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     LocaleManager.Instance[LocaleKeys.RyujinxConfirm]);
 
                 UpdateWaitWindow waitingDialog = new(dialogTitle,
-                    LocaleManager.Instance[LocaleKeys.Firmware_DialogFirmwareInstaller_FirmwareInstallWaitMessage]);
+                    LocaleManager.Instance[LocaleKeys.Firmware_Installer_Message_Wait]);
 
                 if (result == UserResult.Yes)
                 {
@@ -991,7 +991,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                                 waitingDialog.Close();
 
                                 string message = LocaleManager.Instance.UpdateAndGetDynamicValue(
-                                    LocaleKeys.Firmware_DialogFirmwareInstaller_FirmwareInstallSuccessMessage,
+                                    LocaleKeys.Firmware_Installer_Message_Success,
                                     firmwareVersion.VersionString);
 
                                 await ContentDialogHelper.CreateInfoDialog(
@@ -1061,16 +1061,16 @@ namespace Ryujinx.Ava.UI.ViewModels
                 string dialogTitle =
                     LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Keys_MenuBarActions_Install);
                 string dialogMessage =
-                    LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Keys_DialogKeysInstaller_KeysInstallMessage);
+                    LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Keys_Installer_Message_Main);
 
                 if (ContentManager.AreKeysAlreadyPresent(systemDirectory))
                 {
                     dialogMessage +=
                         LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys
-                            .Keys_DialogKeysInstaller_KeysInstallSubMessage);
+                            .Keys_Installer_Message_Sub);
                 }
 
-                dialogMessage += LocaleManager.Instance[LocaleKeys.Keys_DialogKeysInstaller_InstallConfirmMessage];
+                dialogMessage += LocaleManager.Instance[LocaleKeys.Keys_Installer_ConfirmInstall];
 
                 UserResult result = await ContentDialogHelper.CreateConfirmationDialog(
                     dialogTitle,
@@ -1080,7 +1080,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     LocaleManager.Instance[LocaleKeys.RyujinxConfirm]);
 
                 UpdateWaitWindow waitingDialog = new(dialogTitle,
-                    LocaleManager.Instance[LocaleKeys.Keys_DialogKeysInstaller_KeysInstallWaitMessage]);
+                    LocaleManager.Instance[LocaleKeys.Keys_Installer_Message_Wait]);
 
                 if (result == UserResult.Yes)
                 {
@@ -1103,7 +1103,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
                                 string message =
                                     LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys
-                                        .Keys_DialogKeysInstaller_KeysInstallSuccessMessage);
+                                        .Keys_Installer_Message_Success);
 
                                 await ContentDialogHelper.CreateInfoDialog(
                                     dialogTitle,
@@ -1125,7 +1125,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                                 if (ex is FormatException)
                                 {
                                     message = LocaleManager.Instance.UpdateAndGetDynamicValue(
-                                        LocaleKeys.Keys_DialogKeysInstaller_KeysNotFoundErrorMessage, filename);
+                                        LocaleKeys.Keys_Installer_KeysNotFound, filename);
                                 }
 
                                 await ContentDialogHelper.CreateErrorDialog(message);

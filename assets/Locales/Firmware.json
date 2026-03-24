@@ -51,7 +51,7 @@
       }
     },
     {
-      "ID": "MenuBarActions_InstallFromDirectory",
+      "ID": "MenuBarActions_InstallFromFolder",
       "Translations": {
         "ar_SA": "مجلد",
         "de_DE": "Verzeichnis",
@@ -151,7 +151,7 @@
       }
     },
     {
-      "ID": "DialogInstall_EmbeddedMessage",
+      "ID": "Installer_Message_Embedded",
       "Translations": {
         "ar_SA": "هل ترغب في تثبيت البرنامج الثابت المدمج في هذه اللعبة؟ (البرنامج الثابت {0})",
         "de_DE": "Die in diesem Spiel enthaltene Firmware installieren? (Firmware {0})",
@@ -176,7 +176,7 @@
       }
     },
     {
-      "ID": "DialogInstall_EmbeddedMessage_Success",
+      "ID": "Installer_Message_Embedded_Success",
       "Translations": {
         "ar_SA": "لم يتم العثور على أي برنامج ثابت مثبت ولكن ريوجينكس كان قادرا على تثبيت البرنامج الثابت {0} من اللعبة المقدمة.\nسيبدأ المحاكي الآن.",
         "de_DE": "Es wurde keine installierte Firmware gefunden, aber Ryujinx konnte die Firmware {0} aus dem bereitgestellten Spiel installieren.\nRyujinx wird nun gestartet.",
@@ -186,7 +186,7 @@
         "fr_FR": "Aucun firmware installé n'a été trouvé mais Ryujinx a pu installer le firmware {0} à partir du jeu fourni.\nL'émulateur va maintenant démarrer.",
         "he_IL": "לא נמצאה קושחה מותקנת אבל ריוג'ינקס הצליח להתקין קושחה {0} מהמשחק שסופק. \nהאמולטור יופעל כעת.",
         "it_IT": "Non è stato trovato alcun firmware installato, ma Ryujinx è riuscito ad installare il firmware {0} dal gioco fornito.\nL'emulatore si avvierà adesso.",
-        "ja_JP": "ファームウェアがインストールされていませんが, ゲームに含まれるファームウェア {0} をインストールできます.\nエミュレータが開始します.",
+        "ja_JP": "ファームウェアがインストールされていませんが, ゲームに含まれるファームウェア {0} をインストールできます.\nエミュレータが開始します。",
         "ko_KR": "설치된 펌웨어를 찾을 수 없지만 Ryujinx는 제공된 게임에서 펌웨어 {0}을(를) 설치할 수 있습니다.\n이제 에뮬레이터가 시작됩니다.",
         "no_NO": "Det ble ikke funnet noen installert fastvare, men Ryujinx kunne installere fastvare {0} fra det oppgitte spillet.\nemulatoren vil nå starte.",
         "pl_PL": "Nie znaleziono zainstalowanego oprogramowania, ale Ryujinx był w stanie zainstalować oprogramowanie {0} z dostarczonej gry.\n\nEmulator uruchomi się teraz.",
@@ -201,32 +201,32 @@
       }
     },
     {
-      "ID": "DialogInstall_NoFirmwareInstalledMessage",
+      "ID": "Installer_Message_NotInstalled",
       "Translations": {
         "ar_SA": "لا يوجد برنامج ثابت مثبت",
-        "de_DE": "Keine Firmware installiert",
-        "el_GR": "Δεν έχει εγκατασταθεί Firmware",
-        "en_US": "No Firmware Installed",
-        "es_ES": "No hay Firmware Instalado",
-        "fr_FR": "Aucun Firmware Installé",
-        "he_IL": "לא מותקנת קושחה",
-        "it_IT": "Nessun firmware installato",
-        "ja_JP": "ファームウェアがインストールされていません",
-        "ko_KR": "펌웨어가 설치되어 있지 않음",
-        "no_NO": "Ingen fastvare installert",
-        "pl_PL": "Brak Zainstalowanego Firmware'u",
-        "pt_BR": "Nenhum Firmware Instalado",
-        "ru_RU": "Прошивка не установлена",
-        "sv_SE": "Inget firmware installerat",
+        "de_DE": "Keine Firmware installiert.",
+        "el_GR": "Δεν έχει εγκατασταθεί Firmware.",
+        "en_US": "No Firmware Installed.",
+        "es_ES": "No hay Firmware Instalado.",
+        "fr_FR": "Aucun Firmware Installé.",
+        "he_IL": "לא מותקנת קושחה.",
+        "it_IT": "Nessun firmware installato.",
+        "ja_JP": "ファームウェアがインストールされていません。",
+        "ko_KR": "펌웨어가 설치되어 있지 .않음",
+        "no_NO": "Ingen fastvare installert.",
+        "pl_PL": "Brak Zainstalowanego Firmware'u.",
+        "pt_BR": "Nenhum Firmware Instalado.",
+        "ru_RU": "Прошивка не установлена.",
+        "sv_SE": "Inget firmware installerat.",
         "th_TH": "ไม่มีการติดตั้งเฟิร์มแวร์",
-        "tr_TR": "Yazılım Yüklü Değil",
-        "uk_UA": "Прошивка не встановлена",
-        "zh_CN": "未安装系统固件",
-        "zh_TW": "未安裝韌體"
+        "tr_TR": "Yazılım Yüklü Değil.",
+        "uk_UA": "Прошивка не встановлена.",
+        "zh_CN": "未安装系统固件。",
+        "zh_TW": "未安裝韌體。"
       }
     },
     {
-      "ID": "DialogInstall_InstalledMessage",
+      "ID": "Installer_Message_Installed",
       "Translations": {
         "ar_SA": "تم تثبيت البرنامج الثابت {0}",
         "de_DE": "Firmware {0} wurde installiert",
@@ -251,7 +251,7 @@
       }
     },
     {
-      "ID": "DialogFirmwareInstaller_FirmwareNotFoundErrorMessage",
+      "ID": "Installer_FirmwareNotFound",
       "Translations": {
         "ar_SA": "لم يتم العثور على برنامج ثابت للنظام صالح في {0}.",
         "de_DE": "Es wurde keine gültige System-Firmware gefunden in {0}.",
@@ -261,7 +261,7 @@
         "fr_FR": "Un firmware valide n'a pas été trouvé dans {0}.",
         "he_IL": "לא נמצאה קושחת מערכת תקפה ב-{0}.",
         "it_IT": "Un firmware del sistema valido non è stato trovato in {0}.",
-        "ja_JP": "{0} には有効なシステムファームウェアがありません.",
+        "ja_JP": "{0} には有効なシステムファームウェアがありません。",
         "ko_KR": "{0}에서 유효한 시스템 펌웨어를 찾을 수 없습니다.",
         "no_NO": "En gyldig systemfastvare ble ikke funnet i {0}.",
         "pl_PL": "Nie znaleziono prawidłowego firmware'u systemowego w {0}.",
@@ -276,7 +276,7 @@
       }
     },
     {
-      "ID": "DialogFirmwareInstaller_FirmwareInstallTitle",
+      "ID": "Installer_Title",
       "Translations": {
         "ar_SA": "تثبيت البرنامج الثابت {0}",
         "de_DE": "Installiere Firmware {0}",
@@ -301,7 +301,7 @@
       }
     },
     {
-      "ID": "DialogFirmwareInstaller_FirmwareInstallMessage",
+      "ID": "Installer_Message_Main",
       "Translations": {
         "ar_SA": "سيتم تثبيت إصدار النظام {0}.",
         "de_DE": "Systemversion {0} wird jetzt installiert.",
@@ -311,7 +311,7 @@
         "fr_FR": "La version {0} du système sera installée.",
         "he_IL": "גירסת המערכת {0} תותקן.",
         "it_IT": "La versione del sistema {0} sarà installata.",
-        "ja_JP": "システムバージョン {0} がインストールされます.",
+        "ja_JP": "システムバージョン {0} がインストールされます。",
         "ko_KR": "시스템 버전 {0}이(가) 설치됩니다.",
         "no_NO": "Systemversjon {0} vil bli installert.",
         "pl_PL": "Wersja systemu {0} zostanie zainstalowana.",
@@ -326,7 +326,7 @@
       }
     },
     {
-      "ID": "DialogFirmwareInstaller_FirmwareInstallSubMessage",
+      "ID": "Installer_Message_Sub",
       "Translations": {
         "ar_SA": "\n\nهذا سيحل محل إصدار النظام الحالي {0}.",
         "de_DE": "\n\nDies wird die aktuelle Systemversion {0} ersetzen.",
@@ -336,7 +336,7 @@
         "fr_FR": "\n\nCela remplacera la version actuelle du système {0}.",
         "he_IL": "\n\nזה יחליף את גרסת המערכת הנוכחית {0}.",
         "it_IT": "\n\nQuesta sostituirà l'attuale versione del sistema ({0}).",
-        "ja_JP": "\n\n現在のシステムバージョン {0} を置き換えます.",
+        "ja_JP": "\n\n現在のシステムバージョン {0} を置き換えます。",
         "ko_KR": "\n\n현재 시스템 버전 {0}을(를) 대체합니다.",
         "no_NO": "\n\nDette erstatter den gjeldende systemversjonen {0}.",
         "pl_PL": "\n\nZastąpi to obecną wersję systemu {0}.",
@@ -351,7 +351,7 @@
       }
     },
     {
-      "ID": "DialogFirmwareInstaller_FirmwaresInstallConfirmMessage",
+      "ID": "Installer_Message_Confirm",
       "Translations": {
         "ar_SA": "\nهل تريد المتابعة؟",
         "de_DE": "\n\nMöchtest du fortfahren?",
@@ -376,7 +376,7 @@
       }
     },
     {
-      "ID": "DialogFirmwareInstaller_FirmwareInstallWaitMessage",
+      "ID": "Installer_Message_Wait",
       "Translations": {
         "ar_SA": "تثبيت البرنامج الثابت...",
         "de_DE": "Firmware wird installiert...",
@@ -401,7 +401,7 @@
       }
     },
     {
-      "ID": "DialogFirmwareInstaller_FirmwareInstallSuccessMessage",
+      "ID": "Installer_Message_Success",
       "Translations": {
         "ar_SA": "تم تثبيت إصدار النظام {0} بنجاح.",
         "de_DE": "Systemversion {0} wurde erfolgreich installiert.",
@@ -411,7 +411,7 @@
         "fr_FR": "Version du système {0} installée avec succès.",
         "he_IL": "גרסת המערכת {0} הותקנה בהצלחה.",
         "it_IT": "La versione del sistema {0} è stata installata.",
-        "ja_JP": "システムバージョン {0} が正常にインストールされました.",
+        "ja_JP": "システムバージョン {0} が正常にインストールされました。",
         "ko_KR": "시스템 버전 {0}이(가) 설치되었습니다.",
         "no_NO": "Systemversjon {0} ble installert.",
         "pl_PL": "Wersja systemu {0} została pomyślnie zainstalowana.",
@@ -421,7 +421,7 @@
         "th_TH": "ระบบเวอร์ชั่น {0} ติดตั้งเรียบร้อยแล้ว",
         "tr_TR": "Sistem sürümü {0} başarıyla yüklendi.",
         "uk_UA": "Версію системи {0} успішно встановлено.",
-        "zh_CN": "成功安装系统固件版本 {0} 。",
+        "zh_CN": "成功安装系统固件版本 {0}。",
         "zh_TW": "成功安裝系統韌體版本 {0}。"
       }
     },
@@ -453,30 +453,30 @@
     {
       "ID": "UserError_NoFirmware_Description",
       "Translations": {
-        "ar_SA": "لم يتمكن ريوجينكس من العثور على أية برامج ثابتة مثبتة",
+        "ar_SA": "لم يتمكن ريوجينكس من العثور على أية برامج ثابتة مثبتة.",
         "de_DE": "Ryujinx konnte keine installierte Firmware finden!",
-        "el_GR": "Το Ryujinx δεν κατάφερε να εντοπίσει κανένα εγκατεστημένο firmware",
-        "en_US": "Ryujinx was unable to find any firmwares installed",
+        "el_GR": "Το Ryujinx δεν κατάφερε να εντοπίσει κανένα εγκατεστημένο firmware.",
+        "en_US": "Ryujinx was unable to find any firmwares installed.",
         "es_ES": "Ryujinx no pudo encontrar un firmware instalado.",
-        "fr_FR": "Ryujinx n'a pas trouvé de firmware installé",
-        "he_IL": "ריוג'ינקס לא הצליחה למצוא קושחה מותקנת",
-        "it_IT": "Ryujinx non è riuscito a trovare alcun firmware installato",
-        "ja_JP": "インストールされたファームウェアが見つかりませんでした",
-        "ko_KR": "Ryujinx가 설치된 펌웨어를 찾을 수 없음",
-        "no_NO": "Ryujinx kunne ikke finne noen fastvare installert",
-        "pl_PL": "Ryujinx nie mógł znaleźć żadnego zainstalowanego firmware'u",
-        "pt_BR": "Ryujinx não conseguiu encontrar nenhum Firmware instalado",
-        "ru_RU": "Ryujinx не удалось найти ни одной установленной прошивки",
-        "sv_SE": "Ryujinx kunde inte hitta några installerade firmwares",
+        "fr_FR": "Ryujinx n'a pas trouvé de firmware installé.",
+        "he_IL": "ריוג'ינקס לא הצליחה למצוא קושחה מותקנת.",
+        "it_IT": "Ryujinx non è riuscito a trovare alcun firmware installato.",
+        "ja_JP": "インストールされたファームウェアが見つかりませんでした。",
+        "ko_KR": "Ryujinx가 설치된 펌웨어를 찾을 수 없음.",
+        "no_NO": "Ryujinx kunne ikke finne noen fastvare installert.",
+        "pl_PL": "Ryujinx nie mógł znaleźć żadnego zainstalowanego firmware'u.",
+        "pt_BR": "Ryujinx não conseguiu encontrar nenhum Firmware instalado.",
+        "ru_RU": "Ryujinx не удалось найти ни одной установленной прошивки.",
+        "sv_SE": "Ryujinx kunde inte hitta några installerade firmwares.",
         "th_TH": "Ryujinx ไม่พบ เฟิร์มแวร์ที่ติดตั้งไว้ในเครื่องของคุณ",
-        "tr_TR": "Ryujinx yüklü herhangi firmware bulamadı",
-        "uk_UA": "Ryujinx не вдалося знайти жодної встановленої прошивки",
-        "zh_CN": "Ryujinx 模拟器未安装 Switch 系统固件",
-        "zh_TW": "Ryujinx 無法找到已安裝的任何韌體"
+        "tr_TR": "Ryujinx yüklü herhangi firmware bulamadı.",
+        "uk_UA": "Ryujinx не вдалося знайти жодної встановленої прошивки.",
+        "zh_CN": "Ryujinx 模拟器未安装 Switch 系统固件。",
+        "zh_TW": "Ryujinx 無法找到已安裝的任何韌體。"
       }
     },
     {
-      "ID": "UserError_FirmwareParsingFailed",
+      "ID": "UserError_ParsingFailed",
       "Translations": {
         "ar_SA": "خطأ في تحليل البرنامج الثابت",
         "de_DE": "Firmware-Analysierung-Fehler",
@@ -501,7 +501,7 @@
       }
     },
     {
-      "ID": "UserError_FirmwareParsingFailed_Description",
+      "ID": "UserError_ParsingFailed_Description",
       "Translations": {
         "ar_SA": "لم يتمكن ريوجينكس من تحليل البرامج الثابتة المتوفرة. يحدث هذا عادة بسبب المفاتيح القديمة.",
         "de_DE": "Ryujinx konnte die zu verfügung gestellte Firmware nicht analysieren. Ein möglicher Grund dafür sind veraltete keys.",

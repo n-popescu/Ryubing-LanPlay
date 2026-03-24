@@ -705,8 +705,8 @@ namespace Ryujinx.Ava.Systems
                         if (userError is UserError.NoFirmware)
                         {
                             UserResult result = await ContentDialogHelper.CreateConfirmationDialog(
-                                LocaleManager.Instance[LocaleKeys.Firmware_DialogInstall_NoFirmwareInstalledMessage],
-                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Firmware_DialogInstall_EmbeddedMessage, firmwareVersion.VersionString),
+                                LocaleManager.Instance[LocaleKeys.Firmware_Installer_Message_NotInstalled],
+                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Firmware_Installer_Message_Embedded, firmwareVersion.VersionString),
                                 LocaleManager.Instance[LocaleKeys.InputDialogYes],
                                 LocaleManager.Instance[LocaleKeys.InputDialogNo],
                                 string.Empty);
@@ -736,8 +736,8 @@ namespace Ryujinx.Ava.Systems
                             _viewModel.RefreshFirmwareStatus();
 
                             await ContentDialogHelper.CreateInfoDialog(
-                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Firmware_DialogInstall_InstalledMessage, firmwareVersion.VersionString),
-                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Firmware_DialogInstall_EmbeddedMessage_Success, firmwareVersion.VersionString),
+                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Firmware_Installer_Message_Installed, firmwareVersion.VersionString),
+                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Firmware_Installer_Message_Embedded_Success, firmwareVersion.VersionString),
                                 LocaleManager.Instance[LocaleKeys.InputDialogOk],
                                 string.Empty,
                                 LocaleManager.Instance[LocaleKeys.RyujinxInfo]);
