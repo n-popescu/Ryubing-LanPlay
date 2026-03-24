@@ -33,11 +33,11 @@ namespace Ryujinx.Input.Assigner
 
         public Button? GetPressedButton()
         {
-            // On some layouts (for example AltGr on Windows), Right Alt is reported as Ctrl+Alt.
-            // Prefer AltRight in that case so the binding reflects the physical key used.
-            if (_keyboardState.IsPressed(Key.ControlLeft) && _keyboardState.IsPressed(Key.AltRight))
+            Key aliasedKey = GetAliasedPressedKey();
+
+            if (aliasedKey != Key.Unknown)
             {
-                return !ShouldCancel() ? new Button(Key.AltRight) : null;
+                return !ShouldCancel() ? new Button(aliasedKey) : null;
             }
 
             Button? keyPressed = null;
@@ -52,6 +52,27 @@ namespace Ryujinx.Input.Assigner
             }
 
             return !ShouldCancel() ? keyPressed : null;
+        }
+
+        private Key GetAliasedPressedKey()
+        {
+            // On some layouts (for example AltGr on Windows), Right Alt is reported as Ctrl+Alt.
+            // Prefer AltRight in that case so the binding reflects the physical key used.
+            if (_keyboardState.IsPressed(Key.ControlLeft) && _keyboardState.IsPressed(Key.AltRight))
+            {
+                return Key.AltRight;
+            }
+
+            // On some Copilot keyboards, the key in the right-control position is reported as
+            // ShiftLeft+Win+F23. Prefer ControlRight so the binding reflects that physical key.
+            if (_keyboardState.IsPressed(Key.ShiftLeft) &&
+                _keyboardState.IsPressed(Key.F23) &&
+                (_keyboardState.IsPressed(Key.WinLeft) || _keyboardState.IsPressed(Key.WinRight)))
+            {
+                return Key.ControlRight;
+            }
+
+            return Key.Unknown;
         }
     }
 }
