@@ -207,12 +207,6 @@
                     InputGesture="Ctrl + D"
                     IsEnabled="{Binding HasSkylander}" />
                 <Separator IsVisible="{Binding ShowSkylanderActions}"/>
-                <MenuItem
-                    Command="{Binding OpenCheatManagerForCurrentApp}"
-                    Header="{ext:Locale GameListContextMenuManageCheat}"
-                    Icon="{ext:Icon fa-solid fa-code}"
-                    InputGesture="Ctrl + C"
-                    IsEnabled="{Binding IsGameRunning}" />
                 <MenuItem 
                     Command="{Binding SimulateWakeUpMessage}" 
                     Header="{ext:Locale MenuBarOptionsSimulateWakeUpMessage}" 

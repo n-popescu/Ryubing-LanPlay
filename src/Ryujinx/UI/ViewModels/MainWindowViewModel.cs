@@ -1886,24 +1886,6 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Title = RyujinxApp.FormatTitle();
             });
         }
-        
-        public async Task OpenCheatManagerForCurrentApp()
-        {
-            if (IsGameRunning)
-            {
-                string name = AppHost.Device.Processes.ActiveApplication.ApplicationControlProperties.Title[(int)AppHost.Device.System.State.DesiredTitleLanguage].NameString.ToString();
-
-                await StyleableAppWindow.ShowAsync(
-                    new CheatWindow(
-                        Window.VirtualFileSystem,
-                        AppHost.Device.Processes.ActiveApplication.ProgramIdText,
-                        name,
-                        SelectedApplication.Path)
-                );
-
-                AppHost.Device.EnableCheats();
-            }
-        }
 
         public async Task OpenAmiiboWindow()
         {
