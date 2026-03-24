@@ -324,7 +324,7 @@ namespace Ryujinx.Input.SDL3
 
         public void SetLed(uint packedRgb)
         {
-            // Keyboard LEDs are not supported by this backend.
+            Logger.Debug?.Print(LogClass.UI, "SetLed called on an SDL3Keyboard");
         }
 
         public void SetTriggerThreshold(float triggerThreshold)

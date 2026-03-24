@@ -53,16 +53,12 @@ namespace Ryujinx.Ava.Input
 
                 foreach (KeyboardInputMappingHelper.KeyboardButtonMapping entry in _buttonsUserMapping)
                 {
-                    if (!entry.IsValid)
+                    if (!entry.IsValid || result.IsPressed(entry.To))
                     {
                         continue;
                     }
 
-                    // NOTE: Do not touch state of the button already pressed.
-                    if (!result.IsPressed(entry.To))
-                    {
-                        result.SetPressed(entry.To, rawState.IsPressed(entry.From));
-                    }
+                    result.SetPressed(entry.To, rawState.IsPressed(entry.From));
                 }
 
                 (short leftStickX, short leftStickY) = KeyboardInputMappingHelper.GetStickValues(ref rawState, _configuration.LeftJoyconStick);
