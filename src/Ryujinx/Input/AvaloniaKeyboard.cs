@@ -98,6 +98,19 @@ namespace Ryujinx.Ava.Input
             }
         }
 
+        public bool TryConsumePressedKey(out Key key)
+        {
+            try
+            {
+                return _driver.TryConsumePressedKey(_mode, out key);
+            }
+            catch
+            {
+                key = Key.Unknown;
+                return false;
+            }
+        }
+
         public void SetConfiguration(InputConfig configuration)
         {
             lock (_userMappingLock)

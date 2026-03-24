@@ -44,5 +44,16 @@ namespace Ryujinx.Input
 
             return new KeyboardStateSnapshot(_keyState);
         }
+
+        /// <summary>
+        /// Try to consume a recently pressed key.
+        /// </summary>
+        /// <param name="key">The pressed key, if available.</param>
+        /// <returns>True if a key press was consumed.</returns>
+        bool TryConsumePressedKey(out Key key)
+        {
+            key = Key.Unknown;
+            return false;
+        }
     }
 }
