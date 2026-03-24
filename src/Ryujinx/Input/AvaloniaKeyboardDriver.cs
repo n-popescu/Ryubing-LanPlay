@@ -4,6 +4,7 @@ using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Input;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using ConfigPhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;
 using Key = Ryujinx.Input.Key;
 
@@ -16,6 +17,9 @@ namespace Ryujinx.Ava.Input
         private readonly HashSet<Key> _semanticPressedKeys;
         private readonly HashSet<ConfigPhysicalKey> _physicalPressedKeys;
         private readonly Dictionary<Key, ConfigPhysicalKey> _observedPhysicalKeysBySemanticKey;
+        private readonly Queue<Key> _semanticPressedKeyQueue;
+        private readonly Queue<Key> _physicalPressedKeyQueue;
+        private readonly Lock _pressedKeyQueueLock;
         private readonly KeyboardInputMode _defaultMode;
 
         public event EventHandler<KeyEventArgs> KeyPressed;
@@ -31,6 +35,9 @@ namespace Ryujinx.Ava.Input
             _semanticPressedKeys = [];
             _physicalPressedKeys = [];
             _observedPhysicalKeysBySemanticKey = [];
+            _semanticPressedKeyQueue = [];
+            _physicalPressedKeyQueue = [];
+            _pressedKeyQueueLock = new();
             _defaultMode = defaultMode;
 
             _control.KeyDown += OnKeyPress;
@@ -108,20 +115,46 @@ namespace Ryujinx.Ava.Input
 
         internal void Clear(KeyboardInputMode mode)
         {
-            if (mode == KeyboardInputMode.Physical)
+            lock (_pressedKeyQueueLock)
             {
-                _physicalPressedKeys.Clear();
-            }
-            else
-            {
-                _semanticPressedKeys.Clear();
+                if (mode == KeyboardInputMode.Physical)
+                {
+                    _physicalPressedKeys.Clear();
+                    _physicalPressedKeyQueue.Clear();
+                }
+                else
+                {
+                    _semanticPressedKeys.Clear();
+                    _semanticPressedKeyQueue.Clear();
+                }
             }
         }
 
         public void Clear()
         {
-            _semanticPressedKeys.Clear();
-            _physicalPressedKeys.Clear();
+            lock (_pressedKeyQueueLock)
+            {
+                _semanticPressedKeys.Clear();
+                _physicalPressedKeys.Clear();
+                _semanticPressedKeyQueue.Clear();
+                _physicalPressedKeyQueue.Clear();
+            }
+        }
+
+        internal bool TryConsumePressedKey(KeyboardInputMode mode, out Key key)
+        {
+            lock (_pressedKeyQueueLock)
+            {
+                Queue<Key> queue = mode == KeyboardInputMode.Physical ? _physicalPressedKeyQueue : _semanticPressedKeyQueue;
+
+                if (queue.TryDequeue(out key))
+                {
+                    return true;
+                }
+            }
+
+            key = Key.Unknown;
+            return false;
         }
 
         private static void UpdateKeyState(HashSet<Key> pressedKeys, Key key, bool isPressed)
@@ -161,9 +194,27 @@ namespace Ryujinx.Ava.Input
             Key semanticKey = AvaloniaKeyboardMappingHelper.ToInputKey(args.Key);
             Key resolvedSemanticKey = AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey, args.Key);
             ConfigPhysicalKey physicalKey = GetPhysicalInputKey(args, semanticKey);
+            bool semanticWasPressed = _semanticPressedKeys.Contains(resolvedSemanticKey);
+            bool physicalWasPressed = _physicalPressedKeys.Contains(physicalKey);
 
             UpdateKeyState(_semanticPressedKeys, resolvedSemanticKey, isPressed);
             UpdateKeyState(_physicalPressedKeys, physicalKey, isPressed);
+
+            if (isPressed)
+            {
+                lock (_pressedKeyQueueLock)
+                {
+                    if (!semanticWasPressed && resolvedSemanticKey is not Key.Unknown and not Key.Unbound)
+                    {
+                        _semanticPressedKeyQueue.Enqueue(resolvedSemanticKey);
+                    }
+
+                    if (!physicalWasPressed && physicalKey is not ConfigPhysicalKey.Unknown and not ConfigPhysicalKey.Unbound)
+                    {
+                        _physicalPressedKeyQueue.Enqueue((Key)(int)physicalKey);
+                    }
+                }
+            }
 
             if (isPressed &&
                 semanticKey is not Key.Unknown and not Key.Unbound &&
