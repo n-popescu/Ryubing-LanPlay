@@ -149,27 +149,27 @@
                 IsVisible="{Binding !EnableNonGameRunningControls}">
                 <MenuItem
                     Name="PauseEmulationMenuItem"
-                    Header="{ext:Locale MenuBarOptionsPauseEmulation}"
+                    Header="{ext:Locale MenuBar_Actions_PauseEmulationButton}"
                     Icon="{ext:Icon fa-solid fa-pause}"
                     InputGesture="{Binding PauseKey}"
                     IsEnabled="{Binding !IsPaused}"
                     IsVisible="{Binding !IsPaused}" />
                 <MenuItem
                     Name="ResumeEmulationMenuItem"
-                    Header="{ext:Locale MenuBarOptionsResumeEmulation}"
+                    Header="{ext:Locale MenuBar_Actions_ResumeEmulationButton}"
                     Icon="{ext:Icon fa-solid fa-play}"
                     InputGesture="{Binding PauseKey}"
                     IsEnabled="{Binding IsPaused}"
                     IsVisible="{Binding IsPaused}" />
                 <MenuItem
                     Name="StopEmulationMenuItem"
-                    Header="{ext:Locale MenuBarOptionsStopEmulation}"
+                    Header="{ext:Locale MenuBar_Actions_StopEmulationButton}"
                     Icon="{ext:Icon fa-solid fa-stop}"
                     InputGesture="Escape"
                     IsEnabled="{Binding IsGameRunning}" />
                 <MenuItem
                     Name="RestartEmulationMenuItem"
-                    Header="{ext:Locale MenuBarOptionsRestartEmulation}"
+                    Header="{ext:Locale MenuBar_Actions_RestartEmulationButton}"
                     Icon="{ext:Icon fa-solid fa-rotate-right}"
                     InputGesture="Ctrl + R"
                     IsEnabled="{Binding IsGameRunning}" />
@@ -177,14 +177,14 @@
                 <MenuItem
                     Command="{Binding OpenAmiiboWindow}"
                     AttachedToVisualTree="ScanAmiiboMenuItem_AttachedToVisualTree"
-                    Header="{ext:Locale MenuBarActionsScanAmiibo}"
+                    Header="{ext:Locale MenuBar_Actions_ScanAmiiboButton}"
                     Icon="{ext:Icon fa-solid fa-chess-rook}"
                     InputGesture="Ctrl + A"
                     IsEnabled="{Binding IsAmiiboRequested}" />
                 <MenuItem
                     Command="{Binding OpenBinFile}"
                     AttachedToVisualTree="ScanBinAmiiboMenuItem_AttachedToVisualTree"
-                    Header="{ext:Locale MenuBarActionsScanAmiiboBin}"
+                    Header="{ext:Locale MenuBar_Actions_ScanAmiiboFromBinButton}"
                     Icon="{ext:Icon fa-solid fa-chess-rook}"
                     IsVisible="{Binding CanScanAmiiboBinaries}"
                     InputGesture="Ctrl + B"
@@ -193,7 +193,7 @@
                 <MenuItem
                     Command="{Binding OpenSkylanderWindow}"
                     AttachedToVisualTree="ScanSkylanderMenuItem_AttachedToVisualTree"
-                    Header="{ext:Locale MenuBarActionsScanSkylander}"
+                    Header="{ext:Locale MenuBar_Actions_ScanSkylanderButton}"
                     Icon="{ext:Icon fa-solid fa-dragon}"
                     IsVisible="{Binding ShowSkylanderActions}"
                     InputGesture="Ctrl + S"
@@ -201,7 +201,7 @@
                 <MenuItem
                     Command="{Binding RemoveSkylander}"
                     AttachedToVisualTree="RemoveSkylanderMenuItem_AttachedToVisualTree"
-                    Header="{ext:Locale MenuBarActionsRemoveSkylander}"
+                    Header="{ext:Locale MenuBar_Actions_RemoveSkylanderButton}"
                     Icon="{ext:Icon fa-solid fa-dragon}"
                     IsVisible="{Binding ShowSkylanderActions}"
                     InputGesture="Ctrl + D"
@@ -215,13 +215,13 @@
                 <Separator />
                 <MenuItem
                     Command="{Binding TakeScreenshot}"
-                    Header="{ext:Locale MenuBarFileToolsTakeScreenshot}"
+                    Header="{ext:Locale MenuBar_Actions_TakeScreenshotButton}"
                     Icon="{ext:Icon fa-solid fa-camera}"
                     InputGesture="{Binding ScreenshotKey}"
                     IsEnabled="{Binding IsGameRunning}" />
                 <MenuItem
                     Command="{Binding HideUi}"
-                    Header="{ext:Locale MenuBarFileToolsHideUi}"
+                    Header="{ext:Locale MenuBar_Actions_HideUiButton}"
                     Icon="{ext:Icon fa-solid fa-eye-slash}"
                     InputGesture="{Binding ShowUiKey}"
                     IsEnabled="{Binding IsGameRunning}" />
@@ -230,43 +230,43 @@
                     IsVisible="{Binding ShowStartCaptureButton}"
                     Command="{Binding StartRenderDocCapture}"
                     CommandParameter="{Binding}"
-                    Header="{ext:Locale RenderDoc_MenuBarActions_StartCapture}"
+                    Header="{ext:Locale MenuBar_Actions_StartRenderDocCaptureButton}"
                     Icon="{ext:Icon fa-solid fa-video}"
                     IsEnabled="{Binding IsGameRunning}" />
                 <MenuItem
                     IsVisible="{Binding ShowEndCaptureButton}"
                     Command="{Binding EndRenderDocCapture}"
                     CommandParameter="{Binding}"
-                    Header="{ext:Locale RenderDoc_MenuBarActions_EndCapture}"
+                    Header="{ext:Locale MenuBar_Actions_EndRenderDocCaptureButton}"
                     Icon="{ext:Icon fa-solid fa-video-slash}"
                     IsEnabled="{Binding IsGameRunning}" />
                 <MenuItem
                     IsVisible="{Binding ShowEndCaptureButton}"
                     Command="{Binding DiscardRenderDocCapture}"
                     CommandParameter="{Binding}"
-                    Header="{ext:Locale RenderDoc_MenuBarActions_DiscardCapture}"
-                    ToolTip.Tip="{ext:Locale RenderDoc_MenuBarActions_DiscardCapture_ToolTip}"
+                    Header="{ext:Locale MenuBar_Actions_DiscardRenderDocCaptureButton}"
+                    ToolTip.Tip="{ext:Locale MenuBar_Actions_DiscardRenderDocCaptureToolTip}"
                     Icon="{ext:Icon fa-solid fa-video-slash}"
                     IsEnabled="{Binding IsGameRunning}" />
             </MenuItem>
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBarActions}" IsVisible="{Binding EnableNonGameRunningControls}">
-                <MenuItem Header="{ext:Locale Keys_MenuBarActions_Install}" Icon="{ext:Icon fa-solid fa-key}">
-                    <MenuItem Command="{Binding InstallKeysFromFile}" Header="{ext:Locale Keys_MenuBarActions_InstallFromFile}" Icon="{ext:Icon fa-solid fa-file-code}" />
-                    <MenuItem Command="{Binding InstallKeysFromFolder}" Header="{ext:Locale Keys_MenuBarActions_InstallFromFolder}" Icon="{ext:Icon fa-solid fa-folder-closed}" />
+                <MenuItem Header="{ext:Locale MenuBar_Actions_InstallKeysLabel}" Icon="{ext:Icon fa-solid fa-key}">
+                    <MenuItem Command="{Binding InstallKeysFromFile}" Header="{ext:Locale MenuBar_Actions_InstallKeysFromFileButton}" Icon="{ext:Icon fa-solid fa-file-code}" />
+                    <MenuItem Command="{Binding InstallKeysFromFolder}" Header="{ext:Locale MenuBar_Actions_InstallKeysFromFolderButton}" Icon="{ext:Icon fa-solid fa-folder-closed}" />
                 </MenuItem>
-                <MenuItem Header="{ext:Locale Firmware_MenuBarActions_Install}" Icon="{ext:Icon fa-solid fa-floppy-disk}">
-                    <MenuItem Command="{Binding InstallFirmwareFromFile}" Header="{ext:Locale Firmware_MenuBarActions_InstallFromFile}" Icon="{ext:Icon fa-solid fa-file-code}" />
-                    <MenuItem Command="{Binding InstallFirmwareFromFolder}" Header="{ext:Locale Firmware_MenuBarActions_InstallFromFolder}" Icon="{ext:Icon fa-solid fa-folder-closed}" />
+                <MenuItem Header="{ext:Locale MenuBar_Actions_InstallFirmwareLabel}" Icon="{ext:Icon fa-solid fa-floppy-disk}">
+                    <MenuItem Command="{Binding InstallFirmwareFromFile}" Header="{ext:Locale MenuBar_Actions_InstallFirmwareFromFileButton}" Icon="{ext:Icon fa-solid fa-file-code}" />
+                    <MenuItem Command="{Binding InstallFirmwareFromFolder}" Header="{ext:Locale MenuBar_Actions_InstallFirmwareFromFolderButton}" Icon="{ext:Icon fa-solid fa-folder-closed}" />
                 </MenuItem>
                 <MenuItem Header="{ext:Locale MenuBarActionsManageFileTypes}" IsVisible="{Binding ManageFileTypesVisible}" Icon="{ext:Icon fa-solid fa-clipboard}">
                     <MenuItem Name="InstallFileTypesMenuItem" Header="{ext:Locale MenuBarActionsInstallFileTypes}" IsEnabled="{Binding AreMimeTypesRegistered, Converter={x:Static BoolConverters.Not}}" Icon="{ext:Icon fa-solid fa-square-plus}" />
                     <MenuItem Name="UninstallFileTypesMenuItem" Header="{ext:Locale MenuBarActionsUninstallFileTypes}" IsEnabled="{Binding AreMimeTypesRegistered}" Icon="{ext:Icon fa-solid fa-square-minus}" />
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="{ext:Locale MenuBarActionsTools}" Icon="{ext:Icon fa-solid fa-toolbox}">
+                <MenuItem Header="{ext:Locale MenuBar_Actions_ToolsLabel}" Icon="{ext:Icon fa-solid fa-toolbox}">
                     <MenuItem
-                        Name="MiiAppletMenuItem" Header="{ext:Locale MenuBarActionsOpenMiiEditor}" Icon="{ext:Icon fa-solid fa-face-grin-wide}" ToolTip.Tip="{ext:Locale MenuBarActionsOpenMiiEditorToolTip}" />
-                    <MenuItem Name="XciTrimmerMenuItem" Header="{ext:Locale MenuBarActionsXCITrimmer}" Icon="{ext:Icon fa-solid fa-scissors}" />
+                        Name="MiiAppletMenuItem" Header="{ext:Locale MenuBar_Actions_MiiEditorButton}" Icon="{ext:Icon fa-solid fa-face-grin-wide}" ToolTip.Tip="{ext:Locale MenuBarActionsOpenMiiEditorToolTip}" />
+                    <MenuItem Name="XciTrimmerMenuItem" Header="{ext:Locale MenuBar_Actions_XCITrimmerButton}" Icon="{ext:Icon fa-solid fa-scissors}" />
                 </MenuItem>
             </MenuItem>
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBarView}">

@@ -1,56 +1,6 @@
 {
   "Locales": [
     {
-      "ID": "MenuBarActionsOpenMiiEditor",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Mii Editor",
-        "es_ES": "Editor de Mii",
-        "fr_FR": "Éditeur de Mii",
-        "he_IL": "",
-        "it_IT": "Editor di Mii",
-        "ja_JP": "",
-        "ko_KR": "Mii 편집기",
-        "no_NO": "Mii-redigerer",
-        "pl_PL": "Edytor Mii",
-        "pt_BR": "Editor de Mii",
-        "ru_RU": "Редактор Mii",
-        "sv_SE": "Mii-redigerare",
-        "th_TH": "",
-        "tr_TR": "",
-        "uk_UA": "Редактор Mii",
-        "zh_CN": "Mii 编辑器",
-        "zh_TW": "Mii 編輯器"
-      }
-    },
-    {
-      "ID": "MenuBarActionsOpenMiiEditorToolTip",
-      "Translations": {
-        "ar_SA": "‫افتح تطبيق تحرير Mii في الوضع المستقل",
-        "de_DE": "Öffnet das Mii-Editor im Standalone-Modus",
-        "el_GR": "Άνοιγμα του Mii Editor σε Αυτόνομη λειτουργία",
-        "en_US": "Opens Mii Editor in Standalone mode",
-        "es_ES": "Abre el Editor de Mii en modo Autónomo",
-        "fr_FR": "Ouvrir L'Éditeur de Mii en mode autonome",
-        "he_IL": "פתח את יישומון עורך ה- Mii במצב עצמאי",
-        "it_IT": "Apri l'Editor di Mii in modalità Standalone",
-        "ja_JP": "スタンドアロンモードで Mii エディタアプレットを開きます",
-        "ko_KR": "독립 실행형 모드로 Mii 편집기 애플릿 열기",
-        "no_NO": "Åpne Mii Redigerings program i eget vindu",
-        "pl_PL": "Otwórz Edytor Mii w trybie indywidualnym",
-        "pt_BR": "Abrir Editor de Mii em Modo Independente",
-        "ru_RU": "Открывает редактор Mii в автономном режиме",
-        "sv_SE": "Öppna Mii Editor i fristående läge",
-        "th_TH": "เปิดโปรแกรม Mii Editor",
-        "tr_TR": "Mii Editör'ini Bağımsız Mod'da Aç",
-        "uk_UA": "Відкрити редактор Mii в автономному режимі",
-        "zh_CN": "打开独立的 Mii 小程序",
-        "zh_TW": "在獨立模式下開啟 Mii 編輯器小程式"
-      }
-    },
-    {
       "ID": "SettingsTabInputDirectMouseAccess",
       "Translations": {
         "ar_SA": "الوصول المباشر للفأرة",
@@ -551,56 +501,6 @@
       }
     },
     {
-      "ID": "MenuBarOptionsStopEmulation",
-      "Translations": {
-        "ar_SA": "إيقاف المحاكاة",
-        "de_DE": "Emulation beenden",
-        "el_GR": "Διακοπή Εξομοίωσης",
-        "en_US": "Stop Emulation",
-        "es_ES": "Detener Emulación",
-        "fr_FR": "Arrêter l'Émulation",
-        "he_IL": "עצור אמולציה",
-        "it_IT": "Arresta l'emulazione",
-        "ja_JP": "エミュレーションを中止",
-        "ko_KR": "에뮬레이션 중지",
-        "no_NO": "Stopp Emulering",
-        "pl_PL": "Zatrzymaj emulację",
-        "pt_BR": "Parar a Emulação",
-        "ru_RU": "Остановить эмуляцию",
-        "sv_SE": "Stoppa emulering",
-        "th_TH": "หยุดการจำลอง",
-        "tr_TR": "Emülasyonu Durdur",
-        "uk_UA": "Зупинити емуляцію",
-        "zh_CN": "停止模拟",
-        "zh_TW": "停止模擬"
-      }
-    },
-    {
-      "ID": "MenuBarOptionsRestartEmulation",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Restart Emulation",
-        "es_ES": "",
-        "fr_FR": "Redémarrer l'Émulation",
-        "he_IL": "",
-        "it_IT": "",
-        "ja_JP": "",
-        "ko_KR": "",
-        "no_NO": "",
-        "pl_PL": "",
-        "pt_BR": "",
-        "ru_RU": "Перезапустить эмуляцию",
-        "sv_SE": "Starta om emulering",
-        "th_TH": "",
-        "tr_TR": "",
-        "uk_UA": "",
-        "zh_CN": "",
-        "zh_TW": ""
-      }
-    },
-    {
       "ID": "MenuBarOptionsSettings",
       "Translations": {
         "ar_SA": "_الإعدادات",
@@ -701,106 +601,6 @@
       }
     },
     {
-      "ID": "MenuBarActionsScanAmiibo",
-      "Translations": {
-        "ar_SA": "مسح Amiibo",
-        "de_DE": "Amiibo scannen",
-        "el_GR": "Σάρωση Amiibo",
-        "en_US": "Scan Amiibo",
-        "es_ES": "Escanear Amiibo",
-        "fr_FR": "Scanner un Amiibo",
-        "he_IL": "סרוק אמיבו",
-        "it_IT": "Scansiona un Amiibo",
-        "ja_JP": "Amiibo をスキャン",
-        "ko_KR": "Amiibo 스캔",
-        "no_NO": "Skann en Amiibo",
-        "pl_PL": "Skanuj Amiibo",
-        "pt_BR": "Escanear um Amiibo",
-        "ru_RU": "Сканировать Amiibo",
-        "sv_SE": "Skanna en Amiibo",
-        "th_TH": "สแกนหา Amiibo",
-        "tr_TR": "Bir Amiibo Tara",
-        "uk_UA": "Сканувати Amiibo",
-        "zh_CN": "扫描 Amiibo",
-        "zh_TW": "掃描 Amiibo"
-      }
-    },
-    {
-      "ID": "MenuBarActionsScanSkylander",
-      "Translations": {
-        "ar_SA": "‫فحص Skylander",
-        "de_DE": "Skylander scannen",
-        "el_GR": "Σάρωση Skylander",
-        "en_US": "Scan Skylander",
-        "es_ES": "Escanear Skylander",
-        "fr_FR": "Scanner un Skylander",
-        "he_IL": "סרוק אמיבו",
-        "it_IT": "Scansiona un Skylander",
-        "ja_JP": "Skylander をスキャン",
-        "ko_KR": "Skylander 스캔",
-        "no_NO": "Skann en Skylander",
-        "pl_PL": "Skanuj Skylander",
-        "pt_BR": "Escanear um Skylander",
-        "ru_RU": "Сканировать Skylander",
-        "sv_SE": "Skanna en Skylander",
-        "th_TH": "สแกนหา Skylander",
-        "tr_TR": "Bir Skylander Tara",
-        "uk_UA": "Сканувати Skylander",
-        "zh_CN": "扫描 Skylander",
-        "zh_TW": "掃描 Skylander"
-      }
-    },
-    {
-      "ID": "MenuBarActionsRemoveSkylander",
-      "Translations": {
-        "ar_SA": "إزالة Skylander",
-        "de_DE": "Skylander entfernen",
-        "el_GR": "Αφαίρεση Skylander",
-        "en_US": "Remove Skylander",
-        "es_ES": "Eliminar Skylander",
-        "fr_FR": "Supprimer un Skylander",
-        "he_IL": "הסר Skylander",
-        "it_IT": "Rimuovi Skylander",
-        "ja_JP": "Skylander を削除",
-        "ko_KR": "Skylander 제거",
-        "no_NO": "Fjern Skylander",
-        "pl_PL": "Usuń Skylander",
-        "pt_BR": "Remover um Skylander",
-        "ru_RU": "Удалить Skylander",
-        "sv_SE": "Ta bort Skylander",
-        "th_TH": "ลบ Skylander",
-        "tr_TR": "Skylander'ı Kaldır",
-        "uk_UA": "Видалити Skylander",
-        "zh_CN": "移除 Skylander",
-        "zh_TW": "移除 Skylander"
-      }
-    },
-    {
-      "ID": "MenuBarActionsScanAmiiboBin",
-      "Translations": {
-        "ar_SA": "مسح Amiibo (.BIN)",
-        "de_DE": "Amiibo scannen (.BIN)",
-        "el_GR": "Σάρωση Amiibo (.BIN)",
-        "en_US": "Scan Amiibo (.BIN)",
-        "es_ES": "Escanear un Amiibo (.BIN)",
-        "fr_FR": "Scanner un Amiibo (.BIN)",
-        "he_IL": "סרוק Amiibo (.BIN)",
-        "it_IT": "Scansiona un Amiibo (.BIN)",
-        "ja_JP": "Amiibo をスキャン (.BIN)",
-        "ko_KR": "Amiibo 스캔 (.BIN)",
-        "no_NO": "Skann en Amiibo (.BIN)",
-        "pl_PL": "Skanuj Amiibo (.BIN)",
-        "pt_BR": "Escaneie um Amiibo (.BIN)",
-        "ru_RU": "Сканировать Amiibo (.BIN)",
-        "sv_SE": "Skanna en Amiibo (.BIN)",
-        "th_TH": "สแกนอามีโบ (.BIN)",
-        "tr_TR": "Amiibo Tara (.BIN)",
-        "uk_UA": "Сканувати Amiibo (.BIN)",
-        "zh_CN": "扫描 Amiibo (.BIN)",
-        "zh_TW": "掃瞄 Amiibo (.BIN)"
-      }
-    },
-    {
       "ID": "MenuBarActionsManageFileTypes",
       "Translations": {
         "ar_SA": "إدارة أنواع الملفات",
@@ -873,56 +673,6 @@
         "uk_UA": "Видалити типи файлів",
         "zh_CN": "取消关联扩展名",
         "zh_TW": "移除檔案類型"
-      }
-    },
-    {
-      "ID": "MenuBarActionsXCITrimmer",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "XCI-Dateien trimmen",
-        "el_GR": "",
-        "en_US": "Trim XCI Files",
-        "es_ES": "Recortar Archivos XCI",
-        "fr_FR": "Réduire les Fichiers XCI",
-        "he_IL": "",
-        "it_IT": "Riduci dimensioni dei file XCI",
-        "ja_JP": "",
-        "ko_KR": "XCI 파일 트리머",
-        "no_NO": "Trim XCI-filer",
-        "pl_PL": "",
-        "pt_BR": "Reduzir Arquivos XCI",
-        "ru_RU": "Обрезать XCI файлы",
-        "sv_SE": "Optimera XCI-filer",
-        "th_TH": "ตัดแต่งไฟล์ XCI",
-        "tr_TR": "",
-        "uk_UA": "Обрізати XCI файли",
-        "zh_CN": "瘦身 XCI 文件",
-        "zh_TW": "修剪 XCI 檔案"
-      }
-    },
-    {
-      "ID": "MenuBarActionsTools",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Tools",
-        "es_ES": "Herramientas",
-        "fr_FR": "Outils",
-        "he_IL": "",
-        "it_IT": "Strumenti",
-        "ja_JP": "",
-        "ko_KR": "도구",
-        "no_NO": "",
-        "pl_PL": "",
-        "pt_BR": "Ferramentas",
-        "ru_RU": "Инструменты",
-        "sv_SE": "Verktyg",
-        "th_TH": "",
-        "tr_TR": "",
-        "uk_UA": "",
-        "zh_CN": "工具",
-        "zh_TW": "工具"
       }
     },
     {
@@ -11776,56 +11526,6 @@
       }
     },
     {
-      "ID": "MenuBarFileToolsTakeScreenshot",
-      "Translations": {
-        "ar_SA": "أخذ لقطة للشاشة",
-        "de_DE": "Screenshot aufnehmen",
-        "el_GR": "Λήψη Στιγμιότυπου",
-        "en_US": "Take Screenshot",
-        "es_ES": "Captura de Pantalla",
-        "fr_FR": "Prendre une Capture d'Écran",
-        "he_IL": "צלם מסך",
-        "it_IT": "Cattura uno screenshot",
-        "ja_JP": "スクリーンショットを撮影",
-        "ko_KR": "스크린샷 찍기",
-        "no_NO": "Ta skjermbilde",
-        "pl_PL": "Zrób zrzut ekranu",
-        "pt_BR": "Tirar Captura de tela",
-        "ru_RU": "Сделать снимок экрана",
-        "sv_SE": "Ta skärmbild",
-        "th_TH": "ถ่ายภาพหน้าจอ",
-        "tr_TR": "Ekran Görüntüsü Al",
-        "uk_UA": "Зробити знімок екрана",
-        "zh_CN": "保存截屏",
-        "zh_TW": "儲存擷取畫面"
-      }
-    },
-    {
-      "ID": "MenuBarFileToolsHideUi",
-      "Translations": {
-        "ar_SA": "إخفاء واجهة المستخدم",
-        "de_DE": "Oberfläche ausblenden",
-        "el_GR": "Απόκρυψη UI",
-        "en_US": "Hide UI",
-        "es_ES": "Ocultar Interfaz",
-        "fr_FR": "Masquer l'Interface",
-        "he_IL": "הסתר ממשק משתמש ",
-        "it_IT": "Nascondi l'interfaccia",
-        "ja_JP": "UIを隠す",
-        "ko_KR": "UI 숨기기",
-        "no_NO": "Skjul brukergrensesnitt",
-        "pl_PL": "Ukryj interfejs użytkownika",
-        "pt_BR": "Esconder Interface",
-        "ru_RU": "Скрыть интерфейс",
-        "sv_SE": "Dölj gränssnittet",
-        "th_TH": "ซ่อน UI",
-        "tr_TR": "Arayüzü Gizle",
-        "uk_UA": "Сховати інтерфейс",
-        "zh_CN": "隐藏菜单栏和状态栏",
-        "zh_TW": "隱藏 UI"
-      }
-    },
-    {
       "ID": "GameListContextMenuRunApplication",
       "Translations": {
         "ar_SA": "ابدأ",
@@ -14598,56 +14298,6 @@
         "uk_UA": "Ім'я файлу містить неприпустимі символи. Будь ласка, спробуйте ще раз.",
         "zh_CN": "文件名包含无效字符，请重试。",
         "zh_TW": "檔案名稱包含無效字元。請重試。"
-      }
-    },
-    {
-      "ID": "MenuBarOptionsPauseEmulation",
-      "Translations": {
-        "ar_SA": "إيقاف التشغيل مؤقتًا",
-        "de_DE": "Emulation pausieren",
-        "el_GR": "Παύση προσομοίωσης",
-        "en_US": "Pause Emulation",
-        "es_ES": "Pausar Emulación",
-        "fr_FR": "Pauser l'Émulation",
-        "he_IL": "השהיית האמולציה",
-        "it_IT": "Pausa emulazione",
-        "ja_JP": "エミュレーション一時停止",
-        "ko_KR": "에뮬레이션 일시중지",
-        "no_NO": "Pause Emulatoren",
-        "pl_PL": "Wstrzymaj emulację",
-        "pt_BR": "Pausar emulação",
-        "ru_RU": "Пауза эмуляции",
-        "sv_SE": "Pausa emuleringen",
-        "th_TH": "พักการจำลอง",
-        "tr_TR": "Emülasyonu Duraklat",
-        "uk_UA": "Пауза емуляції",
-        "zh_CN": "暂停模拟",
-        "zh_TW": "暫停模擬"
-      }
-    },
-    {
-      "ID": "MenuBarOptionsResumeEmulation",
-      "Translations": {
-        "ar_SA": "استئناف المحاكاة",
-        "de_DE": "Emulation fortsetzen",
-        "el_GR": "Συνέχιση προσομοίωσης",
-        "en_US": "Resume Emulation",
-        "es_ES": "Reanudar Emulación",
-        "fr_FR": "Reprendre l'Émulation",
-        "he_IL": "המשך האמולציה",
-        "it_IT": "Riprendi l'emulazione",
-        "ja_JP": "エミュレーション再開",
-        "ko_KR": "에뮬레이션 다시 시작",
-        "no_NO": "Gjenoppta emuleringen",
-        "pl_PL": "Wznów emulację",
-        "pt_BR": "Retomar emulação",
-        "ru_RU": "Продолжить эмуляцию",
-        "sv_SE": "Återuppta emuleringen",
-        "th_TH": "ดำเนินการจำลองต่อ",
-        "tr_TR": "Emülasyonu Sürdür",
-        "uk_UA": "Продовжити емуляцію",
-        "zh_CN": "继续模拟",
-        "zh_TW": "繼續模擬"
       }
     },
     {

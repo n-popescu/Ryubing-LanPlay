@@ -1059,7 +1059,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 }
 
                 string dialogTitle =
-                    LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Keys_MenuBarActions_Install);
+                    LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.MenuBar_Actions_InstallKeysLabel);
                 string dialogMessage =
                     LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Keys_Installer_Message_Main);
 
