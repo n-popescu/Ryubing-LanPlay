@@ -1,5 +1,6 @@
 using Ryujinx.Common.Configuration.Hid;
 using Ryujinx.Common.Configuration.Hid.Keyboard;
+using Ryujinx.Common.Logging;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -323,7 +324,7 @@ namespace Ryujinx.Input.SDL3
 
         public void SetLed(uint packedRgb)
         {
-            // Keyboard LEDs are not supported by this backend.
+            Logger.Debug?.Print(LogClass.UI, "SetLed called on an SDL3Keyboard");
         }
 
         public void SetTriggerThreshold(float triggerThreshold)
