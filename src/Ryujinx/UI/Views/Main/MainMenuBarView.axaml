@@ -64,6 +64,11 @@
                     Header="{ext:Locale MenuBarFileOpenScreenshotsFolder}"
                     Icon="{ext:Icon fa-solid fa-image}" />
                 <Separator />
+                <MenuItem Header="{ext:Locale MenuBar_File_ManageFileTypes}" IsVisible="{Binding ManageFileTypesVisible}" Icon="{ext:Icon fa-solid fa-clipboard}">
+                    <MenuItem Name="InstallFileTypesMenuItem" Header="{ext:Locale MenuBar_File_InstallFileTypes}" IsEnabled="{Binding AreMimeTypesRegistered, Converter={x:Static BoolConverters.Not}}" Icon="{ext:Icon fa-solid fa-square-plus}" />
+                    <MenuItem Name="UninstallFileTypesMenuItem" Header="{ext:Locale MenuBar_File_UninstallFileTypes}" IsEnabled="{Binding AreMimeTypesRegistered}" Icon="{ext:Icon fa-solid fa-square-minus}" />
+                </MenuItem>
+                <Separator />
                 <MenuItem
                     Name="CloseRyujinxMenuItem"
                     Header="{ext:Locale MenuBarFileExit}"
@@ -257,10 +262,6 @@
                 <MenuItem Header="{ext:Locale MenuBar_Actions_InstallFirmwareLabel}" Icon="{ext:Icon fa-solid fa-floppy-disk}">
                     <MenuItem Command="{Binding InstallFirmwareFromFile}" Header="{ext:Locale MenuBar_Actions_InstallFirmwareFromFileButton}" Icon="{ext:Icon fa-solid fa-file-code}" />
                     <MenuItem Command="{Binding InstallFirmwareFromFolder}" Header="{ext:Locale MenuBar_Actions_InstallFirmwareFromFolderButton}" Icon="{ext:Icon fa-solid fa-folder-closed}" />
-                </MenuItem>
-                <MenuItem Header="{ext:Locale MenuBar_File_ManageFileTypes}" IsVisible="{Binding ManageFileTypesVisible}" Icon="{ext:Icon fa-solid fa-clipboard}">
-                    <MenuItem Name="InstallFileTypesMenuItem" Header="{ext:Locale MenuBar_File_InstallFileTypes}" IsEnabled="{Binding AreMimeTypesRegistered, Converter={x:Static BoolConverters.Not}}" Icon="{ext:Icon fa-solid fa-square-plus}" />
-                    <MenuItem Name="UninstallFileTypesMenuItem" Header="{ext:Locale MenuBar_File_UninstallFileTypes}" IsEnabled="{Binding AreMimeTypesRegistered}" Icon="{ext:Icon fa-solid fa-square-minus}" />
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="{ext:Locale MenuBar_Actions_ToolsLabel}" Icon="{ext:Icon fa-solid fa-toolbox}">
