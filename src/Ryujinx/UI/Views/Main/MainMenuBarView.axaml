@@ -63,7 +63,7 @@
                     Command="{Binding OpenScreenshotsFolder}"
                     Header="{ext:Locale MenuBarFileOpenScreenshotsFolder}"
                     Icon="{ext:Icon fa-solid fa-image}" />
-                <Separator />
+                <Separator IsVisible="{Binding ManageFileTypesVisible}" />
                 <MenuItem Header="{ext:Locale MenuBar_File_ManageFileTypes}" IsVisible="{Binding ManageFileTypesVisible}" Icon="{ext:Icon fa-solid fa-clipboard}">
                     <MenuItem Name="InstallFileTypesMenuItem" Header="{ext:Locale MenuBar_File_InstallFileTypes}" IsEnabled="{Binding AreMimeTypesRegistered, Converter={x:Static BoolConverters.Not}}" Icon="{ext:Icon fa-solid fa-square-plus}" />
                     <MenuItem Name="UninstallFileTypesMenuItem" Header="{ext:Locale MenuBar_File_UninstallFileTypes}" IsEnabled="{Binding AreMimeTypesRegistered}" Icon="{ext:Icon fa-solid fa-square-minus}" />
