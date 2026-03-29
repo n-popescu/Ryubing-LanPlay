@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Ryujinx.HLE.HOS.Services.Pcv.Clkrst.ClkrstManager
 {
-    class IClkrstSession : IpcService
+    partial class IClkrstSession : IpcService
     {
         private readonly DeviceCode _deviceCode;
 #pragma warning disable IDE0052 // Remove unread private member

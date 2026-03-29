@@ -1,6 +1,6 @@
 namespace Ryujinx.HLE.HOS.Services.Apm
 {
-    abstract class ISession : IpcService
+    abstract partial class ISession : IpcService
     {
         public ISession(ServiceCtx context) { }
 

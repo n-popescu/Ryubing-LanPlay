@@ -6,7 +6,7 @@ using System;
 
 namespace Ryujinx.HLE.HOS.Services.SurfaceFlinger
 {
-    abstract class IHOSBinderDriver : IpcService
+    abstract partial class IHOSBinderDriver : IpcService
     {
         public IHOSBinderDriver() { }
 

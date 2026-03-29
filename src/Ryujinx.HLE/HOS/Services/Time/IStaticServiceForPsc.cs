@@ -16,7 +16,7 @@ namespace Ryujinx.HLE.HOS.Services.Time
 {
     [Service("time:s", TimePermissions.System)]
     [Service("time:su", TimePermissions.SystemUpdate)]
-    class IStaticServiceForPsc : IpcService
+    partial class IStaticServiceForPsc : IpcService
     {
         private readonly TimeManager _timeManager;
         private readonly TimePermissions _permissions;

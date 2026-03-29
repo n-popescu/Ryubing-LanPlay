@@ -25,7 +25,7 @@ using IStorage = LibHac.FsSrv.Sf.IStorage;
 namespace Ryujinx.HLE.HOS.Services.Fs
 {
     [Service("fsp-srv")]
-    class IFileSystemProxy : DisposableIpcService
+    partial class IFileSystemProxy : DisposableIpcService
     {
         private SharedRef<LibHac.FsSrv.Sf.IFileSystemProxy> _baseFileSystemProxy;
         private ulong _pid;

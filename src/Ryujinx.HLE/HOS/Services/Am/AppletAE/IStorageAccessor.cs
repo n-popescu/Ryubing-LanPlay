@@ -2,7 +2,7 @@ using System;
 
 namespace Ryujinx.HLE.HOS.Services.Am.AppletAE
 {
-    class IStorageAccessor : IpcService
+    partial class IStorageAccessor : IpcService
     {
         private readonly IStorage _storage;
 

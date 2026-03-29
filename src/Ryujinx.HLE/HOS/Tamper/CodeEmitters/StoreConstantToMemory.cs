@@ -51,7 +51,7 @@ namespace Ryujinx.HLE.HOS.Tamper.CodeEmitters
                     throw new TamperCompilationException($"Invalid offset mode {useOffsetRegister} in Atmosphere cheat");
             }
 
-            InstructionHelper.EmitMov(operationWidth, context, destinationMemory, storeValue);
+            InstructionHelper.Emit<OpMovFactory>(operationWidth, context, destinationMemory, storeValue, null);
 
             switch (incrementAddressRegister)
             {

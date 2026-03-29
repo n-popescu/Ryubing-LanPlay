@@ -6,7 +6,7 @@ using System;
 
 namespace Ryujinx.HLE.HOS.Services.Ldn.Lp2p
 {
-    class ISfServiceMonitor : IpcService
+    partial class ISfServiceMonitor : IpcService
     {
         private readonly KEvent _stateChangeEvent;
         private readonly KEvent _jointEvent;

@@ -15,46 +15,47 @@ namespace Ryujinx.HLE.HOS.Tamper
             context.CurrentOperations.Add(operation);
         }
 
-        public static void Emit(Type instruction, byte width, CompilationContext context, params Object[] operands)
+        public static void Emit<TOp>(byte width, CompilationContext context, IOperand destination, IOperand lhs, IOperand rhs) where TOp : IOperationFactory
         {
-            Emit((IOperation)Create(instruction, width, operands), context);
-        }
-
-        public static void EmitMov(byte width, CompilationContext context, IOperand destination, IOperand source)
-        {
-            Emit(typeof(OpMov<>), width, context, destination, source);
+            Emit(Create<TOp>(width, destination, lhs, rhs), context);
         }
 
         public static ICondition CreateCondition(Comparison comparison, byte width, IOperand lhs, IOperand rhs)
         {
-            ICondition Create(Type conditionType)
+            ICondition CreateCore<TOp>() where TOp : IConditionFactory
             {
-                return (ICondition)InstructionHelper.Create(conditionType, width, lhs, rhs);
+                return width switch
+                {
+                    1 => TOp.CreateFor<byte>(lhs, rhs),
+                    2 => TOp.CreateFor<ushort>(lhs, rhs),
+                    4 => TOp.CreateFor<uint>(lhs, rhs),
+                    8 => TOp.CreateFor<ulong>(lhs, rhs),
+                    _ => throw new NotSupportedException(),
+                };
             }
 
             return comparison switch
             {
-                Comparison.Greater => Create(typeof(CondGT<>)),
-                Comparison.GreaterOrEqual => Create(typeof(CondGE<>)),
-                Comparison.Less => Create(typeof(CondLT<>)),
-                Comparison.LessOrEqual => Create(typeof(CondLE<>)),
-                Comparison.Equal => Create(typeof(CondEQ<>)),
-                Comparison.NotEqual => Create(typeof(CondNE<>)),
+                Comparison.Greater => CreateCore<CondGTFactory>(),
+                Comparison.GreaterOrEqual => CreateCore<CondGEFactory>(),
+                Comparison.Less => CreateCore<CondLTFactory>(),
+                Comparison.LessOrEqual => CreateCore<CondLEFactory>(),
+                Comparison.Equal => CreateCore<CondEQFactory>(),
+                Comparison.NotEqual => CreateCore<CondNEFactory>(),
                 _ => throw new TamperCompilationException($"Invalid comparison {comparison} in Atmosphere cheat"),
             };
         }
 
-        public static Object Create(Type instruction, byte width, params Object[] operands)
+        public static IOperation Create<TOp>(byte width, IOperand destination, IOperand lhs, IOperand rhs) where TOp : IOperationFactory
         {
-            Type realType = width switch
+            return width switch
             {
-                1 => instruction.MakeGenericType(typeof(byte)),
-                2 => instruction.MakeGenericType(typeof(ushort)),
-                4 => instruction.MakeGenericType(typeof(uint)),
-                8 => instruction.MakeGenericType(typeof(ulong)),
-                _ => throw new TamperCompilationException($"Invalid instruction width {width} in Atmosphere cheat"),
+                1 => TOp.CreateFor<byte>(destination, lhs, rhs),
+                2 => TOp.CreateFor<ushort>(destination, lhs, rhs),
+                4 => TOp.CreateFor<uint>(destination, lhs, rhs),
+                8 => TOp.CreateFor<ulong>(destination, lhs, rhs),
+                _ => throw new NotSupportedException(),
             };
-            return Activator.CreateInstance(realType, operands);
         }
 
         public static ulong GetImmediate(byte[] instruction, int index, int nybbleCount)

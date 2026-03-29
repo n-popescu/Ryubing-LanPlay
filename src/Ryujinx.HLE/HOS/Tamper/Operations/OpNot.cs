@@ -1,6 +1,15 @@
+using System.Numerics;
+
 namespace Ryujinx.HLE.HOS.Tamper.Operations
 {
-    class OpNot<T> : IOperation where T : unmanaged
+    sealed class OpNotFactory : IOperationFactory
+    {
+        private OpNotFactory() { }
+
+        public static IOperation CreateFor<T>(IOperand destination, IOperand lhs, IOperand rhs) where T : unmanaged, IBinaryInteger<T>
+            => new OpNot<T>(destination, lhs);
+    }
+    class OpNot<T> : IOperation where T : unmanaged, IBinaryNumber<T>
     {
         readonly IOperand _destination;
         readonly IOperand _source;
@@ -13,7 +22,7 @@ namespace Ryujinx.HLE.HOS.Tamper.Operations
 
         public void Execute()
         {
-            _destination.Set((T)(~(dynamic)_source.Get<T>()));
+            _destination.Set(~_source.Get<T>());
         }
     }
 }

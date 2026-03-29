@@ -6,7 +6,7 @@ namespace Ryujinx.HLE.HOS.Services.Pctl
     [Service("pctl:a", 0x83BE)]
     [Service("pctl:r", 0x8040)]
     [Service("pctl:s", 0x838E)]
-    class IParentalControlServiceFactory : IpcService
+    partial class IParentalControlServiceFactory : IpcService
     {
         private readonly int _permissionFlag;
 

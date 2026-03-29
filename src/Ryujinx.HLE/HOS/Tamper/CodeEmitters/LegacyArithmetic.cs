@@ -37,27 +37,27 @@ namespace Ryujinx.HLE.HOS.Tamper.CodeEmitters
             ulong immediate = InstructionHelper.GetImmediate(instruction, ValueImmediateIndex, ValueImmediateSize);
             Value<ulong> rightHandSideValue = new(immediate);
 
-            void Emit(Type operationType)
+            void EmitCore<TOp>() where TOp : IOperationFactory
             {
-                InstructionHelper.Emit(operationType, operationWidth, context, register, register, rightHandSideValue);
+                InstructionHelper.Emit<TOp>(operationWidth, context, register, register, rightHandSideValue);
             }
 
             switch (operation)
             {
                 case Add:
-                    Emit(typeof(OpAdd<>));
+                    EmitCore<OpAddFactory>();
                     break;
                 case Sub:
-                    Emit(typeof(OpSub<>));
+                    EmitCore<OpAddFactory>();
                     break;
                 case Mul:
-                    Emit(typeof(OpMul<>));
+                    EmitCore<OpMulFactory>();
                     break;
                 case Lsh:
-                    Emit(typeof(OpLsh<>));
+                    EmitCore<OpLshFactory>();
                     break;
                 case Rsh:
-                    Emit(typeof(OpRsh<>));
+                    EmitCore<OpRshFactory>();
                     break;
                 default:
                     throw new TamperCompilationException($"Invalid arithmetic operation {operation} in Atmosphere cheat");

@@ -7,7 +7,7 @@ using Path = LibHac.FsSrv.Sf.Path;
 
 namespace Ryujinx.HLE.HOS.Services.Fs.FileSystemProxy
 {
-    class IFileSystem : DisposableIpcService
+    partial class IFileSystem : DisposableIpcService
     {
         private SharedRef<LibHac.FsSrv.Sf.IFileSystem> _fileSystem;
 

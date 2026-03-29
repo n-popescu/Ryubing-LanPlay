@@ -5,7 +5,7 @@ using Ryujinx.Horizon.Common;
 
 namespace Ryujinx.HLE.HOS.Services.Ptm.Psm
 {
-    class IPsmSession : IpcService
+    partial class IPsmSession : IpcService
     {
         private readonly KEvent _stateChangeEvent;
         private int _stateChangeEventHandle;

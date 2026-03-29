@@ -1,4 +1,5 @@
 using Ryujinx.HLE.Exceptions;
+using Ryujinx.HLE.HOS.Tamper.Operations;
 
 namespace Ryujinx.HLE.HOS.Tamper.CodeEmitters
 {
@@ -52,7 +53,7 @@ namespace Ryujinx.HLE.HOS.Tamper.CodeEmitters
                     throw new TamperCompilationException($"Invalid source mode {useDestinationAsSourceIndex} in Atmosphere cheat");
             }
 
-            InstructionHelper.EmitMov(operationWidth, context, destinationRegister, sourceMemory);
+            InstructionHelper.Emit<OpMovFactory>(operationWidth, context, destinationRegister, sourceMemory, null);
         }
     }
 }

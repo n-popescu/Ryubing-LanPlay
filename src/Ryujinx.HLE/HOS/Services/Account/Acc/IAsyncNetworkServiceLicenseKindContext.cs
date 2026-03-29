@@ -2,7 +2,7 @@ using Ryujinx.HLE.HOS.Services.Account.Acc.AsyncContext;
 
 namespace Ryujinx.HLE.HOS.Services.Account.Acc
 {
-    class IAsyncNetworkServiceLicenseKindContext : IAsyncContext
+    partial class IAsyncNetworkServiceLicenseKindContext : IAsyncContext
     {
         private readonly NetworkServiceLicenseKind? _serviceLicenseKind;
 

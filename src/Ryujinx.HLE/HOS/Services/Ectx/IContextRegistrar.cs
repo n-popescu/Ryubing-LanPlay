@@ -4,7 +4,7 @@ using Ryujinx.Horizon.Common;
 
 namespace Ryujinx.HLE.HOS.Services.Ectx
 {
-    class IContextRegistrar : DisposableIpcService
+    partial class IContextRegistrar : DisposableIpcService
     {
         public IContextRegistrar(ServiceCtx context) { }
 

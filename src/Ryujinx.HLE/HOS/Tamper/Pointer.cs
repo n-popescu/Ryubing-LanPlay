@@ -1,5 +1,6 @@
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Tamper.Operations;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace Ryujinx.HLE.HOS.Tamper
@@ -15,12 +16,12 @@ namespace Ryujinx.HLE.HOS.Tamper
             _process = process;
         }
 
-        public T Get<T>() where T : unmanaged
+        public T Get<T>() where T : unmanaged, INumber<T>
         {
             return _process.ReadMemory<T>(_position.Get<ulong>());
         }
 
-        public void Set<T>(T value) where T : unmanaged
+        public void Set<T>(T value) where T : unmanaged, INumber<T>
         {
             ulong position = _position.Get<ulong>();
 

@@ -5,7 +5,7 @@ using static LibHac.Ns.ApplicationControlProperty;
 
 namespace Ryujinx.HLE.HOS.Services.Pctl.ParentalControlServiceFactory
 {
-    class IParentalControlService : IpcService
+    partial class IParentalControlService : IpcService
     {
         private readonly ulong _pid;
         private readonly int _permissionFlag;

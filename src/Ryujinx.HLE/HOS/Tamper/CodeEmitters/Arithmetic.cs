@@ -1,7 +1,5 @@
 using Ryujinx.HLE.Exceptions;
 using Ryujinx.HLE.HOS.Tamper.Operations;
-using System;
-using System.Collections.Generic;
 
 namespace Ryujinx.HLE.HOS.Tamper.CodeEmitters
 {
@@ -71,53 +69,42 @@ namespace Ryujinx.HLE.HOS.Tamper.CodeEmitters
                     throw new TamperCompilationException($"Invalid right-hand side switch {rightHandSideIsImmediate} in Atmosphere cheat");
             }
 
-            void Emit(Type operationType, IOperand rhs = null)
+            void EmitCore<TOp>(IOperand rhs = null) where TOp : IOperationFactory
             {
-                List<IOperand> operandList =
-                [
-                    destinationRegister,
-                    leftHandSideRegister
-                ];
-
-                if (rhs != null)
-                {
-                    operandList.Add(rhs);
-                }
-
-                InstructionHelper.Emit(operationType, operationWidth, context, operandList.ToArray());
+                InstructionHelper.Emit<TOp>(operationWidth, context, destinationRegister, leftHandSideRegister, rhs);
             }
 
             switch (operation)
             {
                 case Add:
-                    Emit(typeof(OpAdd<>), rightHandSideOperand);
+                    EmitCore<OpAddFactory>(rightHandSideOperand);
                     break;
                 case Sub:
-                    Emit(typeof(OpSub<>), rightHandSideOperand);
+                    EmitCore<OpSubFactory>(rightHandSideOperand);
                     break;
                 case Mul:
-                    Emit(typeof(OpMul<>), rightHandSideOperand);
+                    EmitCore<OpMulFactory>(rightHandSideOperand);
                     break;
                 case Lsh:
-                    Emit(typeof(OpLsh<>), rightHandSideOperand);
+                    EmitCore<OpLshFactory>(rightHandSideOperand);
                     break;
                 case Rsh:
-                    Emit(typeof(OpRsh<>), rightHandSideOperand);
+                    EmitCore<OpRshFactory>(rightHandSideOperand);
                     break;
                 case And:
-                    Emit(typeof(OpAnd<>), rightHandSideOperand);
+                    EmitCore<OpAndFactory>(rightHandSideOperand);
                     break;
                 case Or:
-                    Emit(typeof(OpOr<>), rightHandSideOperand);
+                    EmitCore<OpOrFactory>(rightHandSideOperand);
                     break;
                 case Not:
-                    Emit(typeof(OpNot<>));
+                    EmitCore<OpNotFactory>();
                     break;
                 case Xor:
-                    Emit(typeof(OpXor<>), rightHandSideOperand);
+                    EmitCore<OpXorFactory>(rightHandSideOperand);
                     break;
                 case Mov:
-                    Emit(typeof(OpMov<>));
+                    EmitCore<OpMovFactory>();
                     break;
                 default:
                     throw new TamperCompilationException($"Invalid arithmetic operation {operation} in Atmosphere cheat");

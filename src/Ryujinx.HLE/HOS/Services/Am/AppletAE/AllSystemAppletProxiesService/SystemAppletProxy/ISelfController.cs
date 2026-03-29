@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Ryujinx.HLE.HOS.Services.Am.AppletAE.AllSystemAppletProxiesService.SystemAppletProxy
 {
-    class ISelfController : IpcService
+    partial class ISelfController : IpcService
     {
         private readonly ulong _pid;
 

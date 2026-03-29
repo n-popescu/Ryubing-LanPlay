@@ -1,3 +1,5 @@
+using Ryujinx.HLE.HOS.Tamper.Operations;
+
 namespace Ryujinx.HLE.HOS.Tamper.CodeEmitters
 {
     /// <summary>
@@ -35,7 +37,7 @@ namespace Ryujinx.HLE.HOS.Tamper.CodeEmitters
             ulong valueImmediate = InstructionHelper.GetImmediate(instruction, ValueImmediateIndex, valueImmediateSize);
             Value<ulong> storeValue = new(valueImmediate);
 
-            InstructionHelper.EmitMov(operationWidth, context, dstMem, storeValue);
+            InstructionHelper.Emit<OpMovFactory>(operationWidth, context, dstMem, storeValue, null);
         }
     }
 }

@@ -3,7 +3,7 @@ using Ryujinx.HLE.HOS.Services.Nfc.NfcManager;
 namespace Ryujinx.HLE.HOS.Services.Nfc
 {
     [Service("nfc:user")]
-    class IUserManager : IpcService
+    partial class IUserManager : IpcService
     {
         public IUserManager(ServiceCtx context) { }
 

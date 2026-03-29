@@ -5,7 +5,7 @@ using Ryujinx.HLE.HOS.Services.Caps.Types;
 namespace Ryujinx.HLE.HOS.Services.Caps
 {
     [Service("caps:u")]
-    class IAlbumApplicationService : IpcService
+    partial class IAlbumApplicationService : IpcService
     {
         public IAlbumApplicationService(ServiceCtx context) { }
 

@@ -4,7 +4,7 @@ using Ryujinx.HLE.HOS.Services.Nim.Ntc.StaticService;
 namespace Ryujinx.HLE.HOS.Services.Nim.Ntc
 {
     [Service("ntc")]
-    class IStaticService : IpcService
+    partial class IStaticService : IpcService
     {
         public IStaticService(ServiceCtx context) { }
 

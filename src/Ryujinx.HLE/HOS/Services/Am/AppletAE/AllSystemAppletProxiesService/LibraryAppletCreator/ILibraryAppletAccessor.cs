@@ -9,7 +9,7 @@ using System;
 
 namespace Ryujinx.HLE.HOS.Services.Am.AppletAE.AllSystemAppletProxiesService.LibraryAppletCreator
 {
-    class ILibraryAppletAccessor : DisposableIpcService
+    partial class ILibraryAppletAccessor : DisposableIpcService
     {
         private readonly KernelContext _kernelContext;
 
