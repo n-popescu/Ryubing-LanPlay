@@ -272,11 +272,13 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 if (selected != DeviceType.None)
                 {
-                    LoadControllers();
-
                     if (_isLoaded)
                     {
-                        LoadConfiguration(LoadDefaultConfiguration());
+                        LoadSelectedDeviceDefaults();
+                    }
+                    else
+                    {
+                        LoadSelectedDeviceControllers();
                     }
                 }
 
@@ -285,6 +287,21 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 OnPropertyChanged(nameof(SelectedDeviceItem));
                 NotifyChanges();
             }
+        }
+
+        public void ResetCurrentDeviceToDefaults()
+        {
+            LoadDevices();
+
+            if (_device <= 0 || _device >= Devices.Count || Devices[_device].Type == DeviceType.None)
+            {
+                return;
+            }
+
+            MarkAsChanged();
+            LoadSelectedDeviceDefaults();
+            FindPairedDeviceInConfigFile();
+            NotifyChanges();
         }
 
         public object SelectedDeviceItem
@@ -501,6 +518,20 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             OnPropertyChanged(nameof(Device));
             OnPropertyChanged(nameof(SelectedDeviceItem));
             NotifyChanges();
+        }
+
+        private void LoadSelectedDeviceControllers()
+        {
+            if (_device > 0 && _device < Devices.Count && Devices[_device].Type != DeviceType.None)
+            {
+                LoadControllers();
+            }
+        }
+
+        private void LoadSelectedDeviceDefaults()
+        {
+            LoadSelectedDeviceControllers();
+            LoadConfiguration(LoadDefaultConfiguration());
         }
 
         private void LoadInputDriver()
