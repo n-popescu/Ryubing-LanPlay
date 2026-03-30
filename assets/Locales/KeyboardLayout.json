@@ -1876,7 +1876,7 @@
       }
     },
     {
-      "ID": "AllKeyboards",
+      "ID": "KeyboardInputMode",
       "Translations": {
         "ar_SA": "لوحة المفاتيح",
         "de_DE": "Tastatur",
