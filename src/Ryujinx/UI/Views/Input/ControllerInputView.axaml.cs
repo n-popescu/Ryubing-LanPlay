@@ -116,7 +116,6 @@ namespace Ryujinx.Ava.UI.Views.Input
                             if (e.ButtonValue.HasValue)
                             {
                                 Button buttonValue = e.ButtonValue.Value;
-                                FlagInputConfigChanged();
 
                                 switch (button.Name)
                                 {
@@ -187,6 +186,8 @@ namespace Ryujinx.Ava.UI.Views.Input
                                         viewModel.Config.RightJoystick = buttonValue.AsHidType<StickInputId>();
                                         break;
                                 }
+
+                                FlagInputConfigChanged();
                             }
                         };
 
@@ -212,7 +213,7 @@ namespace Ryujinx.Ava.UI.Views.Input
 
         private void FlagInputConfigChanged()
         {
-            (DataContext as ControllerInputViewModel)!.ParentModel.IsModified = true;
+            (DataContext as ControllerInputViewModel)!.ParentModel.RefreshModifiedState();
         }
 
         private void MouseClick(object sender, PointerPressedEventArgs e)

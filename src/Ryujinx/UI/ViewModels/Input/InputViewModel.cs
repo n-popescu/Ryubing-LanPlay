@@ -181,8 +181,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                     return;
                 }
 
-                MarkAsChanged();
                 ApplyControllerSelection(controllerIndex);
+                RefreshModifiedState();
             }
         }
 
@@ -265,7 +265,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                     return;
                 }
 
-                MarkAsChanged();
                 _device = value;
 
                 DeviceType selected = Devices[_device].Type;
@@ -282,6 +281,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                     }
                 }
 
+                RefreshModifiedState();
                 FindPairedDeviceInConfigFile();
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(SelectedDeviceItem));
@@ -298,8 +298,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 return;
             }
 
-            MarkAsChanged();
             LoadSelectedDeviceDefaults();
+            RefreshModifiedState();
             FindPairedDeviceInConfigFile();
             NotifyChanges();
         }
@@ -393,20 +393,19 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
 
 
-        private void LoadConfiguration(InputConfig inputConfig = null)
+        private InputConfig GetPersistedInputConfig()
         {
-            InputConfig persistedConfig;
-
             if (UseGlobalConfig && Program.UseExtraConfig)
             {
-                persistedConfig = ConfigurationState.InstanceExtra.Hid.InputConfig.Value.FirstOrDefault(inputConfig => inputConfig.PlayerIndex == _playerId);
-            }
-            else
-            {
-                persistedConfig = ConfigurationState.Instance.Hid.InputConfig.Value.FirstOrDefault(inputConfig => inputConfig.PlayerIndex == _playerId);
+                return ConfigurationState.InstanceExtra.Hid.InputConfig.Value.FirstOrDefault(inputConfig => inputConfig.PlayerIndex == _playerId);
             }
 
-            Config = inputConfig ?? GetDisplayedInputConfig(persistedConfig);
+            return ConfigurationState.Instance.Hid.InputConfig.Value.FirstOrDefault(inputConfig => inputConfig.PlayerIndex == _playerId);
+        }
+
+        private void LoadConfiguration(InputConfig inputConfig = null)
+        {
+            Config = inputConfig ?? GetDisplayedInputConfig(GetPersistedInputConfig());
 
             if (Config is StandardKeyboardInputConfig keyboardInputConfig)
             {
@@ -448,15 +447,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 {
                     NotificationText = $"{LocaleManager.Instance[LocaleKeys.ControllerSettingsWaitingConnectDevice].Format(Config.Name, Config.Id)}";
                 }
-            }
-        }
-
-        private void MarkAsChanged()
-        {
-            //If tracking is active, then allow changing the modifier      
-            if (!IsModified && _isChangeTrackingActive)
-            {
-                IsModified = true;
             }
         }
 
@@ -532,6 +522,55 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         {
             LoadSelectedDeviceControllers();
             LoadConfiguration(LoadDefaultConfiguration());
+        }
+
+        public void RefreshModifiedState()
+        {
+            if (!_isChangeTrackingActive)
+            {
+                return;
+            }
+
+            IsModified = !ConfigsMatch(GetSelectedDeviceConfig(), GetDisplayedInputConfig(GetPersistedInputConfig()));
+        }
+
+        private static bool ConfigsMatch(InputConfig currentConfig, InputConfig otherConfig)
+        {
+            if (currentConfig == null || otherConfig == null)
+            {
+                return currentConfig == otherConfig;
+            }
+
+            return JsonHelper.Serialize(currentConfig, _serializerContext.InputConfig) ==
+                   JsonHelper.Serialize(otherConfig, _serializerContext.InputConfig);
+        }
+
+        private InputConfig GetSelectedDeviceConfig()
+        {
+            if (_device <= 0 || _device >= Devices.Count)
+            {
+                return null;
+            }
+
+            (DeviceType Type, string Id, string Name) device = Devices[_device];
+            InputConfig config = device.Type switch
+            {
+                DeviceType.Keyboard => (ConfigViewModel as KeyboardInputViewModel)?.Config.GetConfig(),
+                DeviceType.Controller => (ConfigViewModel as ControllerInputViewModel)?.Config.GetConfig(),
+                _ => null,
+            };
+
+            if (config == null)
+            {
+                return null;
+            }
+
+            config.Id = device.Type == DeviceType.Keyboard ? device.Id : device.Id.Split(" ")[0];
+            config.Name = device.Name;
+            config.PlayerIndex = _playerId;
+            config.ControllerType = Controllers[_controller].Type;
+
+            return config;
         }
 
         private void LoadInputDriver()
@@ -1161,25 +1200,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             }
             else
             {
-                (DeviceType Type, string Id, string Name) device = Devices[Device];
-
-                if (device.Type == DeviceType.Keyboard)
-                {
-                    KeyboardInputConfig inputConfig = (ConfigViewModel as KeyboardInputViewModel).Config;
-                    inputConfig.Id = device.Id;
-                }
-                else
-                {
-                    GamepadInputConfig inputConfig = (ConfigViewModel as ControllerInputViewModel).Config;
-                    inputConfig.Id = device.Id.Split(" ")[0];
-                }
-
-                InputConfig config = !IsController
-                    ? (ConfigViewModel as KeyboardInputViewModel).Config.GetConfig()
-                    : (ConfigViewModel as ControllerInputViewModel).Config.GetConfig();
-                config.ControllerType = Controllers[_controller].Type;
-                config.PlayerIndex = _playerId;
-                config.Name = device.Name;
+                InputConfig config = GetSelectedDeviceConfig();
 
                 int i = newConfig.FindIndex(x => x.PlayerIndex == PlayerId);
                 if (i == -1)
