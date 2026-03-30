@@ -73,7 +73,6 @@ namespace Ryujinx.Ava.UI.Views.Input
                         if (be.ButtonValue.HasValue)
                         {
                             Button buttonValue = be.ButtonValue.Value;
-                            ViewModel.ParentModel.IsModified = true;
 
                             switch (button.Name)
                             {
@@ -162,6 +161,8 @@ namespace Ryujinx.Ava.UI.Views.Input
                                     ViewModel.Config.RightStickLeft = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                             }
+
+                            ViewModel.ParentModel.RefreshModifiedState();
                         }
                     };
 
@@ -240,7 +241,7 @@ namespace Ryujinx.Ava.UI.Views.Input
                 if (buttonActions.TryGetValue(_currentAssigner.ToggledButton.Name, out Action action))
                 {
                     action();
-                    ViewModel.ParentModel.IsModified = true;
+                    ViewModel.ParentModel.RefreshModifiedState();
                 }
             }
         }
