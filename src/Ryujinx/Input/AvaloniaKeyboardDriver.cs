@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Ryujinx.Ava.Common.Locale;
+using Ryujinx.Common.Logging;
 using Ryujinx.Input;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,13 @@ namespace Ryujinx.Ava.Input
 {
     internal class AvaloniaKeyboardDriver : IKeyboardModeDriver
     {
+        private enum PhysicalKeySource
+        {
+            Direct,
+            ObservedFallback,
+            Unknown,
+        }
+
         private static readonly string[] _keyboardIdentifers = ["0"];
         private readonly Control _control;
         private readonly HashSet<Key> _semanticPressedKeys;
@@ -193,9 +201,11 @@ namespace Ryujinx.Ava.Input
         {
             Key semanticKey = AvaloniaKeyboardMappingHelper.ToInputKey(args.Key);
             Key resolvedSemanticKey = AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey, args.Key);
-            ConfigPhysicalKey physicalKey = GetPhysicalInputKey(args, semanticKey);
+            ConfigPhysicalKey physicalKey = GetPhysicalInputKey(args, semanticKey, out PhysicalKeySource physicalKeySource);
             bool semanticWasPressed = _semanticPressedKeys.Contains(resolvedSemanticKey);
             bool physicalWasPressed = _physicalPressedKeys.Contains(physicalKey);
+            bool bufferedSemanticPress = false;
+            bool bufferedPhysicalPress = false;
 
             UpdateKeyState(_semanticPressedKeys, resolvedSemanticKey, isPressed);
             UpdateKeyState(_physicalPressedKeys, physicalKey, isPressed);
@@ -207,11 +217,13 @@ namespace Ryujinx.Ava.Input
                     if (!semanticWasPressed && resolvedSemanticKey is not Key.Unknown and not Key.Unbound)
                     {
                         _semanticPressedKeyQueue.Enqueue(resolvedSemanticKey);
+                        bufferedSemanticPress = true;
                     }
 
                     if (!physicalWasPressed && physicalKey is not ConfigPhysicalKey.Unknown and not ConfigPhysicalKey.Unbound)
                     {
                         _physicalPressedKeyQueue.Enqueue((Key)(int)physicalKey);
+                        bufferedPhysicalPress = true;
                     }
                 }
             }
@@ -222,24 +234,36 @@ namespace Ryujinx.Ava.Input
             {
                 _observedPhysicalKeysBySemanticKey[semanticKey] = physicalKey;
             }
+
+            Logger.Trace?.Print(
+                LogClass.UI,
+                $"Keyboard {(isPressed ? "down" : "up")}: avaloniaKey={args.Key}, avaloniaPhysical={args.PhysicalKey}, keySymbol={FormatKeySymbol(args.KeySymbol)}, modifiers={args.KeyModifiers}, semantic={semanticKey}, resolvedSemantic={resolvedSemanticKey}, physical={physicalKey}, physicalSource={physicalKeySource}, bufferedSemantic={bufferedSemanticPress}, bufferedPhysical={bufferedPhysicalPress}, semanticPressed={_semanticPressedKeys.Count}, physicalPressed={_physicalPressedKeys.Count}");
         }
 
-        private ConfigPhysicalKey GetPhysicalInputKey(KeyEventArgs args, Key semanticKey)
+        private ConfigPhysicalKey GetPhysicalInputKey(KeyEventArgs args, Key semanticKey, out PhysicalKeySource source)
         {
             Key key = AvaloniaKeyboardMappingHelper.ToInputKey(args.PhysicalKey);
 
             if (key is >= Key.Unknown and < Key.Count)
             {
+                source = PhysicalKeySource.Direct;
                 return (ConfigPhysicalKey)(int)key;
             }
 
             if (semanticKey is not Key.Unknown and not Key.Unbound &&
                 _observedPhysicalKeysBySemanticKey.TryGetValue(semanticKey, out ConfigPhysicalKey observedPhysicalKey))
             {
+                source = PhysicalKeySource.ObservedFallback;
                 return observedPhysicalKey;
             }
 
+            source = PhysicalKeySource.Unknown;
             return ConfigPhysicalKey.Unknown;
+        }
+
+        private static string FormatKeySymbol(string keySymbol)
+        {
+            return string.IsNullOrEmpty(keySymbol) ? "<none>" : keySymbol;
         }
 
         public void Dispose()

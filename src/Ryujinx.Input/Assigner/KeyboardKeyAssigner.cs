@@ -1,3 +1,5 @@
+using Ryujinx.Common.Logging;
+
 namespace Ryujinx.Input.Assigner
 {
     /// <summary>
@@ -24,7 +26,21 @@ namespace Ryujinx.Input.Assigner
         {
             _keyboardState = _keyboard.GetKeyboardStateSnapshot();
 
-            _pressedButton ??= GetPressedButtonFromState() ?? GetPressedButtonFromBufferedPress();
+            if (_pressedButton is not null)
+            {
+                return;
+            }
+
+            Button? buttonFromState = GetPressedButtonFromState();
+            Button? buttonFromBufferedPress = buttonFromState is null ? GetPressedButtonFromBufferedPress() : null;
+
+            _pressedButton = buttonFromState ?? buttonFromBufferedPress;
+
+            if (_pressedButton is not null)
+            {
+                string source = buttonFromState is not null ? "state" : "buffered-press";
+                Logger.Debug?.Print(LogClass.UI, $"Keyboard assigner registered key={_pressedButton.Value.AsHidType<Key>()}, source={source}, cancelPressed={ShouldCancel()}");
+            }
         }
 
         public bool IsAnyButtonPressed()
