@@ -291,7 +291,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         public void ResetCurrentDeviceToDefaults()
         {
-            LoadDevices();
+            RefreshAvailableDevices();
 
             if (_device <= 0 || _device >= Devices.Count || Devices[_device].Type == DeviceType.None)
             {
@@ -352,7 +352,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 _isLoaded = false;
 
-                LoadDevices();
+                RefreshAvailableDevices();
 
                 PlayerId = PlayerIndex.Player1;
             }
@@ -573,7 +573,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             bool shouldApplyKeyboardFallback = Config is StandardControllerInputConfig controllerConfig && controllerConfig.Id == id;
 
-            LoadDevices();
+            RefreshAvailableDevices();
 
             if (shouldApplyKeyboardFallback)
             {
@@ -598,7 +598,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         {
             _isChangeTrackingActive = false; // Disable configuration change tracking
 
-            LoadDevices();
+            RefreshAvailableDevices();
 
             IsModified = true;
             RevertChanges();
@@ -700,7 +700,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             return str[(str.IndexOf(Hyphen) + Offset)..];
         }
 
-        public void LoadDevices()
+        private void RefreshAvailableDevices()
         {
             int selectedDeviceIndex = 0;
             (DeviceType Type, string Id, string Name) selectedDevice = default;
