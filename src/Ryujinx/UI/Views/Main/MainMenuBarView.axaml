@@ -150,7 +150,7 @@
             <MenuItem
                 Name="ActionsMenuItem"
                 VerticalAlignment="Center"
-                Header="{ext:Locale MenuBarActions}"
+                Header="{ext:Locale MenuBar_Actions_ActionsLabel}"
                 IsVisible="{Binding !EnableNonGameRunningControls}">
                 <MenuItem
                     Name="PauseEmulationMenuItem"
@@ -254,7 +254,7 @@
                     Icon="{ext:Icon fa-solid fa-video-slash}"
                     IsEnabled="{Binding IsGameRunning}" />
             </MenuItem>
-            <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBarActions}" IsVisible="{Binding EnableNonGameRunningControls}">
+            <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBar_Actions_ActionsLabel}" IsVisible="{Binding EnableNonGameRunningControls}">
                 <MenuItem Header="{ext:Locale MenuBar_Actions_InstallKeysLabel}" Icon="{ext:Icon fa-solid fa-key}">
                     <MenuItem Command="{Binding InstallKeysFromFile}" Header="{ext:Locale MenuBar_Actions_InstallKeysFromFileButton}" Icon="{ext:Icon fa-solid fa-file-code}" />
                     <MenuItem Command="{Binding InstallKeysFromFolder}" Header="{ext:Locale MenuBar_Actions_InstallKeysFromFolderButton}" Icon="{ext:Icon fa-solid fa-folder-closed}" />

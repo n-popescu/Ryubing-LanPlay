@@ -1,6 +1,31 @@
 {
   "Locales": [
     {
+      "ID": "ActionsLabel",
+      "Translations": {
+        "ar_SA": "_الإجراءات",
+        "de_DE": "_Aktionen",
+        "el_GR": "_Δράσεις",
+        "en_US": "_Actions",
+        "es_ES": "_Acciones",
+        "fr_FR": null,
+        "he_IL": "_פעולות",
+        "it_IT": "_Azioni",
+        "ja_JP": "アクション(_A)",
+        "ko_KR": "동작(_A)",
+        "no_NO": "_Handlinger",
+        "pl_PL": "_Akcje",
+        "pt_BR": "_Ações",
+        "ru_RU": "_Действия",
+        "sv_SE": "_Åtgärder",
+        "th_TH": "_การดำเนินการ",
+        "tr_TR": "_Eylemler",
+        "uk_UA": "_Дії",
+        "zh_CN": "操作(_A)",
+        "zh_TW": "動作(_A)"
+      }
+    },
+    {
       "ID": "InstallKeysLabel",
       "Translations": {
         "ar_SA": "تثبيت المفاتيح",
