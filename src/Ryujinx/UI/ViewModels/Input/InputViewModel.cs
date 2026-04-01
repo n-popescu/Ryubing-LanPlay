@@ -304,6 +304,11 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             NotifyChanges();
         }
 
+        public void RefreshInputDevices()
+        {
+            RefreshAvailableDevices();
+        }
+
         public object SelectedDeviceItem
         {
             get => _device >= 0 && _device < Devices.Count ? Devices[_device] : null;
