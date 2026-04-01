@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Common.Logging;
 using Ryujinx.Input;
@@ -48,8 +49,11 @@ namespace Ryujinx.Ava.Input
             _pressedKeyQueueLock = new();
             _defaultMode = defaultMode;
 
-            _control.KeyDown += OnKeyPress;
-            _control.KeyUp += OnKeyRelease;
+            // Use routed handlers so keys consumed earlier in the Avalonia pipeline
+            // can still be observed by the input driver. This is needed for keys like
+            // Caps Lock on macOS, which may not reach the plain CLR event path.
+            _control.AddHandler(InputElement.KeyDownEvent, OnKeyPress, RoutingStrategies.Tunnel, true);
+            _control.AddHandler(InputElement.KeyUpEvent, OnKeyRelease, RoutingStrategies.Tunnel, true);
             _control.TextInput += Control_TextInput;
         }
 
@@ -91,8 +95,8 @@ namespace Ryujinx.Ava.Input
         {
             if (disposing)
             {
-                _control.KeyDown -= OnKeyPress;
-                _control.KeyUp -= OnKeyRelease;
+                _control.RemoveHandler(InputElement.KeyDownEvent, OnKeyPress);
+                _control.RemoveHandler(InputElement.KeyUpEvent, OnKeyRelease);
                 _control.TextInput -= Control_TextInput;
             }
         }
