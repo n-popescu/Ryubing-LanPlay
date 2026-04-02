@@ -82,7 +82,7 @@ namespace Ryujinx.Ava.Systems
             static string ColStr(SepReader.Col col) => col.ToString().Trim('"');
         }
 
-        public string GameName { get; }
+        public string GameName { get; set; }
         public Optional<string> TitleId { get; }
         public string[] Labels { get; }
         public LocaleKeys? Status { get; }

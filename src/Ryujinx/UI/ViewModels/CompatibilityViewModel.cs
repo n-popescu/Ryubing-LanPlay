@@ -47,10 +47,19 @@ namespace Ryujinx.Ava.UI.ViewModels
         private void AppCountUpdated(object _, ApplicationCountUpdatedEventArgs __)
             => _ownedGameTitleIds = _appLibrary.Applications.Keys.Select(x => x.ToString("X16")).ToArray();
 
+        private void LocalizeGameNames()
+        {
+            foreach (var entry in CompatibilityDatabase.Entries)
+            {
+                entry.GameName = _appLibrary.Applications.Items.SingleOrDefault(x => x.IdString.EqualsIgnoreCase(entry.TitleId))?.Name ?? entry.GameName;
+            }
+        }
+
         public CompatibilityViewModel(ApplicationLibrary appLibrary)
         {
             _appLibrary = appLibrary;
             AppCountUpdated(null, null);
+            LocalizeGameNames();
             CountByStatus();
             _appLibrary.ApplicationCountUpdated += AppCountUpdated;
         }
