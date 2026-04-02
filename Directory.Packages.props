@@ -57,5 +57,6 @@
     <PackageVersion Include="SPB" Version="0.0.4-build32" />
     <PackageVersion Include="System.IO.Hashing" Version="9.0.2" />
     <PackageVersion Include="UnicornEngine.Unicorn" Version="2.0.2-rc1-fb78016" />
+    <PackageVersion Include="WebViewControl-Avalonia" Version="3.120.10" />
   </ItemGroup>
 </Project>
