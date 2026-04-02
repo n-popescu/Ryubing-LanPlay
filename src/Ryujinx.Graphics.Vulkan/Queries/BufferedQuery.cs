@@ -145,29 +145,19 @@ namespace Ryujinx.Graphics.Vulkan.Queries
         {
             long data = _defaultValue;
 
-            if (wakeSignal == null)
+            int iterations = 0;
+            while (WaitingForValue(data) && iterations++ < MaxQueryRetries)
             {
-                while (WaitingForValue(data))
+                data = Marshal.ReadInt64(_bufferMap);
+                if (wakeSignal != null && WaitingForValue(data))
                 {
-                    data = Marshal.ReadInt64(_bufferMap);
+                    wakeSignal.WaitOne(0);
                 }
             }
-            else
-            {
-                int iterations = 0;
-                while (WaitingForValue(data) && iterations++ < MaxQueryRetries)
-                {
-                    data = Marshal.ReadInt64(_bufferMap);
-                    if (WaitingForValue(data))
-                    {
-                        wakeSignal.WaitOne(1);
-                    }
-                }
 
-                if (iterations >= MaxQueryRetries)
-                {
-                    Logger.Error?.Print(LogClass.Gpu, $"Error: Query result {_type} timed out. Took more than {MaxQueryRetries} tries.");
-                }
+            if (iterations >= MaxQueryRetries)
+            {
+                Logger.Error?.Print(LogClass.Gpu, $"Error: Query result {_type} timed out. Took more than {MaxQueryRetries} tries.");
             }
 
             return data;
