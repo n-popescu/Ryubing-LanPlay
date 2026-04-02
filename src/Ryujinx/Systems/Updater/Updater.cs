@@ -554,7 +554,7 @@ namespace Ryujinx.Ava.Systems
                 return false;
             }
 
-            if (Program.Version.Contains("dirty") || !ReleaseInformation.IsValid)
+            if (Program.Version.Contains("dirty") || !ReleaseInformation.IsValid || RunningPlatform.IsIntelMac)
             {
                 if (showWarnings)
                 {
