@@ -570,6 +570,11 @@ namespace Ryujinx.HLE.HOS
             }
         }
 
+        public string DebugGetApplicationProcessMinidump()
+        {
+            return DebugGetApplicationProcess()?.Debugger?.GetMinidump();
+        }
+
         internal KProcess DebugGetApplicationProcess()
         {
             lock (KernelContext.Processes)
