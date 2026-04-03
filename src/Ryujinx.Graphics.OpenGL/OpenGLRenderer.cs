@@ -169,6 +169,7 @@ namespace Ryujinx.Graphics.OpenGL
                 supports5BitComponentFormat: true,
                 supportsSparseBuffer: false,
                 supportsBlendEquationAdvanced: HwCapabilities.SupportsBlendEquationAdvanced,
+                supportsFastDmaTextureCopy: true,
                 supportsFragmentShaderInterlock: HwCapabilities.SupportsFragmentShaderInterlock,
                 supportsFragmentShaderOrderingIntel: HwCapabilities.SupportsFragmentShaderOrdering,
                 supportsGeometryShader: true,
