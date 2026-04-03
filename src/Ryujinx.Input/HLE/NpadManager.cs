@@ -226,6 +226,10 @@ namespace Ryujinx.Input.HLE
 
                 foreach (InputConfig inputConfig in _inputConfig)
                 {
+                    // ignore handheld inputs if docked
+                    if (_device.System.State.DockedMode && inputConfig.PlayerIndex == Common.Configuration.Hid.PlayerIndex.Handheld)
+                        continue;
+
                     GamepadInput inputState = default;
                     (SixAxisInput, SixAxisInput) motionState = default;
 
