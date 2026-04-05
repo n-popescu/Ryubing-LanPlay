@@ -329,7 +329,7 @@
                 Margin="5, 0, 0, 0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Text="{ext:Locale StatusBarSystemVersion}" />
+                Text="{ext:Locale StatusBar_FirmwareVersion}" />
         </StackPanel>
     </Grid>
 </UserControl>
