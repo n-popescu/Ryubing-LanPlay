@@ -477,10 +477,10 @@ namespace Ryujinx.Ava.Systems
 
             TouchScreenManager.Initialize(Device);
 
-            _viewModel.IsGameRunning = true;
-
             Dispatcher.UIThread.InvokeAsync(() =>
             {
+                _viewModel.IsGameRunning = true;
+                _viewModel.IsPaused = false;
                 _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI);
             });
 
@@ -579,6 +579,7 @@ namespace Ryujinx.Ava.Systems
         public void Stop()
         {
             _isActive = false;
+            _viewModel.IsPaused = false;
             _playTimer.Stop();
             
             GCSettings.LatencyMode = GCLatencyMode.Interactive;
@@ -735,8 +736,8 @@ namespace Ryujinx.Ava.Systems
                         if (userError is UserError.NoFirmware)
                         {
                             UserResult result = await ContentDialogHelper.CreateConfirmationDialog(
-                                LocaleManager.Instance[LocaleKeys.DialogFirmwareNoFirmwareInstalledMessage],
-                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.DialogFirmwareInstallEmbeddedMessage, firmwareVersion.VersionString),
+                                LocaleManager.Instance[LocaleKeys.Dialog_Firmware_InstallerNotInstalledMessage],
+                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Dialog_Firmware_InstallerEmbeddedMessage, firmwareVersion.VersionString),
                                 LocaleManager.Instance[LocaleKeys.InputDialogYes],
                                 LocaleManager.Instance[LocaleKeys.InputDialogNo],
                                 string.Empty);
@@ -768,8 +769,8 @@ namespace Ryujinx.Ava.Systems
                             _viewModel.RefreshFirmwareStatus();
 
                             await ContentDialogHelper.CreateInfoDialog(
-                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.DialogFirmwareInstalledMessage, firmwareVersion.VersionString),
-                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.DialogFirmwareInstallEmbeddedSuccessMessage, firmwareVersion.VersionString),
+                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Dialog_Firmware_InstallerInstalledMessage, firmwareVersion.VersionString),
+                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Dialog_Firmware_InstallerEmbeddedMessageSuccess, firmwareVersion.VersionString),
                                 LocaleManager.Instance[LocaleKeys.InputDialogOk],
                                 string.Empty,
                                 LocaleManager.Instance[LocaleKeys.RyujinxInfo]);

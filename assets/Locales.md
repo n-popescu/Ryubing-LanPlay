@@ -5,8 +5,8 @@ Ryubing Locales uses a custom format, which uses a file for defining the support
 Each json file holds the locales for a specific part of the emulator, e.g. the Setup Wizard locales are in `SetupWizard.json`, and each locale entry in the file includes all the supported languages in the same place.
 
 ## Languages
-in the `/assets/` folder you will find the `Languages.json` file, which defines all the languages supported by the emulator. 
-The file includes a table of the langauge codes and their langauge names.
+In the `/assets/` folder you will find the `Languages.json` file, which defines all the languages supported by the emulator. 
+The file includes a table of the language codes and their language names.
 
     #Example of the format for Languages.json	
     {
@@ -19,7 +19,7 @@ The file includes a table of the langauge codes and their langauge names.
     }
 
 ## Locales
-in the `/assets/Locales/` folder you will find the json files, which define all the locales supported by the emulator. 
+In the `/assets/Locales/` folder you will find the json files, which define all the locales supported by the emulator. 
 Each json file holds locales for a specific part of the emulator in a large array of locale objects.
 Each locale is made up an ID used for lookup and a list of the languages and their matching translations.
 Any empty string or null value will automatically use the English translation instead in the emulator.

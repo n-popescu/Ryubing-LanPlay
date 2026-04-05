@@ -14,9 +14,9 @@ namespace Ryujinx.Ava.UI.Helpers
         private static string GetErrorTitle(UserError error) =>
             error switch
             {
-                UserError.NoKeys => LocaleManager.Instance[LocaleKeys.UserErrorNoKeys],
-                UserError.NoFirmware => LocaleManager.Instance[LocaleKeys.UserErrorNoFirmware],
-                UserError.FirmwareParsingFailed => LocaleManager.Instance[LocaleKeys.UserErrorFirmwareParsingFailed],
+                UserError.NoKeys => LocaleManager.Instance[LocaleKeys.Error_NoKeysFound],
+                UserError.NoFirmware => LocaleManager.Instance[LocaleKeys.Error_NoFirmwareFound],
+                UserError.FirmwareParsingFailed => LocaleManager.Instance[LocaleKeys.Error_FirmwareParsingFailed],
                 UserError.ApplicationNotFound => LocaleManager.Instance[LocaleKeys.UserErrorApplicationNotFound],
                 UserError.Unknown => LocaleManager.Instance[LocaleKeys.UserErrorUnknown],
                 _ => LocaleManager.Instance[LocaleKeys.UserErrorUndefined],
@@ -25,9 +25,9 @@ namespace Ryujinx.Ava.UI.Helpers
         private static string GetErrorDescription(UserError error) =>
             error switch
             {
-                UserError.NoKeys => LocaleManager.Instance[LocaleKeys.UserErrorNoKeysDescription],
-                UserError.NoFirmware => LocaleManager.Instance[LocaleKeys.UserErrorNoFirmwareDescription],
-                UserError.FirmwareParsingFailed => LocaleManager.Instance[LocaleKeys.UserErrorFirmwareParsingFailedDescription],
+                UserError.NoKeys => LocaleManager.Instance[LocaleKeys.Error_NoKeysFoundDescription],
+                UserError.NoFirmware => LocaleManager.Instance[LocaleKeys.Error_NoFirmwareFoundDescription],
+                UserError.FirmwareParsingFailed => LocaleManager.Instance[LocaleKeys.Error_FirmwareParsingFailedDescription],
                 UserError.ApplicationNotFound => LocaleManager.Instance[LocaleKeys.UserErrorApplicationNotFoundDescription],
                 UserError.Unknown => LocaleManager.Instance[LocaleKeys.UserErrorUnknownDescription],
                 _ => LocaleManager.Instance[LocaleKeys.UserErrorUndefinedDescription],

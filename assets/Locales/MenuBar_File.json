@@ -1,0 +1,79 @@
+{
+  "Locales": [
+    {
+      "ID": "ManageFileTypes",
+      "Translations": {
+        "ar_SA": "إدارة أنواع الملفات",
+        "de_DE": "Dateitypen verwalten",
+        "el_GR": "Διαχείριση τύπων αρχείων",
+        "en_US": "Manage File Types",
+        "es_ES": "Administrar Tipos de Archivo",
+        "fr_FR": "Gérer les Types de Fichiers",
+        "he_IL": "ניהול סוגי קבצים",
+        "it_IT": "Gestisci i tipi di file",
+        "ja_JP": "ファイル形式を管理",
+        "ko_KR": "파일 형식 관리",
+        "no_NO": "Behandle filtyper",
+        "pl_PL": "Zarządzaj rodzajami plików",
+        "pt_BR": "Gerenciar Tipos de Arquivos",
+        "ru_RU": "Управление типами файлов",
+        "sv_SE": "Hantera filtyper",
+        "th_TH": "จัดการประเภทไฟล์",
+        "tr_TR": "Dosya uzantılarını yönet",
+        "uk_UA": "Керувати типами файлів",
+        "zh_CN": "管理文件扩展名",
+        "zh_TW": "管理檔案類型"
+      }
+    },
+    {
+      "ID": "InstallFileTypes",
+      "Translations": {
+        "ar_SA": "تثبيت أنواع الملفات",
+        "de_DE": "Dateitypen installieren",
+        "el_GR": "Εγκαταστήσετε τύπους αρχείων.",
+        "en_US": "Install File Types",
+        "es_ES": "Instalar Tipos de Archivo",
+        "fr_FR": "Installer des Types de Fichiers",
+        "he_IL": "סוגי קבצי התקנה",
+        "it_IT": "Installa i tipi di file",
+        "ja_JP": "ファイル形式をインストール",
+        "ko_KR": "파일 형식 설치",
+        "no_NO": "Installer filtyper",
+        "pl_PL": "Typy plików instalacyjnych",
+        "pt_BR": "Instalar tipos de arquivos",
+        "ru_RU": "Установить типы файлов",
+        "sv_SE": "Installera filtyper",
+        "th_TH": "ติดตั้งประเภทไฟล์",
+        "tr_TR": "Dosya uzantılarını yükle",
+        "uk_UA": "Встановити типи файлів",
+        "zh_CN": "关联文件扩展名",
+        "zh_TW": "安裝檔案類型"
+      }
+    },
+    {
+      "ID": "UninstallFileTypes",
+      "Translations": {
+        "ar_SA": "إزالة أنواع الملفات",
+        "de_DE": "Dateitypen deinstallieren",
+        "el_GR": "Απεγκαταστήσετε τύπους αρχείων",
+        "en_US": "Uninstall File Types",
+        "es_ES": "Desinstalar Tipos de Archivo",
+        "fr_FR": "Désinstaller des Types de Fichiers",
+        "he_IL": "סוגי קבצי הסרה",
+        "it_IT": "Disinstalla i tipi di file",
+        "ja_JP": "ファイル形式をアンインストール",
+        "ko_KR": "파일 형식 제거",
+        "no_NO": "Avinstaller filtyper",
+        "pl_PL": "Typy plików dezinstalacyjnych",
+        "pt_BR": "Desinstalar tipos de arquivos",
+        "ru_RU": "Удалить типы файлов",
+        "sv_SE": "Avinstallera filtyper",
+        "th_TH": "ถอนการติดตั้งประเภทไฟล์",
+        "tr_TR": "Dosya uzantılarını kaldır",
+        "uk_UA": "Видалити типи файлів",
+        "zh_CN": "取消关联扩展名",
+        "zh_TW": "移除檔案類型"
+      }
+    }
+  ]
+}
