@@ -328,7 +328,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             PlayerIndexes.Add(new(PlayerIndex.Player6, LocaleManager.Instance[LocaleKeys.ControllerSettingsPlayer6]));
             PlayerIndexes.Add(new(PlayerIndex.Player7, LocaleManager.Instance[LocaleKeys.ControllerSettingsPlayer7]));
             PlayerIndexes.Add(new(PlayerIndex.Player8, LocaleManager.Instance[LocaleKeys.ControllerSettingsPlayer8]));
-            PlayerIndexes.Add(new(PlayerIndex.Handheld, LocaleManager.Instance[LocaleKeys.ControllerSettingsHandheld]));
+            PlayerIndexes.Add(new(PlayerIndex.Handheld, LocaleManager.Instance[LocaleKeys.Handheld]));
         }
 
 
@@ -508,7 +508,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             if (_playerId == PlayerIndex.Handheld)
             {
-                Controllers.Add(new(ControllerType.Handheld, LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypeHandheld]));
+                Controllers.Add(new(ControllerType.Handheld, LocaleManager.Instance[LocaleKeys.Handheld]));
 
                 Controller = 0;
             }

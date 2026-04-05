@@ -29,7 +29,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         [ObservableProperty]
         public partial Color LedColor { get; set; }
 
-        public string RainbowSpeedText => RainbowSpeed.ToString(CultureInfo.CurrentCulture).Truncate(4, string.Empty);
+        public string RainbowSpeedText => RainbowSpeed.ToString("F2", CultureInfo.CurrentCulture);
 
         public float RainbowSpeed
         {

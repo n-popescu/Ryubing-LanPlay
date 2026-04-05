@@ -82,13 +82,7 @@ namespace Ryujinx.Ava.UI.Helpers
                 _isWaitingForInput = false;
 
                 ToggledButton.IsChecked = false;
-
-                if (pressedButton.HasValue && pressedButton.Value.AsHidType<Key>() == Key.BackSpace)
-                {
-                    ButtonAssigned?.Invoke(this, new ButtonAssignedEventArgs(ToggledButton, new Button(Key.Unbound)));
-                    return;
-                }
-
+                
                 ButtonAssigned?.Invoke(this, new ButtonAssignedEventArgs(ToggledButton, pressedButton));
             });
         }
