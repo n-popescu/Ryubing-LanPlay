@@ -154,42 +154,42 @@ namespace Ryujinx.Ava.UI.Models.Input
                         {
                             KeyboardStateSnapshot snapshot = keyboard.GetKeyboardStateSnapshot();
 
-                            if (snapshot.IsPressed((Key)KeyboardConfig.LeftStickRight))
+                            if (snapshot.IsPressed(KeyboardConfig.LeftStickRight))
                             {
                                 leftBuffer.Item1 += 1;
                             }
 
-                            if (snapshot.IsPressed((Key)KeyboardConfig.LeftStickLeft))
+                            if (snapshot.IsPressed(KeyboardConfig.LeftStickLeft))
                             {
                                 leftBuffer.Item1 -= 1;
                             }
 
-                            if (snapshot.IsPressed((Key)KeyboardConfig.LeftStickUp))
+                            if (snapshot.IsPressed(KeyboardConfig.LeftStickUp))
                             {
                                 leftBuffer.Item2 += 1;
                             }
 
-                            if (snapshot.IsPressed((Key)KeyboardConfig.LeftStickDown))
+                            if (snapshot.IsPressed(KeyboardConfig.LeftStickDown))
                             {
                                 leftBuffer.Item2 -= 1;
                             }
 
-                            if (snapshot.IsPressed((Key)KeyboardConfig.RightStickRight))
+                            if (snapshot.IsPressed(KeyboardConfig.RightStickRight))
                             {
                                 rightBuffer.Item1 += 1;
                             }
 
-                            if (snapshot.IsPressed((Key)KeyboardConfig.RightStickLeft))
+                            if (snapshot.IsPressed(KeyboardConfig.RightStickLeft))
                             {
                                 rightBuffer.Item1 -= 1;
                             }
 
-                            if (snapshot.IsPressed((Key)KeyboardConfig.RightStickUp))
+                            if (snapshot.IsPressed(KeyboardConfig.RightStickUp))
                             {
                                 rightBuffer.Item2 += 1;
                             }
 
-                            if (snapshot.IsPressed((Key)KeyboardConfig.RightStickDown))
+                            if (snapshot.IsPressed(KeyboardConfig.RightStickDown))
                             {
                                 rightBuffer.Item2 -= 1;
                             }

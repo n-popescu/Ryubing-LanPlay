@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia;
 using FluentAvalonia.UI.Controls;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Systems.Configuration;
@@ -15,9 +16,14 @@ namespace Ryujinx.Ava.UI.Views.Input
 
         public InputView()
         {
-            ViewModel = new InputViewModel(this, ConfigurationState.Instance.System.UseInputGlobalConfig);
+            ReplaceViewModel(ConfigurationState.Instance.System.UseInputGlobalConfig);
+        }
 
-            InitializeComponent();
+        protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+        {
+            base.OnAttachedToVisualTree(e);
+
+            ViewModel?.RetargetKeyboardDriver(this);
         }
 
         public void SaveCurrentProfile()
@@ -28,8 +34,18 @@ namespace Ryujinx.Ava.UI.Views.Input
         public void ToggleLocalGlobalInput(bool enableConfigGlobal)
         {
             Dispose();
-            ViewModel = new InputViewModel(this, enableConfigGlobal); // Create new Input Page with global input configs
+            ReplaceViewModel(enableConfigGlobal);
+        }
+
+        private void ReplaceViewModel(bool useGlobalConfig)
+        {
+            ViewModel = new InputViewModel(this, useGlobalConfig); // Create new Input Page with the selected input config scope.
             InitializeComponent();
+
+            if (VisualRoot is not null)
+            {
+                ViewModel.RetargetKeyboardDriver(this);
+            }
         }
 
         private async void PlayerIndexBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
