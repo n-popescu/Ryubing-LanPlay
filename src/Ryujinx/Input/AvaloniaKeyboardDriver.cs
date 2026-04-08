@@ -209,6 +209,8 @@ namespace Ryujinx.Ava.Input
             ConfigPhysicalKey physicalKey = GetPhysicalInputKey(args, semanticKey, out PhysicalKeySource physicalKeySource);
             bool semanticWasPressed = _semanticPressedKeys.Contains(resolvedSemanticKey);
             bool physicalWasPressed = _physicalPressedKeys.Contains(physicalKey);
+            bool semanticStateChanged = resolvedSemanticKey is not Key.Unknown and not Key.Unbound && semanticWasPressed != isPressed;
+            bool physicalStateChanged = physicalKey is not ConfigPhysicalKey.Unknown and not ConfigPhysicalKey.Unbound && physicalWasPressed != isPressed;
             bool bufferedSemanticPress = false;
             bool bufferedPhysicalPress = false;
 
@@ -240,7 +242,8 @@ namespace Ryujinx.Ava.Input
                 _observedPhysicalKeysBySemanticKey[semanticKey] = physicalKey;
             }
 
-            if (ConfigurationState.Instance.Logger.EnableAvaloniaLog)
+            if (ConfigurationState.Instance.Logger.EnableAvaloniaLog &&
+                (semanticStateChanged || physicalStateChanged))
             {
                 Logger.Info?.Print(
                     LogClass.UI,
