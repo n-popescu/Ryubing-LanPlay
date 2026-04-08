@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Ryujinx.Ava.Common.Locale;
+using Ryujinx.Ava.Systems.Configuration;
 using Ryujinx.Common.Logging;
 using Ryujinx.Input;
 using System;
@@ -239,9 +240,12 @@ namespace Ryujinx.Ava.Input
                 _observedPhysicalKeysBySemanticKey[semanticKey] = physicalKey;
             }
 
-            Logger.Trace?.Print(
-                LogClass.UI,
-                $"Keyboard {(isPressed ? "down" : "up")}: avaloniaKey={args.Key}, avaloniaPhysical={args.PhysicalKey}, keySymbol={FormatKeySymbol(args.KeySymbol)}, modifiers={args.KeyModifiers}, semantic={semanticKey}, resolvedSemantic={resolvedSemanticKey}, physical={physicalKey}, physicalSource={physicalKeySource}, bufferedSemantic={bufferedSemanticPress}, bufferedPhysical={bufferedPhysicalPress}, semanticPressed={_semanticPressedKeys.Count}, physicalPressed={_physicalPressedKeys.Count}");
+            if (ConfigurationState.Instance.Logger.EnableAvaloniaLog)
+            {
+                Logger.Info?.Print(
+                    LogClass.UI,
+                    $"Keyboard {(isPressed ? "down" : "up")}: avaloniaKey={args.Key}, avaloniaPhysical={args.PhysicalKey}, keySymbol={FormatKeySymbol(args.KeySymbol)}, modifiers={args.KeyModifiers}, semantic={semanticKey}, resolvedSemantic={resolvedSemanticKey}, physical={physicalKey}, physicalSource={physicalKeySource}, bufferedSemantic={bufferedSemanticPress}, bufferedPhysical={bufferedPhysicalPress}, semanticPressed={_semanticPressedKeys.Count}, physicalPressed={_physicalPressedKeys.Count}");
+            }
         }
 
         private ConfigPhysicalKey GetPhysicalInputKey(KeyEventArgs args, Key semanticKey, out PhysicalKeySource source)
