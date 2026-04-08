@@ -1234,9 +1234,17 @@ namespace Ryujinx.Ava.Systems
                 return false;
             }
 
+            bool hasModalFocusLoss = _viewModel.Window is MainWindow mainWindow &&
+                                     mainWindow.SettingsWindow?.IsActive == true;
+
+            if (!_viewModel.IsActive || hasModalFocusLoss)
+            {
+                _inputManager.KeyboardDriver.Clear();
+            }
+
             NpadManager.Update(ConfigurationState.Instance.Graphics.AspectRatio.Value.ToFloat());
 
-            if (_viewModel.IsActive)
+            if (_viewModel.IsActive && !hasModalFocusLoss)
             {
                 bool isCursorVisible = true;
 
@@ -1369,7 +1377,7 @@ namespace Ryujinx.Ava.Systems
             // Touchscreen.
             bool hasTouch = false;
 
-            if (_viewModel.IsActive && !ConfigurationState.Instance.Hid.EnableMouse.Value)
+            if (_viewModel.IsActive && !hasModalFocusLoss && !ConfigurationState.Instance.Hid.EnableMouse.Value)
             {
                 hasTouch = TouchScreenManager.Update(true, (_inputManager.MouseDriver as AvaloniaMouseDriver).IsButtonPressed(MouseButton.Button1), ConfigurationState.Instance.Graphics.AspectRatio.Value.ToFloat());
             }
