@@ -24,6 +24,7 @@ namespace Ryujinx.Ava.Input
 
         private static readonly string[] _keyboardIdentifers = ["0"];
         private readonly Control _control;
+        private readonly Window _window;
         private readonly HashSet<Key> _semanticPressedKeys;
         private readonly HashSet<ConfigPhysicalKey> _physicalPressedKeys;
         private readonly Dictionary<Key, ConfigPhysicalKey> _observedPhysicalKeysBySemanticKey;
@@ -42,6 +43,7 @@ namespace Ryujinx.Ava.Input
         public AvaloniaKeyboardDriver(Control control, KeyboardInputMode defaultMode = KeyboardInputMode.Semantic)
         {
             _control = control;
+            _window = control as Window ?? TopLevel.GetTopLevel(control) as Window;
             _semanticPressedKeys = [];
             _physicalPressedKeys = [];
             _observedPhysicalKeysBySemanticKey = [];
@@ -56,6 +58,12 @@ namespace Ryujinx.Ava.Input
             _control.AddHandler(InputElement.KeyDownEvent, OnKeyPress, RoutingStrategies.Tunnel, true);
             _control.AddHandler(InputElement.KeyUpEvent, OnKeyRelease, RoutingStrategies.Tunnel, true);
             _control.TextInput += Control_TextInput;
+            _window?.Deactivated += Window_Deactivated;
+        }
+
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            Clear();
         }
 
         private void Control_TextInput(object sender, TextInputEventArgs e)
@@ -99,6 +107,10 @@ namespace Ryujinx.Ava.Input
                 _control.RemoveHandler(InputElement.KeyDownEvent, OnKeyPress);
                 _control.RemoveHandler(InputElement.KeyUpEvent, OnKeyRelease);
                 _control.TextInput -= Control_TextInput;
+                if (_window != null)
+                {
+                    _window.Deactivated -= Window_Deactivated;
+                }
             }
         }
 
