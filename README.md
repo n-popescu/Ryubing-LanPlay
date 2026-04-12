@@ -7,8 +7,8 @@
           
 # Ryujinx
 
-[![Latest release](https://img.shields.io/gitlab/v/release/ryubing%2Fryujinx?gitlab_url=https%3A%2F%2Fgit.ryujinx.app&label=stable&color=32cd32)](https://update.ryujinx.app/latest/stable)
-[![Latest canary release](https://img.shields.io/gitlab/v/release/ryubing%2Fcanary?gitlab_url=https%3A%2F%2Fgit.ryujinx.app&label=canary&color=FF4500)](https://update.ryujinx.app/latest/canary)
+[![Latest release](https://git.ryujinx.app/projects/Ryubing/badges/release.svg?label=stable&color=32cd32)](https://update.ryujinx.app/latest/stable)
+[![Latest canary release](https://git.ryujinx.app/Ryubing/Canary/badges/release.svg?label=canary&color=FF4500)](https://update.ryujinx.app/latest/canary)
 <br>
 <a href="https://discord.gg/PEuzjrFXUA">
 <img src="https://img.shields.io/discord/1294443224030511104?color=5865F2&label=Ryubing&logo=discord&logoColor=white" alt="Discord">
@@ -21,7 +21,7 @@
   Ryujinx is an open-source Nintendo Switch emulator, originally created by gdkchan, written in C#.
   This emulator aims at providing excellent accuracy and performance, a user-friendly interface and consistent builds.
   It was written from scratch and development on the project began in September 2017.
-  Ryujinx is available on a self-managed GitLab instance under the <a href="https://git.ryujinx.app/ryubing/ryujinx/-/blob/master/LICENSE.txt?ref_type=heads" target="_blank">MIT license</a>.
+  Ryujinx is available on a self-managed <a href="https://github.com/Ryubing/forgejo" target="_blank">modified</a> <a href="https://forgejo.org/" target="_blank">Forgejo</a> instance under the <a href="https://git.ryujinx.app/projects/Ryubing/src/branch/master/LICENSE.txt" target="_blank">MIT license</a>.
   <br />
 </p>
 <p align="center">
@@ -31,11 +31,11 @@
   <br>
   This is not a Ryujinx revival project. This is not a Phoenix project.
   <br>
-  Guides and documentation can be found on the <a href="https://git.ryujinx.app/groups/ryubing/-/wikis/home">Wiki tab</a>.
+  Guides and documentation can be found on the <a href="https://git.greemdev.net/projects/Ryubing/wiki/Home">Wiki tab</a>.
 </p>
 
 <p align="center">
-    <img src="https://git.ryujinx.app/ryubing/ryujinx/-/raw/master/docs/shell.png?ref_type=heads&inline=false" alt="Ryujinx example">
+    <img src="https://git.ryujinx.app/projects/Ryubing/raw/branch/master/docs/shell.png" alt="Ryujinx example">
 </p>
 
 ## Usage
@@ -49,17 +49,17 @@ Stable builds are made every so often, based on the `master` branch, that then g
 These stable builds exist so that the end user can get a more **enjoyable and stable experience**.
 They are released every month or so, to ensure consistent updates, while not being an annoying amount of individual updates to download over the course of that month.
 
-You can find the stable releases [here](https://git.ryujinx.app/ryubing/ryujinx/-/releases).
+You can find the stable releases [here](https://git.ryujinx.app/projects/Ryubing/releases).
 
 Canary builds are compiled automatically for each commit on the `master` branch.
 While we strive to ensure optimal stability and performance prior to pushing an update, these builds **may be unstable or completely broken**.
 These canary builds are only recommended for experienced users.
 
-You can find the canary releases [here](https://git.ryujinx.app/ryubing/canary/-/releases).
+You can find the canary releases [here](https://git.ryujinx.app/Ryubing/Canary/releases).
 
 ## Documentation
 
-If you are planning to contribute or just want to learn more about this project please read through our [documentation](docs/README.md).
+If you are planning to contribute or just want to learn more about this project please read through our [documentation](https://git.ryujinx.app/projects/Ryubing/src/branch/master/docs/README.md).
 
 ## Features
 
@@ -105,13 +105,13 @@ If you are planning to contribute or just want to learn more about this project 
 
 ## License
 
-This software is licensed under the terms of the [MIT license](LICENSE.txt).
+This software is licensed under the terms of the [MIT license](https://git.ryujinx.app/projects/Ryubing/src/branch/master/LICENSE.txt).
 This project makes use of code authored by the libvpx project, licensed under BSD and the ffmpeg project, licensed under LGPLv3.
-See [LICENSE.txt](LICENSE.txt) and [THIRDPARTY.md](distribution/legal/THIRDPARTY.md) for more details.
+See [LICENSE.txt](https://git.ryujinx.app/projects/Ryubing/src/branch/master/LICENSE.txt) and [THIRDPARTY.md](https://git.ryujinx.app/projects/Ryubing/src/branch/master/distribution/legal/THIRDPARTY.md) for more details.
 
 ## Credits
 
-- [LibHac](https://git.ryujinx.app/ryubing/libhac) is used for our file-system.
+- [LibHac](https://git.ryujinx.app/projects/LibHac) is used for our file-system.
 - [AmiiboAPI](https://www.amiiboapi.com) is used in our Amiibo emulation.
 - [ldn_mitm](https://github.com/spacemeowx2/ldn_mitm) is used for one of our available multiplayer modes.
 - [ShellLink](https://github.com/securifybv/ShellLink) is used for Windows shortcut generation.
