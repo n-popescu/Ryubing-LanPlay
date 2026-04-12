@@ -5,10 +5,6 @@ on:
 
 jobs:
   triage:
-    permissions:
-      contents: read
-      pull-requests: write
-
     runs-on: ubuntu-latest
 
     steps:
@@ -18,11 +14,12 @@ jobs:
         with:
            # Ensure we pin the source origin as pull_request_target run under forks.
            fetch-depth: 0
-           repository: GreemDev/Ryujinx
+           repository: projects/Ryubing
            ref: master
 
       - name: Update labels based on changes
         uses: actions/labeler@v5
         with:
+          configuration-path: .forgejo/labeler.yml
           sync-labels: true
           dot: true

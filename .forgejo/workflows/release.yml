@@ -19,18 +19,20 @@ env:
 jobs:
   release:
     name: Release for ${{ matrix.platform.name }}
-    runs-on: ${{ matrix.platform.os }}
+    runs-on: docker
+    container:
+      image: ${{ matrix.platform.os }}
     strategy:
       matrix:
         platform:
-          - { name: win-x64,     os: ubuntu-latest, zip_os_name: win_x64     }
-          #- { name: win-arm64,   os: ubuntu-latest, zip_os_name: win_arm64   }
-          - { name: linux-x64,   os: ubuntu-latest,  zip_os_name: linux_x64   }
-          - { name: linux-arm64, os: ubuntu-latest,  zip_os_name: linux_arm64 }
+          - { name: win-x64,     os: ghcr.io/catthehacker/ubuntu:act-latest, zip_os_name: win_x64     }
+          #- { name: win-arm64,   os: ghcr.io/catthehacker/ubuntu:act-latest, zip_os_name: win_arm64   }
+          - { name: linux-x64,   os: ghcr.io/catthehacker/ubuntu:act-latest,  zip_os_name: linux_x64   }
+          - { name: linux-arm64, os: ghcr.io/catthehacker/ubuntu:act-latest,  zip_os_name: linux_arm64 }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
 
@@ -41,26 +43,21 @@ jobs:
         run: |
           sudo apt install -y 7zip
           
-      - name: Install gli
-        run: |
-          mkdir -p $HOME/.bin
-          gh release download -R GreemDev/GLI -O gli -p 'gli-linux-x64' 2.0.31
-          chmod +x gli
-          mv gli $HOME/.bin/
-          echo "$HOME/.bin" >> $GITHUB_PATH
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install GLI
+        uses: actions/setup-gli@v1
+        with:
+          token: ${{ secrets.SETUP_GLI_TOKEN }}
 
       - name: Get version info
         id: version_info
         run: |
           if [ '${{ inputs.is_bugfix_release }}' == 'false' ]; then
-            echo "build_version=$(gli get-next-version -m -c Stable -R)" >> $GITHUB_OUTPUT
+            echo "build_version=$(gli get-next-version -m -c Stable -R)" >> $FORGEJO_OUTPUT
           else
-            echo "build_version=$(gli get-next-version -c Stable -R)" >> $GITHUB_OUTPUT
+            echo "build_version=$(gli get-next-version -c Stable -R)" >> $FORGEJO_OUTPUT
           fi
-          echo "prev_build_version=$(gli get-current-version -c Stable -R)" >> $GITHUB_OUTPUT
-          echo "git_short_hash=$(git rev-parse --short "${{ github.sha }}")" >> $GITHUB_OUTPUT
+          echo "prev_build_version=$(gli get-current-version -c Stable -R)" >> $FORGEJO_OUTPUT
+          echo "git_short_hash=$(git rev-parse --short "${{ forgejo.sha }}")" >> $FORGEJO_OUTPUT
         shell: bash
 
       - name: Configure for release
@@ -85,11 +82,7 @@ jobs:
           rm libarmeilleure-jitsupport.dylib
           7z a ../release_output/ryujinx-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.zip ../publish
           popd
-
-          gli upload-generic-package -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/ryujinx -n Ryubing -v ${{ steps.version_info.outputs.build_version }} -r 5 -p release_output/ryujinx-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.zip
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Packing Linux builds
         if: contains(matrix.platform.name, 'linux')
@@ -99,11 +92,7 @@ jobs:
           chmod +x Ryujinx.sh Ryujinx
           tar -czvf ../release_output/ryujinx-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.tar.gz ../publish
           popd
-
-          gli upload-generic-package -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/ryujinx -n Ryubing -v ${{ steps.version_info.outputs.build_version }} -r 5 -p release_output/ryujinx-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.tar.gz
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build AppImage (Linux)
         if: contains(matrix.platform.name, 'linux')
@@ -138,17 +127,27 @@ jobs:
           pushd publish_appimage
           mv Ryujinx.AppImage ../release_output/ryujinx-$BUILD_VERSION-$ARCH_NAME.AppImage
           popd
-
-          gli upload-generic-package -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/ryujinx -n Ryubing -v ${{ steps.version_info.outputs.build_version }} -r 5 -p release_output/ryujinx-$BUILD_VERSION-$ARCH_NAME.AppImage
         shell: bash
+
+      - name: Create release
+        uses: actions/create-release@v1
+        with:
+          name: "${{ steps.version_info.outputs.build_version }}"
+          repository: "projects/Ryubing"
+          token: ${{ secrets.RELEASER_TOKEN  }}
+          tag_name: ${{ steps.version_info.outputs.build_version }}
+          files: |-
+            release_output/**
 
   macos_release:
     name: Release MacOS universal
-    runs-on: ubuntu-24.04
+    runs-on: docker
+    container:
+      image: ghcr.io/catthehacker/ubuntu:act-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
 
@@ -158,37 +157,28 @@ jobs:
           chmod +x llvm.sh
           sudo ./llvm.sh 17
           
-      - name: Install gli
-        run: |
-          mkdir -p $HOME/.bin
-          gh release download -R GreemDev/GLI -O gli -p 'gli-linux-x64' 2.0.30
-          chmod +x gli
-          mv gli $HOME/.bin/
-          echo "$HOME/.bin" >> $GITHUB_PATH
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install GLI
+        uses: actions/setup-gli@v1
+        with:
+          token: ${{ secrets.SETUP_GLI_TOKEN }}
 
       - name: Install rcodesign
         run: |
-          mkdir -p $HOME/.bin
-          gh release download -R indygreg/apple-platform-rs -O apple-codesign.tar.gz -p 'apple-codesign-*-x86_64-unknown-linux-musl.tar.gz'
+          gli ghr -R indygreg/apple-platform-rs -p apple-codesign-*-x86_64-unknown-linux-musl.tar.gz -O apple-codesign.tar.gz
           tar -xzvf apple-codesign.tar.gz --wildcards '*/rcodesign' --strip-components=1
           rm apple-codesign.tar.gz
-          mv rcodesign $HOME/.bin/
-          echo "$HOME/.bin" >> $GITHUB_PATH
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          mv rcodesign /usr/bin/rcodesign
 
       - name: Get version info
         id: version_info
         run: |
           if [ '${{ inputs.is_bugfix_release }}' == 'false' ]; then
-            echo "build_version=$(gli get-next-version -m -c Stable -R)" >> $GITHUB_OUTPUT
+            echo "build_version=$(gli get-next-version -m -c Stable -R)" >> $FORGEJO_OUTPUT
           else
-            echo "build_version=$(gli get-next-version -c Stable -R)" >> $GITHUB_OUTPUT
+            echo "build_version=$(gli get-next-version -c Stable -R)" >> $FORGEJO_OUTPUT
           fi
-          echo "prev_build_version=$(gli get-current-version -c Stable -R)" >> $GITHUB_OUTPUT
-          echo "git_short_hash=$(git rev-parse --short "${{ github.sha }}")" >> $GITHUB_OUTPUT
+          echo "prev_build_version=$(gli get-current-version -c Stable -R)" >> $FORGEJO_OUTPUT
+          echo "git_short_hash=$(git rev-parse --short "${{ forgejo.sha }}")" >> $FORGEJO_OUTPUT
         shell: bash
 
       - name: Configure for release
@@ -201,10 +191,18 @@ jobs:
 
       - name: Publish macOS Ryujinx
         run: |
-          ./distribution/macos/create_macos_build_ava.sh . publish_tmp_ava publish ./distribution/macos/entitlements.xml "${{ steps.version_info.outputs.build_version }}" "${{ steps.version_info.outputs.git_short_hash }}" Release 0
-          
-          gli upload-generic-package -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/ryujinx -n Ryubing -v ${{ steps.version_info.outputs.build_version }} -r 5 -p publish/ryujinx-${{ steps.version_info.outputs.build_version }}-macos_universal.app.tar.gz
-          
+          bash distribution/macos/create_macos_build_ava.sh . publish_tmp_ava publish ./distribution/macos/entitlements.xml "${{ steps.version_info.outputs.build_version }}" "${{ steps.version_info.outputs.git_short_hash }}" Release 0
+
+      - name: Create release
+        uses: actions/create-release@v1
+        with:
+          name: "${{ steps.version_info.outputs.build_version }}"
+          repository: "projects/Ryubing"
+          token: ${{ secrets.RELEASER_TOKEN  }}
+          tag_name: ${{ steps.version_info.outputs.build_version }}
+          files: |-
+            publish_ava/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-macos_universal.app.tar.gz
+
   create_gitlab_release:
     name: Create GitLab Release
     runs-on: ubuntu-24.04
@@ -214,36 +212,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         
-      - name: Install gli
-        run: |
-          mkdir -p $HOME/.bin
-          gh release download -R GreemDev/GLI -O gli -p 'gli-linux-x64' 2.0.30
-          chmod +x gli
-          mv gli $HOME/.bin/
-          echo "$HOME/.bin" >> $GITHUB_PATH
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install GLI
+        uses: actions/setup-gli@v1
+        with:
+          token: ${{ secrets.SETUP_GLI_TOKEN }}
 
       - name: Get version info
         id: version_info
         run: |
           if [ '${{ inputs.is_bugfix_release }}' == 'false' ]; then
-            echo "build_version=$(gli get-next-version -m -c Stable -R)" >> $GITHUB_OUTPUT
+            echo "build_version=$(gli get-next-version -m -c Stable -R)" >> $FORGEJO_OUTPUT
           else
-            echo "build_version=$(gli get-next-version -c Stable -R)" >> $GITHUB_OUTPUT
+            echo "build_version=$(gli get-next-version -c Stable -R)" >> $FORGEJO_OUTPUT
           fi
-          echo "prev_build_version=$(gli get-current-version -c Stable -R)" >> $GITHUB_OUTPUT
-          echo "git_short_hash=$(git rev-parse --short "${{ github.sha }}")" >> $GITHUB_OUTPUT
-          echo "commit_message=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+          echo "prev_build_version=$(gli get-current-version -c Stable -R)" >> $FORGEJO_OUTPUT
+          echo "git_short_hash=$(git rev-parse --short "${{ forgejo.sha }}")" >> $FORGEJO_OUTPUT
         shell: bash
-
-      - name: Create release
-        run: |
-          gli create-release-from-generic-package-files -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/ryujinx -n Ryubing -v ${{ steps.version_info.outputs.build_version }} -r ${{ steps.version_info.outputs.git_short_hash }} -t "${{ steps.version_info.outputs.build_version }}" -b "msd:${{ steps.version_info.outputs.build_version }}"
 
       - name: Send notification webhook
         run: |
-          gli send-update-message -T ${{ secrets.GITLAB_TOKEN }} -P ryubing/ryujinx -t ${{ steps.version_info.outputs.build_version }} -c 32cd32 -w ${{ secrets.STABLE_DISCORD_WEBHOOK }} -i https://avatars.githubusercontent.com/u/192939710?s=200&v=4
+          gli send-update-message -T ${{ secrets.RELEASER_TOKEN }} -P projects/Ryubing -t ${{ steps.version_info.outputs.build_version }} -c 32cd32 -w ${{ secrets.STABLE_DISCORD_WEBHOOK }} -i https://avatars.githubusercontent.com/u/192939710?s=200&v=4
 
       - name: Notify update server of new builds
         run: |
