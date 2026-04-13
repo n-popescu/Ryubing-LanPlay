@@ -40,6 +40,7 @@
     <PackageVersion Include="DynamicData" Version="9.4.33" />
     <PackageVersion Include="Gommon" Version="2.8.1.2" />
     <PackageVersion Include="Humanizer" Version="3.0.10" />
+    <PackageVersion Include="PolySharp" Version="1.15.0" />
     
     <!-- TODO: Microsoft.CodeAnalysis.Analyzers > 3.3.4 needs refactoring -->
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" />

@@ -1529,8 +1529,8 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public void SetGridMode() => Glyph = Glyph.Grid;
 
-        public void SetAspectRatio(AspectRatio aspectRatio) =>
-            ConfigurationState.Instance.Graphics.AspectRatio.Value = aspectRatio;
+        public void SetAspectRatio(object aspectRatio) =>
+            ConfigurationState.Instance.Graphics.AspectRatio.Value = (AspectRatio)aspectRatio;
 
         public async Task InstallFirmwareFromFile()
         {

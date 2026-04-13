@@ -4,7 +4,7 @@ using Ryujinx.Common.Logging;
 namespace Ryujinx.HLE.HOS.Services.Hid
 {
     [Service("hidbus")]
-    class IHidbusServer : IpcService
+    partial class IHidbusServer : IpcService
     {
         public IHidbusServer(ServiceCtx context) { }
 

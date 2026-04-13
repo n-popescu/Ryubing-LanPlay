@@ -16,6 +16,7 @@ using Ryujinx.HLE.FileSystem;
 using Ryujinx.HLE.HOS.Services.Account.Acc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using UserId = Ryujinx.HLE.HOS.Services.Account.Acc.UserId;
@@ -59,7 +60,7 @@ namespace Ryujinx.Ava.UI.Controls
             LoadProfiles();
         }
 
-        public void Navigate(Type sourcePageType, object parameter)
+        public void Navigate([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type sourcePageType, object parameter)
             => ContentFrame.Navigate(sourcePageType, parameter);
 
         public static async Task Show(

@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace Ryujinx.HLE.HOS.Services.Nifm.StaticService
 {
-    class IGeneralService : DisposableIpcService
+    partial class IGeneralService : DisposableIpcService
     {
         private readonly GeneralServiceDetail _generalServiceDetail;
 

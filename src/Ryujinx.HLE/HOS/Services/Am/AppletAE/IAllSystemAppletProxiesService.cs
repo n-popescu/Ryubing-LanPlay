@@ -4,7 +4,7 @@ using Ryujinx.HLE.HOS.Services.Am.AppletOE.ApplicationProxyService;
 namespace Ryujinx.HLE.HOS.Services.Am.AppletAE
 {
     [Service("appletAE")]
-    class IAllSystemAppletProxiesService : IpcService
+    partial class IAllSystemAppletProxiesService : IpcService
     {
         public IAllSystemAppletProxiesService(ServiceCtx context) { }
 

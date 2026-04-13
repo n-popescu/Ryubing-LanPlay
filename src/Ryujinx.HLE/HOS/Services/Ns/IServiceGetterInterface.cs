@@ -5,7 +5,7 @@ namespace Ryujinx.HLE.HOS.Services.Ns
     [Service("ns:rid")]
     [Service("ns:rt")]
     [Service("ns:web")]
-    class IServiceGetterInterface : IpcService
+    partial class IServiceGetterInterface : IpcService
     {
         public IServiceGetterInterface(ServiceCtx context) { }
 

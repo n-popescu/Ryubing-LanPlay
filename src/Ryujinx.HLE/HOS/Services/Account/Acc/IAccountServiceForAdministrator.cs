@@ -5,7 +5,7 @@ using Ryujinx.HLE.HOS.Services.Account.Acc.AccountService;
 namespace Ryujinx.HLE.HOS.Services.Account.Acc
 {
     [Service("acc:su", AccountServiceFlag.Administrator)] // Max Sessions: 8
-    class IAccountServiceForAdministrator : IpcService
+    partial class IAccountServiceForAdministrator : IpcService
     {
         private readonly ApplicationServiceServer _applicationServiceServer;
 

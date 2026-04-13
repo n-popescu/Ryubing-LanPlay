@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Ryujinx.HLE.HOS.Services.Nfc.Nfp
 {
-    class INfp : IpcService
+    partial class INfp : IpcService
     {
 #pragma warning disable IDE0052 // Remove unread private member
         private ulong _appletResourceUserId;

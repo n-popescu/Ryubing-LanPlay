@@ -2,7 +2,7 @@ using Ryujinx.Common.Logging;
 
 namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
 {
-    class IClientProcessMonitor : DisposableIpcService
+    partial class IClientProcessMonitor : DisposableIpcService
     {
         public IClientProcessMonitor(ServiceCtx context) { }
 

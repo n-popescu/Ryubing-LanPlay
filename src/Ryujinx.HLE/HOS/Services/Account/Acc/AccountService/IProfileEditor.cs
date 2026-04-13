@@ -1,6 +1,6 @@
 namespace Ryujinx.HLE.HOS.Services.Account.Acc.AccountService
 {
-    class IProfileEditor : IpcService
+    partial class IProfileEditor : IpcService
     {
         private readonly ProfileServer _profileServer;
 

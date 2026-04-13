@@ -3,7 +3,7 @@ using Ryujinx.HLE.HOS.Services.BluetoothManager.BtmUser;
 namespace Ryujinx.HLE.HOS.Services.BluetoothManager
 {
     [Service("btm:u")] // 5.0.0+
-    class IBtmUser : IpcService
+    partial class IBtmUser : IpcService
     {
         public IBtmUser(ServiceCtx context) { }
 

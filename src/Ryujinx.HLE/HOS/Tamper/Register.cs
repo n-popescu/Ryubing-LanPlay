@@ -1,5 +1,6 @@
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Tamper.Operations;
+using System.Numerics;
 
 namespace Ryujinx.HLE.HOS.Tamper
 {
@@ -13,16 +14,16 @@ namespace Ryujinx.HLE.HOS.Tamper
             _alias = alias;
         }
 
-        public T Get<T>() where T : unmanaged
+        public T Get<T>() where T : unmanaged, INumber<T>
         {
-            return (T)(dynamic)_register;
+            return T.CreateTruncating(_register);
         }
 
-        public void Set<T>(T value) where T : unmanaged
+        public void Set<T>(T value) where T : unmanaged, INumber<T>
         {
             Logger.Debug?.Print(LogClass.TamperMachine, $"{_alias}: {value}");
 
-            _register = (ulong)(dynamic)value;
+            _register = ulong.CreateTruncating(value);
         }
     }
 }

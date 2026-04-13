@@ -4,34 +4,21 @@ using Ryujinx.HLE.HOS.Kernel;
 using Ryujinx.HLE.HOS.Kernel.Ipc;
 using Ryujinx.Horizon.Common;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace Ryujinx.HLE.HOS.Services.Sm
 {
     partial class IUserInterface : IpcService
     {
-        private static readonly Dictionary<string, Type> _services;
-
         private readonly SmRegistry _registry;
         private ServerBase _commonServer;
 
         private bool _isInitialized;
 
-        public IUserInterface(KernelContext context, SmRegistry registry) : base(registerTipc: true)
+        public IUserInterface(KernelContext context, SmRegistry registry)
         {
             _registry = registry;
-        }
-
-        static IUserInterface()
-        {
-            _services = typeof(IUserInterface).Assembly.GetTypes()
-                .SelectMany(type => type.GetCustomAttributes(typeof(ServiceAttribute), true)
-                .Select(service => (((ServiceAttribute)service).Name, type)))
-                .ToDictionary(service => service.Name, service => service.type);
         }
 
         [CommandCmif(0)]
@@ -90,17 +77,13 @@ namespace Ryujinx.HLE.HOS.Services.Sm
             }
             else
             {
-                if (_services.TryGetValue(name, out Type type))
+                if (GetServiceInstance(name, context) is { } service)
                 {
-                    ServiceAttribute serviceAttribute = type.GetCustomAttributes<ServiceAttribute>().First(service => service.Name == name);
-
-                    IpcService service = GetServiceInstance(type, context, serviceAttribute.Parameter);
-
                     if (_commonServer is null)
                     {
                         _commonServer = new ServerBase(context.Device.System.KernelContext, "Common");
                     }
-                    
+
                     service.TrySetServer(_commonServer);
                     service.Server.AddSessionObj(session.ServerSession, service);
                 }

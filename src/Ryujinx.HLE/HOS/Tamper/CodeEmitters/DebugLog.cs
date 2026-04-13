@@ -1,5 +1,6 @@
 using Ryujinx.HLE.Exceptions;
 using Ryujinx.HLE.HOS.Tamper.Operations;
+using System;
 
 namespace Ryujinx.HLE.HOS.Tamper.CodeEmitters
 {
@@ -81,7 +82,15 @@ namespace Ryujinx.HLE.HOS.Tamper.CodeEmitters
                     throw new TamperCompilationException($"Invalid operand type {operandType} in Atmosphere cheat");
             }
 
-            InstructionHelper.Emit(typeof(OpLog<>), operationWidth, context, logId, sourceOperand);
+            IOperation op = operationWidth switch
+            {
+                1 => new OpLog<byte>(logId, sourceOperand),
+                2 => new OpLog<ushort>(logId, sourceOperand),
+                4 => new OpLog<uint>(logId, sourceOperand),
+                8 => new OpLog<ulong>(logId, sourceOperand),
+                _ => throw new NotSupportedException(),
+            };
+            InstructionHelper.Emit(op, context);
         }
     }
 }

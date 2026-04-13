@@ -1,6 +1,6 @@
 namespace Ryujinx.HLE.HOS.Services.Apm
 {
-    abstract class ISystemManager : IpcService
+    abstract partial class ISystemManager : IpcService
     {
         public ISystemManager(ServiceCtx context) { }
 

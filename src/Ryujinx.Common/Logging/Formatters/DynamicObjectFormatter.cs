@@ -37,7 +37,9 @@ namespace Ryujinx.Common.Logging.Formatters
                 return;
             }
 
+#pragma warning disable IL2075 // GetProperties is *probably* fine here, it only really matters what exists anyway
             PropertyInfo[] props = dynamicObject.GetType().GetProperties();
+#pragma warning restore IL2075
 
             sb.Append('{');
 
