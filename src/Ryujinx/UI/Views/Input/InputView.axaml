@@ -149,7 +149,7 @@
                 <Grid
                     Grid.Column="0"
                     Margin="2"
-                    HorizontalAlignment="Stretch" ColumnDefinitions="Auto,*,Auto">
+                    HorizontalAlignment="Stretch" ColumnDefinitions="Auto,*,Auto,Auto">
                     <TextBlock
                         Grid.Column="0"
                         Margin="5,0,10,0"
@@ -175,9 +175,22 @@
                         MinWidth="0"
                         Margin="5,0,0,0"
                         VerticalAlignment="Center"
-                        Command="{Binding ResetCurrentDeviceToDefaults}">
+                        ToolTip.Tip="{ext:Locale ControllerSettingsRefresh}"
+                        Command="{Binding RefreshInputDevices}">
                         <ui:SymbolIcon
                             Symbol="Refresh"
+                            FontSize="15"
+                            Height="20"/>
+                    </Button>
+                    <Button
+                        Grid.Column="3"
+                        MinWidth="0"
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Center"
+                        ToolTip.Tip="{ext:Locale ControllerSettingsResetKeybindsToDefault}"
+                        Command="{Binding ResetCurrentDeviceToDefaults}">
+                        <ui:SymbolIcon
+                            Symbol="Undo"
                             FontSize="15"
                             Height="20"/>
                     </Button>
