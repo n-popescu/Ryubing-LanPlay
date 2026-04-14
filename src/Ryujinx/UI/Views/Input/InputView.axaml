@@ -78,7 +78,7 @@
                             ToolTip.Tip="{ext:Locale ControllerSettingsCancelCurrentChangesToolTip}"
                             Command="{Binding RevertChanges}">
                         <ui:SymbolIcon
-                            Symbol="Undo"
+                            Symbol="Clear"
                             FontSize="15"
                             Height="20" />
                     </Button>
