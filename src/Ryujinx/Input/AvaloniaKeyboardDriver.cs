@@ -3,11 +3,13 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Systems.Configuration;
+using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Common.Logging;
 using Ryujinx.Input;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Runtime.Versioning;
 using ConfigPhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;
 using Key = Ryujinx.Input.Key;
 
@@ -27,6 +29,7 @@ namespace Ryujinx.Ava.Input
         private readonly Window _window;
         private readonly HashSet<Key> _semanticPressedKeys;
         private readonly HashSet<ConfigPhysicalKey> _physicalPressedKeys;
+        private readonly HashSet<Key> _keysToRestoreAfterActivation;
         private readonly Dictionary<Key, ConfigPhysicalKey> _observedPhysicalKeysBySemanticKey;
         private readonly Queue<Key> _semanticPressedKeyQueue;
         private readonly Queue<Key> _physicalPressedKeyQueue;
@@ -46,6 +49,7 @@ namespace Ryujinx.Ava.Input
             _window = control as Window ?? TopLevel.GetTopLevel(control) as Window;
             _semanticPressedKeys = [];
             _physicalPressedKeys = [];
+            _keysToRestoreAfterActivation = [];
             _observedPhysicalKeysBySemanticKey = [];
             _semanticPressedKeyQueue = [];
             _physicalPressedKeyQueue = [];
@@ -58,11 +62,23 @@ namespace Ryujinx.Ava.Input
             _control.AddHandler(InputElement.KeyDownEvent, OnKeyPress, RoutingStrategies.Tunnel, true);
             _control.AddHandler(InputElement.KeyUpEvent, OnKeyRelease, RoutingStrategies.Tunnel, true);
             _control.TextInput += Control_TextInput;
+            _window?.Activated += Window_Activated;
             _window?.Deactivated += Window_Deactivated;
+        }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            RestorePressedKeysAfterActivation();
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
         {
+            lock (_pressedKeyQueueLock)
+            {
+                _keysToRestoreAfterActivation.Clear();
+                _keysToRestoreAfterActivation.UnionWith(_semanticPressedKeys);
+            }
+
             Clear();
         }
 
@@ -109,6 +125,7 @@ namespace Ryujinx.Ava.Input
                 _control.TextInput -= Control_TextInput;
                 if (_window != null)
                 {
+                    _window.Activated -= Window_Activated;
                     _window.Deactivated -= Window_Deactivated;
                 }
             }
@@ -163,6 +180,231 @@ namespace Ryujinx.Ava.Input
                 _physicalPressedKeys.Clear();
                 _semanticPressedKeyQueue.Clear();
                 _physicalPressedKeyQueue.Clear();
+            }
+        }
+
+        private void RestorePressedKeysAfterActivation()
+        {
+            if (!OperatingSystem.IsWindows())
+            {
+                lock (_pressedKeyQueueLock)
+                {
+                    _keysToRestoreAfterActivation.Clear();
+                }
+
+                return;
+            }
+
+            lock (_pressedKeyQueueLock)
+            {
+                if (_keysToRestoreAfterActivation.Count == 0)
+                {
+                    return;
+                }
+
+                foreach (Key key in _keysToRestoreAfterActivation)
+                {
+                    if (!TryGetWindowsVirtualKey(key, out int virtualKey) ||
+                        !IsWindowsKeyPressed(virtualKey))
+                    {
+                        continue;
+                    }
+
+                    _semanticPressedKeys.Add(key);
+
+                    ConfigPhysicalKey physicalKey = GetPhysicalKeyForSemanticKey(key);
+
+                    if (physicalKey is not ConfigPhysicalKey.Unknown and not ConfigPhysicalKey.Unbound)
+                    {
+                        _physicalPressedKeys.Add(physicalKey);
+                    }
+                }
+
+                _keysToRestoreAfterActivation.Clear();
+            }
+        }
+
+        private ConfigPhysicalKey GetPhysicalKeyForSemanticKey(Key key)
+        {
+            if (_observedPhysicalKeysBySemanticKey.TryGetValue(key, out ConfigPhysicalKey physicalKey))
+            {
+                return physicalKey;
+            }
+
+            return key is >= Key.Unknown and < Key.Count
+                ? (ConfigPhysicalKey)(int)key
+                : ConfigPhysicalKey.Unknown;
+        }
+
+        [SupportedOSPlatform("windows")]
+        private static bool IsWindowsKeyPressed(int virtualKey)
+        {
+            return (Win32NativeInterop.GetAsyncKeyState(virtualKey) & 0x8000) != 0;
+        }
+
+        private static bool TryGetWindowsVirtualKey(Key key, out int virtualKey)
+        {
+            switch (key)
+            {
+                case >= Key.A and <= Key.Z:
+                    virtualKey = 'A' + (int)(key - Key.A);
+                    return true;
+                case >= Key.Number0 and <= Key.Number9:
+                    virtualKey = '0' + (int)(key - Key.Number0);
+                    return true;
+                case >= Key.F1 and <= Key.F24:
+                    virtualKey = 0x70 + (int)(key - Key.F1);
+                    return true;
+                case Key.ShiftLeft:
+                    virtualKey = 0xA0;
+                    return true;
+                case Key.ShiftRight:
+                    virtualKey = 0xA1;
+                    return true;
+                case Key.ControlLeft:
+                    virtualKey = 0xA2;
+                    return true;
+                case Key.ControlRight:
+                    virtualKey = 0xA3;
+                    return true;
+                case Key.AltLeft:
+                    virtualKey = 0xA4;
+                    return true;
+                case Key.AltRight:
+                    virtualKey = 0xA5;
+                    return true;
+                case Key.WinLeft:
+                    virtualKey = 0x5B;
+                    return true;
+                case Key.WinRight:
+                    virtualKey = 0x5C;
+                    return true;
+                case Key.Menu:
+                    virtualKey = 0x5D;
+                    return true;
+                case Key.Up:
+                    virtualKey = 0x26;
+                    return true;
+                case Key.Down:
+                    virtualKey = 0x28;
+                    return true;
+                case Key.Left:
+                    virtualKey = 0x25;
+                    return true;
+                case Key.Right:
+                    virtualKey = 0x27;
+                    return true;
+                case Key.Enter:
+                    virtualKey = 0x0D;
+                    return true;
+                case Key.Escape:
+                    virtualKey = 0x1B;
+                    return true;
+                case Key.Space:
+                    virtualKey = 0x20;
+                    return true;
+                case Key.Tab:
+                    virtualKey = 0x09;
+                    return true;
+                case Key.BackSpace:
+                    virtualKey = 0x08;
+                    return true;
+                case Key.Insert:
+                    virtualKey = 0x2D;
+                    return true;
+                case Key.Delete:
+                    virtualKey = 0x2E;
+                    return true;
+                case Key.PageUp:
+                    virtualKey = 0x21;
+                    return true;
+                case Key.PageDown:
+                    virtualKey = 0x22;
+                    return true;
+                case Key.Home:
+                    virtualKey = 0x24;
+                    return true;
+                case Key.End:
+                    virtualKey = 0x23;
+                    return true;
+                case Key.CapsLock:
+                    virtualKey = 0x14;
+                    return true;
+                case Key.ScrollLock:
+                    virtualKey = 0x91;
+                    return true;
+                case Key.PrintScreen:
+                    virtualKey = 0x2C;
+                    return true;
+                case Key.Pause:
+                    virtualKey = 0x13;
+                    return true;
+                case Key.NumLock:
+                    virtualKey = 0x90;
+                    return true;
+                case Key.Clear:
+                    virtualKey = 0x0C;
+                    return true;
+                case >= Key.Keypad0 and <= Key.Keypad9:
+                    virtualKey = 0x60 + (int)(key - Key.Keypad0);
+                    return true;
+                case Key.KeypadDivide:
+                    virtualKey = 0x6F;
+                    return true;
+                case Key.KeypadMultiply:
+                    virtualKey = 0x6A;
+                    return true;
+                case Key.KeypadSubtract:
+                    virtualKey = 0x6D;
+                    return true;
+                case Key.KeypadAdd:
+                    virtualKey = 0x6B;
+                    return true;
+                case Key.KeypadDecimal:
+                    virtualKey = 0x6E;
+                    return true;
+                case Key.KeypadEnter:
+                    virtualKey = 0x0D;
+                    return true;
+                case Key.Tilde:
+                    virtualKey = 0xC0;
+                    return true;
+                case Key.Grave:
+                    virtualKey = 0xE2;
+                    return true;
+                case Key.Minus:
+                    virtualKey = 0xBD;
+                    return true;
+                case Key.Plus:
+                    virtualKey = 0xBB;
+                    return true;
+                case Key.BracketLeft:
+                    virtualKey = 0xDB;
+                    return true;
+                case Key.BracketRight:
+                    virtualKey = 0xDD;
+                    return true;
+                case Key.Semicolon:
+                    virtualKey = 0xBA;
+                    return true;
+                case Key.Quote:
+                    virtualKey = 0xDE;
+                    return true;
+                case Key.Comma:
+                    virtualKey = 0xBC;
+                    return true;
+                case Key.Period:
+                    virtualKey = 0xBE;
+                    return true;
+                case Key.Slash:
+                    virtualKey = 0xBF;
+                    return true;
+                case Key.BackSlash:
+                    virtualKey = 0xDC;
+                    return true;
+                default:
+                    virtualKey = 0;
+                    return false;
             }
         }
 
