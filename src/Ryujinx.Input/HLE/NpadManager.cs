@@ -24,7 +24,7 @@ namespace Ryujinx.Input.HLE
 
         private readonly Lock _lock = new();
 
-        private bool _blockInputUpdates;
+        private int _inputUpdateBlockCount;
 
         private const int MaxControllers = 9;
 
@@ -264,16 +264,29 @@ namespace Ryujinx.Input.HLE
             return true;
         }
 
+        private void ClearInputDriverStates()
+        {
+            foreach (InputConfig inputConfig in _inputConfig)
+            {
+                _controllers[(int)inputConfig.PlayerIndex]?.GamepadDriver?.Clear();
+            }
+        }
+
         public void UnblockInputUpdates()
         {
             lock (_lock)
             {
-                foreach (InputConfig inputConfig in _inputConfig)
+                if (_inputUpdateBlockCount == 0)
                 {
-                    _controllers[(int)inputConfig.PlayerIndex]?.GamepadDriver?.Clear();
+                    return;
                 }
 
-                _blockInputUpdates = false;
+                _inputUpdateBlockCount--;
+
+                if (_inputUpdateBlockCount == 0)
+                {
+                    ClearInputDriverStates();
+                }
             }
         }
 
@@ -282,7 +295,7 @@ namespace Ryujinx.Input.HLE
             get
             {
                 lock (_lock)
-                    return _blockInputUpdates;
+                    return _inputUpdateBlockCount > 0;
             }
         }
 
@@ -290,7 +303,7 @@ namespace Ryujinx.Input.HLE
         {
             lock (_lock)
             {
-                _blockInputUpdates = true;
+                _inputUpdateBlockCount++;
             }
         }
 
@@ -322,7 +335,7 @@ namespace Ryujinx.Input.HLE
                     bool isJoyconPair = false;
 
                     // Do we allow input updates and is a controller connected?
-                    if (!_blockInputUpdates && controller != null)
+                    if (_inputUpdateBlockCount == 0 && controller != null)
                     {
                         DriverConfigurationUpdate(ref controller, inputConfig);
 
@@ -360,7 +373,7 @@ namespace Ryujinx.Input.HLE
                     }
                 }
 
-                if (!_blockInputUpdates && _enableKeyboard)
+                if (_inputUpdateBlockCount == 0 && _enableKeyboard)
                 {
                     hleKeyboardInput = NpadController.GetHLEKeyboardInput(_keyboardDriver);
                 }

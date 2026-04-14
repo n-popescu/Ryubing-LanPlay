@@ -351,8 +351,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 _mainWindow.InputManager.GamepadDriver.OnGamepadConnected += HandleOnGamepadConnected;
                 _mainWindow.InputManager.GamepadDriver.OnGamepadDisconnected += HandleOnGamepadDisconnected;
 
-                _mainWindow.ViewModel.AppHost?.NpadManager.BlockInputUpdates();
-
                 UseGlobalConfig = useGlobal;
 
                 _isLoaded = false;
@@ -1289,8 +1287,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             _mainWindow.InputManager.GamepadDriver.OnGamepadConnected -= HandleOnGamepadConnected;
             _mainWindow.InputManager.GamepadDriver.OnGamepadDisconnected -= HandleOnGamepadDisconnected;
-
-            _mainWindow.ViewModel.AppHost?.NpadManager.UnblockInputUpdates();
 
             VisualStick.Dispose();
 
