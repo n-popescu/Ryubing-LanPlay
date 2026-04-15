@@ -104,7 +104,7 @@ namespace Ryujinx.Ava.UI.Views.Input
 
                         PointerPressed += MouseClick;
 
-                        ControllerInputViewModel viewModel = (DataContext as ControllerInputViewModel);
+                        ControllerInputViewModel viewModel = ViewModel;
 
                         IKeyboard keyboard =
                             (IKeyboard)viewModel.ParentModel.AvaloniaKeyboardDriver
@@ -113,7 +113,7 @@ namespace Ryujinx.Ava.UI.Views.Input
 
                         _currentAssigner.ButtonAssigned += (sender, e) =>
                         {
-                            if (e.ButtonValue.HasValue)
+                            if (e.ButtonValue.HasValue && IsActiveAssignmentContext(viewModel))
                             {
                                 Button buttonValue = e.ButtonValue.Value;
 
@@ -213,7 +213,15 @@ namespace Ryujinx.Ava.UI.Views.Input
 
         private void FlagInputConfigChanged()
         {
-            (DataContext as ControllerInputViewModel)!.ParentModel.RefreshModifiedState();
+            if (DataContext is ControllerInputViewModel viewModel && VisualRoot is not null)
+            {
+                viewModel.ParentModel.RefreshModifiedState();
+            }
+        }
+
+        private bool IsActiveAssignmentContext(ControllerInputViewModel viewModel)
+        {
+            return VisualRoot is not null && ReferenceEquals(DataContext, viewModel);
         }
 
         private void MouseClick(object sender, PointerPressedEventArgs e)

@@ -63,106 +63,108 @@ namespace Ryujinx.Ava.UI.Views.Input
 
                     PointerPressed += MouseClick;
 
+                    KeyboardInputViewModel viewModel = ViewModel;
+
                     IKeyboard keyboard =
-                        (IKeyboard)ViewModel.ParentModel.AvaloniaKeyboardDriver.GetGamepad("0"); // Open Avalonia keyboard for cancel operations.
+                        (IKeyboard)viewModel.ParentModel.AvaloniaKeyboardDriver.GetGamepad("0"); // Open Avalonia keyboard for cancel operations.
                     IButtonAssigner assigner =
-                        new KeyboardKeyAssigner((IKeyboard)ViewModel.ParentModel.SelectedGamepad);
+                        new KeyboardKeyAssigner((IKeyboard)viewModel.ParentModel.SelectedGamepad);
 
                     _currentAssigner.ButtonAssigned += (_, be) =>
                     {
-                        if (be.ButtonValue.HasValue)
+                        if (be.ButtonValue.HasValue && IsActiveAssignmentContext(viewModel))
                         {
                             Button buttonValue = be.ButtonValue.Value;
 
                             switch (button.Name)
                             {
                                 case "ButtonZl":
-                                    ViewModel.Config.ButtonZl = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.ButtonZl = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "ButtonL":
-                                    ViewModel.Config.ButtonL = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.ButtonL = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "ButtonMinus":
-                                    ViewModel.Config.ButtonMinus = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.ButtonMinus = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "LeftStickButton":
-                                    ViewModel.Config.LeftStickButton = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.LeftStickButton = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "LeftStickUp":
-                                    ViewModel.Config.LeftStickUp = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.LeftStickUp = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "LeftStickDown":
-                                    ViewModel.Config.LeftStickDown = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.LeftStickDown = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "LeftStickRight":
-                                    ViewModel.Config.LeftStickRight = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.LeftStickRight = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "LeftStickLeft":
-                                    ViewModel.Config.LeftStickLeft = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.LeftStickLeft = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "DpadUp":
-                                    ViewModel.Config.DpadUp = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.DpadUp = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "DpadDown":
-                                    ViewModel.Config.DpadDown = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.DpadDown = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "DpadLeft":
-                                    ViewModel.Config.DpadLeft = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.DpadLeft = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "DpadRight":
-                                    ViewModel.Config.DpadRight = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.DpadRight = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "LeftButtonSr":
-                                    ViewModel.Config.LeftButtonSr = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.LeftButtonSr = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "LeftButtonSl":
-                                    ViewModel.Config.LeftButtonSl = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.LeftButtonSl = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "RightButtonSr":
-                                    ViewModel.Config.RightButtonSr = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.RightButtonSr = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "RightButtonSl":
-                                    ViewModel.Config.RightButtonSl = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.RightButtonSl = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "ButtonZr":
-                                    ViewModel.Config.ButtonZr = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.ButtonZr = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "ButtonR":
-                                    ViewModel.Config.ButtonR = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.ButtonR = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "ButtonPlus":
-                                    ViewModel.Config.ButtonPlus = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.ButtonPlus = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "ButtonA":
-                                    ViewModel.Config.ButtonA = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.ButtonA = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "ButtonB":
-                                    ViewModel.Config.ButtonB = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.ButtonB = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "ButtonX":
-                                    ViewModel.Config.ButtonX = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.ButtonX = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "ButtonY":
-                                    ViewModel.Config.ButtonY = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.ButtonY = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "RightStickButton":
-                                    ViewModel.Config.RightStickButton = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.RightStickButton = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "RightStickUp":
-                                    ViewModel.Config.RightStickUp = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.RightStickUp = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "RightStickDown":
-                                    ViewModel.Config.RightStickDown = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.RightStickDown = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "RightStickRight":
-                                    ViewModel.Config.RightStickRight = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.RightStickRight = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                                 case "RightStickLeft":
-                                    ViewModel.Config.RightStickLeft = buttonValue.AsHidType<PhysicalKey>();
+                                    viewModel.Config.RightStickLeft = buttonValue.AsHidType<PhysicalKey>();
                                     break;
                             }
 
-                            ViewModel.ParentModel.RefreshModifiedState();
+                            viewModel.ParentModel.RefreshModifiedState();
                         }
                     };
 
@@ -251,6 +253,11 @@ namespace Ryujinx.Ava.UI.Views.Input
             base.OnDetachedFromVisualTree(e);
             _currentAssigner?.Cancel();
             _currentAssigner = null;
+        }
+
+        private bool IsActiveAssignmentContext(KeyboardInputViewModel viewModel)
+        {
+            return VisualRoot is not null && ReferenceEquals(DataContext, viewModel);
         }
     }
 }
