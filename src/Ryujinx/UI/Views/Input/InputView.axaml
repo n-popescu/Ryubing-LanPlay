@@ -188,7 +188,7 @@
                         Margin="5,0,0,0"
                         VerticalAlignment="Center"
                         ToolTip.Tip="{ext:Locale ControllerSettingsResetKeybindsToDefault}"
-                        Command="{Binding ResetCurrentDeviceToDefaults}">
+                        Click="ResetCurrentDeviceToDefaultsButton_OnClick">
                         <ui:SymbolIcon
                             Symbol="Undo"
                             FontSize="15"

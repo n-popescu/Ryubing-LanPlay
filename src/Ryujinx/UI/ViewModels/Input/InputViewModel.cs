@@ -289,6 +289,19 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             }
         }
 
+        public bool NeedsResetCurrentDeviceToDefaultsConfirmation()
+        {
+            if (_device <= 0 || _device >= Devices.Count || Devices[_device].Type == DeviceType.None)
+            {
+                return false;
+            }
+
+            InputConfig defaultConfig = LoadDefaultConfiguration();
+            InputConfig currentConfig = GetSelectedDeviceConfig();
+
+            return !ConfigsMatch(currentConfig, defaultConfig);
+        }
+
         public void ResetCurrentDeviceToDefaults()
         {
             RefreshAvailableDevices();

@@ -1,5 +1,8 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia;
+using Avalonia.Layout;
+using Avalonia.Media;
 using FluentAvalonia.UI.Controls;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Systems.Configuration;
@@ -100,6 +103,55 @@ namespace Ryujinx.Ava.UI.Views.Input
             {
                 faComboBox.IsDropDownOpen = false;
                 ViewModel.IsModified = true;
+            }
+        }
+
+        private async void ResetCurrentDeviceToDefaultsButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!ViewModel.NeedsResetCurrentDeviceToDefaultsConfirmation())
+            {
+                ViewModel.ResetCurrentDeviceToDefaults();
+                return;
+            }
+
+            Window owner = TopLevel.GetTopLevel(this) as Window;
+
+            StackPanel content = new()
+            {
+                Spacing = 4,
+                MaxWidth = 360,
+            };
+
+            content.Children.Add(new TextBlock
+            {
+                Text = LocaleManager.Instance[LocaleKeys.DialogControllerSettingsResetKeybindsConfirmMessage],
+                TextWrapping = TextWrapping.Wrap,
+                MaxWidth = 360,
+            });
+
+            content.Children.Add(new TextBlock
+            {
+                Text = LocaleManager.Instance[LocaleKeys.DialogControllerSettingsResetKeybindsConfirmSubMessage],
+                TextWrapping = TextWrapping.Wrap,
+                MaxWidth = 360,
+            });
+
+            ContentDialog contentDialog = new ContentDialog
+            {
+                Title = LocaleManager.Instance[LocaleKeys.RyujinxConfirm],
+                PrimaryButtonText = LocaleManager.Instance[LocaleKeys.InputDialogYes],
+                CloseButtonText = LocaleManager.Instance[LocaleKeys.InputDialogNo],
+                DefaultButton = ContentDialogButton.Primary,
+                Content = content,
+            }.ApplyStyles();
+
+            ContentDialogResult result = owner is not null
+                ? await contentDialog.ShowAsync(owner)
+                : await ContentDialogHelper.ShowAsync(contentDialog);
+
+            if (result == ContentDialogResult.Primary)
+            {
+                ViewModel.ResetCurrentDeviceToDefaults();
             }
         }
 
