@@ -557,8 +557,20 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 return currentConfig == otherConfig;
             }
 
-            return JsonHelper.Serialize(currentConfig, _serializerContext.InputConfig) ==
-                   JsonHelper.Serialize(otherConfig, _serializerContext.InputConfig);
+            return SerializeComparableConfig(currentConfig) ==
+                   SerializeComparableConfig(otherConfig);
+        }
+
+        private static string SerializeComparableConfig(InputConfig config)
+        {
+            InputConfig comparableConfig =
+                JsonHelper.Deserialize(
+                    JsonHelper.Serialize(config, _serializerContext.InputConfig),
+                    _serializerContext.InputConfig);
+
+            comparableConfig.Name = string.Empty;
+
+            return JsonHelper.Serialize(comparableConfig, _serializerContext.InputConfig);
         }
 
         private InputConfig GetSelectedDeviceConfig()
