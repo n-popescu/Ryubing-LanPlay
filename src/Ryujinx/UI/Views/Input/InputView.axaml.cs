@@ -102,7 +102,7 @@ namespace Ryujinx.Ava.UI.Views.Input
             if (sender is FAComboBox faComboBox)
             {
                 faComboBox.IsDropDownOpen = false;
-                ViewModel.IsModified = true;
+                ViewModel.RefreshModifiedState();
             }
         }
 

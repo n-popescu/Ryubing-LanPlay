@@ -1036,7 +1036,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         public void LoadProfileButton()
         {
             LoadProfile();
-            IsModified = true;
         }
 
         public async void LoadProfile()
@@ -1106,6 +1105,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 _isLoaded = true;
 
+                RefreshModifiedState();
                 NotifyChanges();
             }
         }
