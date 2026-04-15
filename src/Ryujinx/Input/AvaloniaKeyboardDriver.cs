@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+using AvaKey = Avalonia.Input.Key;
 using ConfigPhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;
 using Key = Ryujinx.Input.Key;
 
