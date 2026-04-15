@@ -9,6 +9,7 @@ using Ryujinx.Input;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using ConfigPhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;
 using Key = Ryujinx.Input.Key;
@@ -24,6 +25,19 @@ namespace Ryujinx.Ava.Input
             Unknown,
         }
 
+        [Flags]
+        private enum CGEventFlags : ulong
+        {
+             AlphaShift = 1UL << 16 // CapsLock
+        }
+
+        private enum CGEventSourceStateID : uint
+        {
+            HIDSystemState = 1
+        }
+
+        [DllImport("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
+        private static extern CGEventFlags CGEventSourceFlagsState(CGEventSourceStateID stateID);
         private static readonly string[] _keyboardIdentifers = ["0"];
         private readonly Control _control;
         private readonly Window _window;
@@ -56,9 +70,6 @@ namespace Ryujinx.Ava.Input
             _pressedKeyQueueLock = new();
             _defaultMode = defaultMode;
 
-            // Use routed handlers so keys consumed earlier in the Avalonia pipeline
-            // can still be observed by the input driver. This is needed for keys like
-            // Caps Lock on macOS, which may not reach the plain CLR event path.
             _control.AddHandler(InputElement.KeyDownEvent, OnKeyPress, RoutingStrategies.Tunnel, true);
             _control.AddHandler(InputElement.KeyUpEvent, OnKeyRelease, RoutingStrategies.Tunnel, true);
             _control.TextInput += Control_TextInput;
@@ -130,16 +141,45 @@ namespace Ryujinx.Ava.Input
                 }
             }
         }
+        private bool _capsLockState;
+        private bool _lastCapsLockState = false;
 
         protected void OnKeyPress(object sender, KeyEventArgs args)
         {
-            UpdateKeyStates(args, isPressed: true);
+            if (args.Key == AvaKey.CapsLock)
+            {
+                // Update cached state using macOS API
+                if (OperatingSystem.IsMacOS())
+                {
+                    var flags = CGEventSourceFlagsState(CGEventSourceStateID.HIDSystemState);
+                    _capsLockState = (flags & CGEventFlags.AlphaShift) != 0;
+                }
+                else
+                {
+                    _capsLockState = true;
+                }
+            }
+
+            UpdateKeyStates(args, true);
             KeyPressed?.Invoke(this, args);
         }
 
         protected void OnKeyRelease(object sender, KeyEventArgs args)
         {
-            UpdateKeyStates(args, isPressed: false);
+            if (args.Key == AvaKey.CapsLock)
+            {
+                if (OperatingSystem.IsMacOS())
+                {
+                    var flags = CGEventSourceFlagsState(CGEventSourceStateID.HIDSystemState);
+                    _capsLockState = (flags & CGEventFlags.AlphaShift) != 0;
+                }
+                else
+                {
+                    _capsLockState = false;
+                }
+            }
+
+            UpdateKeyStates(args, false);
             KeyRelease?.Invoke(this, args);
         }
 
@@ -150,9 +190,43 @@ namespace Ryujinx.Ava.Input
                 return false;
             }
 
+            if (key == Key.CapsLock)
+            {
+                return IsCapsLockOnMacOS();
+            }
+
             return mode == KeyboardInputMode.Physical
                 ? _physicalPressedKeys.Contains((ConfigPhysicalKey)(int)key)
                 : _semanticPressedKeys.Contains(key);
+        }
+
+        private bool IsCapsLockOnMacOS()
+        {
+            bool currentState = false;
+
+            try
+            {
+                if (OperatingSystem.IsMacOS())
+                {
+                    var flags = CGEventSourceFlagsState(CGEventSourceStateID.HIDSystemState);
+                    currentState = (flags & CGEventFlags.AlphaShift) != 0;
+                }
+                else
+                {
+                    // Fallback: use Avalonia's tracked key state (semantic CapsLock)
+                    if (AvaloniaKeyboardMappingHelper.TryGetAvaKey(Key.CapsLock, out AvaKey nativeKey))
+                    {
+                        currentState = _semanticPressedKeys.Contains(Key.CapsLock);
+                    }
+                }
+            }
+            catch
+            {
+                // ignore and fallback to "not pressed"
+            }
+
+            _lastCapsLockState = currentState;
+            return currentState;
         }
 
         internal void Clear(KeyboardInputMode mode)
