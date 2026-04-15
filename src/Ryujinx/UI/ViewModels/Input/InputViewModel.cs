@@ -570,6 +570,12 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             comparableConfig.Name = string.Empty;
 
+            if (comparableConfig is StandardControllerInputConfig controllerConfig &&
+                controllerConfig.Led is { EnableLed: false, TurnOffLed: false, UseRainbow: false, LedColor: 0 })
+            {
+                controllerConfig.Led = null;
+            }
+
             return JsonHelper.Serialize(comparableConfig, _serializerContext.InputConfig);
         }
 
