@@ -27,6 +27,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using ConfigGamepadInputId = Ryujinx.Common.Configuration.Hid.Controller.GamepadInputId;
 using ConfigStickInputId = Ryujinx.Common.Configuration.Hid.Controller.StickInputId;
 using PhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;
@@ -78,7 +79,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 field = value;
 
-                if (ConfigViewModel is ControllerInputViewModel { Config.UseRainbowLed: true })
+                if ((field?.Features & GamepadFeaturesFlag.Led) != 0 &&
+                    ConfigViewModel is ControllerInputViewModel { Config.UseRainbowLed: true })
                     Rainbow.Updated += (ref Color color) => field.SetLed((uint)color.ToArgb());
 
                 OnPropertiesChanged(nameof(HasLed), nameof(CanClearLed));
@@ -644,14 +646,24 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         {
             _isChangeTrackingActive = false; // Disable configuration change tracking
 
-            bool shouldApplyKeyboardFallback = Config is StandardControllerInputConfig controllerConfig && controllerConfig.Id == id;
+            bool selectedControllerDisconnected =
+                _device > 0 &&
+                _device < Devices.Count &&
+                Devices[_device].Type == DeviceType.Controller &&
+                string.Equals(GetCurrentGamepadId(), id, StringComparison.Ordinal);
 
             RefreshAvailableDevices();
 
+            InputConfig displayedConfig = GetDisplayedInputConfig(GetPersistedInputConfig());
+            bool shouldApplyKeyboardFallback =
+                selectedControllerDisconnected ||
+                displayedConfig is StandardKeyboardInputConfig;
+
             if (shouldApplyKeyboardFallback)
             {
-                LoadConfiguration();
+                LoadConfiguration(displayedConfig);
                 LoadDevice();
+                LoadProfiles();
                 FindPairedDeviceInConfigFile();
                 IsModified = false;
                 NotifyChanges();
@@ -667,17 +679,48 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         }
 
-        private void HandleOnGamepadConnected(string id)
+        private async void HandleOnGamepadConnected(string id)
         {
             _isChangeTrackingActive = false; // Disable configuration change tracking
 
-            RefreshAvailableDevices();
+            try
+            {
+                InputConfig persistedConfig = GetPersistedInputConfig();
+                bool shouldRestoreControllerAfterFallback =
+                    Config is StandardKeyboardInputConfig &&
+                    persistedConfig is StandardControllerInputConfig;
 
-            IsModified = true;
-            RevertChanges();
+                if (shouldRestoreControllerAfterFallback)
+                {
+                    const int reconnectRestoreAttempts = 20;
+                    const int reconnectRestoreDelayMs = 250;
 
-            _isChangeTrackingActive = true;// Enable configuration change tracking
+                    string controllerId = persistedConfig.Id;
 
+                    for (int attempt = 0; attempt < reconnectRestoreAttempts; attempt++)
+                    {
+                        RefreshAvailableDevices();
+
+                        if (Devices.Any(device => device.Type == DeviceType.Controller && device.Id == controllerId))
+                        {
+                            IsModified = true;
+                            RevertChanges();
+                            return;
+                        }
+
+                        await Task.Delay(reconnectRestoreDelayMs);
+                    }
+                }
+
+                RefreshAvailableDevices();
+
+                IsModified = true;
+                RevertChanges();
+            }
+            finally
+            {
+                _isChangeTrackingActive = true;// Enable configuration change tracking
+            }
         }
 
         private string GetCurrentGamepadId()
