@@ -40,11 +40,7 @@
     <PackageVersion Include="Open.NAT.Core" Version="2.1.0.5" />
     <PackageVersion Include="Ryujinx.Audio.OpenAL.Dependencies" Version="1.21.0.1" />
     <PackageVersion Include="Ryujinx.Graphics.Nvdec.Dependencies.AllArch" Version="6.1.2-build3" />
-    <!-- there's an issue with Ryujinx.Graphics.Vulkan.Dependencies.MoltenVK:1.2.3 -->
-    <!-- "rendering issues, it has many regressions" guess it needs updating -->
-    <!-- going to try replacing with Silk.NET.MoltenVK.Native -->
-    <!-- <PackageVersion Include="Ryujinx.Graphics.Vulkan.Dependencies.MoltenVK" Version="1.2.0" /> -->
-    <PackageVersion Include="Silk.NET.MoltenVK.Native" Version="2.23.0" />
+    <PackageVersion Include="Ryujinx.Graphics.Vulkan.MoltenVK" Version="1.4.2-ryujinx.1" />
     <PackageVersion Include="Ryujinx.LibHac" Version="0.21.0-alpha.129" />
     <PackageVersion Include="Ryujinx.UpdateClient" Version="1.0.44" />
     <PackageVersion Include="Ryujinx.Systems.Update.Common" Version="1.0.44" />
