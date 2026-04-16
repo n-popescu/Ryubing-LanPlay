@@ -211,7 +211,7 @@ namespace Ryujinx.Graphics.Vulkan
                 _lock.ExitReadLock();
             }
 
-            ulong blockAlignedSize = BitUtils.AlignUp(size, (ulong)_blockAlignment);
+            ulong blockAlignedSize = BitUtils.AlignUp(size + alignment, (ulong)_blockAlignment);
 
             MemoryAllocateInfo memoryAllocateInfo = new()
             {
