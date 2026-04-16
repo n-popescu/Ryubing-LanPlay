@@ -155,7 +155,6 @@ namespace Ryujinx.Input.HLE
                     bool isValid = DriverConfigurationUpdate(ref controller, activeConfig);
 
                     if (!isValid &&
-                        enableKeyboard &&
                         inputConfigEntry is StandardControllerInputConfig &&
                         TryGetKeyboardFallback(inputConfigEntry, out StandardKeyboardInputConfig fallbackConfig))
                     {

@@ -652,7 +652,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             {
                 LoadConfiguration();
                 LoadDevice();
-                NotificationIsVisible = false;
+                FindPairedDeviceInConfigFile();
                 IsModified = false;
                 NotifyChanges();
             }
