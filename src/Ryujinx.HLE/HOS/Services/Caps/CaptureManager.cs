@@ -4,8 +4,8 @@ using SkiaSharp;
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using Ryujinx.Common.Logging;
 
 namespace Ryujinx.HLE.HOS.Services.Caps
 {
@@ -117,14 +117,39 @@ namespace Ryujinx.HLE.HOS.Services.Caps
                     filePath = GenerateFilePath(folderPath, applicationAlbumEntry, currentDateTime, hash);
                 }
 
-                // NOTE: The saved JPEG file doesn't have the limitation in the extra EXIF data.
-                using SKBitmap bitmap = new(new SKImageInfo(1280, 720, SKColorType.Rgba8888));
-                Marshal.Copy(screenshotData, 0, bitmap.GetPixels(), screenshotData.Length);
-                using SKData data = bitmap.Encode(SKEncodedImageFormat.Jpeg, 80);
-                using FileStream file = File.OpenWrite(filePath);
-                data.SaveTo(file);
+                try
+                {
+                    // NOTE: The saved JPEG file doesn't have the limitation in the extra EXIF data.
+                    using SKBitmap bitmap = new(new SKImageInfo(1280, 720, SKColorType.Rgba8888, SKAlphaType.Premul));
+                    ReadOnlySpan<byte> rawImage = screenshotData;
+                    Span<byte> pixelBuffer = bitmap.GetPixelSpan();
+                    int strideBytes = bitmap.Info.Width * 4;
+                    int bmpRowBytes = bitmap.RowBytes;
 
-                return ResultCode.Success;
+                    if (rawImage.Length < strideBytes * bitmap.Info.Height)
+                    {
+                        throw new Exception("Screenshot buffer is too small.");
+                    }
+
+                    for (int i = 0, l = bitmap.Info.Height; i < l; ++i)
+                    {
+                        ReadOnlySpan<byte> srcRow = rawImage.Slice(i * strideBytes, strideBytes);
+                        Span<byte> dstRow = pixelBuffer.Slice(i * bmpRowBytes, strideBytes);
+
+                        srcRow.CopyTo(dstRow);
+                    }
+
+                    using SKData data = bitmap.Encode(SKEncodedImageFormat.Jpeg, 80);
+                    using FileStream file = File.OpenWrite(filePath);
+                    data.SaveTo(file);
+
+                    return ResultCode.Success;
+                }
+                catch (Exception e)
+                {
+                    Logger.Error?.Print(LogClass.ServiceCaps, $"Failed to save screenshot: {e}\nmessage: {e.Message}.");
+                    return ResultCode.NullInputBuffer;
+                }
             }
 
             return ResultCode.NullInputBuffer;
