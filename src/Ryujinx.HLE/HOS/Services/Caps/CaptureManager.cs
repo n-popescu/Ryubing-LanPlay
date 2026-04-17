@@ -4,8 +4,8 @@ using SkiaSharp;
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using Ryujinx.Common.Logging;
 
 namespace Ryujinx.HLE.HOS.Services.Caps
 {
@@ -117,25 +117,17 @@ namespace Ryujinx.HLE.HOS.Services.Caps
                     filePath = GenerateFilePath(folderPath, applicationAlbumEntry, currentDateTime, hash);
                 }
 
-                try
-                {
-                    // NOTE: The saved JPEG file doesn't have the limitation in the extra EXIF data.
-                    using SKBitmap bitmap = new(new SKImageInfo(1280, 720, SKColorType.Rgba8888, SKAlphaType.Premul));
-                    int dataLen = screenshotData.Length > bitmap.ByteCount ? bitmap.ByteCount : screenshotData.Length;
+                // NOTE: The saved JPEG file doesn't have the limitation in the extra EXIF data.
+                using SKBitmap bitmap = new(new SKImageInfo(1280, 720, SKColorType.Rgba8888, SKAlphaType.Premul));
+                int dataLen = screenshotData.Length > bitmap.ByteCount ? bitmap.ByteCount : screenshotData.Length;
 
-                    screenshotData[..dataLen].CopyTo(bitmap.GetPixelSpan());
+                Marshal.Copy(screenshotData, 0, bitmap.GetPixels(), dataLen);
 
-                    using SKData data = bitmap.Encode(SKEncodedImageFormat.Jpeg, 80);
-                    using FileStream file = File.OpenWrite(filePath);
-                    data.SaveTo(file);
+                using SKData data = bitmap.Encode(SKEncodedImageFormat.Jpeg, 80);
+                using FileStream file = File.OpenWrite(filePath);
+                data.SaveTo(file);
 
-                    return ResultCode.Success;
-                }
-                catch (Exception e)
-                {
-                    Logger.Error?.Print(LogClass.ServiceCaps, $"Failed to save screenshot: {e}\nmessage: {e.Message}.");
-                    return ResultCode.NullInputBuffer;
-                }
+                return ResultCode.Success;
             }
 
             return ResultCode.NullInputBuffer;
