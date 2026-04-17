@@ -123,8 +123,7 @@ namespace Ryujinx.HLE.HOS.Services.Caps
                     using SKBitmap bitmap = new(new SKImageInfo(1280, 720, SKColorType.Rgba8888, SKAlphaType.Premul));
                     ReadOnlySpan<byte> rawImage = screenshotData;
                     Span<byte> pixelBuffer = bitmap.GetPixelSpan();
-                    int strideBytes = bitmap.Info.Width * 4;
-                    int bmpRowBytes = bitmap.RowBytes;
+                    int strideBytes = bitmap.RowBytes;
 
                     if (rawImage.Length < strideBytes * bitmap.Info.Height)
                     {
@@ -134,7 +133,7 @@ namespace Ryujinx.HLE.HOS.Services.Caps
                     for (int i = 0, l = bitmap.Info.Height; i < l; ++i)
                     {
                         ReadOnlySpan<byte> srcRow = rawImage.Slice(i * strideBytes, strideBytes);
-                        Span<byte> dstRow = pixelBuffer.Slice(i * bmpRowBytes, strideBytes);
+                        Span<byte> dstRow = pixelBuffer.Slice(i * strideBytes, strideBytes);
 
                         srcRow.CopyTo(dstRow);
                     }
