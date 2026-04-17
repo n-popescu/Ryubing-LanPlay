@@ -121,22 +121,9 @@ namespace Ryujinx.HLE.HOS.Services.Caps
                 {
                     // NOTE: The saved JPEG file doesn't have the limitation in the extra EXIF data.
                     using SKBitmap bitmap = new(new SKImageInfo(1280, 720, SKColorType.Rgba8888, SKAlphaType.Premul));
-                    ReadOnlySpan<byte> rawImage = screenshotData;
-                    Span<byte> pixelBuffer = bitmap.GetPixelSpan();
-                    int strideBytes = bitmap.RowBytes;
+                    int dataLen = screenshotData.Length > bitmap.ByteCount ? bitmap.ByteCount : screenshotData.Length;
 
-                    if (rawImage.Length < strideBytes * bitmap.Info.Height)
-                    {
-                        throw new Exception("Screenshot buffer is too small.");
-                    }
-
-                    for (int i = 0, l = bitmap.Info.Height; i < l; ++i)
-                    {
-                        ReadOnlySpan<byte> srcRow = rawImage.Slice(i * strideBytes, strideBytes);
-                        Span<byte> dstRow = pixelBuffer.Slice(i * strideBytes, strideBytes);
-
-                        srcRow.CopyTo(dstRow);
-                    }
+                    screenshotData[..dataLen].CopyTo(bitmap.GetPixelSpan());
 
                     using SKData data = bitmap.Encode(SKEncodedImageFormat.Jpeg, 80);
                     using FileStream file = File.OpenWrite(filePath);
