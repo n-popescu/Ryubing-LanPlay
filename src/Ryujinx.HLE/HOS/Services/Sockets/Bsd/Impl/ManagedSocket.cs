@@ -158,7 +158,7 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
             }
             catch (SocketException exception)
             {
-                if (!Blocking && exception.ErrorCode == (int)WsaError.WSAEWOULDBLOCK)
+                if (!Blocking && exception.SocketErrorCode == SocketError.WouldBlock)
                 {
                     return LinuxError.EINPROGRESS;
                 }
