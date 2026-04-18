@@ -75,6 +75,11 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             get;
             private set
             {
+                if (!ReferenceEquals(field, value))
+                {
+                    field?.Dispose();
+                }
+
                 Rainbow.Reset();
 
                 field = value;
@@ -424,6 +429,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         private void LoadConfiguration(InputConfig inputConfig = null)
         {
             Config = inputConfig ?? GetDisplayedInputConfig(GetPersistedInputConfig());
+            ConfigViewModel = null;
 
             if (Config is StandardKeyboardInputConfig keyboardInputConfig)
             {
@@ -613,6 +619,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         {
             if (_device < 0)
             {
+                SelectedGamepad = null;
                 return;
             }
 
@@ -621,6 +628,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             if (type == DeviceType.None)
             {
+                SelectedGamepad = null;
                 return;
             }
 
@@ -654,13 +662,21 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             RefreshAvailableDevices();
 
-            InputConfig displayedConfig = GetDisplayedInputConfig(GetPersistedInputConfig());
+            InputConfig persistedConfig = GetPersistedInputConfig();
+            InputConfig displayedConfig = GetDisplayedInputConfig(persistedConfig);
             bool shouldApplyKeyboardFallback =
                 selectedControllerDisconnected ||
                 displayedConfig is StandardKeyboardInputConfig;
 
             if (shouldApplyKeyboardFallback)
             {
+                if (selectedControllerDisconnected &&
+                    displayedConfig is not StandardKeyboardInputConfig &&
+                    TryCreateKeyboardFallbackConfig(persistedConfig, out StandardKeyboardInputConfig fallbackConfig))
+                {
+                    displayedConfig = fallbackConfig;
+                }
+
                 LoadConfiguration(displayedConfig);
                 LoadDevice();
                 LoadProfiles();
@@ -940,58 +956,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             InputConfig config;
             if (activeDevice.Type == DeviceType.Keyboard)
             {
-                string id = activeDevice.Id;
-                string name = activeDevice.Name;
-
-                config = new StandardKeyboardInputConfig
-                {
-                    Version = InputConfig.CurrentVersion,
-                    Backend = InputBackendType.WindowKeyboard,
-                    Id = id,
-                    Name = name,
-                    ControllerType = ControllerType.ProController,
-                    LeftJoycon = new LeftJoyconCommonConfig<PhysicalKey>
-                    {
-                        DpadUp = PhysicalKey.Up,
-                        DpadDown = PhysicalKey.Down,
-                        DpadLeft = PhysicalKey.Left,
-                        DpadRight = PhysicalKey.Right,
-                        ButtonMinus = PhysicalKey.Minus,
-                        ButtonL = PhysicalKey.E,
-                        ButtonZl = PhysicalKey.Q,
-                        ButtonSl = PhysicalKey.Unbound,
-                        ButtonSr = PhysicalKey.Unbound,
-                    },
-                    LeftJoyconStick =
-                        new JoyconConfigKeyboardStick<PhysicalKey>
-                        {
-                            StickUp = PhysicalKey.W,
-                            StickDown = PhysicalKey.S,
-                            StickLeft = PhysicalKey.A,
-                            StickRight = PhysicalKey.D,
-                            StickButton = PhysicalKey.F,
-                        },
-                    RightJoycon = new RightJoyconCommonConfig<PhysicalKey>
-                    {
-                        ButtonA = PhysicalKey.Z,
-                        ButtonB = PhysicalKey.X,
-                        ButtonX = PhysicalKey.C,
-                        ButtonY = PhysicalKey.V,
-                        ButtonPlus = PhysicalKey.Plus,
-                        ButtonR = PhysicalKey.U,
-                        ButtonZr = PhysicalKey.O,
-                        ButtonSl = PhysicalKey.Unbound,
-                        ButtonSr = PhysicalKey.Unbound,
-                    },
-                    RightJoyconStick = new JoyconConfigKeyboardStick<PhysicalKey>
-                    {
-                        StickUp = PhysicalKey.I,
-                        StickDown = PhysicalKey.K,
-                        StickLeft = PhysicalKey.J,
-                        StickRight = PhysicalKey.L,
-                        StickButton = PhysicalKey.H,
-                    },
-                };
+                config = CreateDefaultKeyboardConfig(activeDevice.Id, activeDevice.Name, ControllerType.ProController, _playerId);
             }
             else if (activeDevice.Type == DeviceType.Controller)
             {
@@ -1074,6 +1039,78 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             config.PlayerIndex = _playerId;
 
             return config;
+        }
+
+        private bool TryCreateKeyboardFallbackConfig(InputConfig sourceConfig, out StandardKeyboardInputConfig fallbackConfig)
+        {
+            fallbackConfig = null;
+
+            (DeviceType Type, string Id, string Name) keyboardDevice =
+                Devices.FirstOrDefault(device => device.Type == DeviceType.Keyboard);
+
+            if (keyboardDevice == default)
+            {
+                return false;
+            }
+
+            ControllerType controllerType = sourceConfig?.ControllerType ?? ControllerType.ProController;
+            PlayerIndex playerIndex = sourceConfig?.PlayerIndex ?? _playerId;
+
+            fallbackConfig = CreateDefaultKeyboardConfig(keyboardDevice.Id, keyboardDevice.Name, controllerType, playerIndex);
+            return true;
+        }
+
+        private static StandardKeyboardInputConfig CreateDefaultKeyboardConfig(string id, string name, ControllerType controllerType, PlayerIndex playerIndex)
+        {
+            return new StandardKeyboardInputConfig
+            {
+                Version = InputConfig.CurrentVersion,
+                Backend = InputBackendType.WindowKeyboard,
+                Id = id,
+                Name = name,
+                PlayerIndex = playerIndex,
+                ControllerType = controllerType,
+                LeftJoycon = new LeftJoyconCommonConfig<PhysicalKey>
+                {
+                    DpadUp = PhysicalKey.Up,
+                    DpadDown = PhysicalKey.Down,
+                    DpadLeft = PhysicalKey.Left,
+                    DpadRight = PhysicalKey.Right,
+                    ButtonMinus = PhysicalKey.Minus,
+                    ButtonL = PhysicalKey.E,
+                    ButtonZl = PhysicalKey.Q,
+                    ButtonSl = PhysicalKey.Unbound,
+                    ButtonSr = PhysicalKey.Unbound,
+                },
+                LeftJoyconStick = new JoyconConfigKeyboardStick<PhysicalKey>
+                {
+                    StickUp = PhysicalKey.W,
+                    StickDown = PhysicalKey.S,
+                    StickLeft = PhysicalKey.A,
+                    StickRight = PhysicalKey.D,
+                    StickButton = PhysicalKey.F,
+                },
+                RightJoycon = new RightJoyconCommonConfig<PhysicalKey>
+                {
+                    ButtonA = PhysicalKey.Z,
+                    ButtonB = PhysicalKey.X,
+                    ButtonX = PhysicalKey.C,
+                    ButtonY = PhysicalKey.V,
+                    ButtonPlus = PhysicalKey.Plus,
+                    ButtonR = PhysicalKey.U,
+                    ButtonZr = PhysicalKey.O,
+                    ButtonSl = PhysicalKey.Unbound,
+                    ButtonSr = PhysicalKey.Unbound,
+                },
+                RightJoyconStick = new JoyconConfigKeyboardStick<PhysicalKey>
+                {
+                    StickUp = PhysicalKey.I,
+                    StickDown = PhysicalKey.K,
+                    StickLeft = PhysicalKey.J,
+                    StickRight = PhysicalKey.L,
+                    StickButton = PhysicalKey.H,
+                },
+            };
         }
 
         public void LoadProfileButton()
