@@ -17,7 +17,8 @@ namespace Ryujinx.Cpu.LightningJit.Cache
         private static readonly int _pageMask = _pageSize - 1;
 
         private const int CodeAlignment = 4; // Bytes.
-        private const int CacheSize = 256 * 1024 * 1024;
+        // TODO: JIT Cache size should be application dependent, not global.
+        private const int CacheSize = 1024 * (1024 * 1024); // Megabytes * Size of Megabytes (since its in bytes).
 
         private static JitCacheInvalidation _jitCacheInvalidator;
 
