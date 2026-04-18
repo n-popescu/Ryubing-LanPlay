@@ -1,4 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
+using Ryujinx.Ava.UI.Models.Input;
 
 namespace Ryujinx.Ava.UI.ViewModels.Input
 {
@@ -25,7 +27,10 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         [ObservableProperty]
         public partial double GyroDeadzone { get; set; }
 
-        [ObservableProperty]
-        public partial bool EnableCemuHookMotion { get; set; }
+        [ObservableProperty] public partial bool EnableCemuHookMotion { get; set; }
+
+        [ObservableProperty] public partial int GyroRotation { get; set; }
+
+        public List<MotionRotationOptionsConfig> MotionRotationOptions => MotionRotationOptionsConfig.RotationOptions;
     }
 }

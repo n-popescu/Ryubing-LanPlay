@@ -297,8 +297,8 @@ namespace Ryujinx.Input.HLE
                             Vector3 accelerometer = gamepad.GetMotionData(MotionInputId.Accelerometer);
                             Vector3 gyroscope = gamepad.GetMotionData(MotionInputId.Gyroscope);
 
-                            accelerometer = new Vector3(accelerometer.X, -accelerometer.Z, accelerometer.Y);
-                            gyroscope = new Vector3(gyroscope.X, -gyroscope.Z, gyroscope.Y);
+                            accelerometer = MotionUtils.ApplyGyroRotation(accelerometer, controllerConfig.Motion.GyroRotation);
+                            gyroscope = MotionUtils.ApplyGyroRotation(gyroscope, controllerConfig.Motion.GyroRotation);
 
                             _leftMotionInput.Update(accelerometer, gyroscope, (ulong)PerformanceCounter.ElapsedNanoseconds / 1000, controllerConfig.Motion.Sensitivity, (float)controllerConfig.Motion.GyroDeadzone);
 
@@ -309,8 +309,8 @@ namespace Ryujinx.Input.HLE
                                     Vector3 rightAccelerometer = gamepad.GetMotionData(MotionInputId.SecondAccelerometer);
                                     Vector3 rightGyroscope = gamepad.GetMotionData(MotionInputId.SecondGyroscope);
 
-                                    rightAccelerometer = new Vector3(rightAccelerometer.X, -rightAccelerometer.Z, rightAccelerometer.Y);
-                                    rightGyroscope = new Vector3(rightGyroscope.X, -rightGyroscope.Z, rightGyroscope.Y);
+                                    rightAccelerometer = MotionUtils.ApplyGyroRotation(rightAccelerometer, controllerConfig.Motion.GyroRotation);
+                                    rightGyroscope = MotionUtils.ApplyGyroRotation(rightGyroscope, controllerConfig.Motion.GyroRotation);
 
                                     _rightMotionInput.Update(rightAccelerometer, rightGyroscope, (ulong)PerformanceCounter.ElapsedNanoseconds / 1000, controllerConfig.Motion.Sensitivity, (float)controllerConfig.Motion.GyroDeadzone);
                                 }

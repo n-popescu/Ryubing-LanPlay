@@ -17,6 +17,7 @@ namespace Ryujinx.Ava.UI.Models.Input
         public bool MirrorInput { get; set; }
         public int Sensitivity { get; set; }
         public double GyroDeadzone { get; set; }
+        public int GyroRotation { get; set; }
 
         public float WeakRumble { get; set; }
         public float StrongRumble { get; set; }
@@ -219,6 +220,7 @@ namespace Ryujinx.Ava.UI.Models.Input
                     EnableMotion = controllerInput.Motion.EnableMotion;
                     GyroDeadzone = controllerInput.Motion.GyroDeadzone;
                     Sensitivity = controllerInput.Motion.Sensitivity;
+                    GyroRotation = controllerInput.Motion.GyroRotation;
 
                     if (controllerInput.Motion is CemuHookMotionConfigController cemuHook)
                     {
@@ -331,6 +333,7 @@ namespace Ryujinx.Ava.UI.Models.Input
                     MotionBackend = MotionInputBackendType.CemuHook,
                     GyroDeadzone = GyroDeadzone,
                     Sensitivity = Sensitivity,
+                    GyroRotation = GyroRotation,
                     DsuServerHost = DsuServerHost,
                     DsuServerPort = DsuServerPort,
                     Slot = Slot,
@@ -346,6 +349,7 @@ namespace Ryujinx.Ava.UI.Models.Input
                     MotionBackend = MotionInputBackendType.GamepadDriver,
                     GyroDeadzone = GyroDeadzone,
                     Sensitivity = Sensitivity,
+                    GyroRotation = GyroRotation,
                 };
             }
 

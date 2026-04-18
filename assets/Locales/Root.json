@@ -8476,6 +8476,56 @@
       }
     },
     {
+      "ID": "ControllerSettingsMotionVisualizer",
+      "Translations": {
+        "ar_SA": "مُظهر الحركة",
+        "de_DE": "Bewegungsvisualisierung",
+        "el_GR": "Οπτικοποιητής Κίνησης",
+        "en_US": "Motion Visualizer",
+        "es_ES": "Visualizador de Movimiento",
+        "fr_FR": "Visualiseur de Mouvements",
+        "he_IL": "ממחיש תנועה",
+        "it_IT": "Visualizzatore di movimento",
+        "ja_JP": "モーションビジュアライザー",
+        "ko_KR": "모션 시각화 도구",
+        "no_NO": "Bevegelsesvisualisering",
+        "pl_PL": "Wizualizator Ruchu",
+        "pt_BR": "Visualizador de Movimento",
+        "ru_RU": "Визуализатор движения",
+        "sv_SE": "Rörelsevisualisering",
+        "th_TH": "ตัวแสดงภาพการเคลื่อนไหว",
+        "tr_TR": "Hareket Görselleştirici",
+        "uk_UA": "Візуалізатор руху",
+        "zh_CN": "体感可视化",
+        "zh_TW": "體感視覺化"
+      }
+    },
+    {
+      "ID": "ControllerSettingsGyroRotation",
+      "Translations": {
+        "ar_SA": "دوران الجيروسكوب",
+        "de_DE": "Gyro-Drehung",
+        "el_GR": "Περιστροφή Γυροσκοπίου",
+        "en_US": "Gyro Rotation",
+        "es_ES": "Rotación de Gyro",
+        "fr_FR": "Rotation du Gyroscope",
+        "he_IL": "סיבוב ג'ירוסקופ",
+        "it_IT": "Rotazione giroscopio",
+        "ja_JP": "ジャイロ回転",
+        "ko_KR": "자이로 회전",
+        "no_NO": "Gyro Rotasjon",
+        "pl_PL": "Rotacja Żyroskopu",
+        "pt_BR": "Rotação do Giroscópio",
+        "ru_RU": "Вращение гироскопа",
+        "sv_SE": "Gyrorotation",
+        "th_TH": "การหมุน Gyro",
+        "tr_TR": "Gyro Rotasyonu",
+        "uk_UA": "Обертання гіроскопа",
+        "zh_CN": "陀螺仪旋转",
+        "zh_TW": "陀螺儀旋轉"
+      }
+    },
+    {
       "ID": "ControllerSettingsLed",
       "Translations": {
         "ar_SA": "",

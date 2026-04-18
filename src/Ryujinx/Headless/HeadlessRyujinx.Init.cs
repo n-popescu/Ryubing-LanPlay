@@ -215,6 +215,7 @@ namespace Ryujinx.Headless
                             EnableMotion = true,
                             Sensitivity = 100,
                             GyroDeadzone = 1,
+                            GyroRotation = 0,
                         },
                         Rumble = new RumbleConfigController
                         {

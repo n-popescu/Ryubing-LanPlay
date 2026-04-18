@@ -1,0 +1,57 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    x:Class="Ryujinx.Ava.UI.Controls.MotionVisualizerControl"
+    Background="Transparent"
+    Width="180"
+    Height="180">
+    <Canvas Width="180" Height="180" Background="Transparent" HorizontalAlignment="Center"
+        VerticalAlignment="Center">
+        <!-- Outer circle border -->
+        <Ellipse Canvas.Left="15" Canvas.Top="15" Width="150" Height="150"
+            Fill="Transparent" Stroke="#CCCCCC" StrokeThickness="2" />
+        <!-- Crosshairs (vertical line) -->
+        <Path Canvas.Left="90" Canvas.Top="15" Stroke="#DDDDDD" StrokeThickness="1"
+            Data="M 0,0 L 0,150" />
+        <!-- Crosshairs (horizontal line) -->
+        <Path Canvas.Left="15" Canvas.Top="90" Stroke="#DDDDDD" StrokeThickness="1"
+            Data="M 0,0 L 150,0" />
+        <!-- Center dot (static reference) -->
+        <Ellipse Canvas.Left="84" Canvas.Top="84" Width="12" Height="12"
+            Fill="#333333" />
+        <!-- X axis motion indicator (Red) -->
+        <Ellipse x:Name="MotionDotX"
+            Canvas.Left="84"
+            Canvas.Top="84"
+            Width="10"
+            Height="10"
+            Fill="#FF4444"
+            Opacity="0.9" />
+        <!-- Y axis motion indicator (Green) -->
+        <Ellipse x:Name="MotionDotY"
+            Canvas.Left="84"
+            Canvas.Top="84"
+            Width="8"
+            Height="8"
+            Fill="#44FF44"
+            Opacity="0.8" />
+        <!-- Z axis motion indicator (Blue) -->
+        <Ellipse x:Name="MotionDotZ"
+            Canvas.Left="84"
+            Canvas.Top="84"
+            Width="6"
+            Height="6"
+            Fill="#90D5FF"
+            Opacity="0.7" />
+        <!-- Axis labels -->
+        <TextBlock Canvas.Left="160" Canvas.Top="85" Foreground="#FF4444" FontSize="10"
+            FontWeight="Bold" Text="X" />
+        <TextBlock Canvas.Left="85" Canvas.Top="10" Foreground="#44FF44" FontSize="10"
+            FontWeight="Bold" Text="Y" />
+        <TextBlock Canvas.Left="155" Canvas.Top="10" Foreground="#90D5FF" FontSize="10"
+            FontWeight="Bold" Text="Z" />
+    </Canvas>
+</UserControl>

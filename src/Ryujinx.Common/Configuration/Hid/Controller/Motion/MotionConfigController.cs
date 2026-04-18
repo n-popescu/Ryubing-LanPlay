@@ -21,5 +21,10 @@ namespace Ryujinx.Common.Configuration.Hid.Controller.Motion
         /// Enable Motion Controls
         /// </summary>
         public bool EnableMotion { get; set; }
+
+        /// <summary>
+        /// Gyro Rotation in degrees (0, 90, 180, 270)
+        /// </summary>
+        public int GyroRotation { get; set; } = 0;
     }
 }
