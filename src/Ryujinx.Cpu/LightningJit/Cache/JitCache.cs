@@ -34,6 +34,14 @@ namespace Ryujinx.Cpu.LightningJit.Cache
         [SupportedOSPlatform("windows")]
         [LibraryImport("kernel32.dll", SetLastError = true)]
         public static partial nint FlushInstructionCache(nint hProcess, nint lpAddress, nuint dwSize);
+        
+        [SupportedOSPlatform("macos")]
+        [LibraryImport("libSystem.dylib", EntryPoint = "sys_icache_invalidate")]
+        internal static partial void SysICacheInvalidate(nint start, nuint len);
+
+        [SupportedOSPlatform("linux")]
+        [LibraryImport("libgcc_s.so.1", EntryPoint = "__clear_cache")]
+        internal static partial void ClearCache(nint begin, nint end);
 
         public static void Initialize(IJitMemoryAllocator allocator)
         {
