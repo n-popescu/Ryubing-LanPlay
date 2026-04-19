@@ -1,19 +1,19 @@
 using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
 using Gommon;
-using ICSharpCode.SharpZipLib.GZip;
-using ICSharpCode.SharpZipLib.Tar;
-using ICSharpCode.SharpZipLib.Zip;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Ava.Utilities;
 using Ryujinx.Common;
 using Ryujinx.Common.Helper;
 using Ryujinx.Common.Logging;
+using SharpCompress.Archives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Formats.Tar;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -21,7 +21,6 @@ using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -143,6 +142,10 @@ namespace Ryujinx.Ava.Systems
 
             Directory.CreateDirectory(_updateDir);
 
+            // If we get a .zip url switch it to the preferred .7z file instead
+            // The update server still returns the .zip url by default for legacy support
+            downloadUrl = downloadUrl.Replace(".zip", ".7z");
+            
             string updateFile = Path.Combine(_updateDir, "update.bin");
 
             TaskDialog taskDialog = new()
@@ -402,73 +405,23 @@ namespace Ryujinx.Ava.Systems
 
         [SupportedOSPlatform("linux")]
         [SupportedOSPlatform("macos")]
-        private static void ExtractTarGzipFile(TaskDialog taskDialog, string archivePath, string outputDirectoryPath)
+        private static void ExtractTarGzipFile(string archivePath, string outputDirectoryPath)
         {
             using FileStream inStream = File.OpenRead(archivePath);
-            using GZipInputStream gzipStream = new(inStream);
-            using TarInputStream tarStream = new(gzipStream, Encoding.ASCII);
-
-            TarEntry tarEntry;
-
-            while ((tarEntry = tarStream.GetNextEntry()) is not null)
-            {
-                if (tarEntry.IsDirectory)
-                {
-                    continue;
-                }
-
-                string outPath = Path.Combine(outputDirectoryPath, tarEntry.Name);
-
-                Directory.CreateDirectory(Path.GetDirectoryName(outPath));
-
-                using FileStream outStream = File.OpenWrite(outPath);
-                tarStream.CopyEntryContents(outStream);
-
-                File.SetUnixFileMode(outPath, (UnixFileMode)tarEntry.TarHeader.Mode);
-                File.SetLastWriteTime(outPath, DateTime.SpecifyKind(tarEntry.ModTime, DateTimeKind.Utc));
-
-                Dispatcher.UIThread.Post(() =>
-                {
-                    if (tarEntry is null)
-                    {
-                        return;
-                    }
-
-                    taskDialog.SetProgressBarState(GetPercentage(tarEntry.Size, inStream.Length), TaskDialogProgressState.Normal);
-                });
-            }
+            using GZipStream gzipStream = new(inStream, CompressionMode.Decompress);
+            
+            TarFile.ExtractToDirectory(gzipStream,  outputDirectoryPath, true);
         }
 
-        private static void ExtractZipFile(TaskDialog taskDialog, string archivePath, string outputDirectoryPath)
+        private static void ExtractZipFile(string archivePath, string outputDirectoryPath)
         {
-            using Stream inStream = File.OpenRead(archivePath);
-            using ZipFile zipFile = new(inStream);
-
-            double count = 0;
-            foreach (ZipEntry zipEntry in zipFile)
-            {
-                count++;
-                if (zipEntry.IsDirectory)
-                {
-                    continue;
-                }
-
-                string outPath = Path.Combine(outputDirectoryPath, zipEntry.Name);
-
-                Directory.CreateDirectory(Path.GetDirectoryName(outPath));
-
-                using Stream zipStream = zipFile.GetInputStream(zipEntry);
-                using FileStream outStream = File.OpenWrite(outPath);
-
-                zipStream.CopyTo(outStream);
-
-                File.SetLastWriteTime(outPath, DateTime.SpecifyKind(zipEntry.DateTime, DateTimeKind.Utc));
-
-                Dispatcher.UIThread.Post(() =>
-                {
-                    taskDialog.SetProgressBarState(GetPercentage(count, zipFile.Count), TaskDialogProgressState.Normal);
-                });
-            }
+            ZipFile.ExtractToDirectory(archivePath, outputDirectoryPath);
+        }
+        
+        private static void Extract7ZipFile(string archivePath, string outputDirectoryPath)
+        {
+            IArchive archive = ArchiveFactory.OpenArchive(archivePath);
+            archive.WriteToDirectory(outputDirectoryPath);
         }
 
         private static void InstallUpdate(TaskDialog taskDialog, string updateFile)
@@ -479,16 +432,20 @@ namespace Ryujinx.Ava.Systems
 
             if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
             {
-                ExtractTarGzipFile(taskDialog, updateFile, _updateDir);
+                ExtractTarGzipFile(updateFile, _updateDir);
             }
             else if (OperatingSystem.IsWindows())
             {
-                ExtractZipFile(taskDialog, updateFile, _updateDir);
+                Extract7ZipFile(updateFile, _updateDir);
             }
             else
             {
                 throw new NotSupportedException();
             }
+            
+            // The new decompression implementations don't have a way to show progress
+            // so the progressbar is just set to 100% after the decompression is done
+            taskDialog.SetProgressBarState(100, TaskDialogProgressState.Normal);
 
             // Delete downloaded zip
             File.Delete(updateFile);
