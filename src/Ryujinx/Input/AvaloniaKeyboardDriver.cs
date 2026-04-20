@@ -89,6 +89,7 @@ namespace Ryujinx.Ava.Input
             {
                 _keysToRestoreAfterActivation.Clear();
                 _keysToRestoreAfterActivation.UnionWith(_semanticPressedKeys);
+                _observedPhysicalKeysBySemanticKey.Clear();
             }
 
             Clear();
@@ -140,6 +141,7 @@ namespace Ryujinx.Ava.Input
                     _window.Activated -= Window_Activated;
                     _window.Deactivated -= Window_Deactivated;
                 }
+                _observedPhysicalKeysBySemanticKey.Clear();
             }
         }
         private bool _capsLockState;
