@@ -31,7 +31,7 @@ namespace Ryujinx.Ava.Systems
         private static readonly string _homeDir = AppDomain.CurrentDomain.BaseDirectory;
         private static readonly string _updateDir = Path.Combine(Path.GetTempPath(), "Ryujinx", "update");
         private static readonly string _updatePublishDir = Path.Combine(_updateDir, "publish");
-        private const int ConnectionCount = 4;
+        private const int ConnectionCount = 1;
         
         private static long _buildSize;
         private static bool _updateSuccessful;
