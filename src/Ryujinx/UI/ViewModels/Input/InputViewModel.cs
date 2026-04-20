@@ -339,9 +339,16 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                     return;
                 }
 
-                int deviceIndex = Devices.ToList().FindIndex(device =>
-                    device.Type == selectedDevice.Item1 &&
-                    device.Id == selectedDevice.Item2);
+                int deviceIndex = -1;
+                for (int i = 0; i < Devices.Count; i++)
+                {
+                    var device = Devices[i];
+                    if (device.Type == selectedDevice.Item1 && device.Id == selectedDevice.Item2)
+                    {
+                        deviceIndex = i;
+                        break;
+                    }
+                }
 
                 if (deviceIndex < 0)
                 {
@@ -508,7 +515,15 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             if (item != default)
             {
-                deviceIndex = Devices.ToList().FindIndex(x => x.Id == item.Id);
+                deviceIndex = -1;
+                for (int i = 0; i < Devices.Count; i++)
+                {
+                    if (Devices[i].Id == item.Id)
+                    {
+                        deviceIndex = i;
+                        break;
+                    }
+                }
             }
 
             ApplyLoadedDevice(deviceIndex);
@@ -790,19 +805,30 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 Controllers.Add(new(ControllerType.JoyconLeft, LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypeJoyConLeft]));
                 Controllers.Add(new(ControllerType.JoyconRight, LocaleManager.Instance[LocaleKeys.ControllerSettingsControllerTypeJoyConRight]));
 
-                if (Config != null && Controllers.ToList().FindIndex(x => x.Type == Config.ControllerType) != -1)
+                if (Config != null)
                 {
-                    int controllerIndex = Controllers.ToList().FindIndex(x => x.Type == Config.ControllerType);
-                    
-                    // Avalonia bug: setting a newly instanced ComboBox to 0
-                    // causes the selected item to show up blank
-                    // Workaround: set the box to 1 and then 0
-                    if (controllerIndex == 0)
+                    int controllerIndex = -1;
+                    for (int i = 0; i < Controllers.Count; i++)
                     {
-                        ApplyControllerSelection(1);
+                        if (Controllers[i].Type == Config.ControllerType)
+                        {
+                            controllerIndex = i;
+                            break;
+                        }
                     }
 
-                    ApplyControllerSelection(controllerIndex);
+                    if (controllerIndex != -1)
+                    {
+                        // Avalonia bug: setting a newly instanced ComboBox to 0
+                        // causes the selected item to show up blank
+                        // Workaround: set the box to 1 and then 0
+                        if (controllerIndex == 0)
+                        {
+                            ApplyControllerSelection(1);
+                        }
+
+                        ApplyControllerSelection(controllerIndex);
+                    }
                 }
                 else
                 {
@@ -889,9 +915,16 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 if (selectedDevice != default)
                 {
-                    selectedDeviceIndex = Devices.ToList().FindIndex(device =>
-                        device.Type == selectedDevice.Type &&
-                        device.Id == selectedDevice.Id);
+                    selectedDeviceIndex = -1;
+                    for (int i = 0; i < Devices.Count; i++)
+                    {
+                        var device = Devices[i];
+                        if (device.Type == selectedDevice.Type && device.Id == selectedDevice.Id)
+                        {
+                            selectedDeviceIndex = i;
+                            break;
+                        }
+                    }
                 }
 
                 if (selectedDeviceIndex < 0)
