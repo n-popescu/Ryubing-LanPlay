@@ -123,6 +123,8 @@ namespace Ryujinx.Ava.Systems
                 return default;
             }
 
+            _connectionCount = (int)_versionResponse.MaxConcurrency;
+
             return (currentVersion, newVersion);
         }
     }
