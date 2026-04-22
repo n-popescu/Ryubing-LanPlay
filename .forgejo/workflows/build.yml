@@ -83,6 +83,9 @@ jobs:
           retry-codes: 139
         if: matrix.platform.name != 'linux-arm64'
 
+      - name: Create output dir
+        run: "mkdir artifact"
+
       - name: Publish Ryujinx
         run: dotnet publish -c "${{ matrix.configuration }}" -r "${{ matrix.platform.name }}" -o ./publish -p:Version="${{ steps.version_info.outputs.result }}" -p:DebugType=embedded -p:SourceRevisionId="${{ steps.version_info.outputs.git_short_hash }}" -p:ExtraDefineConstants=DISABLE_UPDATER src/Ryujinx --self-contained 
         if: forgejo.event_name == 'pull_request'
@@ -110,6 +113,7 @@ jobs:
       - name: Upload Ryujinx artifact
         uses: actions/upload-artifact@v4
         with:
+          name: ryujinx-${{ matrix.configuration }}-${{ steps.version_info.outputs.result }}+${{ steps.version_info.outputs.git_short_hash }}-${{ matrix.platform.zip_os_name }}
           path: artifact
         if: forgejo.event_name == 'pull_request'
 
