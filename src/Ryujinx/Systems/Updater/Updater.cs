@@ -73,27 +73,6 @@ namespace Ryujinx.Ava.Systems
                 return;
             }
 
-            // Fetch build size information to learn chunk sizes.
-            using HttpClient buildSizeClient = ConstructHttpClient();
-            try
-            {
-                buildSizeClient.DefaultRequestHeaders.Add("Range", "bytes=0-0");
-                
-                // Forgejo instance is located in Ukraine. Connection times will vary across the world.
-                buildSizeClient.Timeout = TimeSpan.FromSeconds(10);
-
-                HttpResponseMessage message = await buildSizeClient.GetAsync(new Uri(_versionResponse.ArtifactUrl), HttpCompletionOption.ResponseHeadersRead);
-
-                _buildSize = message.Content.Headers.ContentRange.Length.Value;
-            }
-            catch (Exception ex)
-            {
-                Logger.Warning?.Print(LogClass.Application, ex.Message);
-                Logger.Warning?.Print(LogClass.Application, "Couldn't determine build size for update, using single-threaded updater");
-
-                _buildSize = -1;
-            }
-
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 string newVersionString = ReleaseInformation.IsCanaryBuild
@@ -161,6 +140,27 @@ namespace Ryujinx.Ava.Systems
                 ShowProgressBar = true,
                 XamlRoot = RyujinxApp.MainWindow,
             };
+            
+            // Fetch build size information to learn chunk sizes.
+            using HttpClient buildSizeClient = ConstructHttpClient();
+            try
+            {
+                buildSizeClient.DefaultRequestHeaders.Add("Range", "bytes=0-0");
+                
+                // Forgejo instance is located in Ukraine. Connection times will vary across the world.
+                buildSizeClient.Timeout = TimeSpan.FromSeconds(10);
+
+                HttpResponseMessage message = await buildSizeClient.GetAsync(new Uri(_versionResponse.ArtifactUrl), HttpCompletionOption.ResponseHeadersRead);
+
+                _buildSize = message.Content.Headers.ContentRange.Length.Value;
+            }
+            catch (Exception ex)
+            {
+                Logger.Warning?.Print(LogClass.Application, ex.Message);
+                Logger.Warning?.Print(LogClass.Application, "Couldn't determine build size for update, using single-threaded updater");
+
+                _buildSize = -1;
+            }
 
             taskDialog.Opened += (s, e) =>
             {
