@@ -13,6 +13,12 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);._*</DefaultItemExcludes>
   </PropertyGroup>
 
+  <Target Name="RemoveNativePackagePdbs" AfterTargets="ResolvePackageAssets">
+    <ItemGroup Condition="'$(Configuration)'=='Release'">
+      <NativeCopyLocalItems Remove="@(NativeCopyLocalItems)" Condition="'%(Extension)' == '.pdb'" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="BuildValidationProj" BeforeTargets="BeforeRebuild">
     <MSBuild Projects="..\Ryujinx.BuildValidationTasks\Ryujinx.BuildValidationTasks.csproj" Targets="Rebuild">
     </MSBuild>
