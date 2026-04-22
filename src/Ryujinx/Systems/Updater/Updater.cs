@@ -8,6 +8,7 @@ using Ryujinx.Common;
 using Ryujinx.Common.Helper;
 using Ryujinx.Common.Logging;
 using SharpCompress.Archives;
+using SharpCompress.Compressors.Xz;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -145,6 +146,10 @@ namespace Ryujinx.Ava.Systems
             // If we get a .zip url switch it to the preferred .7z file instead
             // The update server still returns the .zip url by default for legacy support
             downloadUrl = downloadUrl.Replace(".zip", ".7z");
+            
+            // If we get a .tar.gz url switch it to the preferred .tar.xz file instead
+            // The update server still returns the .tar.gz url by default for legacy support
+            downloadUrl = downloadUrl.Replace(".tar.gz", ".tar.xz");
             
             string updateFile = Path.Combine(_updateDir, "update.bin");
 
@@ -410,7 +415,17 @@ namespace Ryujinx.Ava.Systems
             using FileStream inStream = File.OpenRead(archivePath);
             using GZipStream gzipStream = new(inStream, CompressionMode.Decompress);
             
-            TarFile.ExtractToDirectory(gzipStream,  outputDirectoryPath, true);
+            TarFile.ExtractToDirectory(gzipStream, outputDirectoryPath, true);
+        }
+        
+        [SupportedOSPlatform("linux")]
+        [SupportedOSPlatform("macos")]
+        private static void ExtractTarXzipFile(string archivePath, string outputDirectoryPath)
+        {
+            using FileStream inStream = File.OpenRead(archivePath);
+            using XZStream gzipStream = new(inStream);
+            
+            TarFile.ExtractToDirectory(gzipStream, outputDirectoryPath, true);
         }
 
         private static void ExtractZipFile(string archivePath, string outputDirectoryPath)
@@ -432,7 +447,7 @@ namespace Ryujinx.Ava.Systems
 
             if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
             {
-                ExtractTarGzipFile(updateFile, _updateDir);
+                ExtractTarXzipFile(updateFile, _updateDir);
             }
             else if (OperatingSystem.IsWindows())
             {

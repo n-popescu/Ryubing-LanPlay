@@ -46,6 +46,10 @@ jobs:
         with:
           token: ${{ secrets.SETUP_GLI_TOKEN }}
 
+      - name: Install 7zip
+        run: |
+          sudo apt update && sudo apt install -y 7zip
+
       - name: Overwrite csc problem matcher
         run: echo "::add-matcher::.forgejo/csc.json"
 
@@ -88,41 +92,30 @@ jobs:
           chmod +x ./publish/Ryujinx ./publish/Ryujinx.sh
         if: forgejo.event_name == 'pull_request' && contains(matrix.platform.name, 'linux')
 
-      - name: Build AppImage
-        if: forgejo.event_name == 'pull_request' && contains(matrix.platform.name, 'linux')
+        shell: bash
+
+      - name: Packing Windows builds
+        if: contains(matrix.platform.name, 'win')
         run: |
-          PLATFORM_NAME="${{ matrix.platform.name }}"
+          pushd publish
+          7z a ../release_output/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.7z ../artifact
+          popd
+        shell: bash
 
-          sudo apt update && sudo apt install -y zsync desktop-file-utils appstream libfuse2t64
-
-          mkdir -p tools
-          export PATH="$PATH:$(readlink -f tools)"
-
-          # Setup appimagetool
-          wget -q -O tools/appimagetool "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage"
-          chmod +x tools/appimagetool
-          chmod +x distribution/linux/appimage/build-appimage.sh
-
-          # Explicitly set $ARCH for appimagetool ($ARCH_NAME is for the file name)
-          if [ "$PLATFORM_NAME" = "linux-x64" ]; then
-            ARCH_NAME=x64
-            export ARCH=x86_64
-          elif [ "$PLATFORM_NAME" = "linux-arm64" ]; then
-            ARCH_NAME=arm64
-            export ARCH=aarch64
-          else
-            echo "Unexpected PLATFORM_NAME "$PLATFORM_NAME""
-            exit 1
-          fi
-
-          BUILDDIR=publish OUTDIR=publish_appimage distribution/linux/appimage/build-appimage.sh
+      - name: Packing Linux builds
+        if: contains(matrix.platform.name, 'linux')
+        run: |
+          pushd publish
+          chmod +x Ryujinx.sh Ryujinx
+          tar -cJvf ../release_output/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.tar.xz ../artifact
+          popd
         shell: bash
 
       - name: Upload Ryujinx artifact
         uses: actions/upload-artifact@v4
         with:
           name: ryujinx-${{ matrix.configuration }}-${{ steps.version_info.outputs.result }}+${{ steps.version_info.outputs.git_short_hash }}-${{ matrix.platform.zip_os_name }}
-          path: publish
+          path: artifact
         if: forgejo.event_name == 'pull_request'
 
       - name: Upload Ryujinx (AppImage) artifact
