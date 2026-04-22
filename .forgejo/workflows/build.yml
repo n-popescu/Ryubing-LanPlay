@@ -98,7 +98,7 @@ jobs:
         if: contains(matrix.platform.name, 'win')
         run: |
           pushd publish
-          7z a ../release_output/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.7z ../artifact
+          7z a ../artifact/ryujinx-ryujinx-${{ matrix.configuration }}-${{ steps.version_info.outputs.result }}+${{ steps.version_info.outputs.git_short_hash }}-${{ matrix.platform.zip_os_name }}.7z ../publish
           popd
         shell: bash
 
@@ -107,14 +107,13 @@ jobs:
         run: |
           pushd publish
           chmod +x Ryujinx.sh Ryujinx
-          tar -cJvf ../release_output/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.tar.xz ../artifact
+          tar -cJvf ../artifact/ryujinx-ryujinx-${{ matrix.configuration }}-${{ steps.version_info.outputs.result }}+${{ steps.version_info.outputs.git_short_hash }}-${{ matrix.platform.zip_os_name }}.tar.xz ../publish
           popd
         shell: bash
 
       - name: Upload Ryujinx artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ryujinx-${{ matrix.configuration }}-${{ steps.version_info.outputs.result }}+${{ steps.version_info.outputs.git_short_hash }}-${{ matrix.platform.zip_os_name }}
           path: artifact
         if: forgejo.event_name == 'pull_request'
 
