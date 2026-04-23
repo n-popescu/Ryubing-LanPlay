@@ -217,10 +217,6 @@ namespace Ryujinx.Graphics.Vulkan.Effects
                 _outputTexture = _renderer.CreateTexture(outputInfo) as TextureView;
                 _edgeOutputTexture = _renderer.CreateTexture(tempInfo) as TextureView;
                 _blendOutputTexture = _renderer.CreateTexture(tempInfo) as TextureView;
-
-                _outputTexture?.SetDebugName("Vulkan.Present.SmaaOutput");
-                _edgeOutputTexture?.SetDebugName("Vulkan.Present.SmaaEdgeOutput");
-                _blendOutputTexture?.SetDebugName("Vulkan.Present.SmaaBlendOutput");
             }
 
             _pipeline.SetCommandBuffer(cbs);

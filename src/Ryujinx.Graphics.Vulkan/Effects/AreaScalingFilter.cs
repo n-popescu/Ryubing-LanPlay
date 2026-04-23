@@ -91,7 +91,6 @@ namespace Ryujinx.Graphics.Vulkan.Effects
 
                 _outputTexture?.Dispose();
                 _outputTexture = _renderer.CreateTexture(outputInfo) as TextureView;
-                _outputTexture?.SetDebugName("Vulkan.Present.AreaOutput");
             }
 
             _pipeline.SetCommandBuffer(cbs);

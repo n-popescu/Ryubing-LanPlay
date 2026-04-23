@@ -608,11 +608,6 @@ namespace Ryujinx.Graphics.Vulkan
             return new TextureStorage(this, _device, info);
         }
 
-        internal void SetObjectName(ObjectType objectType, ulong objectHandle, string name)
-        {
-            _debugMessenger?.SetObjectName(_device, objectType, objectHandle, name);
-        }
-
         public void DeleteBuffer(BufferHandle buffer)
         {
             BufferManager.Delete(buffer);

@@ -77,7 +77,6 @@ namespace Ryujinx.Graphics.Vulkan.Effects
 
                 _texture?.Dispose();
                 _texture = _renderer.CreateTexture(textureInfo) as TextureView;
-                _texture?.SetDebugName("Vulkan.Present.FxaaOutput");
             }
 
             _pipeline.SetCommandBuffer(cbs);

@@ -1,5 +1,4 @@
 using Ryujinx.Common.Configuration;
-using Ryujinx.Common.Logging;
 using Ryujinx.Graphics.GAL;
 using Ryujinx.Graphics.Vulkan.Effects;
 using Silk.NET.Vulkan;
@@ -48,7 +47,6 @@ namespace Ryujinx.Graphics.Vulkan
         private bool _updateScalingFilter;
         private ScalingFilter _currentScalingFilter;
         private bool _colorSpacePassthroughEnabled;
-        private bool _logFloatPresentationState;
 
         public unsafe Window(VulkanRenderer gd, SurfaceKHR surface, PhysicalDevice physicalDevice, Device device)
         {
@@ -150,12 +148,6 @@ namespace Ryujinx.Graphics.Vulkan
             _format = surfaceFormat.Format;
             GraphicsConfigurationState.ActiveVulkanFloatPresentation = surfaceFormat.Format == PreferredSwapchainFormat16;
 
-            if (UseFloatPresentation && !GraphicsConfigurationState.ActiveVulkanFloatPresentation)
-            {
-                Logger.Info?.Print(LogClass.Gpu,
-                    $"Vulkan float presentation requested, but swapchain fell back to {_format}. Float source promotion is disabled for this swapchain.");
-            }
-
             SwapchainKHR oldSwapchain = _swapchain;
 
             SwapchainCreateInfoKHR swapchainCreateInfo = new()
@@ -207,9 +199,7 @@ namespace Ryujinx.Graphics.Vulkan
 
             for (int i = 0; i < _swapchainImageViews.Length; i++)
             {
-                _gd.SetObjectName(ObjectType.Image, _swapchainImages[i].Handle, $"Vulkan.Present.SwapchainImage[{i}] [{surfaceFormat.Format}]");
                 _swapchainImageViews[i] = CreateSwapchainImageView(_swapchainImages[i], surfaceFormat.Format, textureCreateInfo);
-                _swapchainImageViews[i].SetDebugName($"Vulkan.Present.SwapchainView[{i}]");
             }
 
             SemaphoreCreateInfo semaphoreCreateInfo = new()
@@ -281,7 +271,6 @@ namespace Ryujinx.Graphics.Vulkan
 
             _preScalingTexture?.Dispose();
             _preScalingTexture = _gd.CreateTexture(preScalingInfo) as TextureView;
-            _preScalingTexture?.SetDebugName("Vulkan.Present.PreScalingTexture");
         }
 
         private static SurfaceFormatKHR ChooseSwapSurfaceFormat(SurfaceFormatKHR[] availableFormats, bool colorSpacePassthroughEnabled)
@@ -434,11 +423,6 @@ namespace Ryujinx.Graphics.Vulkan
 
             TextureView view = (TextureView)texture;
 
-            if (!view.HasDebugName)
-            {
-                view.SetDebugName("Vulkan.Present.SourceTexture");
-            }
-
             UpdateEffect();
 
             if (_effect != null)
@@ -506,22 +490,9 @@ namespace Ryujinx.Graphics.Vulkan
 
             TextureView swapchainTexture = _swapchainImageViews[nextImage];
             Ryujinx.Graphics.GAL.Format preferredPresentFormat = GetPreferredPresentFormat();
-            VkFormat preferredSwapchainFormat = GetPreferredSwapchainFormat();
             Ryujinx.Graphics.GAL.Format? finalBlitFormat = swapchainTexture.Info.Format == preferredPresentFormat
                 ? preferredPresentFormat
                 : null;
-
-            if (_logFloatPresentationState)
-            {
-                _logFloatPresentationState = false;
-
-                string finalBlitText = finalBlitFormat?.ToString() ?? "null";
-                string effectName = _effect?.GetType().Name ?? "none";
-                string scalingName = _scalingFilter?.GetType().Name ?? "none";
-
-                Logger.Info?.Print(LogClass.Gpu,
-                    $"Vulkan float presentation state: enabled={UseFloatPresentation}, source={view.Info.Format}, swapchain={swapchainTexture.Info.Format}/{_format}, preferredPresent={preferredPresentFormat}, preferredSwapchain={preferredSwapchainFormat}, finalBlit={finalBlitText}, effect={effectName}, scaling={scalingName}");
-            }
 
             TextureView lateFloatView = view;
 
@@ -665,7 +636,6 @@ namespace Ryujinx.Graphics.Vulkan
                 GraphicsConfigurationState.ActiveVulkanFloatPresentation = false;
             }
 
-            _logFloatPresentationState = true;
             _swapchainIsDirty = true;
         }
 

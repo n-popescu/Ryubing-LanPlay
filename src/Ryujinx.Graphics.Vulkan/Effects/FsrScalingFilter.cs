@@ -125,7 +125,6 @@ namespace Ryujinx.Graphics.Vulkan.Effects
 
                 _outputTexture?.Dispose();
                 _outputTexture = _renderer.CreateTexture(outputInfo) as TextureView;
-                _outputTexture?.SetDebugName("Vulkan.Present.FsrOutput");
             }
 
             Ryujinx.Graphics.GAL.Format intermediaryFormat = outputFormat;
@@ -141,7 +140,6 @@ namespace Ryujinx.Graphics.Vulkan.Effects
 
                 _intermediaryTexture?.Dispose();
                 _intermediaryTexture = _renderer.CreateTexture(info) as TextureView;
-                _intermediaryTexture?.SetDebugName("Vulkan.Present.FsrIntermediary");
             }
 
             _pipeline.SetCommandBuffer(cbs);
