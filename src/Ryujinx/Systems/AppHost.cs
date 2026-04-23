@@ -205,7 +205,6 @@ namespace Ryujinx.Ava.Systems
             ConfigurationState.Instance.Graphics.ScalingFilter.Event += UpdateScalingFilter;
             ConfigurationState.Instance.Graphics.ScalingFilterLevel.Event += UpdateScalingFilterLevel;
             ConfigurationState.Instance.Graphics.EnableColorSpacePassthrough.Event += UpdateColorSpacePassthrough;
-            ConfigurationState.Instance.Graphics.EnableVulkanFloatPresentation.Event += UpdateVulkanFloatPresentation;
             ConfigurationState.Instance.Graphics.VSyncMode.Event += UpdateVSyncMode;
             ConfigurationState.Instance.Graphics.CustomVSyncInterval.Event += UpdateCustomVSyncIntervalValue;
             ConfigurationState.Instance.Graphics.EnableCustomVSyncInterval.Event += UpdateCustomVSyncIntervalEnabled;
@@ -303,12 +302,6 @@ namespace Ryujinx.Ava.Systems
         private void UpdateColorSpacePassthrough(object sender, ReactiveEventArgs<bool> e)
         {
             _renderer.Window?.SetColorSpacePassthrough(ConfigurationState.Instance.Graphics.EnableColorSpacePassthrough);
-        }
-
-        private void UpdateVulkanFloatPresentation(object sender, ReactiveEventArgs<bool> e)
-        {
-            GraphicsConfigurationState.EnableVulkanFloatPresentation = ConfigurationState.Instance.Graphics.EnableVulkanFloatPresentation;
-            _renderer.Window?.SetVulkanFloatPresentation(ConfigurationState.Instance.Graphics.EnableVulkanFloatPresentation);
         }
 
         public void UpdateVSyncMode(object sender, ReactiveEventArgs<VSyncMode> e)
@@ -647,7 +640,6 @@ namespace Ryujinx.Ava.Systems
             ConfigurationState.Instance.Graphics.ScalingFilterLevel.Event -= UpdateScalingFilterLevel;
             ConfigurationState.Instance.Graphics.AntiAliasing.Event -= UpdateAntiAliasing;
             ConfigurationState.Instance.Graphics.EnableColorSpacePassthrough.Event -= UpdateColorSpacePassthrough;
-            ConfigurationState.Instance.Graphics.EnableVulkanFloatPresentation.Event -= UpdateVulkanFloatPresentation;
 
             _topLevel.PointerMoved -= TopLevel_PointerEnteredOrMoved;
             _topLevel.PointerEntered -= TopLevel_PointerEnteredOrMoved;

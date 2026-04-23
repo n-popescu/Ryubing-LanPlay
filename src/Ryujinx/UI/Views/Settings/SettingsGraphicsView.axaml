@@ -96,6 +96,7 @@
                             <TextBlock Text="{ext:Locale SettingsEnableColorSpacePassthrough}" />
                         </CheckBox>
                         <CheckBox IsChecked="{Binding EnableVulkanFloatPresentation}"
+                                  IsEnabled="{Binding !IsGameRunning}"
                                   IsVisible="{Binding IsVulkanSelected}"
                             ToolTip.Tip="{ext:Locale SettingsEnableVulkanFloatPresentationTooltip}">
                             <TextBlock Text="{ext:Locale SettingsEnableVulkanFloatPresentation}" />
