@@ -15,8 +15,8 @@ namespace Ryujinx.Graphics.Vulkan
         private const int SurfaceHeight = 720;
         private const VkFormat PreferredSwapchainFormat8 = VkFormat.B8G8R8A8Unorm;
         private const VkFormat PreferredSwapchainFormat16 = VkFormat.R16G16B16A16Sfloat;
-        private const Ryujinx.Graphics.GAL.Format PreferredPresentFormat8 = Ryujinx.Graphics.GAL.Format.R8G8B8A8Unorm;
         private const Ryujinx.Graphics.GAL.Format PreferredPresentFormat16 = Ryujinx.Graphics.GAL.Format.R16G16B16A16Float;
+        private const int PreferredPresentBytesPerPixel = 8;
 
         private readonly VulkanRenderer _gd;
         private readonly SurfaceKHR _surface;
@@ -63,16 +63,6 @@ namespace Ryujinx.Graphics.Vulkan
         private static VkFormat GetPreferredSwapchainFormat()
         {
             return UseFloatPresentation ? PreferredSwapchainFormat16 : PreferredSwapchainFormat8;
-        }
-
-        private static Ryujinx.Graphics.GAL.Format GetPreferredPresentFormat()
-        {
-            return PreferredPresentFormat16;
-        }
-
-        private static int GetPreferredPresentBytesPerPixel()
-        {
-            return 8;
         }
 
         private void RecreateSwapchain()
@@ -251,7 +241,7 @@ namespace Ryujinx.Graphics.Vulkan
 
         private void EnsurePreScalingTexture(TextureView source)
         {
-            Ryujinx.Graphics.GAL.Format preferredPresentFormat = GetPreferredPresentFormat();
+            Ryujinx.Graphics.GAL.Format preferredPresentFormat = PreferredPresentFormat16;
 
             if (_preScalingTexture != null &&
                 _preScalingTexture.Width == source.Width &&
@@ -265,7 +255,7 @@ namespace Ryujinx.Graphics.Vulkan
             TextureCreateInfo preScalingInfo = TextureStorage.NewCreateInfoWith(
                 ref sourceInfo,
                 preferredPresentFormat,
-                GetPreferredPresentBytesPerPixel(),
+                PreferredPresentBytesPerPixel,
                 source.Width,
                 source.Height);
 
@@ -489,7 +479,7 @@ namespace Ryujinx.Graphics.Vulkan
             int dstY1 = crop.FlipY ? _height - dstPaddingY : dstPaddingY;
 
             TextureView swapchainTexture = _swapchainImageViews[nextImage];
-            Ryujinx.Graphics.GAL.Format preferredPresentFormat = GetPreferredPresentFormat();
+            Ryujinx.Graphics.GAL.Format preferredPresentFormat = PreferredPresentFormat16;
             Ryujinx.Graphics.GAL.Format? finalBlitFormat = swapchainTexture.Info.Format == preferredPresentFormat
                 ? preferredPresentFormat
                 : null;
@@ -517,7 +507,7 @@ namespace Ryujinx.Graphics.Vulkan
             if (_scalingFilter != null)
             {
                 Ryujinx.Graphics.GAL.Format scalingOutputFormat = UseFloatPresentation ? preferredPresentFormat : view.Info.Format;
-                int scalingOutputBpp = UseFloatPresentation ? GetPreferredPresentBytesPerPixel() : view.Info.BytesPerPixel;
+                int scalingOutputBpp = UseFloatPresentation ? PreferredPresentBytesPerPixel : view.Info.BytesPerPixel;
 
                 TextureView scaledTexture = _scalingFilter.Run(
                     lateFloatView,

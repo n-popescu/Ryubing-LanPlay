@@ -281,7 +281,6 @@ namespace Ryujinx.Headless
             // Setup graphics configuration
             GraphicsConfig.EnableShaderCache = !option.DisableShaderCache;
             GraphicsConfig.EnableTextureRecompression = option.EnableTextureRecompression;
-            GraphicsConfig.EnableVulkanFloatPresentation = option.EnableVulkanFloatPresentation;
             GraphicsConfig.ResScale = option.ResScale;
             GraphicsConfig.MaxAnisotropy = option.MaxAnisotropy;
             GraphicsConfig.ShadersDumpPath = option.GraphicsShadersDumpPath;

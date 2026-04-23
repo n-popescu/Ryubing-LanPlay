@@ -8,7 +8,6 @@ using Ryujinx.Common.Configuration;
 using Ryujinx.Memory.Range;
 using System;
 using System.Collections.Concurrent;
-using System.Reflection;
 using System.Threading;
 
 namespace Ryujinx.Graphics.Gpu
@@ -28,34 +27,6 @@ namespace Ryujinx.Graphics.Gpu
             }
 
             return renderer.GetType().FullName == "Ryujinx.Graphics.Vulkan.VulkanRenderer";
-        }
-
-        private static void TrySetPresentSourceDebugName(ITexture hostTexture, Image.Texture texture)
-        {
-            if (hostTexture?.GetType().FullName == "Ryujinx.Graphics.GAL.Multithreading.Resources.ThreadedTexture")
-            {
-                FieldInfo baseField = hostTexture.GetType().GetField("Base", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-                if (baseField != null)
-                {
-                    hostTexture = baseField.GetValue(hostTexture) as ITexture;
-                }
-            }
-
-            if (hostTexture == null)
-            {
-                return;
-            }
-
-            MethodInfo setDebugName = hostTexture.GetType().GetMethod("SetDebugName", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-            if (setDebugName != null)
-            {
-                string kind = texture.IsView ? "View" : "Storage";
-                string floatHost = texture.ForceRenderTargetFloatHost ? "FloatHost" : "NativeHost";
-
-                setDebugName.Invoke(hostTexture, [ $"Vulkan.Present.SourceTexture.{kind}.{floatHost}" ]);
-            }
         }
 
         /// <summary>
@@ -256,8 +227,6 @@ namespace Ryujinx.Graphics.Gpu
                 pt.Cache.Tick();
 
                 texture.SynchronizeMemory();
-
-                TrySetPresentSourceDebugName(texture.HostTexture, texture);
 
                 ImageCrop crop = new(
                     (int)(pt.Crop.Left * texture.ScaleFactor),
