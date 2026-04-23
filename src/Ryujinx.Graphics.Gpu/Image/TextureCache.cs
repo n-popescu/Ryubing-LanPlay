@@ -1,9 +1,11 @@
 using Ryujinx.Common;
+using Ryujinx.Common.Configuration;
 using Ryujinx.Graphics.GAL;
 using Ryujinx.Graphics.Gpu.Engine.Threed;
 using Ryujinx.Graphics.Gpu.Engine.Twod;
 using Ryujinx.Graphics.Gpu.Engine.Types;
 using Ryujinx.Graphics.Gpu.Memory;
+using Ryujinx.Graphics.Shader.Translation;
 using Ryujinx.Graphics.Texture;
 using Ryujinx.Memory.Range;
 using System;
@@ -18,6 +20,8 @@ namespace Ryujinx.Graphics.Gpu.Image
     /// </summary>
     class TextureCache : IDisposable
     {
+        private const ulong InvalidPreferredFloatPresentAddress = ulong.MaxValue;
+
         private readonly struct OverlapInfo
         {
             public TextureViewCompatibility Compatibility { get; }
@@ -37,6 +41,7 @@ namespace Ryujinx.Graphics.Gpu.Image
 
         private readonly GpuContext _context;
         private readonly PhysicalMemory _physicalMemory;
+        private ulong _preferredFloatPresentAddress = InvalidPreferredFloatPresentAddress;
 
         private readonly MultiRangeList<Texture> _textures;
         private readonly HashSet<Texture> _partiallyMappedTextures;
@@ -404,6 +409,11 @@ namespace Ryujinx.Graphics.Gpu.Image
             return texture;
         }
 
+        public void SetPreferredFloatPresentAddress(MultiRange range)
+        {
+            _preferredFloatPresentAddress = range.GetSubRange(0).Address;
+        }
+
         /// <summary>
         /// Tries to find an existing texture, or create a new one if not found.
         /// </summary>
@@ -653,6 +663,8 @@ namespace Ryujinx.Graphics.Gpu.Image
         {
             bool isSamplerTexture = (flags & TextureSearchFlags.ForSampler) != 0;
             bool discard = (flags & TextureSearchFlags.DiscardData) != 0;
+            bool useRenderTargetFloatHost = (flags & TextureSearchFlags.RenderTargetFloatHost) != 0;
+            bool noViewReuse = (flags & TextureSearchFlags.NoViewReuse) != 0;
 
             TextureScaleMode scaleMode = IsUpscaleCompatible(info, (flags & TextureSearchFlags.WithUpscale) != 0);
 
@@ -695,6 +707,16 @@ namespace Ryujinx.Graphics.Gpu.Image
                 }
             }
 
+            if (!useRenderTargetFloatHost &&
+                GraphicsConfigurationState.ActiveVulkanFloatPresentation &&
+                !isSamplerTexture &&
+                (flags & TextureSearchFlags.ForCopy) == 0 &&
+                info.Target != Target.TextureBuffer &&
+                address == _preferredFloatPresentAddress)
+            {
+                useRenderTargetFloatHost = true;
+            }
+
             int sameAddressOverlapsCount;
 
             _texturesLock.EnterReadLock();
@@ -716,6 +738,11 @@ namespace Ryujinx.Graphics.Gpu.Image
             for (int index = 0; index < sameAddressOverlapsCount; index++)
             {
                 Texture overlap = _textureOverlaps[index];
+
+                if (useRenderTargetFloatHost != overlap.ForceRenderTargetFloatHost)
+                {
+                    continue;
+                }
 
                 TextureMatchQuality matchQuality = overlap.IsExactMatch(info, flags);
 
@@ -795,6 +822,20 @@ namespace Ryujinx.Graphics.Gpu.Image
                 try
                 {
                     overlapsCount = _textures.FindOverlaps(range.Value, ref _textureOverlaps);
+
+                    int filteredOverlapsCount = 0;
+
+                    for (int index = 0; index < overlapsCount; index++)
+                    {
+                        Texture overlap = _textureOverlaps[index];
+
+                        if (overlap.ForceRenderTargetFloatHost == useRenderTargetFloatHost)
+                        {
+                            _textureOverlaps[filteredOverlapsCount++] = overlap;
+                        }
+                    }
+
+                    overlapsCount = filteredOverlapsCount;
                 }
                 finally
                 {
@@ -805,6 +846,11 @@ namespace Ryujinx.Graphics.Gpu.Image
             if (_overlapInfo.Length != _textureOverlaps.Length)
             {
                 Array.Resize(ref _overlapInfo, _textureOverlaps.Length);
+            }
+
+            if (noViewReuse)
+            {
+                overlapsCount = 0;
             }
 
             // =============== Find Texture View of Existing Texture ===============
@@ -851,7 +897,7 @@ namespace Ryujinx.Graphics.Gpu.Image
 
             // Search through the overlaps to find a compatible view and establish any copy dependencies.
 
-            if (preferredOverlap != -1)
+            if (preferredOverlap != -1 && !noViewReuse)
             {
                 Texture overlap = _textureOverlaps[preferredOverlap];
                 OverlapInfo oInfo = _overlapInfo[preferredOverlap];
@@ -886,7 +932,7 @@ namespace Ryujinx.Graphics.Gpu.Image
                     {
                         // Only copy compatible. If there's another choice for a FULLY compatible texture, choose that instead.
 
-                        texture = new Texture(_context, _physicalMemory, info, sizeInfo, range.Value, scaleMode);
+                        texture = new Texture(_context, _physicalMemory, info, sizeInfo, range.Value, scaleMode, useRenderTargetFloatHost);
 
                         // If the new texture is larger than the existing one, we need to fill the remaining space with CPU data,
                         // otherwise we only need the data that is copied from the existing texture, without loading the CPU data.
@@ -935,7 +981,7 @@ namespace Ryujinx.Graphics.Gpu.Image
             // No match, create a new texture.
             if (texture == null)
             {
-                texture = new Texture(_context, _physicalMemory, info, sizeInfo, range.Value, scaleMode);
+                texture = new Texture(_context, _physicalMemory, info, sizeInfo, range.Value, scaleMode, useRenderTargetFloatHost);
 
                 // Step 1: Find textures that are view compatible with the new texture.
                 // Any textures that are incompatible will contain garbage data, so they should be removed where possible.
@@ -1101,7 +1147,7 @@ namespace Ryujinx.Graphics.Gpu.Image
                     }
                     else
                     {
-                        TextureCreateInfo createInfo = GetCreateInfo(overlapInfo, _context.Capabilities, overlap.ScaleFactor);
+                        TextureCreateInfo createInfo = GetCreateInfo(overlapInfo, _context.Capabilities, overlap.ScaleFactor, overlap.ForceRenderTargetFloatHost);
 
                         ITexture newView = texture.HostTexture.CreateView(createInfo, oInfo.FirstLayer, oInfo.FirstLevel);
 
@@ -1278,9 +1324,21 @@ namespace Ryujinx.Graphics.Gpu.Image
         /// <param name="caps">GPU capabilities</param>
         /// <param name="scale">Texture scale factor, to be applied to the texture size</param>
         /// <returns>The texture creation information</returns>
-        public static TextureCreateInfo GetCreateInfo(TextureInfo info, Capabilities caps, float scale)
+        private static FormatInfo GetHostFormatInfo(TextureInfo info, Capabilities caps, bool forceRenderTargetFloatHost = false)
         {
-            FormatInfo formatInfo = TextureCompatibility.ToHostCompatibleFormat(info, caps);
+            FormatInfo hostFormatInfo = TextureCompatibility.ToHostCompatibleFormat(info, caps);
+
+            if (forceRenderTargetFloatHost && ShouldForceRenderTargetFloatHost(hostFormatInfo.Format))
+            {
+                return new FormatInfo(Format.R16G16B16A16Float, 1, 1, 8, 4);
+            }
+
+            return hostFormatInfo;
+        }
+
+        public static TextureCreateInfo GetCreateInfo(TextureInfo info, Capabilities caps, float scale, bool forceRenderTargetFloatHost = false)
+        {
+            FormatInfo formatInfo = GetHostFormatInfo(info, caps, forceRenderTargetFloatHost);
 
             if (info.Target == Target.TextureBuffer && !caps.SupportsSnormBufferTextureFormat)
             {
@@ -1337,6 +1395,14 @@ namespace Ryujinx.Graphics.Gpu.Image
                 info.SwizzleB,
                 info.SwizzleA);
         }
+
+            private static bool ShouldForceRenderTargetFloatHost(Format format)
+            {
+                return format is Format.R8G8B8A8Unorm or
+                    Format.R8G8B8A8Srgb or
+                    Format.B8G8R8A8Unorm or
+                    Format.B8G8R8A8Srgb;
+            }
 
         /// <summary>
         /// Removes a texture from the cache.

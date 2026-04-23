@@ -232,6 +232,11 @@ namespace Ryujinx.Graphics.Gpu.Image
         {
             return _rtColors[0] ?? _rtDepthStencil;
         }
+        
+        public Texture GetRenderTargetColor(int index)
+        {
+            return _rtColors[index];
+        }
 
         /// <summary>
         /// Updates the Render Target scale, given the currently bound render targets.

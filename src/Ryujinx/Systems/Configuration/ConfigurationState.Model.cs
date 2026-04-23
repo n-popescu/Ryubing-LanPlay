@@ -588,6 +588,11 @@ namespace Ryujinx.Ava.Systems.Configuration
             public ReactiveObject<bool> EnableColorSpacePassthrough { get; private set; }
 
             /// <summary>
+            /// Enables or disables the Vulkan RGBA16 presentation path.
+            /// </summary>
+            public ReactiveObject<bool> EnableVulkanFloatPresentation { get; private set; }
+
+            /// <summary>
             /// Graphics backend
             /// </summary>
             public ReactiveObject<GraphicsBackend> GraphicsBackend { get; private set; }
@@ -643,6 +648,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 EnableMacroHLE.LogChangesToValue(nameof(EnableMacroHLE));
                 EnableColorSpacePassthrough = new ReactiveObject<bool>();
                 EnableColorSpacePassthrough.LogChangesToValue(nameof(EnableColorSpacePassthrough));
+                EnableVulkanFloatPresentation = new ReactiveObject<bool>();
+                EnableVulkanFloatPresentation.LogChangesToValue(nameof(EnableVulkanFloatPresentation));
                 AntiAliasing = new ReactiveObject<AntiAliasing>();
                 AntiAliasing.LogChangesToValue(nameof(AntiAliasing));
                 ScalingFilter = new ReactiveObject<ScalingFilter>();

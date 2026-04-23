@@ -15,5 +15,7 @@ namespace Ryujinx.Graphics.Gpu.Image
         WithUpscale = 1 << 4,
         NoCreate = 1 << 5,
         DiscardData = 1 << 6,
+        RenderTargetFloatHost = 1 << 7,
+        NoViewReuse = 1 << 8,
     }
 }

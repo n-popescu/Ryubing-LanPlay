@@ -310,6 +310,8 @@ namespace Ryujinx.Graphics.OpenGL
 
         public void SetColorSpacePassthrough(bool colorSpacePassthroughEnabled) { }
 
+        public void SetVulkanFloatPresentation(bool enabled) { }
+
         private void UpdateEffect()
         {
             if (_updateEffect)

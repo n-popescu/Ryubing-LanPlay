@@ -17,7 +17,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// <summary>
         /// The current version of the file format
         /// </summary>
-        public const int CurrentVersion = 71;
+        public const int CurrentVersion = 72;
 
         /// <summary>
         /// Version of the configuration file format
@@ -260,6 +260,11 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// Enables or disables color space passthrough, if available.
         /// </summary>
         public bool EnableColorSpacePassthrough { get; set; }
+
+        /// <summary>
+        /// Enables or disables the Vulkan RGBA16 presentation path.
+        /// </summary>
+        public bool EnableVulkanFloatPresentation { get; set; }
 
         /// <summary>
         /// Enables or disables profiled translation cache persistency

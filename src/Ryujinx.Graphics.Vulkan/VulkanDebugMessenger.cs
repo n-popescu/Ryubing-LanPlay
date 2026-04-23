@@ -117,6 +117,33 @@ namespace Ryujinx.Graphics.Vulkan
             return 0;
         }
 
+        public unsafe void SetObjectName(Device device, ObjectType objectType, ulong objectHandle, string name)
+        {
+            if (_debugUtils == null || objectHandle == 0 || string.IsNullOrEmpty(name))
+            {
+                return;
+            }
+
+            nint objectName = Marshal.StringToHGlobalAnsi(name);
+
+            try
+            {
+                DebugUtilsObjectNameInfoEXT objectNameInfo = new()
+                {
+                    SType = StructureType.DebugUtilsObjectNameInfoExt,
+                    ObjectType = objectType,
+                    ObjectHandle = objectHandle,
+                    PObjectName = (byte*)objectName,
+                };
+
+                _debugUtils.SetDebugUtilsObjectName(device, in objectNameInfo);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(objectName);
+            }
+        }
+
         public void Dispose()
         {
             if (!_disposed)

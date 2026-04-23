@@ -569,6 +569,7 @@ namespace Ryujinx.Ava.UI.Windows
             GraphicsConfig.EnableShaderCache          = ConfigurationState.Instance.Graphics.EnableShaderCache;
             GraphicsConfig.EnableTextureRecompression = ConfigurationState.Instance.Graphics.EnableTextureRecompression;
             GraphicsConfig.EnableMacroHLE             = ConfigurationState.Instance.Graphics.EnableMacroHLE;
+                GraphicsConfig.EnableVulkanFloatPresentation = ConfigurationState.Instance.Graphics.EnableVulkanFloatPresentation;
 #pragma warning restore IDE0055
         }
 

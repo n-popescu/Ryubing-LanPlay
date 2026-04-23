@@ -89,6 +89,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             Graphics.EnableTextureRecompression.Value = cff.EnableTextureRecompression;
             Graphics.EnableMacroHLE.Value = cff.EnableMacroHLE;
             Graphics.EnableColorSpacePassthrough.Value = cff.EnableColorSpacePassthrough;
+            Graphics.EnableVulkanFloatPresentation.Value = cff.EnableVulkanFloatPresentation;
 
             System.Language.Value = cff.SystemLanguage;
             System.Region.Value = cff.SystemRegion;
@@ -436,6 +437,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                         WindowMaximized = false
                     }),
                 (48, static cff => cff.EnableColorSpacePassthrough = false),
+                (72, static cff => cff.EnableVulkanFloatPresentation = false),
                 (49, static _ =>
                 {
                     if (OperatingSystem.IsMacOS())

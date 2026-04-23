@@ -5,7 +5,6 @@ using Ryujinx.Graphics.Shader.Translation;
 using Silk.NET.Vulkan;
 using System;
 using Extent2D = Ryujinx.Graphics.GAL.Extents2D;
-using Format = Silk.NET.Vulkan.Format;
 using SamplerCreateInfo = Ryujinx.Graphics.GAL.SamplerCreateInfo;
 
 namespace Ryujinx.Graphics.Vulkan.Effects
@@ -20,6 +19,8 @@ namespace Ryujinx.Graphics.Vulkan.Effects
         private float _sharpeningLevel = 1;
         private Device _device;
         private TextureView _intermediaryTexture;
+        private TextureView _outputTexture;
+        private bool _useFloatImageOutputs;
 
         public float Level
         {
@@ -45,16 +46,13 @@ namespace Ryujinx.Graphics.Vulkan.Effects
             _sharpeningProgram.Dispose();
             _sampler.Dispose();
             _intermediaryTexture?.Dispose();
+            _outputTexture?.Dispose();
         }
 
         public void Initialize()
         {
             _pipeline = new PipelineHelperShader(_renderer, _device);
-
             _pipeline.Initialize();
-
-            byte[] scalingShader = EmbeddedResources.Read("Ryujinx.Graphics.Vulkan/Effects/Shaders/FsrScaling.spv");
-            byte[] sharpeningShader = EmbeddedResources.Read("Ryujinx.Graphics.Vulkan/Effects/Shaders/FsrSharpening.spv");
 
             ResourceLayout scalingResourceLayout = new ResourceLayoutBuilder()
                 .Add(ResourceStages.Compute, ResourceType.UniformBuffer, 2)
@@ -70,50 +68,80 @@ namespace Ryujinx.Graphics.Vulkan.Effects
 
             _sampler = _renderer.CreateSampler(SamplerCreateInfo.Create(MinFilter.Linear, MagFilter.Linear));
 
+            RecreateShaders(false, scalingResourceLayout, sharpeningResourceLayout);
+        }
+
+        private void RecreateShaders(bool useFloatImageOutputs, ResourceLayout scalingResourceLayout, ResourceLayout sharpeningResourceLayout)
+        {
+            _useFloatImageOutputs = useFloatImageOutputs;
+            _scalingProgram?.Dispose();
+            _sharpeningProgram?.Dispose();
+
             _scalingProgram = _renderer.CreateProgramWithMinimalLayout([
-                new ShaderSource(scalingShader, ShaderStage.Compute, TargetLanguage.Spirv)
+                EffectShaderHelper.CreateComputeShader("FsrScaling", useFloatImageOutputs)
             ], scalingResourceLayout);
 
             _sharpeningProgram = _renderer.CreateProgramWithMinimalLayout([
-                new ShaderSource(sharpeningShader, ShaderStage.Compute, TargetLanguage.Spirv)
+                EffectShaderHelper.CreateComputeShader("FsrSharpening", useFloatImageOutputs)
             ], sharpeningResourceLayout);
         }
 
-        public void Run(
+        public TextureView Run(
             TextureView view,
             CommandBufferScoped cbs,
-            Auto<DisposableImageView> destinationTexture,
-            Format format,
+            Ryujinx.Graphics.GAL.Format outputFormat,
+            int outputBpp,
             int width,
             int height,
             Extent2D source,
             Extent2D destination)
         {
+            bool useFloatImageOutputs = outputFormat == Ryujinx.Graphics.GAL.Format.R16G16B16A16Float;
+
+            if (_useFloatImageOutputs != useFloatImageOutputs)
+            {
+                ResourceLayout scalingResourceLayout = new ResourceLayoutBuilder()
+                    .Add(ResourceStages.Compute, ResourceType.UniformBuffer, 2)
+                    .Add(ResourceStages.Compute, ResourceType.TextureAndSampler, 1)
+                    .Add(ResourceStages.Compute, ResourceType.Image, 0, true).Build();
+
+                ResourceLayout sharpeningResourceLayout = new ResourceLayoutBuilder()
+                    .Add(ResourceStages.Compute, ResourceType.UniformBuffer, 2)
+                    .Add(ResourceStages.Compute, ResourceType.UniformBuffer, 3)
+                    .Add(ResourceStages.Compute, ResourceType.UniformBuffer, 4)
+                    .Add(ResourceStages.Compute, ResourceType.TextureAndSampler, 1)
+                    .Add(ResourceStages.Compute, ResourceType.Image, 0, true).Build();
+
+                RecreateShaders(useFloatImageOutputs, scalingResourceLayout, sharpeningResourceLayout);
+            }
+
+            if (_outputTexture == null
+                || _outputTexture.Info.Width != width
+                || _outputTexture.Info.Height != height
+                || _outputTexture.Info.Format != outputFormat)
+            {
+                TextureCreateInfo viewInfo = view.Info;
+                TextureCreateInfo outputInfo = TextureStorage.NewCreateInfoWith(ref viewInfo, outputFormat, outputBpp, width, height);
+
+                _outputTexture?.Dispose();
+                _outputTexture = _renderer.CreateTexture(outputInfo) as TextureView;
+                _outputTexture?.SetDebugName("Vulkan.Present.FsrOutput");
+            }
+
+            Ryujinx.Graphics.GAL.Format intermediaryFormat = outputFormat;
+            int intermediaryBpp = outputBpp;
+
             if (_intermediaryTexture == null
                 || _intermediaryTexture.Info.Width != width
                 || _intermediaryTexture.Info.Height != height
-                || !_intermediaryTexture.Info.Equals(view.Info))
+                || _intermediaryTexture.Info.Format != intermediaryFormat)
             {
-                TextureCreateInfo originalInfo = view.Info;
+                TextureCreateInfo viewInfo = view.Info;
+                TextureCreateInfo info = TextureStorage.NewCreateInfoWith(ref viewInfo, intermediaryFormat, intermediaryBpp, width, height);
 
-                TextureCreateInfo info = new(
-                    width,
-                    height,
-                    originalInfo.Depth,
-                    originalInfo.Levels,
-                    originalInfo.Samples,
-                    originalInfo.BlockWidth,
-                    originalInfo.BlockHeight,
-                    originalInfo.BytesPerPixel,
-                    originalInfo.Format,
-                    originalInfo.DepthStencilMode,
-                    originalInfo.Target,
-                    originalInfo.SwizzleR,
-                    originalInfo.SwizzleG,
-                    originalInfo.SwizzleB,
-                    originalInfo.SwizzleA);
                 _intermediaryTexture?.Dispose();
                 _intermediaryTexture = _renderer.CreateTexture(info) as TextureView;
+                _intermediaryTexture?.SetDebugName("Vulkan.Present.FsrIntermediary");
             }
 
             _pipeline.SetCommandBuffer(cbs);
@@ -152,7 +180,7 @@ namespace Ryujinx.Graphics.Vulkan.Effects
             int dispatchY = (height + (threadGroupWorkRegionDim - 1)) / threadGroupWorkRegionDim;
 
             _pipeline.SetUniformBuffers([new BufferAssignment(2, buffer.Range)]);
-            _pipeline.SetImage(ShaderStage.Compute, 0, _intermediaryTexture.GetView(FormatTable.ConvertRgba8SrgbToUnorm(view.Info.Format)));
+            _pipeline.SetImage(ShaderStage.Compute, 0, _intermediaryTexture.GetView(FormatTable.ConvertRgba8SrgbToUnorm(_intermediaryTexture.Info.Format)));
             _pipeline.DispatchCompute(dispatchX, dispatchY, 1);
             _pipeline.ComputeBarrier();
 
@@ -160,11 +188,13 @@ namespace Ryujinx.Graphics.Vulkan.Effects
             _pipeline.SetProgram(_sharpeningProgram);
             _pipeline.SetTextureAndSampler(ShaderStage.Compute, 1, _intermediaryTexture, _sampler);
             _pipeline.SetUniformBuffers([new BufferAssignment(4, sharpeningBuffer.Range)]);
-            _pipeline.SetImage(0, destinationTexture);
+            _pipeline.SetImage(ShaderStage.Compute, 0, _outputTexture.GetView(FormatTable.ConvertRgba8SrgbToUnorm(_outputTexture.Info.Format)));
             _pipeline.DispatchCompute(dispatchX, dispatchY, 1);
             _pipeline.ComputeBarrier();
 
             _pipeline.Finish();
+
+            return _outputTexture;
         }
     }
 }

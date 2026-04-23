@@ -22,6 +22,7 @@ namespace Ryujinx.Graphics.Vulkan
         private readonly Auto<DisposableImageView> _imageViewIdentity;
         private readonly Auto<DisposableImageView> _imageView2dArray;
         private Dictionary<Format, TextureView> _selfManagedViews;
+        private string _debugName;
 
         private int _hazardUses;
 
@@ -39,6 +40,7 @@ namespace Ryujinx.Graphics.Vulkan
         public int FirstLayer { get; }
         public int FirstLevel { get; }
         public VkFormat VkFormat { get; }
+        public bool HasDebugName => !string.IsNullOrEmpty(_debugName);
         private int _isValid;
         public bool Valid => Volatile.Read(ref _isValid) != 0;
 
@@ -206,6 +208,43 @@ namespace Ryujinx.Graphics.Vulkan
         public Auto<DisposableImageView> GetImageViewForAttachment()
         {
             return _imageView2dArray ?? _imageViewDraw;
+        }
+
+        public void SetDebugName(string name)
+        {
+            _debugName = name;
+
+            string formatSuffix = $" [{Info.Format}/{VkFormat}]";
+
+            if (Storage != null)
+            {
+                _gd.SetObjectName(ObjectType.Image, Storage.GetImageForViewCreation().Handle, $"{name} Image{formatSuffix}");
+            }
+
+            NameImageView(_imageView, $"{name} SampledView{formatSuffix}");
+            NameImageView(_imageViewDraw, $"{name} AttachmentView{formatSuffix}");
+            NameImageView(_imageViewIdentity, $"{name} IdentityView{formatSuffix}");
+
+            if (_imageView2dArray != null)
+            {
+                NameImageView(_imageView2dArray, $"{name} ArrayAttachmentView{formatSuffix}");
+            }
+
+            if (_selfManagedViews != null)
+            {
+                foreach (TextureView view in _selfManagedViews.Values)
+                {
+                    view.SetDebugName($"{name} Alias");
+                }
+            }
+        }
+
+        private void NameImageView(Auto<DisposableImageView> imageView, string name)
+        {
+            if (imageView != null)
+            {
+                _gd.SetObjectName(ObjectType.ImageView, imageView.GetUnsafe().Value.Handle, name);
+            }
         }
 
         public void CopyTo(ITexture destination, int firstLayer, int firstLevel)
@@ -595,6 +634,11 @@ namespace Ryujinx.Graphics.Vulkan
                 Info.SwizzleA), 0, 0);
 
             (_selfManagedViews ??= new Dictionary<Format, TextureView>()).Add(format, view);
+
+            if (!string.IsNullOrEmpty(_debugName))
+            {
+                view.SetDebugName($"{_debugName} Alias");
+            }
 
             return view;
         }

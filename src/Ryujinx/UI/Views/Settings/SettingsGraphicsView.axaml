@@ -95,6 +95,11 @@
                             ToolTip.Tip="{ext:Locale SettingsEnableColorSpacePassthroughTooltip}">
                             <TextBlock Text="{ext:Locale SettingsEnableColorSpacePassthrough}" />
                         </CheckBox>
+                        <CheckBox IsChecked="{Binding EnableVulkanFloatPresentation}"
+                                  IsVisible="{Binding IsVulkanSelected}"
+                            ToolTip.Tip="{ext:Locale SettingsEnableVulkanFloatPresentationTooltip}">
+                            <TextBlock Text="{ext:Locale SettingsEnableVulkanFloatPresentation}" />
+                        </CheckBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock VerticalAlignment="Center"

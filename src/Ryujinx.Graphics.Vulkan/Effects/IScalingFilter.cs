@@ -1,4 +1,3 @@
-using Silk.NET.Vulkan;
 using System;
 using Extent2D = Ryujinx.Graphics.GAL.Extents2D;
 
@@ -7,11 +6,11 @@ namespace Ryujinx.Graphics.Vulkan.Effects
     internal interface IScalingFilter : IDisposable
     {
         float Level { get; set; }
-        void Run(
+        TextureView Run(
             TextureView view,
             CommandBufferScoped cbs,
-            Auto<DisposableImageView> destinationTexture,
-            Format format,
+            Ryujinx.Graphics.GAL.Format outputFormat,
+            int outputBpp,
             int width,
             int height,
             Extent2D source,

@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Effects\Shaders\*.glsl" />
     <EmbeddedResource Include="Effects\Textures\SmaaAreaTexture.bin" />
     <EmbeddedResource Include="Effects\Textures\SmaaSearchTexture.bin" />
     <EmbeddedResource Include="Effects\Shaders\AreaScaling.spv" />

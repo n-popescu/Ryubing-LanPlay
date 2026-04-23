@@ -1,4 +1,5 @@
 using Ryujinx.Common.Configuration;
+using Ryujinx.Common.Logging;
 using Ryujinx.Graphics.GAL;
 using Ryujinx.Graphics.Vulkan.Effects;
 using Silk.NET.Vulkan;
@@ -13,6 +14,10 @@ namespace Ryujinx.Graphics.Vulkan
     {
         private const int SurfaceWidth = 1280;
         private const int SurfaceHeight = 720;
+        private const VkFormat PreferredSwapchainFormat8 = VkFormat.B8G8R8A8Unorm;
+        private const VkFormat PreferredSwapchainFormat16 = VkFormat.R16G16B16A16Sfloat;
+        private const Ryujinx.Graphics.GAL.Format PreferredPresentFormat8 = Ryujinx.Graphics.GAL.Format.R8G8B8A8Unorm;
+        private const Ryujinx.Graphics.GAL.Format PreferredPresentFormat16 = Ryujinx.Graphics.GAL.Format.R16G16B16A16Float;
 
         private readonly VulkanRenderer _gd;
         private readonly SurfaceKHR _surface;
@@ -22,6 +27,8 @@ namespace Ryujinx.Graphics.Vulkan
 
         private Image[] _swapchainImages;
         private TextureView[] _swapchainImageViews;
+        private TextureView _presentTexture;
+        private TextureView _preScalingTexture;
 
         private Semaphore[] _imageAvailableSemaphores;
         private Semaphore[] _renderFinishedSemaphores;
@@ -42,6 +49,7 @@ namespace Ryujinx.Graphics.Vulkan
         private bool _updateScalingFilter;
         private ScalingFilter _currentScalingFilter;
         private bool _colorSpacePassthroughEnabled;
+        private bool _logFloatPresentationState;
 
         public unsafe Window(VulkanRenderer gd, SurfaceKHR surface, PhysicalDevice physicalDevice, Device device)
         {
@@ -51,6 +59,23 @@ namespace Ryujinx.Graphics.Vulkan
             _surface = surface;
 
             CreateSwapchain();
+        }
+
+        private static bool UseFloatPresentation => GraphicsConfigurationState.EnableVulkanFloatPresentation;
+
+        private static VkFormat GetPreferredSwapchainFormat()
+        {
+            return UseFloatPresentation ? PreferredSwapchainFormat16 : PreferredSwapchainFormat8;
+        }
+
+        private static Ryujinx.Graphics.GAL.Format GetPreferredPresentFormat()
+        {
+            return PreferredPresentFormat16;
+        }
+
+        private static int GetPreferredPresentBytesPerPixel()
+        {
+            return 8;
         }
 
         private void RecreateSwapchain()
@@ -124,6 +149,13 @@ namespace Ryujinx.Graphics.Vulkan
             _width = (int)extent.Width;
             _height = (int)extent.Height;
             _format = surfaceFormat.Format;
+            GraphicsConfigurationState.ActiveVulkanFloatPresentation = surfaceFormat.Format == PreferredSwapchainFormat16;
+
+            if (UseFloatPresentation && !GraphicsConfigurationState.ActiveVulkanFloatPresentation)
+            {
+                Logger.Info?.Print(LogClass.Gpu,
+                    $"Vulkan float presentation requested, but swapchain fell back to {_format}. Float source promotion is disabled for this swapchain.");
+            }
 
             SwapchainKHR oldSwapchain = _swapchain;
 
@@ -176,7 +208,9 @@ namespace Ryujinx.Graphics.Vulkan
 
             for (int i = 0; i < _swapchainImageViews.Length; i++)
             {
+                _gd.SetObjectName(ObjectType.Image, _swapchainImages[i].Handle, $"Vulkan.Present.SwapchainImage[{i}] [{surfaceFormat.Format}]");
                 _swapchainImageViews[i] = CreateSwapchainImageView(_swapchainImages[i], surfaceFormat.Format, textureCreateInfo);
+                _swapchainImageViews[i].SetDebugName($"Vulkan.Present.SwapchainView[{i}]");
             }
 
             SemaphoreCreateInfo semaphoreCreateInfo = new()
@@ -226,14 +260,93 @@ namespace Ryujinx.Graphics.Vulkan
             return new TextureView(_gd, _device, new DisposableImageView(_gd.Api, _device, imageView), info, format);
         }
 
+        private void EnsurePresentTexture()
+        {
+            Ryujinx.Graphics.GAL.Format preferredPresentFormat = GetPreferredPresentFormat();
+
+            if (_presentTexture != null &&
+                _presentTexture.Width == _width &&
+                _presentTexture.Height == _height &&
+                _presentTexture.Info.Format == preferredPresentFormat)
+            {
+                return;
+            }
+
+            TextureCreateInfo presentInfo = new(
+                _width,
+                _height,
+                1,
+                1,
+                1,
+                1,
+                1,
+                GetPreferredPresentBytesPerPixel(),
+                preferredPresentFormat,
+                DepthStencilMode.Depth,
+                Target.Texture2D,
+                SwizzleComponent.Red,
+                SwizzleComponent.Green,
+                SwizzleComponent.Blue,
+                SwizzleComponent.Alpha);
+
+            _presentTexture?.Dispose();
+            _presentTexture = _gd.CreateTexture(presentInfo) as TextureView;
+            _presentTexture?.SetDebugName("Vulkan.Present.FinalTexture");
+        }
+
+        private void EnsurePreScalingTexture(TextureView source)
+        {
+            Ryujinx.Graphics.GAL.Format preferredPresentFormat = GetPreferredPresentFormat();
+
+            if (_preScalingTexture != null &&
+                _preScalingTexture.Width == source.Width &&
+                _preScalingTexture.Height == source.Height &&
+                _preScalingTexture.Info.Format == preferredPresentFormat)
+            {
+                return;
+            }
+
+            TextureCreateInfo sourceInfo = source.Info;
+            TextureCreateInfo preScalingInfo = TextureStorage.NewCreateInfoWith(
+                ref sourceInfo,
+                preferredPresentFormat,
+                GetPreferredPresentBytesPerPixel(),
+                source.Width,
+                source.Height);
+
+            _preScalingTexture?.Dispose();
+            _preScalingTexture = _gd.CreateTexture(preScalingInfo) as TextureView;
+            _preScalingTexture?.SetDebugName("Vulkan.Present.PreScalingTexture");
+        }
+
         private static SurfaceFormatKHR ChooseSwapSurfaceFormat(SurfaceFormatKHR[] availableFormats, bool colorSpacePassthroughEnabled)
         {
+            VkFormat preferredSwapchainFormat = GetPreferredSwapchainFormat();
+
             if (availableFormats.Length == 1 && availableFormats[0].Format == VkFormat.Undefined)
             {
-                return new SurfaceFormatKHR(VkFormat.B8G8R8A8Unorm, ColorSpaceKHR.PaceSrgbNonlinearKhr);
+                return new SurfaceFormatKHR(preferredSwapchainFormat, colorSpacePassthroughEnabled ? ColorSpaceKHR.SpacePassThroughExt : ColorSpaceKHR.PaceSrgbNonlinearKhr);
             }
 
             SurfaceFormatKHR formatToReturn = availableFormats[0];
+
+            foreach (SurfaceFormatKHR format in availableFormats)
+            {
+                if (format.Format == preferredSwapchainFormat &&
+                    format.ColorSpace == (colorSpacePassthroughEnabled ? ColorSpaceKHR.SpacePassThroughExt : ColorSpaceKHR.PaceSrgbNonlinearKhr))
+                {
+                    return format;
+                }
+            }
+
+            foreach (SurfaceFormatKHR format in availableFormats)
+            {
+                if (format.Format == preferredSwapchainFormat)
+                {
+                    return format;
+                }
+            }
+
             if (colorSpacePassthroughEnabled)
             {
                 foreach (SurfaceFormatKHR format in availableFormats)
@@ -356,7 +469,13 @@ namespace Ryujinx.Graphics.Vulkan
 
             TextureView view = (TextureView)texture;
 
+            if (!view.HasDebugName)
+            {
+                view.SetDebugName("Vulkan.Present.SourceTexture");
+            }
+
             UpdateEffect();
+            EnsurePresentTexture();
 
             if (_effect != null)
             {
@@ -421,31 +540,96 @@ namespace Ryujinx.Graphics.Vulkan
             int dstY0 = crop.FlipY ? dstPaddingY : _height - dstPaddingY;
             int dstY1 = crop.FlipY ? _height - dstPaddingY : dstPaddingY;
 
+            TextureView presentTexture = _presentTexture;
+            Ryujinx.Graphics.GAL.Format preferredPresentFormat = GetPreferredPresentFormat();
+            VkFormat preferredSwapchainFormat = GetPreferredSwapchainFormat();
+            Ryujinx.Graphics.GAL.Format? finalBlitFormat = _swapchainImageViews[nextImage].Info.Format == preferredPresentFormat
+                ? preferredPresentFormat
+                : null;
+
+            if (_logFloatPresentationState)
+            {
+                _logFloatPresentationState = false;
+
+                string finalBlitText = finalBlitFormat?.ToString() ?? "null";
+                string effectName = _effect?.GetType().Name ?? "none";
+                string scalingName = _scalingFilter?.GetType().Name ?? "none";
+
+                Logger.Info?.Print(LogClass.Gpu,
+                    $"Vulkan float presentation state: enabled={UseFloatPresentation}, source={view.Info.Format}, present={presentTexture.Info.Format}/{presentTexture.Storage?.VkFormat}, swapchain={_swapchainImageViews[nextImage].Info.Format}/{_format}, preferredPresent={preferredPresentFormat}, preferredSwapchain={preferredSwapchainFormat}, finalBlit={finalBlitText}, effect={effectName}, scaling={scalingName}");
+            }
+
+            TextureView lateFloatView = view;
+
+            if (UseFloatPresentation && view.Info.Format != preferredPresentFormat)
+            {
+                EnsurePreScalingTexture(view);
+
+                _gd.HelperShader.BlitColor(
+                    _gd,
+                    cbs,
+                    view,
+                    _preScalingTexture,
+                    new Extents2D(0, 0, view.Width, view.Height),
+                    new Extents2D(0, 0, _preScalingTexture.Width, _preScalingTexture.Height),
+                    false,
+                    false,
+                    preferredPresentFormat);
+
+                lateFloatView = _preScalingTexture;
+            }
+
             if (_scalingFilter != null)
             {
-                _scalingFilter.Run(
-                    view,
+                Ryujinx.Graphics.GAL.Format scalingOutputFormat = UseFloatPresentation ? preferredPresentFormat : view.Info.Format;
+                int scalingOutputBpp = UseFloatPresentation ? GetPreferredPresentBytesPerPixel() : view.Info.BytesPerPixel;
+
+                TextureView scaledTexture = _scalingFilter.Run(
+                    lateFloatView,
                     cbs,
-                    _swapchainImageViews[nextImage].GetImageViewForAttachment(),
-                    _format,
+                    scalingOutputFormat,
+                    scalingOutputBpp,
                     _width,
                     _height,
                     new Extents2D(srcX0, srcY0, srcX1, srcY1),
                     new Extents2D(dstX0, dstY0, dstX1, dstY1)
                     );
+
+                _gd.HelperShader.BlitColor(
+                    _gd,
+                    cbs,
+                    scaledTexture,
+                    presentTexture,
+                    new Extents2D(0, 0, scaledTexture.Width, scaledTexture.Height),
+                    new Extents2D(0, 0, presentTexture.Width, presentTexture.Height),
+                    false,
+                    false,
+                    preferredPresentFormat);
             }
             else
             {
                 _gd.HelperShader.BlitColor(
                     _gd,
                     cbs,
-                    view,
-                    _swapchainImageViews[nextImage],
+                    lateFloatView,
+                    presentTexture,
                     new Extents2D(srcX0, srcY0, srcX1, srcY1),
                     new Extents2D(dstX0, dstY1, dstX1, dstY0),
                     _isLinear,
-                    true);
+                    true,
+                        preferredPresentFormat);
             }
+
+            _gd.HelperShader.BlitColor(
+                _gd,
+                cbs,
+                presentTexture,
+                _swapchainImageViews[nextImage],
+                new Extents2D(0, 0, presentTexture.Width, presentTexture.Height),
+                new Extents2D(0, 0, _width, _height),
+                false,
+                false,
+                finalBlitFormat);
 
             Transition(
                 cbs.CommandBuffer,
@@ -511,6 +695,24 @@ namespace Ryujinx.Graphics.Vulkan
         public override void SetColorSpacePassthrough(bool colorSpacePassthroughEnabled)
         {
             _colorSpacePassthroughEnabled = colorSpacePassthroughEnabled;
+            _swapchainIsDirty = true;
+        }
+
+        public override void SetVulkanFloatPresentation(bool enabled)
+        {
+            if (GraphicsConfigurationState.EnableVulkanFloatPresentation == enabled && !_swapchainIsDirty)
+            {
+                return;
+            }
+
+            GraphicsConfigurationState.EnableVulkanFloatPresentation = enabled;
+
+            if (!enabled)
+            {
+                GraphicsConfigurationState.ActiveVulkanFloatPresentation = false;
+            }
+
+            _logFloatPresentationState = true;
             _swapchainIsDirty = true;
         }
 
@@ -670,6 +872,8 @@ namespace Ryujinx.Graphics.Vulkan
 
                 _effect?.Dispose();
                 _scalingFilter?.Dispose();
+                _preScalingTexture?.Dispose();
+                _presentTexture?.Dispose();
             }
         }
 

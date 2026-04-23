@@ -21651,6 +21651,56 @@
       }
     },
     {
+      "ID": "SettingsEnableVulkanFloatPresentation",
+      "Translations": {
+        "ar_SA": "Vulkan RGBA16 Presentation",
+        "de_DE": "Vulkan RGBA16 Presentation",
+        "el_GR": "Vulkan RGBA16 Presentation",
+        "en_US": "Vulkan RGBA16 Presentation",
+        "es_ES": "Vulkan RGBA16 Presentation",
+        "fr_FR": "Vulkan RGBA16 Presentation",
+        "he_IL": "Vulkan RGBA16 Presentation",
+        "it_IT": "Vulkan RGBA16 Presentation",
+        "ja_JP": "Vulkan RGBA16 Presentation",
+        "ko_KR": "Vulkan RGBA16 Presentation",
+        "no_NO": "Vulkan RGBA16 Presentation",
+        "pl_PL": "Vulkan RGBA16 Presentation",
+        "pt_BR": "Vulkan RGBA16 Presentation",
+        "ru_RU": "Vulkan RGBA16 Presentation",
+        "sv_SE": "Vulkan RGBA16 Presentation",
+        "th_TH": "Vulkan RGBA16 Presentation",
+        "tr_TR": "Vulkan RGBA16 Presentation",
+        "uk_UA": "Vulkan RGBA16 Presentation",
+        "zh_CN": "Vulkan RGBA16 Presentation",
+        "zh_TW": "Vulkan RGBA16 Presentation"
+      }
+    },
+    {
+      "ID": "SettingsEnableVulkanFloatPresentationTooltip",
+      "Translations": {
+        "ar_SA": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "de_DE": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "el_GR": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "en_US": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "es_ES": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "fr_FR": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "he_IL": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "it_IT": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "ja_JP": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "ko_KR": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "no_NO": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "pl_PL": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "pt_BR": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "ru_RU": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "sv_SE": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "th_TH": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "tr_TR": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "uk_UA": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "zh_CN": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior.",
+        "zh_TW": "Enables the Vulkan RGBA16 swapchain and blit path. Disable this to use the previous RGBA8 presentation behavior."
+      }
+    },
+    {
       "ID": "VolumeShort",
       "Translations": {
         "ar_SA": "مستوى",

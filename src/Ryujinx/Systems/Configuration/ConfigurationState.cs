@@ -72,6 +72,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 EnableTextureRecompression = Graphics.EnableTextureRecompression,
                 EnableMacroHLE = Graphics.EnableMacroHLE,
                 EnableColorSpacePassthrough = Graphics.EnableColorSpacePassthrough,
+                EnableVulkanFloatPresentation = Graphics.EnableVulkanFloatPresentation,
                 EnablePtc = System.EnablePtc,
                 EnableLowPowerPtc = System.EnableLowPowerPtc,
                 TickScalar = System.TickScalar,
@@ -200,6 +201,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             Graphics.EnableTextureRecompression.Value = false;
             Graphics.EnableMacroHLE.Value = true;
             Graphics.EnableColorSpacePassthrough.Value = false;
+            Graphics.EnableVulkanFloatPresentation.Value = false;
             Graphics.AntiAliasing.Value = AntiAliasing.None;
             Graphics.ScalingFilter.Value = ScalingFilter.Bilinear;
             Graphics.ScalingFilterLevel.Value = 80;

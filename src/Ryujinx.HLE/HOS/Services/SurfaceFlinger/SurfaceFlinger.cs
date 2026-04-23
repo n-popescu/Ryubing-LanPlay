@@ -417,11 +417,10 @@ namespace Ryujinx.HLE.HOS.Services.SurfaceFlinger
 
             ulong frameBufferAddress = map.Address + bufferOffset;
 
-            Format format = ConvertColorFormat(item.GraphicBuffer.Object.Buffer.Surfaces[0].ColorFormat);
+            (Format Format, byte BytesPerPixel) formatInfo = ConvertColorFormat(item.GraphicBuffer.Object.Buffer.Surfaces[0].ColorFormat);
 
-            byte bytesPerPixel =
-                format is Format.B5G6R5Unorm or
-                Format.R4G4B4A4Unorm ? (byte)2 : (byte)4;
+            Format format = formatInfo.Format;
+            byte bytesPerPixel = (byte)formatInfo.BytesPerPixel;
 
             int gobBlocksInY = 1 << item.GraphicBuffer.Object.Buffer.Surfaces[0].BlockHeightLog2;
 
@@ -508,15 +507,47 @@ namespace Ryujinx.HLE.HOS.Services.SurfaceFlinger
             information.Item.Fence.WaitForever(_device.Gpu);
         }
 
-        public static Format ConvertColorFormat(ColorFormat colorFormat)
+        public static (Format Format, byte BytesPerPixel) ConvertColorFormat(ColorFormat colorFormat)
         {
             return colorFormat switch
             {
-                ColorFormat.A8B8G8R8 => Format.R8G8B8A8Unorm,
-                ColorFormat.X8B8G8R8 => Format.R8G8B8A8Unorm,
-                ColorFormat.R5G6B5 => Format.B5G6R5Unorm,
-                ColorFormat.A8R8G8B8 => Format.B8G8R8A8Unorm,
-                ColorFormat.A4B4G4R4 => Format.R4G4B4A4Unorm,
+                ColorFormat.A8B8G8R8 or
+                ColorFormat.X8B8G8R8 => (Format.R8G8B8A8Unorm, 4),
+                ColorFormat.A8B8G8R8_sRGB or
+                ColorFormat.X8B8G8R8_sRGB => (Format.R8G8B8A8Srgb, 4),
+                ColorFormat.R5G6B5 => (Format.B5G6R5Unorm, 2),
+                ColorFormat.A8R8G8B8 or
+                ColorFormat.X8R8G8B8 => (Format.B8G8R8A8Unorm, 4),
+                ColorFormat.A4B4G4R4 => (Format.R4G4B4A4Unorm, 2),
+                ColorFormat.A2B10G10R10 or
+                ColorFormat.A2B10G10R10_sRGB or
+                ColorFormat.A2B10G10R10_709 or
+                ColorFormat.A2B10G10R10_709_Linear or
+                ColorFormat.A2B10G10R10_2020 or
+                ColorFormat.A2B10G10R10_2020_Linear => (Format.R10G10B10A2Unorm, 4),
+                ColorFormat.A2R10G10B10 or
+                ColorFormat.A2R10G10B10_sRGB or
+                ColorFormat.A2R10G10B10_709 or
+                ColorFormat.A2R10G10B10_709_Linear or
+                ColorFormat.A2R10G10B10_2020 or
+                ColorFormat.A2R10G10B10_2020_Linear => (Format.B10G10R10A2Unorm, 4),
+                ColorFormat.A16B16G16R16 or
+                ColorFormat.A16B16G16R16_sRGB or
+                ColorFormat.A16B16G16R16_709 or
+                ColorFormat.A16B16G16R16_709_Linear or
+                ColorFormat.A16B16G16R16_2020 or
+                ColorFormat.A16B16G16R16_2020_Linear or
+                ColorFormat.X16B16G16R16 or
+                ColorFormat.X16B16G16R16_sRGB or
+                ColorFormat.X16B16G16R16_709 or
+                ColorFormat.X16B16G16R16_709_Linear or
+                ColorFormat.X16B16G16R16_2020 or
+                ColorFormat.X16B16G16R16_2020_Linear => (Format.R16G16B16A16Unorm, 8),
+                ColorFormat.Float_A16B16G16R16 or
+                ColorFormat.Float_X16B16G16R16 or
+                ColorFormat.Float_A16B16G16R16_scRGB_Linear or
+                ColorFormat.Float_A16B16G16R16_2020_Linear or
+                ColorFormat.Float_A16B16G16R16_2020_PQ => (Format.R16G16B16A16Float, 8),
                 _ => throw new NotImplementedException($"Color Format \"{colorFormat}\" not implemented!"),
             };
         }

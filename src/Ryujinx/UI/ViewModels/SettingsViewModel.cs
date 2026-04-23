@@ -264,6 +264,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         public bool EnableTextureRecompression { get; set; }
         public bool EnableMacroHLE { get; set; }
         public bool EnableColorSpacePassthrough { get; set; }
+        public bool EnableVulkanFloatPresentation { get; set; }
         public bool ColorSpacePassthroughAvailable => RunningPlatform.IsMacOS;
         public bool EnableFileLog { get; set; }
         public bool EnableStub { get; set; }
@@ -697,6 +698,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             EnableTextureRecompression = config.Graphics.EnableTextureRecompression;
             EnableMacroHLE = config.Graphics.EnableMacroHLE;
             EnableColorSpacePassthrough = config.Graphics.EnableColorSpacePassthrough;
+            EnableVulkanFloatPresentation = config.Graphics.EnableVulkanFloatPresentation;
             ResolutionScale = config.Graphics.ResScale == -1 ? 4 : config.Graphics.ResScale - 1;
             CustomResolutionScale = config.Graphics.ResScaleCustom;
             MaxAnisotropy = config.Graphics.MaxAnisotropy == -1 ? 0 : (int)MathF.Log2(config.Graphics.MaxAnisotropy);
@@ -810,6 +812,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             config.Graphics.EnableTextureRecompression.Value = EnableTextureRecompression;
             config.Graphics.EnableMacroHLE.Value = EnableMacroHLE;
             config.Graphics.EnableColorSpacePassthrough.Value = EnableColorSpacePassthrough;
+            config.Graphics.EnableVulkanFloatPresentation.Value = EnableVulkanFloatPresentation;
             config.Graphics.ResScale.Value = ResolutionScale == 4 ? -1 : ResolutionScale + 1;
             config.Graphics.ResScaleCustom.Value = CustomResolutionScale;
             config.Graphics.MaxAnisotropy.Value = MaxAnisotropy == 0 ? -1 : MathF.Pow(2, MaxAnisotropy);

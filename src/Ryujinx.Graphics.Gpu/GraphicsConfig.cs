@@ -71,5 +71,11 @@ namespace Ryujinx.Graphics.Gpu
         /// Enables or disables color space passthrough, if available.
         /// </summary>
         public static bool EnableColorSpacePassthrough { get; set; } = false;
+
+        /// <summary>
+        /// Enables or disables the Vulkan RGBA16 presentation path.
+        /// When disabled, Vulkan presentation falls back to the legacy RGBA8 path.
+        /// </summary>
+        public static bool EnableVulkanFloatPresentation { get; set; } = false;
     }
 }

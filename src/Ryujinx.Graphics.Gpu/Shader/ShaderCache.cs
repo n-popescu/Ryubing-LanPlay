@@ -277,7 +277,11 @@ namespace Ryujinx.Graphics.Gpu.Shader
                 else
                 {
                     attachmentEnableSpan[index] = true;
-                    attachmentFormatsSpan[index] = colorState.Format.Convert().Format;
+                    Ryujinx.Graphics.Gpu.Image.Texture color = channel.TextureManager.GetRenderTargetColor(index);
+
+                    attachmentFormatsSpan[index] = GraphicsConfigurationState.ActiveVulkanFloatPresentation && color?.ForceRenderTargetFloatHost == true
+                        ? Format.R16G16B16A16Float
+                        : colorState.Format.Convert().Format;
                 }
             }
 

@@ -352,7 +352,8 @@ namespace Ryujinx.Graphics.Vulkan
             Extents2D srcRegion,
             Extents2D dstRegion,
             bool linearFilter,
-            bool clearAlpha = false)
+            bool clearAlpha = false,
+            Format? dstFormat = null)
         {
             _pipeline.SetCommandBuffer(cbs);
 
@@ -425,7 +426,7 @@ namespace Ryujinx.Graphics.Vulkan
             int dstWidth = dst.Width;
             int dstHeight = dst.Height;
 
-            _pipeline.SetRenderTarget(dst, (uint)dstWidth, (uint)dstHeight);
+            _pipeline.SetRenderTarget(dstFormat.HasValue ? dst.GetView(dstFormat.Value) : dst, (uint)dstWidth, (uint)dstHeight);
             _pipeline.SetRenderTargetColorMasks([0xf]);
             _pipeline.SetScissors([new Rectangle<int>(0, 0, dstWidth, dstHeight)]);
 
@@ -991,8 +992,8 @@ namespace Ryujinx.Graphics.Vulkan
             // - Maximum component size is 4 (R32).
             int componentSize = Math.Min(Math.Min(srcBpp, dstBpp), 4);
 
-            Format srcFormat = GetFormat(componentSize, srcBpp / componentSize);
-            Format dstFormat = GetFormat(componentSize, dstBpp / componentSize);
+            Format srcFormat = GetCopyFormat(componentSize, srcBpp);
+            Format dstFormat = GetCopyFormat(componentSize, dstBpp);
 
             _pipeline.SetUniformBuffers([new BufferAssignment(0, buffer.Range)]);
 
@@ -1462,6 +1463,24 @@ namespace Ryujinx.Graphics.Vulkan
             }
 
             throw new ArgumentException($"Invalid component size {componentSize}.");
+        }
+
+        private static Format GetCopyFormat(int componentSize, int bytesPerPixel)
+        {
+            int componentsCount = bytesPerPixel / componentSize;
+
+            return IsValidComponentLayout(componentSize, componentsCount)
+                ? GetFormat(componentSize, componentsCount)
+                : GetFormat(bytesPerPixel);
+        }
+
+        private static bool IsValidComponentLayout(int componentSize, int componentsCount)
+        {
+            return componentSize switch
+            {
+                1 or 2 or 4 => componentsCount is 1 or 2 or 4,
+                _ => false,
+            };
         }
 
         public void ConvertIndexBufferIndirect(

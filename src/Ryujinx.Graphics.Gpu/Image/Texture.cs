@@ -126,6 +126,7 @@ namespace Ryujinx.Graphics.Gpu.Image
         private int _scaledSetScore;
 
         private Texture _viewStorage;
+        private readonly bool _forceRenderTargetFloatHost;
 
         private List<Texture> _views;
 
@@ -174,6 +175,8 @@ namespace Ryujinx.Graphics.Gpu.Image
         /// </summary>
         public bool HasViews => _views.Count > 0;
 
+        public bool ForceRenderTargetFloatHost => _forceRenderTargetFloatHost;
+
         private int _referenceCount;
         private List<TexturePoolOwner> _poolOwners;
 
@@ -198,8 +201,10 @@ namespace Ryujinx.Graphics.Gpu.Image
             int firstLayer,
             int firstLevel,
             float scaleFactor,
-            TextureScaleMode scaleMode)
+            TextureScaleMode scaleMode,
+            bool forceRenderTargetFloatHost)
         {
+            _forceRenderTargetFloatHost = forceRenderTargetFloatHost;
             InitializeTexture(context, physicalMemory, info, sizeInfo, range);
 
             FirstLayer = firstLayer;
@@ -226,10 +231,12 @@ namespace Ryujinx.Graphics.Gpu.Image
             TextureInfo info,
             SizeInfo sizeInfo,
             MultiRange range,
-            TextureScaleMode scaleMode)
+            TextureScaleMode scaleMode,
+            bool forceRenderTargetFloatHost = false)
         {
             ScaleFactor = 1f; // Texture is first loaded at scale 1x.
             ScaleMode = scaleMode;
+            _forceRenderTargetFloatHost = forceRenderTargetFloatHost;
 
             InitializeTexture(context, physicalMemory, info, sizeInfo, range);
         }
@@ -278,7 +285,7 @@ namespace Ryujinx.Graphics.Gpu.Image
             {
                 Debug.Assert(!isView);
 
-                TextureCreateInfo createInfo = TextureCache.GetCreateInfo(Info, _context.Capabilities, ScaleFactor);
+                TextureCreateInfo createInfo = TextureCache.GetCreateInfo(Info, _context.Capabilities, ScaleFactor, _forceRenderTargetFloatHost);
                 HostTexture = _context.Renderer.CreateTexture(createInfo);
 
                 SynchronizeMemory(); // Load the data.
@@ -302,7 +309,7 @@ namespace Ryujinx.Graphics.Gpu.Image
                         ScaleFactor = GraphicsConfig.ResScale;
                     }
 
-                    TextureCreateInfo createInfo = TextureCache.GetCreateInfo(Info, _context.Capabilities, ScaleFactor);
+                    TextureCreateInfo createInfo = TextureCache.GetCreateInfo(Info, _context.Capabilities, ScaleFactor, _forceRenderTargetFloatHost);
                     HostTexture = _context.Renderer.CreateTexture(createInfo);
                 }
             }
@@ -344,10 +351,14 @@ namespace Ryujinx.Graphics.Gpu.Image
                 FirstLayer + firstLayer,
                 FirstLevel + firstLevel,
                 ScaleFactor,
-                ScaleMode);
+                ScaleMode,
+                _forceRenderTargetFloatHost);
 
-            TextureCreateInfo createInfo = TextureCache.GetCreateInfo(info, _context.Capabilities, ScaleFactor);
+            TextureCreateInfo createInfo = TextureCache.GetCreateInfo(info, _context.Capabilities, ScaleFactor, _forceRenderTargetFloatHost);
             texture.HostTexture = HostTexture.CreateView(createInfo, firstLayer, firstLevel);
+                FormatInfo formatInfo = _forceRenderTargetFloatHost
+                    ? new FormatInfo(Format.R16G16B16A16Float, 1, 1, 8, 4)
+                    : TextureCompatibility.ToHostCompatibleFormat(Info, _context.Capabilities);
 
             _viewStorage.AddView(texture);
 
@@ -490,7 +501,7 @@ namespace Ryujinx.Graphics.Gpu.Image
         {
             if (storage == null)
             {
-                TextureCreateInfo createInfo = TextureCache.GetCreateInfo(Info, _context.Capabilities, scale);
+                TextureCreateInfo createInfo = TextureCache.GetCreateInfo(Info, _context.Capabilities, scale, _forceRenderTargetFloatHost);
                 storage = _context.Renderer.CreateTexture(createInfo);
             }
 
@@ -541,20 +552,10 @@ namespace Ryujinx.Graphics.Gpu.Image
                     Logger.Debug?.Print(LogClass.Gpu, $"  Recreating view {Info.Width}x{Info.Height} {Info.FormatInfo.Format}.");
                     view.ScaleFactor = scale;
 
-                    TextureCreateInfo viewCreateInfo = TextureCache.GetCreateInfo(view.Info, _context.Capabilities, scale);
+                    TextureCreateInfo viewCreateInfo = TextureCache.GetCreateInfo(view.Info, _context.Capabilities, scale, _forceRenderTargetFloatHost);
                     ITexture newView = HostTexture.CreateView(viewCreateInfo, view.FirstLayer - FirstLayer, view.FirstLevel - FirstLevel);
 
                     view.ReplaceStorage(newView);
-                    view.ScaleMode = newScaleMode;
-                }
-            }
-
-            if (ScaleMode != newScaleMode)
-            {
-                ScaleMode = newScaleMode;
-
-                foreach (Texture view in _views)
-                {
                     view.ScaleMode = newScaleMode;
                 }
             }
@@ -954,6 +955,22 @@ namespace Ryujinx.Graphics.Gpu.Image
                 }
             }
 
+            Format hostCompatibleFormat = TextureCompatibility.ToHostCompatibleFormat(Info, _context.Capabilities).Format;
+
+            if (_forceRenderTargetFloatHost && (hostCompatibleFormat is Format.R8G8B8A8Unorm or Format.R8G8B8A8Srgb or Format.B8G8R8A8Unorm or Format.B8G8R8A8Srgb))
+            {
+                using (result)
+                {
+                    return hostCompatibleFormat switch
+                    {
+                        Format.R8G8B8A8Srgb => PixelConverter.ConvertR8G8B8A8SrgbToR16G16B16A16Float(result.Span, width),
+                        Format.B8G8R8A8Unorm => PixelConverter.ConvertB8G8R8A8ToR16G16B16A16Float(result.Span, width),
+                        Format.B8G8R8A8Srgb => PixelConverter.ConvertB8G8R8A8SrgbToR16G16B16A16Float(result.Span, width),
+                        _ => PixelConverter.ConvertR8G8B8A8ToR16G16B16A16Float(result.Span, width),
+                    };
+                }
+            }
+
             return result;
         }
 
@@ -980,36 +997,64 @@ namespace Ryujinx.Graphics.Gpu.Image
                 height = Math.Max(height >> level, 1);
                 depth = Math.Max(depth >> level, 1);
 
-                if (Info.IsLinear)
+                MemoryOwner<byte> converted = default;
+                bool hasConverted = false;
+
+                Format hostCompatibleFormat = TextureCompatibility.ToHostCompatibleFormat(Info, _context.Capabilities).Format;
+
+                if (_forceRenderTargetFloatHost && (hostCompatibleFormat is Format.R8G8B8A8Unorm or Format.R8G8B8A8Srgb or Format.B8G8R8A8Unorm or Format.B8G8R8A8Srgb))
                 {
-                    data = LayoutConverter.ConvertLinearToLinearStrided(
-                        output,
-                        Info.Width,
-                        Info.Height,
-                        Info.FormatInfo.BlockWidth,
-                        Info.FormatInfo.BlockHeight,
-                        Info.Stride,
-                        Info.FormatInfo.BytesPerPixel,
-                        data);
+                    converted = hostCompatibleFormat switch
+                    {
+                        Format.R8G8B8A8Srgb => PixelConverter.ConvertR16G16B16A16FloatToR8G8B8A8Srgb(data, width),
+                        Format.B8G8R8A8Unorm => PixelConverter.ConvertR16G16B16A16FloatToB8G8R8A8(data, width),
+                        Format.B8G8R8A8Srgb => PixelConverter.ConvertR16G16B16A16FloatToB8G8R8A8Srgb(data, width),
+                        _ => PixelConverter.ConvertR16G16B16A16FloatToR8G8B8A8(data, width),
+                    };
+                    data = converted.Span;
+                    hasConverted = true;
                 }
-                else
+
+                try
                 {
-                    data = LayoutConverter.ConvertLinearToBlockLinear(
-                        output,
-                        width,
-                        height,
-                        depth,
-                        single ? 1 : depth,
-                        levels,
-                        layers,
-                        Info.FormatInfo.BlockWidth,
-                        Info.FormatInfo.BlockHeight,
-                        Info.FormatInfo.BytesPerPixel,
-                        Info.GobBlocksInY,
-                        Info.GobBlocksInZ,
-                        Info.GobBlocksInTileX,
-                        _sizeInfo,
-                        data);
+                    if (Info.IsLinear)
+                    {
+                        data = LayoutConverter.ConvertLinearToLinearStrided(
+                            output,
+                            Info.Width,
+                            Info.Height,
+                            Info.FormatInfo.BlockWidth,
+                            Info.FormatInfo.BlockHeight,
+                            Info.Stride,
+                            Info.FormatInfo.BytesPerPixel,
+                            data);
+                    }
+                    else
+                    {
+                        data = LayoutConverter.ConvertLinearToBlockLinear(
+                            output,
+                            width,
+                            height,
+                            depth,
+                            single ? 1 : depth,
+                            levels,
+                            layers,
+                            Info.FormatInfo.BlockWidth,
+                            Info.FormatInfo.BlockHeight,
+                            Info.FormatInfo.BytesPerPixel,
+                            Info.GobBlocksInY,
+                            Info.GobBlocksInZ,
+                            Info.GobBlocksInTileX,
+                            _sizeInfo,
+                            data);
+                    }
+                }
+                finally
+                {
+                    if (hasConverted)
+                    {
+                        converted.Dispose();
+                    }
                 }
             }
 
@@ -1314,24 +1359,24 @@ namespace Ryujinx.Graphics.Gpu.Image
 
             if (_arrayViewTexture == null && IsSameDimensionsTarget(target))
             {
-                FormatInfo formatInfo = TextureCompatibility.ToHostCompatibleFormat(Info, _context.Capabilities);
+                TextureCreateInfo baseCreateInfo = TextureCache.GetCreateInfo(Info, _context.Capabilities, ScaleFactor, _forceRenderTargetFloatHost);
 
                 TextureCreateInfo createInfo = new(
-                    Info.Width,
-                    Info.Height,
+                    baseCreateInfo.Width,
+                    baseCreateInfo.Height,
                     target == Target.CubemapArray ? 6 : 1,
-                    Info.Levels,
-                    Info.Samples,
-                    formatInfo.BlockWidth,
-                    formatInfo.BlockHeight,
-                    formatInfo.BytesPerPixel,
-                    formatInfo.Format,
-                    Info.DepthStencilMode,
+                    baseCreateInfo.Levels,
+                    baseCreateInfo.Samples,
+                    baseCreateInfo.BlockWidth,
+                    baseCreateInfo.BlockHeight,
+                    baseCreateInfo.BytesPerPixel,
+                    baseCreateInfo.Format,
+                    baseCreateInfo.DepthStencilMode,
                     target,
-                    Info.SwizzleR,
-                    Info.SwizzleG,
-                    Info.SwizzleB,
-                    Info.SwizzleA);
+                    baseCreateInfo.SwizzleR,
+                    baseCreateInfo.SwizzleG,
+                    baseCreateInfo.SwizzleB,
+                    baseCreateInfo.SwizzleA);
 
                 ITexture viewTexture = HostTexture.CreateView(createInfo, 0, 0);
 
@@ -1417,7 +1462,7 @@ namespace Ryujinx.Graphics.Gpu.Image
 
                 foreach (Texture view in viewCopy)
                 {
-                    TextureCreateInfo createInfo = TextureCache.GetCreateInfo(view.Info, _context.Capabilities, ScaleFactor);
+                    TextureCreateInfo createInfo = TextureCache.GetCreateInfo(view.Info, _context.Capabilities, ScaleFactor, _forceRenderTargetFloatHost);
 
                     ITexture newView = parent.HostTexture.CreateView(createInfo, view.FirstLayer + firstLayer, view.FirstLevel + firstLevel);
 
