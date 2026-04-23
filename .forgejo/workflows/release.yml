@@ -81,6 +81,7 @@ jobs:
           pushd publish
           rm libarmeilleure-jitsupport.dylib
           7z a ../release_output/ryujinx-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.zip ../publish
+          7z a ../release_output/ryujinx-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.7z ../publish
           popd
         shell: bash
 
@@ -91,6 +92,7 @@ jobs:
           rm libarmeilleure-jitsupport.dylib
           chmod +x Ryujinx.sh Ryujinx
           tar -czvf ../release_output/ryujinx-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.tar.gz ../publish
+          tar -cJvf ../release_output/ryujinx-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.tar.xz ../publish
           popd
         shell: bash
 

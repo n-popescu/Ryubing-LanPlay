@@ -46,6 +46,7 @@
     <PackageReference Include="Avalonia.Diagnostics" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Avalonia.Controls.DataGrid" />
     <PackageReference Include="Avalonia.Markup.Xaml.Loader" />
+    <PackageReference Include="SharpCompress" />
     <PackageReference Include="Svg.Controls.Avalonia" />
     <PackageReference Include="Svg.Controls.Skia.Avalonia" />
     <PackageReference Include="DynamicData" />
@@ -68,7 +69,6 @@
     <PackageReference Include="Silk.NET.Vulkan.Extensions.EXT" />
     <PackageReference Include="Silk.NET.Vulkan.Extensions.KHR" />
     <PackageReference Include="SPB" />
-    <PackageReference Include="SharpZipLib" />
   </ItemGroup>
   
   <ItemGroup>
