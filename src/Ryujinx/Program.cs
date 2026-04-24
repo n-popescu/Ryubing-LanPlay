@@ -55,6 +55,7 @@ namespace Ryujinx.Ava
             if (OperatingSystem.IsWindows())
             {
 #if !DEBUG
+                // this fixes the "hide console" option by forcing the emulator to launch in an old-school cmd
                 if (!Console.Title.Contains("conhost.exe"))
                 {
                     string sargs = string.Join(" ", args);
