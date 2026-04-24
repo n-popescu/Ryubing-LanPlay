@@ -13,11 +13,6 @@ namespace Ryujinx.Common.Helper
         private static partial nint GetConsoleWindow();
 
         [SupportedOSPlatform("windows")]
-        [LibraryImport("user32")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static partial bool ShowWindow(nint hWnd, int nCmdShow);
-
-        [SupportedOSPlatform("windows")]
         [LibraryImport("kernel32", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static partial bool AllocConsole();
@@ -46,16 +41,8 @@ namespace Ryujinx.Common.Helper
         {
             if (show)
             {
-                EnsureConsoleAttached();
                 Logger.SetConsoleTargetEnabled(true);
-
-                nint hWnd = GetConsoleWindow();
-
-                if (hWnd != nint.Zero)
-                {
-                    const int SW_SHOW = 5;
-                    ShowWindow(hWnd, SW_SHOW);
-                }
+                EnsureConsoleAttached();
 
                 return;
             }
@@ -92,12 +79,7 @@ namespace Ryujinx.Common.Helper
             if (!FreeConsole())
             {
                 Logger.Warning?.Print(LogClass.Application, "Attempted to detach console window but the operation failed");
-                return;
             }
-
-            Console.SetIn(TextReader.Null);
-            Console.SetOut(TextWriter.Null);
-            Console.SetError(TextWriter.Null);
         }
 
         [SupportedOSPlatform("windows")]

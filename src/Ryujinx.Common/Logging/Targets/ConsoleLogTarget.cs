@@ -1,6 +1,5 @@
 using Ryujinx.Common.Logging.Formatters;
 using System;
-using System.IO;
 
 namespace Ryujinx.Common.Logging.Targets
 {
@@ -31,33 +30,15 @@ namespace Ryujinx.Common.Logging.Targets
 
         public void Log(object sender, LogEventArgs args)
         {
-            try
-            {
-                Console.ForegroundColor = GetLogColor(args.Level);
-                Console.WriteLine(_formatter.Format(args));
-                Console.ResetColor();
-            }
-            catch (IOException)
-            {
-            }
-            catch (InvalidOperationException)
-            {
-            }
+            Console.ForegroundColor = GetLogColor(args.Level);
+            Console.WriteLine(_formatter.Format(args));
+            Console.ResetColor();
         }
 
         public void Dispose()
         {
             GC.SuppressFinalize(this);
-            try
-            {
-                Console.ResetColor();
-            }
-            catch (IOException)
-            {
-            }
-            catch (InvalidOperationException)
-            {
-            }
+            Console.ResetColor();
         }
     }
 }
