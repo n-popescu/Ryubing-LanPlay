@@ -414,6 +414,11 @@ namespace Ryujinx.Graphics.Gpu.Image
             _preferredFloatPresentAddress = range.GetSubRange(0).Address;
         }
 
+        public void ClearPreferredFloatPresentAddress()
+        {
+            _preferredFloatPresentAddress = InvalidPreferredFloatPresentAddress;
+        }
+
         /// <summary>
         /// Tries to find an existing texture, or create a new one if not found.
         /// </summary>
@@ -710,7 +715,6 @@ namespace Ryujinx.Graphics.Gpu.Image
             if (!useRenderTargetFloatHost &&
                 GraphicsConfigurationState.ActiveVulkanFloatPresentation &&
                 !isSamplerTexture &&
-                (flags & TextureSearchFlags.ForCopy) == 0 &&
                 info.Target != Target.TextureBuffer &&
                 address == _preferredFloatPresentAddress)
             {

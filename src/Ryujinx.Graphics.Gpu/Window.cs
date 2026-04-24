@@ -189,6 +189,11 @@ namespace Ryujinx.Graphics.Gpu
 
             MultiRange range = new(address, (ulong)size);
 
+            if (IsVulkanRenderer(_context.Renderer) && GraphicsConfigurationState.ActiveVulkanFloatPresentation)
+            {
+                physicalMemory.TextureCache.SetPreferredFloatPresentAddress(range);
+            }
+
             _frameQueue.Enqueue(new PresentationTexture(
                 physicalMemory.TextureCache,
                 info,
@@ -222,7 +227,16 @@ namespace Ryujinx.Graphics.Gpu
                     flags |= TextureSearchFlags.NoViewReuse | TextureSearchFlags.RenderTargetFloatHost;
                 }
 
-                Image.Texture texture = pt.Cache.FindOrCreateTexture(null, flags, pt.Info, 0, range: pt.Range);
+                Image.Texture texture;
+
+                try
+                {
+                    texture = pt.Cache.FindOrCreateTexture(null, flags, pt.Info, 0, range: pt.Range);
+                }
+                finally
+                {
+                    pt.Cache.ClearPreferredFloatPresentAddress();
+                }
 
                 pt.Cache.Tick();
 
