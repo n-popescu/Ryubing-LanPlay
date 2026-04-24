@@ -24,9 +24,11 @@ using Ryujinx.Headless;
 using Ryujinx.SDL3.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Ryujinx.Ava
@@ -52,6 +54,22 @@ namespace Ryujinx.Ava
 
             if (OperatingSystem.IsWindows())
             {
+#if !DEBUG
+                if (!Console.Title.Contains("conhost.exe"))
+                {
+                    StringBuilder sb = new();
+
+                    foreach (string s in args)
+                    {
+                        sb.Append($" {s}");
+                    }
+                    
+                    Process.Start("conhost.exe", $"{Environment.ProcessPath} {sb}");
+                    Console.WriteLine($"{Environment.ProcessPath} {sb}");
+                    return 0;
+                }
+#endif
+                
                 if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
                 {
                     _ = Win32NativeInterop.MessageBoxA(nint.Zero, "You are running an outdated version of Windows.\n\nRyujinx supports Windows 10 version 20H1 and newer.\n", $"Ryujinx {Version}", MbIconwarning);
