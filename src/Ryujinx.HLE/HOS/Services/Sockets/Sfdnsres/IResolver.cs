@@ -348,8 +348,8 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres
                     }
                     catch (SocketException exception)
                     {
-                        netDbErrorCode = ConvertSocketErrorCodeToNetDbError(exception.SocketErrorCode);
-                        errno = ConvertSocketErrorCodeToGaiError(exception.SocketErrorCode, errno);
+                        netDbErrorCode = ConvertSocketErrorCodeToNetDbError(exception.ErrorCode);
+                        errno = ConvertSocketErrorCodeToGaiError(exception.ErrorCode, errno);
                     }
                 }
             }
@@ -431,8 +431,8 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres
                 }
                 catch (SocketException exception)
                 {
-                    netDbErrorCode = ConvertSocketErrorCodeToNetDbError(exception.SocketErrorCode);
-                    errno = ConvertSocketErrorCodeToGaiError(exception.SocketErrorCode, errno);
+                    netDbErrorCode = ConvertSocketErrorCodeToNetDbError(exception.ErrorCode);
+                    errno = ConvertSocketErrorCodeToGaiError(exception.ErrorCode, errno);
                 }
             }
             else
@@ -574,8 +574,8 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres
                     }
                     catch (SocketException exception)
                     {
-                        netDbErrorCode = ConvertSocketErrorCodeToNetDbError(exception.SocketErrorCode);
-                        errno = ConvertSocketErrorCodeToGaiError(exception.SocketErrorCode, errno);
+                        netDbErrorCode = ConvertSocketErrorCodeToNetDbError(exception.ErrorCode);
+                        errno = ConvertSocketErrorCodeToGaiError(exception.ErrorCode, errno);
                     }
                 }
             }
@@ -687,24 +687,24 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres
             return hostEntry.AddressList.Where(x => x.AddressFamily == AddressFamily.InterNetwork);
         }
 
-        private static NetDbError ConvertSocketErrorCodeToNetDbError(SocketError socketError)
+        private static NetDbError ConvertSocketErrorCodeToNetDbError(int errorCode)
         {
-            return socketError switch
+            return errorCode switch
             {
-                SocketError.HostNotFound => NetDbError.HostNotFound,
-                SocketError.TryAgain => NetDbError.TryAgain,
-                SocketError.NoRecovery => NetDbError.NoRecovery,
-                SocketError.NoData => NetDbError.NoData,
+                11001 => NetDbError.HostNotFound,
+                11002 => NetDbError.TryAgain,
+                11003 => NetDbError.NoRecovery,
+                11004 => NetDbError.NoData,
                 _ => NetDbError.Internal,
             };
         }
 
-        private static GaiError ConvertSocketErrorCodeToGaiError(SocketError socketError, GaiError errno)
+        private static GaiError ConvertSocketErrorCodeToGaiError(int errorCode, GaiError errno)
         {
-            return socketError switch
+            return errorCode switch
             {
-                SocketError.HostNotFound => GaiError.NoData,
-                SocketError.TimedOut => GaiError.Again,
+                11001 => GaiError.NoData,
+                10060 => GaiError.Again,
                 _ => errno,
             };
         }
