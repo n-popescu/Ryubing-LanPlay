@@ -57,15 +57,9 @@ namespace Ryujinx.Ava
 #if !DEBUG
                 if (!Console.Title.Contains("conhost.exe"))
                 {
-                    StringBuilder sb = new();
-
-                    foreach (string s in args)
-                    {
-                        sb.Append($" {s}");
-                    }
+                    string sargs = string.Join(" ", args);
                     
-                    Process.Start("conhost.exe", $"{Environment.ProcessPath} {sb}");
-                    Console.WriteLine($"{Environment.ProcessPath} {sb}");
+                    Process.Start("conhost.exe", $"{Environment.ProcessPath} {sargs}");
                     return 0;
                 }
 #endif
