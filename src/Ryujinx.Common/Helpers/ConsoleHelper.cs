@@ -1,6 +1,5 @@
 using Ryujinx.Common.Logging;
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
@@ -15,14 +14,10 @@ namespace Ryujinx.Common.Helper
         [SupportedOSPlatform("windows")]
         [LibraryImport("kernel32", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static partial bool AllocConsole();
-
-        [SupportedOSPlatform("windows")]
-        [LibraryImport("kernel32", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
         private static partial bool FreeConsole();
 
         public static bool SetConsoleWindowStateSupported => OperatingSystem.IsWindows();
+        public static bool HasConsoleWindow => OperatingSystem.IsWindows() && GetConsoleWindow() != nint.Zero;
 
         public static void SetConsoleWindowState(bool show)
         {
@@ -41,31 +36,15 @@ namespace Ryujinx.Common.Helper
         {
             if (show)
             {
-                Logger.SetConsoleTargetEnabled(true);
-                EnsureConsoleAttached();
-
+                if (GetConsoleWindow() != nint.Zero)
+                {
+                    Logger.SetConsoleTargetEnabled(true);
+                }
                 return;
             }
 
             Logger.SetConsoleTargetEnabled(false);
             DetachConsole();
-        }
-
-        [SupportedOSPlatform("windows")]
-        private static void EnsureConsoleAttached()
-        {
-            if (GetConsoleWindow() != nint.Zero)
-            {
-                return;
-            }
-
-            if (!AllocConsole())
-            {
-                Logger.Warning?.Print(LogClass.Application, "Attempted to allocate console window but the operation failed");
-                return;
-            }
-
-            RebindConsoleStreams();
         }
 
         [SupportedOSPlatform("windows")]
@@ -80,24 +59,6 @@ namespace Ryujinx.Common.Helper
             {
                 Logger.Warning?.Print(LogClass.Application, "Attempted to detach console window but the operation failed");
             }
-        }
-
-        [SupportedOSPlatform("windows")]
-        private static void RebindConsoleStreams()
-        {
-            StreamWriter stdout = new(Console.OpenStandardOutput())
-            {
-                AutoFlush = true,
-            };
-
-            StreamWriter stderr = new(Console.OpenStandardError())
-            {
-                AutoFlush = true,
-            };
-
-            Console.SetIn(new StreamReader(Console.OpenStandardInput()));
-            Console.SetOut(stdout);
-            Console.SetError(stderr);
         }
     }
 }
