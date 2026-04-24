@@ -1,15 +1,13 @@
 using Ryujinx.Common.Logging;
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using System.Threading;
 
 namespace Ryujinx.Common.Helper
 {
     public static partial class ConsoleHelper
     {
-        private static int _windowStateRequestId;
-
         [SupportedOSPlatform("windows")]
         [LibraryImport("kernel32")]
         private static partial nint GetConsoleWindow();
@@ -20,9 +18,14 @@ namespace Ryujinx.Common.Helper
         private static partial bool ShowWindow(nint hWnd, int nCmdShow);
 
         [SupportedOSPlatform("windows")]
-        [LibraryImport("user32")]
+        [LibraryImport("kernel32", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static partial bool IsWindowVisible(nint hWnd);
+        private static partial bool AllocConsole();
+
+        [SupportedOSPlatform("windows")]
+        [LibraryImport("kernel32", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool FreeConsole();
 
         public static bool SetConsoleWindowStateSupported => OperatingSystem.IsWindows();
 
@@ -30,7 +33,7 @@ namespace Ryujinx.Common.Helper
         {
             if (OperatingSystem.IsWindows())
             {
-                SetConsoleWindowStateWindows(show, Interlocked.Increment(ref _windowStateRequestId));
+                SetConsoleWindowStateWindows(show);
             }
             else if (show == false)
             {
@@ -39,61 +42,80 @@ namespace Ryujinx.Common.Helper
         }
 
         [SupportedOSPlatform("windows")]
-        private static void SetConsoleWindowStateWindows(bool show, int requestId)
+        private static void SetConsoleWindowStateWindows(bool show)
         {
-            if (TrySetConsoleWindowStateWindows(show))
-            {
-                return;
-            }
-
             if (show)
             {
-                Logger.Warning?.Print(LogClass.Application, "Attempted to show/hide console window but console window does not exist");
+                EnsureConsoleAttached();
+                Logger.SetConsoleTargetEnabled(true);
+
+                nint hWnd = GetConsoleWindow();
+
+                if (hWnd != nint.Zero)
+                {
+                    const int SW_SHOW = 5;
+                    ShowWindow(hWnd, SW_SHOW);
+                }
+
                 return;
             }
 
-            ThreadPool.QueueUserWorkItem(static state =>
-            {
-                int queuedRequestId = (int)state!;
-
-                for (int attempt = 0; attempt < 10; attempt++)
-                {
-                    Thread.Sleep(50);
-
-                    if (queuedRequestId != Volatile.Read(ref _windowStateRequestId))
-                    {
-                        return;
-                    }
-
-                    if (TrySetConsoleWindowStateWindows(false))
-                    {
-                        return;
-                    }
-                }
-
-                if (queuedRequestId == Volatile.Read(ref _windowStateRequestId))
-                {
-                    Logger.Warning?.Print(LogClass.Application, "Attempted to hide console window but it did not become hidden");
-                }
-            }, requestId);
+            Logger.SetConsoleTargetEnabled(false);
+            DetachConsole();
         }
 
         [SupportedOSPlatform("windows")]
-        private static bool TrySetConsoleWindowStateWindows(bool show)
+        private static void EnsureConsoleAttached()
         {
-            const int SW_HIDE = 0;
-            const int SW_SHOW = 5;
-
-            nint hWnd = GetConsoleWindow();
-
-            if (hWnd == nint.Zero)
+            if (GetConsoleWindow() != nint.Zero)
             {
-                return false;
+                return;
             }
 
-            ShowWindow(hWnd, show ? SW_SHOW : SW_HIDE);
+            if (!AllocConsole())
+            {
+                Logger.Warning?.Print(LogClass.Application, "Attempted to allocate console window but the operation failed");
+                return;
+            }
 
-            return IsWindowVisible(hWnd) == show;
+            RebindConsoleStreams();
+        }
+
+        [SupportedOSPlatform("windows")]
+        private static void DetachConsole()
+        {
+            if (GetConsoleWindow() == nint.Zero)
+            {
+                return;
+            }
+
+            if (!FreeConsole())
+            {
+                Logger.Warning?.Print(LogClass.Application, "Attempted to detach console window but the operation failed");
+                return;
+            }
+
+            Console.SetIn(TextReader.Null);
+            Console.SetOut(TextWriter.Null);
+            Console.SetError(TextWriter.Null);
+        }
+
+        [SupportedOSPlatform("windows")]
+        private static void RebindConsoleStreams()
+        {
+            StreamWriter stdout = new(Console.OpenStandardOutput())
+            {
+                AutoFlush = true,
+            };
+
+            StreamWriter stderr = new(Console.OpenStandardError())
+            {
+                AutoFlush = true,
+            };
+
+            Console.SetIn(new StreamReader(Console.OpenStandardInput()));
+            Console.SetOut(stdout);
+            Console.SetError(stderr);
         }
     }
 }
