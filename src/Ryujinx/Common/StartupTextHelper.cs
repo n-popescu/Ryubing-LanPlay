@@ -7,7 +7,7 @@ namespace Ryujinx.Common
     // My code is crappy and I know it. Props to VewDev for assisting me in these shenanigans. - Awesomeangotti
     public class StartupTextHelper
     {
-        public static void MakeSplash()
+        public static void PrintSplash()
         {
             Logger.Notice.Print(LogClass.Application,  "   ___                 __    _              ");
             Logger.Notice.Print(LogClass.Application, @"  / _ \  __ __ __ __  / /   (_)  ___   ___ _");
