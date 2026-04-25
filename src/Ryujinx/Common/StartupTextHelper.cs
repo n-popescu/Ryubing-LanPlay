@@ -76,6 +76,7 @@ namespace Ryujinx.Common
                 "Somebody once told me!",
                 "Its that time of the month again!",
                 "Brewed from only the finest memes",
+                "Async shader compilation would destroy my soul",
         };
         
     }
