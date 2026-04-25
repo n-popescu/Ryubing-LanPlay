@@ -448,7 +448,7 @@ namespace Ryujinx.Graphics.Gpu.Image
             _preferredFloatPresentAddress = InvalidPreferredFloatPresentAddress;
         }
 
-        public bool HasPreferredFloatPresentAddress(ulong address)
+        private bool HasPreferredFloatPresentAddress(ulong address)
         {
             return address == _preferredFloatPresentAddress;
         }
@@ -469,6 +469,18 @@ namespace Ryujinx.Graphics.Gpu.Image
 
                 return false;
             }
+        }
+
+        public bool IsPreferredFloatPresentTarget(ulong address, bool allowRangeMatch = false)
+        {
+            return HasPreferredFloatPresentAddress(address) || (allowRangeMatch && HasPreferredFloatPresentRange(address));
+        }
+
+        public bool ShouldRecreateAsFloatPresent(Texture texture, bool allowRangeMatch = false)
+        {
+            return GraphicsConfigurationState.ActiveVulkanFloatPresentation &&
+                !texture.ForceRenderTargetFloatHost &&
+                IsPreferredFloatPresentTarget(texture.Range.GetSubRange(0).Address, allowRangeMatch);
         }
 
         /// <summary>
@@ -770,7 +782,7 @@ namespace Ryujinx.Graphics.Gpu.Image
                 GraphicsConfigurationState.ActiveVulkanFloatPresentation &&
                 !isSamplerTexture &&
                 info.Target != Target.TextureBuffer &&
-                (HasPreferredFloatPresentAddress(address) || (isCopyTexture && HasPreferredFloatPresentRange(address))))
+                IsPreferredFloatPresentTarget(address, isCopyTexture))
             {
                 useRenderTargetFloatHost = true;
             }
