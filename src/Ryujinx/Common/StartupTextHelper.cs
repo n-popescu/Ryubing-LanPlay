@@ -71,6 +71,11 @@ namespace Ryujinx.Common
                 "bing bing wahoo",
                 "egg",
                 "No, lossless scaling is NOT supported",
+                "How do you people do anything?",
+                "One dollar.",
+                "Somebody once told me!",
+                "Its that time of the month again!",
+                "Brewed from only the finest memes",
         };
         
     }
