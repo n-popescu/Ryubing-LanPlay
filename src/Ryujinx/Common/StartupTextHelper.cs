@@ -77,6 +77,9 @@ namespace Ryujinx.Common
                 "Its that time of the month again!",
                 "Brewed from only the finest memes",
                 "Async shader compilation would destroy my soul",
+                "Trans rights are human rights!",
+                ":3",
+                "Please connect a controller!",
         };
         
     }
