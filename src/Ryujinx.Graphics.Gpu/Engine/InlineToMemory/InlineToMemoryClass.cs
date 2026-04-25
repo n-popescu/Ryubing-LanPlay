@@ -1,4 +1,5 @@
 using Ryujinx.Common;
+using Ryujinx.Common.Configuration;
 using Ryujinx.Common.Memory;
 using Ryujinx.Graphics.Device;
 using Ryujinx.Graphics.Gpu.Memory;
@@ -196,6 +197,18 @@ namespace Ryujinx.Graphics.Gpu.Engine.InlineToMemory
                         _isLinear,
                         _dstGobBlocksInY,
                         _dstGobBlocksInZ);
+
+                    if (target != null)
+                    {
+                        ulong targetAddress = target.Range.GetSubRange(0).Address;
+
+                        if (GraphicsConfigurationState.ActiveVulkanFloatPresentation &&
+                            !target.ForceRenderTargetFloatHost &&
+                            memoryManager.Physical.TextureCache.HasPreferredFloatPresentAddress(targetAddress))
+                        {
+                            target = null;
+                        }
+                    }
 
                     if (target != null)
                     {

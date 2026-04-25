@@ -42,6 +42,8 @@ namespace Ryujinx.Graphics.Gpu.Image
         private readonly GpuContext _context;
         private readonly PhysicalMemory _physicalMemory;
         private ulong _preferredFloatPresentAddress = InvalidPreferredFloatPresentAddress;
+        private readonly object _preferredFloatPresentRangesLock = new();
+        private readonly List<MemoryRange> _preferredFloatPresentRanges = [];
 
         private readonly MultiRangeList<Texture> _textures;
         private readonly HashSet<Texture> _partiallyMappedTextures;
@@ -409,14 +411,64 @@ namespace Ryujinx.Graphics.Gpu.Image
             return texture;
         }
 
+        public void AddPreferredFloatPresentRange(MultiRange range)
+        {
+            MemoryRange subRange = range.GetSubRange(0);
+
+            lock (_preferredFloatPresentRangesLock)
+            {
+                _preferredFloatPresentRanges.Add(subRange);
+            }
+        }
+
         public void SetPreferredFloatPresentAddress(MultiRange range)
         {
             _preferredFloatPresentAddress = range.GetSubRange(0).Address;
         }
 
+        public void RemovePreferredFloatPresentRange(MultiRange range)
+        {
+            MemoryRange subRange = range.GetSubRange(0);
+
+            lock (_preferredFloatPresentRangesLock)
+            {
+                for (int i = 0; i < _preferredFloatPresentRanges.Count; i++)
+                {
+                    if (_preferredFloatPresentRanges[i] == subRange)
+                    {
+                        _preferredFloatPresentRanges.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+        }
+
         public void ClearPreferredFloatPresentAddress()
         {
             _preferredFloatPresentAddress = InvalidPreferredFloatPresentAddress;
+        }
+
+        public bool HasPreferredFloatPresentAddress(ulong address)
+        {
+            return address == _preferredFloatPresentAddress;
+        }
+
+        private bool HasPreferredFloatPresentRange(ulong address)
+        {
+            lock (_preferredFloatPresentRangesLock)
+            {
+                for (int i = 0; i < _preferredFloatPresentRanges.Count; i++)
+                {
+                    MemoryRange range = _preferredFloatPresentRanges[i];
+
+                    if (address >= range.Address && address < range.EndAddress)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
         }
 
         /// <summary>
@@ -667,9 +719,11 @@ namespace Ryujinx.Graphics.Gpu.Image
             MultiRange? range = null)
         {
             bool isSamplerTexture = (flags & TextureSearchFlags.ForSampler) != 0;
+            bool isCopyTexture = (flags & TextureSearchFlags.ForCopy) != 0;
             bool discard = (flags & TextureSearchFlags.DiscardData) != 0;
             bool useRenderTargetFloatHost = (flags & TextureSearchFlags.RenderTargetFloatHost) != 0;
             bool noViewReuse = (flags & TextureSearchFlags.NoViewReuse) != 0;
+            bool preserveOverlapsForFloatPresent = useRenderTargetFloatHost && noViewReuse;
 
             TextureScaleMode scaleMode = IsUpscaleCompatible(info, (flags & TextureSearchFlags.WithUpscale) != 0);
 
@@ -716,7 +770,7 @@ namespace Ryujinx.Graphics.Gpu.Image
                 GraphicsConfigurationState.ActiveVulkanFloatPresentation &&
                 !isSamplerTexture &&
                 info.Target != Target.TextureBuffer &&
-                address == _preferredFloatPresentAddress)
+                (HasPreferredFloatPresentAddress(address) || (isCopyTexture && HasPreferredFloatPresentRange(address))))
             {
                 useRenderTargetFloatHost = true;
             }
@@ -827,19 +881,22 @@ namespace Ryujinx.Graphics.Gpu.Image
                 {
                     overlapsCount = _textures.FindOverlaps(range.Value, ref _textureOverlaps);
 
-                    int filteredOverlapsCount = 0;
-
-                    for (int index = 0; index < overlapsCount; index++)
+                    if (!preserveOverlapsForFloatPresent)
                     {
-                        Texture overlap = _textureOverlaps[index];
+                        int filteredOverlapsCount = 0;
 
-                        if (overlap.ForceRenderTargetFloatHost == useRenderTargetFloatHost)
+                        for (int index = 0; index < overlapsCount; index++)
                         {
-                            _textureOverlaps[filteredOverlapsCount++] = overlap;
-                        }
-                    }
+                            Texture overlap = _textureOverlaps[index];
 
-                    overlapsCount = filteredOverlapsCount;
+                            if (overlap.ForceRenderTargetFloatHost == useRenderTargetFloatHost)
+                            {
+                                _textureOverlaps[filteredOverlapsCount++] = overlap;
+                            }
+                        }
+
+                        overlapsCount = filteredOverlapsCount;
+                    }
                 }
                 finally
                 {
@@ -852,7 +909,7 @@ namespace Ryujinx.Graphics.Gpu.Image
                 Array.Resize(ref _overlapInfo, _textureOverlaps.Length);
             }
 
-            if (noViewReuse)
+            if (noViewReuse && !preserveOverlapsForFloatPresent)
             {
                 overlapsCount = 0;
             }
@@ -1151,7 +1208,7 @@ namespace Ryujinx.Graphics.Gpu.Image
                     }
                     else
                     {
-                        TextureCreateInfo createInfo = GetCreateInfo(overlapInfo, _context.Capabilities, overlap.ScaleFactor, overlap.ForceRenderTargetFloatHost);
+                        TextureCreateInfo createInfo = GetCreateInfo(overlapInfo, _context.Capabilities, overlap.ScaleFactor, texture.ForceRenderTargetFloatHost);
 
                         ITexture newView = texture.HostTexture.CreateView(createInfo, oInfo.FirstLayer, oInfo.FirstLevel);
 

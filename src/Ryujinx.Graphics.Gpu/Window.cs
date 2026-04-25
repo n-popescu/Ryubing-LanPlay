@@ -191,6 +191,7 @@ namespace Ryujinx.Graphics.Gpu
 
             if (IsVulkanRenderer(_context.Renderer) && GraphicsConfigurationState.ActiveVulkanFloatPresentation)
             {
+                physicalMemory.TextureCache.AddPreferredFloatPresentRange(range);
                 physicalMemory.TextureCache.SetPreferredFloatPresentAddress(range);
             }
 
@@ -236,6 +237,7 @@ namespace Ryujinx.Graphics.Gpu
                 finally
                 {
                     pt.Cache.ClearPreferredFloatPresentAddress();
+                    pt.Cache.RemovePreferredFloatPresentRange(pt.Range);
                 }
 
                 pt.Cache.Tick();
