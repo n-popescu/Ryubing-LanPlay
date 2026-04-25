@@ -431,8 +431,8 @@ namespace Ryujinx.Ava
 
         internal static void PrintSystemInfo()
         {
-            // The ryubing logo is now called inside this thing.
-            StartupTextHelper.StartupSplash(); 
+            // Print the ryubing logo + joke splash
+            StartupTextHelper.MakeSplash(); 
             
             Logger.Notice.Print(LogClass.Application, $"{RyujinxApp.FullAppName} Version: {Version}");
             Logger.Notice.Print(LogClass.Application, $".NET Runtime: {RuntimeInformation.FrameworkDescription}");
