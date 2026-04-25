@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Ryujinx.Common
 {
     // My code is crappy and I know it. Props to VewDev for assisting me in these shenanigans.
+    // In other news, I probably put this in the wrong namespace :kek: - Awesomeangotti
     public class StartupTextHelper
     {
         public static void StartupSplash()
@@ -16,7 +17,7 @@ namespace Ryujinx.Common
             Logger.Notice.Print(LogClass.Application, @"/_/|_|  \_, / \_,_/ /_.__//_/  /_//_/ \_, / ");
             Logger.Notice.Print(LogClass.Application,  "       /___/                         /___/  ");
             
-            // Do some randomizing. Literally just put another entry here to allow it to be picked.
+            // Do some randomizing. Additions are welcome to this list : ) - Awesomeangotti
             List<string> splashes = new()
             {
                 "Ryubing is my middle name",
@@ -52,6 +53,17 @@ namespace Ryujinx.Common
                 "this.",
                 "Probably contains no baked beans",
                 "Y'all ready for this?",
+                "Removed herobrine",
+                "Right to repair!",
+                "Programmed in C#!",
+                "Forgejo has dethroned Gitlab!",
+                "Any ideas what to put here?",
+                "Good morning!",
+                "Good afternoon!",
+                "Good evening!",
+                "I hope you are having a great day!",
+                "Please insert disc two!",
+                "I... AM RYUBING!",
             };
             Random randomobj = new();
             int randindex = randomobj.Next(0, splashes.Count);
