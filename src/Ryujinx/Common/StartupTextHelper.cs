@@ -4,22 +4,25 @@ using Gommon;
 
 namespace Ryujinx.Common
 {
-    // My code is crappy and I know it. Props to VewDev for assisting me in these shenanigans.
-    // In other news, I probably put this in the wrong namespace :kek: - Awesomeangotti
+    // My code is crappy and I know it. Props to VewDev for assisting me in these shenanigans. - Awesomeangotti
     public class StartupTextHelper
     {
         public static void MakeSplash()
         {
-            // Ryubing Logo Print
             Logger.Notice.Print(LogClass.Application,  "   ___                 __    _              ");
             Logger.Notice.Print(LogClass.Application, @"  / _ \  __ __ __ __  / /   (_)  ___   ___ _");
             Logger.Notice.Print(LogClass.Application, @" / , _/ / // // // / / _ \ / /  / _ \ / _ `/");
             Logger.Notice.Print(LogClass.Application, @"/_/|_|  \_, / \_,_/ /_.__//_/  /_//_/ \_, / ");
             Logger.Notice.Print(LogClass.Application,  "       /___/                         /___/  ");
             
-            // Do some randomizing. Additions are welcome to this list : ) - Awesomeangotti
-            List<string> splashes = new()
-            {
+            Logger.Notice.Print(LogClass.Application,  "");
+            Logger.Notice.Print(LogClass.Application,  MainSplashes.GetRandomElement());
+            Logger.Notice.Print(LogClass.Application,  "");
+        }
+        
+        // This list contains all splashes. Additions are welcome to this list : ) - Awesomeangotti
+        public static List<string> MainSplashes =  new()
+        {
                 "Ryubing is my middle name",
                 "Giving it 110 percent!",
                 "I don't think therefore I don't am!",
@@ -66,13 +69,10 @@ namespace Ryujinx.Common
                 "I... AM RYUBING!",
                 "Ryubingin' it up",
                 "bing bing wahoo",
-            };
-
-            // Print the dang thing
-            Logger.Notice.Print(LogClass.Application,  "");
-            Logger.Notice.Print(LogClass.Application,  splashes.GetRandomElement());
-            Logger.Notice.Print(LogClass.Application,  "");
-        }
+                "egg",
+                "No, lossless scaling is NOT supported",
+        };
         
     }
+    
 }
