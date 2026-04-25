@@ -1,6 +1,6 @@
-﻿using Ryujinx.Common.Logging;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Ryujinx.Common.Logging;
+using Gommon;
 
 namespace Ryujinx.Common
 {
@@ -8,7 +8,7 @@ namespace Ryujinx.Common
     // In other news, I probably put this in the wrong namespace :kek: - Awesomeangotti
     public class StartupTextHelper
     {
-        public static void StartupSplash()
+        public static void MakeSplash()
         {
             // Ryubing Logo Print
             Logger.Notice.Print(LogClass.Application,  "   ___                 __    _              ");
@@ -64,13 +64,13 @@ namespace Ryujinx.Common
                 "I hope you are having a great day!",
                 "Please insert disc two!",
                 "I... AM RYUBING!",
+                "Ryubingin' it up",
+                "bing bing wahoo",
             };
-            Random randomobj = new();
-            int randindex = randomobj.Next(0, splashes.Count);
-            
+
             // Print the dang thing
             Logger.Notice.Print(LogClass.Application,  "");
-            Logger.Notice.Print(LogClass.Application,  splashes[randindex]);
+            Logger.Notice.Print(LogClass.Application,  splashes.GetRandomElement());
             Logger.Notice.Print(LogClass.Application,  "");
         }
         
