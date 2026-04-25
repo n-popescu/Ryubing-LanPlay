@@ -46,7 +46,12 @@ namespace Ryujinx.Common
                 "Im sorry dave. I'm afraid I can't do that.",
                 "That's no moon",
                 "Sir, finishing this fight.",
-                
+                "I see how it is...",
+                "Space! The final frontier!",
+                "If you could not tell already, I love making bad jokes : )",
+                "this.",
+                "Probably contains no baked beans",
+                "Y'all ready for this?",
             };
             Random randomobj = new();
             int randindex = randomobj.Next(0, splashes.Count);
