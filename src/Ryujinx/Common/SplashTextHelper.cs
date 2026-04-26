@@ -29,7 +29,7 @@ namespace Ryujinx.Common
                 _Final_Splash = _Main_Splashes.GetRandomElement();
             }
 
-            return _Final_Splash;
+            return $"{_Final_Splash}";
         }
         
         // This list contains all splashes. Additions are welcome to this list : ) - Awesomeangotti
@@ -94,6 +94,7 @@ namespace Ryujinx.Common
                 "Please connect a controller!",
                 "Never gonna give you up!",
                 "The game was rigged from the start",
+                "Ganon is watching you!",
         };
         
         
