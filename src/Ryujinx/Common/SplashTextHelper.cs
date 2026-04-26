@@ -5,7 +5,7 @@ using Gommon;
 namespace Ryujinx.Common
 {
     // My code is crappy and I know it. Props to VewDev for assisting me in these shenanigans. - Awesomeangotti
-    public class StartupTextHelper
+    public class SplashTextHelper
     {
         public static void PrintSplash()
         {
@@ -16,12 +16,24 @@ namespace Ryujinx.Common
             Logger.Notice.Print(LogClass.Application,  "       /___/                         /___/  ");
             
             Logger.Notice.Print(LogClass.Application,  "");
-            Logger.Notice.Print(LogClass.Application,  MainSplashes.GetRandomElement());
+            Logger.Notice.Print(LogClass.Application,  GetSplash());
             Logger.Notice.Print(LogClass.Application,  "");
+        }
+
+        private static string _Final_Splash = "";
+
+        public static string GetSplash()
+        {
+            if (string.IsNullOrEmpty(_Final_Splash))
+            {
+                _Final_Splash = _Main_Splashes.GetRandomElement();
+            }
+
+            return _Final_Splash;
         }
         
         // This list contains all splashes. Additions are welcome to this list : ) - Awesomeangotti
-        public static List<string> MainSplashes =  new()
+        private static List<string> _Main_Splashes =  new()
         {
                 "Ryubing is my middle name",
                 "Giving it 110 percent!",
@@ -81,7 +93,9 @@ namespace Ryujinx.Common
                 ":3",
                 "Please connect a controller!",
                 "Never gonna give you up!",
+                "The game was rigged from the start",
         };
+        
         
     }
     

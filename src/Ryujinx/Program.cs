@@ -432,7 +432,7 @@ namespace Ryujinx.Ava
         internal static void PrintSystemInfo()
         {
             // Print the ryubing logo + joke splash
-            StartupTextHelper.PrintSplash(); 
+            SplashTextHelper.PrintSplash(); 
             
             Logger.Notice.Print(LogClass.Application, $"{RyujinxApp.FullAppName} Version: {Version}");
             Logger.Notice.Print(LogClass.Application, $".NET Runtime: {RuntimeInformation.FrameworkDescription}");
