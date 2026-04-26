@@ -80,6 +80,7 @@ namespace Ryujinx.Common
                 "Trans rights are human rights!",
                 ":3",
                 "Please connect a controller!",
+                "Never gonna give you up!",
         };
         
     }
