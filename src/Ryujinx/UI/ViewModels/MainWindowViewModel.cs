@@ -1263,7 +1263,8 @@ namespace Ryujinx.Ava.UI.ViewModels
                         {
                             case ShaderCacheLoadingState.Start:
                             case ShaderCacheLoadingState.Loading:
-                                LoadHeading = LocaleManager.Instance[LocaleKeys.CompilingShaders];
+                                //LoadHeading = LocaleManager.Instance[LocaleKeys.CompilingShaders]; This is the original line. Leaving it here until done.
+                                LoadHeading = $"{LocaleManager.Instance[LocaleKeys.CompilingShaders]} - {SplashTextHelper.GetSplash()}";
                                 IsLoadingIndeterminate = false;
                                 break;
                             case ShaderCacheLoadingState.Packaging:
