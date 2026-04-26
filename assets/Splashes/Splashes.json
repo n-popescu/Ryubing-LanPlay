@@ -1,0 +1,29 @@
+{
+  "Locales": [
+    {
+      "ID": "MenuBarActionsOpenMiiEditor",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Mii Editor",
+        "es_ES": "Editor de Mii",
+        "fr_FR": "Éditeur de Mii",
+        "he_IL": "",
+        "it_IT": "Editor di Mii",
+        "ja_JP": "",
+        "ko_KR": "Mii 편집기",
+        "no_NO": "Mii-redigerer",
+        "pl_PL": "Edytor Mii",
+        "pt_BR": "Editor de Mii",
+        "ru_RU": "Редактор Mii",
+        "sv_SE": "Mii-redigerare",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "Редактор Mii",
+        "zh_CN": "Mii 编辑器",
+        "zh_TW": "Mii 編輯器"
+      }
+    }
+  ]
+}
