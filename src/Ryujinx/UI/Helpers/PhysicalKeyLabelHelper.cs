@@ -2,7 +2,6 @@ using Avalonia.Input;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Input;
 using Ryujinx.Common.Configuration;
-using Ryujinx.Common.Configuration.Hid;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

@@ -50,55 +50,28 @@ namespace Ryujinx.Ava.UI.Helpers
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string keyString = string.Empty;
-
-            switch (value)
+            return value switch
             {
-                case Key key:
-                    if (KeyboardLayoutLocaleHelper.TryGetSemanticLabel(key, out string localizedKeyLabel))
-                    {
-                        keyString = localizedKeyLabel;
-                    }
-                    else
-                    {
-                        keyString = key.ToString();
-                    }
-
-                    break;
-                case PhysicalKey physicalKey:
-                    keyString = PhysicalKeyLabelHelper.GetDisplayString(physicalKey);
-                    break;
-                case GamepadInputId gamepadInputId:
-                    LocaleKeys localeKey;
-                    if (_gamepadInputIdMap.TryGetValue(gamepadInputId, out localeKey))
-                    {
-                        keyString = LocaleManager.Instance[localeKey];
-                    }
-                    else
-                    {
-                        keyString = gamepadInputId.ToString();
-                    }
-
-                    break;
-                case StickInputId stickInputId:
-                    if (_stickInputIdMap.TryGetValue(stickInputId, out localeKey))
-                    {
-                        keyString = LocaleManager.Instance[localeKey];
-                    }
-                    else
-                    {
-                        keyString = stickInputId.ToString();
-                    }
-
-                    break;
-            }
-
-            return keyString;
+                Key key => KeyboardLayoutLocaleHelper.TryGetSemanticLabel(key, out string localizedKeyLabel)
+                        ? localizedKeyLabel
+                        : key.ToString(),
+                PhysicalKey physicalKey => PhysicalKeyLabelHelper.GetDisplayString(physicalKey),
+                GamepadInputId gamepadInputId => GetLocalizedMappedValue(gamepadInputId, _gamepadInputIdMap),
+                StickInputId stickInputId => GetLocalizedMappedValue(stickInputId, _stickInputIdMap),
+                _ => string.Empty,
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
+        }
+
+        private static string GetLocalizedMappedValue<T>(T value, IReadOnlyDictionary<T, LocaleKeys> map) where T : notnull
+        {
+            return map.TryGetValue(value, out LocaleKeys localeKey)
+                ? LocaleManager.Instance[localeKey]
+                : value.ToString();
         }
     }
 }

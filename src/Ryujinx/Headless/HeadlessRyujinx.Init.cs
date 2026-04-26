@@ -7,8 +7,6 @@ using Ryujinx.Ava.Systems.Configuration;
 using Ryujinx.Common.Configuration;
 using Ryujinx.Common.Configuration.Hid;
 using Ryujinx.Common.Configuration.Hid.Controller;
-using Ryujinx.Common.Configuration.Hid.Controller.Motion;
-using Ryujinx.Common.Configuration.Hid.Keyboard;
 using Ryujinx.Common.Logging;
 using Ryujinx.Common.Utilities;
 using Ryujinx.Cpu;
@@ -22,9 +20,6 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ConfigGamepadInputId = Ryujinx.Common.Configuration.Hid.Controller.GamepadInputId;
-using ConfigStickInputId = Ryujinx.Common.Configuration.Hid.Controller.StickInputId;
-using PhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;
 
 namespace Ryujinx.Headless
 {
@@ -99,131 +94,22 @@ namespace Ryujinx.Headless
             {
                 if (isKeyboard)
                 {
-                    config = new StandardKeyboardInputConfig
-                    {
-                        Version = InputConfig.CurrentVersion,
-                        Backend = InputBackendType.WindowKeyboard,
-                        Id = null,
-                        ControllerType = ControllerType.JoyconPair,
-                        LeftJoycon = new LeftJoyconCommonConfig<PhysicalKey>
-                        {
-                            DpadUp = PhysicalKey.Up,
-                            DpadDown = PhysicalKey.Down,
-                            DpadLeft = PhysicalKey.Left,
-                            DpadRight = PhysicalKey.Right,
-                            ButtonMinus = PhysicalKey.Minus,
-                            ButtonL = PhysicalKey.E,
-                            ButtonZl = PhysicalKey.Q,
-                            ButtonSl = PhysicalKey.Unbound,
-                            ButtonSr = PhysicalKey.Unbound,
-                        },
-
-                        LeftJoyconStick = new JoyconConfigKeyboardStick<PhysicalKey>
-                        {
-                            StickUp = PhysicalKey.W,
-                            StickDown = PhysicalKey.S,
-                            StickLeft = PhysicalKey.A,
-                            StickRight = PhysicalKey.D,
-                            StickButton = PhysicalKey.F,
-                        },
-
-                        RightJoycon = new RightJoyconCommonConfig<PhysicalKey>
-                        {
-                            ButtonA = PhysicalKey.Z,
-                            ButtonB = PhysicalKey.X,
-                            ButtonX = PhysicalKey.C,
-                            ButtonY = PhysicalKey.V,
-                            ButtonPlus = PhysicalKey.Plus,
-                            ButtonR = PhysicalKey.U,
-                            ButtonZr = PhysicalKey.O,
-                            ButtonSl = PhysicalKey.Unbound,
-                            ButtonSr = PhysicalKey.Unbound,
-                        },
-
-                        RightJoyconStick = new JoyconConfigKeyboardStick<PhysicalKey>
-                        {
-                            StickUp = PhysicalKey.I,
-                            StickDown = PhysicalKey.K,
-                            StickLeft = PhysicalKey.J,
-                            StickRight = PhysicalKey.L,
-                            StickButton = PhysicalKey.H,
-                        },
-                    };
+                    config = InputConfigDefaults.CreateDefaultKeyboardConfiguration(
+                        null,
+                        null,
+                        ControllerType.JoyconPair,
+                        index);
                 }
                 else
                 {
                     bool isNintendoStyle = gamepadName.Contains("Nintendo");
 
-                    config = new StandardControllerInputConfig
-                    {
-                        Version = InputConfig.CurrentVersion,
-                        Backend = InputBackendType.GamepadSDL3,
-                        Id = null,
-                        ControllerType = ControllerType.JoyconPair,
-                        DeadzoneLeft = 0.1f,
-                        DeadzoneRight = 0.1f,
-                        RangeLeft = 1.0f,
-                        RangeRight = 1.0f,
-                        TriggerThreshold = 0.5f,
-                        LeftJoycon = new LeftJoyconCommonConfig<ConfigGamepadInputId>
-                        {
-                            DpadUp = ConfigGamepadInputId.DpadUp,
-                            DpadDown = ConfigGamepadInputId.DpadDown,
-                            DpadLeft = ConfigGamepadInputId.DpadLeft,
-                            DpadRight = ConfigGamepadInputId.DpadRight,
-                            ButtonMinus = ConfigGamepadInputId.Minus,
-                            ButtonL = ConfigGamepadInputId.LeftShoulder,
-                            ButtonZl = ConfigGamepadInputId.LeftTrigger,
-                            ButtonSl = ConfigGamepadInputId.SingleLeftTrigger0,
-                            ButtonSr = ConfigGamepadInputId.SingleRightTrigger0,
-                        },
-
-                        LeftJoyconStick = new JoyconConfigControllerStick<ConfigGamepadInputId, ConfigStickInputId>
-                        {
-                            Joystick = ConfigStickInputId.Left,
-                            StickButton = ConfigGamepadInputId.LeftStick,
-                            InvertStickX = false,
-                            InvertStickY = false,
-                            Rotate90CW = false,
-                        },
-
-                        RightJoycon = new RightJoyconCommonConfig<ConfigGamepadInputId>
-                        {
-                            ButtonA = isNintendoStyle ? ConfigGamepadInputId.A : ConfigGamepadInputId.B,
-                            ButtonB = isNintendoStyle ? ConfigGamepadInputId.B : ConfigGamepadInputId.A,
-                            ButtonX = isNintendoStyle ? ConfigGamepadInputId.X : ConfigGamepadInputId.Y,
-                            ButtonY = isNintendoStyle ? ConfigGamepadInputId.Y : ConfigGamepadInputId.X,
-                            ButtonPlus = ConfigGamepadInputId.Plus,
-                            ButtonR = ConfigGamepadInputId.RightShoulder,
-                            ButtonZr = ConfigGamepadInputId.RightTrigger,
-                            ButtonSl = ConfigGamepadInputId.SingleLeftTrigger1,
-                            ButtonSr = ConfigGamepadInputId.SingleRightTrigger1,
-                        },
-
-                        RightJoyconStick = new JoyconConfigControllerStick<ConfigGamepadInputId, ConfigStickInputId>
-                        {
-                            Joystick = ConfigStickInputId.Right,
-                            StickButton = ConfigGamepadInputId.RightStick,
-                            InvertStickX = false,
-                            InvertStickY = false,
-                            Rotate90CW = false,
-                        },
-
-                        Motion = new StandardMotionConfigController
-                        {
-                            MotionBackend = MotionInputBackendType.GamepadDriver,
-                            EnableMotion = true,
-                            Sensitivity = 100,
-                            GyroDeadzone = 1,
-                        },
-                        Rumble = new RumbleConfigController
-                        {
-                            StrongRumble = 1f,
-                            WeakRumble = 1f,
-                            EnableRumble = false,
-                            UseHDRumble = true
-                        },
-                    };
+                    config = InputConfigDefaults.CreateDefaultControllerConfiguration(
+                        null,
+                        null,
+                        ControllerType.JoyconPair,
+                        index,
+                        isNintendoStyle);
                 }
             }
             else

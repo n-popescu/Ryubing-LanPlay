@@ -1,5 +1,5 @@
+using Ryujinx.Common.Configuration.Hid.Controller;
 using Ryujinx.Common.Configuration.Hid.Keyboard;
-using System.Collections.Generic;
 using System.Numerics;
 
 using ConfigPhysicalKey = Ryujinx.Common.Configuration.Hid.PhysicalKey;

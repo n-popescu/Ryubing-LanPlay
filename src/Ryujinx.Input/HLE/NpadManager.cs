@@ -95,7 +95,7 @@ namespace Ryujinx.Input.HLE
             }
         }
 
-        private void HandleOnGamepadConnected(string id)
+        private void HandleOnGamepadConnected(string _)
         {
             // Force input reload
             ReloadConfiguration(_requestedInputConfig, _enableKeyboard, _enableMouse);
@@ -104,16 +104,10 @@ namespace Ryujinx.Input.HLE
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool DriverConfigurationUpdate(ref NpadController controller, InputConfig config)
         {
-            IGamepadDriver targetDriver = _gamepadDriver;
-
-            if (config is StandardControllerInputConfig)
-            {
-                targetDriver = _gamepadDriver;
-            }
-            else if (config is StandardKeyboardInputConfig)
-            {
-                targetDriver = _keyboardDriver;
-            }
+            IGamepadDriver targetDriver =
+                config is StandardKeyboardInputConfig
+                    ? _keyboardDriver
+                    : _gamepadDriver;
 
             Debug.Assert(targetDriver != null, "Unknown input configuration!");
 
@@ -210,55 +204,11 @@ namespace Ryujinx.Input.HLE
                 return false;
             }
 
-            fallbackConfig = new StandardKeyboardInputConfig
-            {
-                Version = InputConfig.CurrentVersion,
-                Backend = InputBackendType.WindowKeyboard,
-                Id = keyboardId,
-                Name = keyboard.Name,
-                PlayerIndex = inputConfig.PlayerIndex,
-                ControllerType = inputConfig.ControllerType,
-                LeftJoycon = new LeftJoyconCommonConfig<PhysicalKey>
-                {
-                    DpadUp = PhysicalKey.Up,
-                    DpadDown = PhysicalKey.Down,
-                    DpadLeft = PhysicalKey.Left,
-                    DpadRight = PhysicalKey.Right,
-                    ButtonMinus = PhysicalKey.Minus,
-                    ButtonL = PhysicalKey.E,
-                    ButtonZl = PhysicalKey.Q,
-                    ButtonSl = PhysicalKey.Unbound,
-                    ButtonSr = PhysicalKey.Unbound,
-                },
-                LeftJoyconStick = new JoyconConfigKeyboardStick<PhysicalKey>
-                {
-                    StickUp = PhysicalKey.W,
-                    StickDown = PhysicalKey.S,
-                    StickLeft = PhysicalKey.A,
-                    StickRight = PhysicalKey.D,
-                    StickButton = PhysicalKey.F,
-                },
-                RightJoycon = new RightJoyconCommonConfig<PhysicalKey>
-                {
-                    ButtonA = PhysicalKey.Z,
-                    ButtonB = PhysicalKey.X,
-                    ButtonX = PhysicalKey.C,
-                    ButtonY = PhysicalKey.V,
-                    ButtonPlus = PhysicalKey.Plus,
-                    ButtonR = PhysicalKey.U,
-                    ButtonZr = PhysicalKey.O,
-                    ButtonSl = PhysicalKey.Unbound,
-                    ButtonSr = PhysicalKey.Unbound,
-                },
-                RightJoyconStick = new JoyconConfigKeyboardStick<PhysicalKey>
-                {
-                    StickUp = PhysicalKey.I,
-                    StickDown = PhysicalKey.K,
-                    StickLeft = PhysicalKey.J,
-                    StickRight = PhysicalKey.L,
-                    StickButton = PhysicalKey.H,
-                },
-            };
+            fallbackConfig = InputConfigDefaults.CreateDefaultKeyboardConfiguration(
+                keyboardId,
+                keyboard.Name,
+                inputConfig.ControllerType,
+                inputConfig.PlayerIndex);
 
             return true;
         }

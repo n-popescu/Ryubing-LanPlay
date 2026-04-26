@@ -144,44 +144,14 @@ namespace Ryujinx.Ava.Input
                 _observedPhysicalKeysBySemanticKey.Clear();
             }
         }
-        private bool _capsLockState;
-        private bool _lastCapsLockState = false;
-
         protected void OnKeyPress(object sender, KeyEventArgs args)
         {
-            if (args.Key == AvaKey.CapsLock)
-            {
-                // Update cached state using macOS API
-                if (OperatingSystem.IsMacOS())
-                {
-                    var flags = CGEventSourceFlagsState(CGEventSourceStateID.HIDSystemState);
-                    _capsLockState = (flags & CGEventFlags.AlphaShift) != 0;
-                }
-                else
-                {
-                    _capsLockState = true;
-                }
-            }
-
             UpdateKeyStates(args, true);
             KeyPressed?.Invoke(this, args);
         }
 
         protected void OnKeyRelease(object sender, KeyEventArgs args)
         {
-            if (args.Key == AvaKey.CapsLock)
-            {
-                if (OperatingSystem.IsMacOS())
-                {
-                    var flags = CGEventSourceFlagsState(CGEventSourceStateID.HIDSystemState);
-                    _capsLockState = (flags & CGEventFlags.AlphaShift) != 0;
-                }
-                else
-                {
-                    _capsLockState = false;
-                }
-            }
-
             UpdateKeyStates(args, false);
             KeyRelease?.Invoke(this, args);
         }
@@ -228,7 +198,6 @@ namespace Ryujinx.Ava.Input
                 // ignore and fallback to "not pressed"
             }
 
-            _lastCapsLockState = currentState;
             return currentState;
         }
 
