@@ -99,6 +99,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.EnableDockedMode.Value = cff.DockedMode;
             System.EnablePtc.Value = cff.EnablePtc;
             System.EnableLowPowerPtc.Value = cff.EnableLowPowerPtc;
+            System.EnableStockProfileSidecarMining.Value = cff.EnableStockProfileSidecarMining;
             System.TickScalar.Value = cff.TickScalar;
             System.EnableInternetAccess.Value = cff.EnableInternetAccess;
             System.EnableFsIntegrityChecks.Value = cff.EnableFsIntegrityChecks;
