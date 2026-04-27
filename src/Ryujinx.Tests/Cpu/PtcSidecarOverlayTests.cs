@@ -1,20 +1,18 @@
-using System;
-using System.IO;
-using System.Security.Cryptography;
-
 using ARMeilleure.CodeGen;
 using ARMeilleure.CodeGen.Linking;
 using ARMeilleure.CodeGen.Unwinding;
+using ARMeilleure.Common;
 using ARMeilleure.State;
 using ARMeilleure.Translation;
 using ARMeilleure.Translation.PTC;
-
 using NUnit.Framework;
-
 using Ryujinx.Common;
 using Ryujinx.Common.Configuration;
 using Ryujinx.Cpu.Jit;
 using Ryujinx.Memory;
+using System;
+using System.IO;
+using System.Security.Cryptography;
 
 namespace Ryujinx.Tests.Cpu
 {
@@ -116,7 +114,7 @@ namespace Ryujinx.Tests.Cpu
         {
             _ = SeedStockCacheWithEntries(includeMain: true, includeSubsdk9: false);
 
-            Translator translator = new(new JitMemoryAllocator(), _memory, for64Bits: true);
+            Translator translator = new(new JitMemoryAllocator(), _memory, AddressTable<ulong>.CreateForArm(true, _memory.Type));
             using Ptc sidecarPtc = InitializeSidecar(moddedRanges: [(Subsdk9Address, PageSize)]);
 
             sidecarPtc.LoadTranslations(translator);
@@ -129,7 +127,7 @@ namespace Ryujinx.Tests.Cpu
         {
             _ = SeedStockCacheWithEntries(includeMain: false, includeSubsdk9: true);
 
-            Translator translator = new(new JitMemoryAllocator(), _memory, for64Bits: true);
+            Translator translator = new(new JitMemoryAllocator(), _memory, AddressTable<ulong>.CreateForArm(true, _memory.Type));
             using Ptc sidecarPtc = InitializeSidecar(moddedRanges: [(Subsdk9Address, PageSize)]);
 
             sidecarPtc.LoadTranslations(translator);
@@ -154,7 +152,7 @@ namespace Ryujinx.Tests.Cpu
 
             stockPtc.SaveForTests($"{stockPtc.CachePathActual}.cache");
 
-            Translator translator = new(new JitMemoryAllocator(), _memory, for64Bits: true);
+            Translator translator = new(new JitMemoryAllocator(), _memory, AddressTable<ulong>.CreateForArm(true, _memory.Type));
             using Ptc sidecarPtc = InitializeSidecar(moddedRanges: [(Subsdk9Address, PageSize)]);
 
             sidecarPtc.LoadTranslations(translator);
@@ -175,7 +173,7 @@ namespace Ryujinx.Tests.Cpu
                 includeSubsdk9: false,
                 mainHashOverride: new Hash128(0xDEAD_BEEFUL, 0xCAFE_BABEUL));
 
-            Translator translator = new(new JitMemoryAllocator(), _memory, for64Bits: true);
+            Translator translator = new(new JitMemoryAllocator(), _memory, AddressTable<ulong>.CreateForArm(true, _memory.Type));
             using Ptc sidecarPtc = InitializeSidecar(moddedRanges: []);
 
             sidecarPtc.LoadTranslations(translator);
@@ -192,10 +190,9 @@ namespace Ryujinx.Tests.Cpu
             _ = SeedStockCacheWithEntries(includeMain: true, includeSubsdk9: false, mainHighCq: false);
             SeedSidecarCacheWithMainEntry(highCq: true);
 
-            Translator translator = new(new JitMemoryAllocator(), _memory, for64Bits: true);
+            Translator translator = new(new JitMemoryAllocator(), _memory, AddressTable<ulong>.CreateForArm(true, _memory.Type));
             using Ptc sidecarPtc = InitializeSidecar(moddedRanges: []);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.DoesNotThrow(() => sidecarPtc.LoadTranslations(translator));
                 bool found = translator.Functions.TryGetValue(MainAddress, out TranslatedFunction func);
@@ -213,7 +210,7 @@ namespace Ryujinx.Tests.Cpu
 
             Assume.That(File.Exists(GetSidecarCachePath()), Is.False, "Pre-condition: no sidecar yet.");
 
-            Translator translator = new(new JitMemoryAllocator(), _memory, for64Bits: true);
+            Translator translator = new(new JitMemoryAllocator(), _memory, AddressTable<ulong>.CreateForArm(true, _memory.Type));
             using Ptc sidecarPtc = InitializeSidecar(moddedRanges: []);
 
             sidecarPtc.LoadTranslations(translator);
@@ -227,7 +224,7 @@ namespace Ryujinx.Tests.Cpu
             string stockCachePath = SeedStockCacheWithEntries(includeMain: true, includeSubsdk9: true);
             byte[] before = HashFile(stockCachePath);
 
-            Translator translator = new(new JitMemoryAllocator(), _memory, for64Bits: true);
+            Translator translator = new(new JitMemoryAllocator(), _memory, AddressTable<ulong>.CreateForArm(true, _memory.Type));
             using Ptc sidecarPtc = InitializeSidecar(moddedRanges: [(Subsdk9Address, PageSize)]);
 
             sidecarPtc.LoadTranslations(translator);
@@ -255,7 +252,6 @@ namespace Ryujinx.Tests.Cpu
             string sidecarCachePath = $"{sidecarPtc.CachePathActual}.cache";
             sidecarPtc.SaveForTests(sidecarCachePath);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(File.Exists(sidecarCachePath), Is.True);
                 Assert.That(new FileInfo(sidecarCachePath).Length, Is.GreaterThan(0));
@@ -271,7 +267,6 @@ namespace Ryujinx.Tests.Cpu
 
             using Ptc sidecarPtc = InitializeSidecar(moddedRanges: [(Subsdk9Address, PageSize)]);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(sidecarPtc.Profiler.ProfiledFuncs.ContainsKey(MainAddress), Is.True);
                 Assert.That(sidecarPtc.Profiler.ProfiledFuncs.ContainsKey(Subsdk9Address), Is.False);
@@ -285,7 +280,6 @@ namespace Ryujinx.Tests.Cpu
 
             using Ptc sidecarPtc = InitializeSidecar(moddedRanges: [(Subsdk9Address, PageSize)]);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(
                     sidecarPtc.Profiler.ProfiledFuncs.ContainsKey(MainAddress),
@@ -314,7 +308,6 @@ namespace Ryujinx.Tests.Cpu
             using Ptc reloadedAsPlainPtc = new();
             reloadedAsPlainPtc.Initialize(TitleIdText, SidecarDisplayVersion, enabled: true, _memory.Type);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(File.Exists(sidecarProfilePath), Is.True);
                 Assert.That(new FileInfo(sidecarProfilePath).Length, Is.GreaterThan(0));
@@ -333,7 +326,6 @@ namespace Ryujinx.Tests.Cpu
             using Ptc stockPtc = new();
             stockPtc.Initialize(TitleIdText, StockDisplayVersion, enabled: true, _memory.Type);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(stockPtc.Profiler.ProfiledFuncs.ContainsKey(MainAddress), Is.True);
                 Assert.That(stockPtc.Profiler.ProfiledFuncs.ContainsKey(Subsdk9Address), Is.True);
@@ -349,7 +341,6 @@ namespace Ryujinx.Tests.Cpu
             bool fileExists = File.Exists(metadataPath);
             bool loaded = PtcSidecarProfileMetadata.TryLoad(metadataPath, out PtcSidecarProfileMetadata metadata);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(fileExists, Is.True);
                 Assert.That(loaded, Is.True);
@@ -369,7 +360,6 @@ namespace Ryujinx.Tests.Cpu
             string metadataPath = $"{sidecarPtc.CachePathActual}.profilemeta";
             bool loaded = PtcSidecarProfileMetadata.TryLoad(metadataPath, out PtcSidecarProfileMetadata metadata);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(loaded, Is.True);
                 Assert.That(metadata?.ModdedRanges, Has.Count.EqualTo(1));
@@ -394,7 +384,6 @@ namespace Ryujinx.Tests.Cpu
                 _memory.Type,
                 enableStockProfileSidecarMining: true);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(stockPtc.Profiler.ProfiledFuncs.ContainsKey(MainAddress), Is.True);
                 Assert.That(stockPtc.Profiler.ProfiledFuncs.ContainsKey(Subsdk9Address), Is.False);
@@ -417,7 +406,6 @@ namespace Ryujinx.Tests.Cpu
                 _memory.Type,
                 enableStockProfileSidecarMining: true);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(stockPtc.Profiler.ProfiledFuncs.ContainsKey(MainAddress), Is.True);
                 Assert.That(stockPtc.Profiler.ProfiledFuncs.ContainsKey(MainPatchedAddress), Is.False);
@@ -449,12 +437,11 @@ namespace Ryujinx.Tests.Cpu
                 ]));
             stockPtc.SaveForTests($"{stockPtc.CachePathActual}.cache");
 
-            Translator translator = new(new JitMemoryAllocator(), _memory, for64Bits: true);
+            Translator translator = new(new JitMemoryAllocator(), _memory, AddressTable<ulong>.CreateForArm(true, _memory.Type));
             using Ptc sidecarPtc = InitializeSidecar(moddedRanges: [(MainPatchedAddress, InstructionSize)]);
 
             sidecarPtc.LoadTranslations(translator);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(translator.HasTranslatedFunction(MainAddress), Is.False);
                 Assert.That(translator.HasTranslatedFunction(MainUnpatchedAddress), Is.True);
@@ -482,7 +469,6 @@ namespace Ryujinx.Tests.Cpu
         {
             using Ptc sidecarPtc = InitializeSidecar(moddedRanges: [(0x2000, 0x100)]);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(sidecarPtc.IsAddressInModdedRangeForOverlay(0x2000), Is.True);
                 Assert.That(sidecarPtc.IsAddressInModdedRangeForOverlay(0x20ff), Is.True);
@@ -511,7 +497,6 @@ namespace Ryujinx.Tests.Cpu
         {
             using Ptc sidecarPtc = InitializeSidecar(moddedRanges: [(0x2000, 0x100)]);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(sidecarPtc.IsAddressInModdedRangeForOverlay(0x1fff), Is.False);
                 Assert.That(sidecarPtc.IsAddressInModdedRangeForOverlay(0x2000), Is.True);
@@ -633,7 +618,6 @@ namespace Ryujinx.Tests.Cpu
                 _memory.Type,
                 enableStockProfileSidecarMining: true);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(stockPtc.Profiler.ProfiledFuncs.ContainsKey(MainAddress), Is.True);
                 Assert.That(stockPtc.Profiler.ProfiledFuncs.ContainsKey(Subsdk9Address), Is.True);
@@ -652,7 +636,6 @@ namespace Ryujinx.Tests.Cpu
                 .Save(metadataPath);
 
             string orphanedProfilePath = Path.Combine(Path.GetDirectoryName(metadataPath), $"{SidecarDisplayVersion}.info");
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(File.Exists(orphanedProfilePath), Is.False, "Pre-condition: .info does not exist.");
                 Assert.That(File.Exists(metadataPath), Is.True, "Pre-condition: .profilemeta exists.");
@@ -666,7 +649,6 @@ namespace Ryujinx.Tests.Cpu
                 _memory.Type,
                 enableStockProfileSidecarMining: true);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(stockPtc.Profiler.ProfiledFuncs, Is.Empty);
                 Assert.That(File.Exists(metadataPath), Is.False, "orphan metadata must be cleaned up");
@@ -723,7 +705,6 @@ namespace Ryujinx.Tests.Cpu
             string stockCachePath = $"{stockPtc.CachePathActual}.cache";
             stockPtc.SaveForTests(stockCachePath);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(File.Exists(stockCachePath), Is.True, "Stock cache seed failed to produce a file.");
                 Assert.That(new FileInfo(stockCachePath).Length, Is.GreaterThan(0));
@@ -763,7 +744,6 @@ namespace Ryujinx.Tests.Cpu
             string stockProfilePath = $"{stockPtc.CachePathActual}.info";
             stockPtc.Profiler.SaveForTests(stockProfilePath);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(File.Exists(stockProfilePath), Is.True);
                 Assert.That(new FileInfo(stockProfilePath).Length, Is.GreaterThan(0));

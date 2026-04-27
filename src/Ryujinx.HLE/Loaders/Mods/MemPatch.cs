@@ -77,7 +77,7 @@ namespace Ryujinx.HLE.Loaders.Mods
                     continue;
                 }
 
-                if (patchOffset > memory.Length)
+                if (patchOffset - protectedOffset > memory.Length)
                 {
                     Logger.Warning?.Print(LogClass.ModLoader, $"Attempted to patch out of bounds memory (offset {patchOffset} ({patchOffset:x}) exceeds memory buffer length {memory.Length}).");
                     continue;

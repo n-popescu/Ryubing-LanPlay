@@ -70,6 +70,8 @@ namespace ARMeilleure.Translation
             return _ptc;
         }
 
+        internal bool HasTranslatedFunction(ulong address) => Functions.ContainsKey(address);
+
         public void PrepareCodeRange(ulong address, ulong size)
         {
             if (_ptc.Profiler.StaticCodeSize == 0)

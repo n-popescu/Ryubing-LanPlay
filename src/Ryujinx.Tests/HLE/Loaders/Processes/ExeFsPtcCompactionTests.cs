@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-
 using NUnit.Framework;
-
 using Ryujinx.HLE.HOS;
 using Ryujinx.HLE.Loaders.Processes;
 using Ryujinx.HLE.Loaders.Processes.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace Ryujinx.Tests.HLE.Loaders.Processes
 {
@@ -101,18 +99,15 @@ namespace Ryujinx.Tests.HLE.Loaders.Processes
             BitVector32 stubsOnly = new();
             stubsOnly[1 << Slot("subsdk0")] = true;
 
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(
-                    FileSystemExtensions.BuildWholeSlotModdedFlags(compactedSlots, replacesOnly, new BitVector32(), partitionReplaced: false),
-                    Is.EqualTo(_expectedFalseTrue));
-                Assert.That(
-                    FileSystemExtensions.BuildWholeSlotModdedFlags(compactedSlots, new BitVector32(), stubsOnly, partitionReplaced: false),
-                    Is.EqualTo(_expectedFalseTrue));
-                Assert.That(
-                    FileSystemExtensions.BuildWholeSlotModdedFlags(compactedSlots, replacesOnly, stubsOnly, partitionReplaced: false),
-                    Is.EqualTo(_expectedFalseTrue));
-            }
+            Assert.That(
+                FileSystemExtensions.BuildWholeSlotModdedFlags(compactedSlots, replacesOnly, new BitVector32(), partitionReplaced: false),
+                Is.EqualTo(_expectedFalseTrue));
+            Assert.That(
+                FileSystemExtensions.BuildWholeSlotModdedFlags(compactedSlots, new BitVector32(), stubsOnly, partitionReplaced: false),
+                Is.EqualTo(_expectedFalseTrue));
+            Assert.That(
+                FileSystemExtensions.BuildWholeSlotModdedFlags(compactedSlots, replacesOnly, stubsOnly, partitionReplaced: false),
+                Is.EqualTo(_expectedFalseTrue));
         }
 
         [Test]
@@ -137,7 +132,7 @@ namespace Ryujinx.Tests.HLE.Loaders.Processes
         [Test]
         public void MergeRangesKeepsSingleRange()
         {
-            Assert.That(ProcessLoaderHelper.MergeRanges([(0x1000, 0x20)]), Is.EqualTo([(0x1000UL, 0x20UL)]));
+            Assert.That(ProcessLoaderHelper.MergeRanges([(0x1000, 0x20)]), Is.EqualTo(new[] { (0x1000UL, 0x20UL) }));
         }
 
         [Test]
@@ -145,7 +140,7 @@ namespace Ryujinx.Tests.HLE.Loaders.Processes
         {
             Assert.That(
                 ProcessLoaderHelper.MergeRanges([(0x3000, 0x10), (0x1000, 0x20)]),
-                Is.EqualTo([(0x1000UL, 0x20UL), (0x3000UL, 0x10UL)]));
+                Is.EqualTo(new[] { (0x1000UL, 0x20UL), (0x3000UL, 0x10UL) }));
         }
 
         [Test]
@@ -153,7 +148,7 @@ namespace Ryujinx.Tests.HLE.Loaders.Processes
         {
             Assert.That(
                 ProcessLoaderHelper.MergeRanges([(0x1000, 0x10), (0x1010, 0x20)]),
-                Is.EqualTo([(0x1000UL, 0x30UL)]));
+                Is.EqualTo(new[] { (0x1000UL, 0x30UL) }));
         }
 
         [Test]
@@ -161,7 +156,7 @@ namespace Ryujinx.Tests.HLE.Loaders.Processes
         {
             Assert.That(
                 ProcessLoaderHelper.MergeRanges([(0x1000, 0x20), (0x1010, 0x20)]),
-                Is.EqualTo([(0x1000UL, 0x30UL)]));
+                Is.EqualTo(new[] { (0x1000UL, 0x30UL) }));
         }
 
         [Test]
@@ -169,7 +164,7 @@ namespace Ryujinx.Tests.HLE.Loaders.Processes
         {
             Assert.That(
                 ProcessLoaderHelper.MergeRanges([(0x1000, 0), (0x2000, 0x20)]),
-                Is.EqualTo([(0x2000UL, 0x20UL)]));
+                Is.EqualTo(new[] { (0x2000UL, 0x20UL) }));
         }
 
         [Test]
@@ -181,7 +176,7 @@ namespace Ryujinx.Tests.HLE.Loaders.Processes
                 wholeSlotModdedFlags: null,
                 patchRanges: [new ModLoader.PatchedRange(2, 0x5000, 0x10)]);
 
-            Assert.That(ranges, Is.EqualTo([(0x0d2df000UL, 0x10UL)]));
+            Assert.That(ranges, Is.EqualTo(new[] { (0x0d2df000UL, 0x10UL) }));
         }
 
         [Test]
@@ -193,7 +188,7 @@ namespace Ryujinx.Tests.HLE.Loaders.Processes
                 wholeSlotModdedFlags: null,
                 patchRanges: [new ModLoader.PatchedRange(0, 0x10, 0x10), new ModLoader.PatchedRange(0, 0x40, 0x10)]);
 
-            Assert.That(ranges, Is.EqualTo([(0x1010UL, 0x10UL), (0x1040UL, 0x10UL)]));
+            Assert.That(ranges, Is.EqualTo(new[] { (0x1010UL, 0x10UL), (0x1040UL, 0x10UL) }));
         }
 
         [Test]
@@ -205,7 +200,7 @@ namespace Ryujinx.Tests.HLE.Loaders.Processes
                 wholeSlotModdedFlags: null,
                 patchRanges: [new ModLoader.PatchedRange(0, 0x10, 0x10), new ModLoader.PatchedRange(0, 0x20, 0x20)]);
 
-            Assert.That(ranges, Is.EqualTo([(0x1010UL, 0x30UL)]));
+            Assert.That(ranges, Is.EqualTo(new[] { (0x1010UL, 0x30UL) }));
         }
 
         [Test]
@@ -217,7 +212,7 @@ namespace Ryujinx.Tests.HLE.Loaders.Processes
                 wholeSlotModdedFlags: null,
                 patchRanges: [new ModLoader.PatchedRange(0, 0x10, 0x20), new ModLoader.PatchedRange(0, 0x20, 0x20)]);
 
-            Assert.That(ranges, Is.EqualTo([(0x1010UL, 0x30UL)]));
+            Assert.That(ranges, Is.EqualTo(new[] { (0x1010UL, 0x30UL) }));
         }
 
         [Test]
@@ -229,7 +224,7 @@ namespace Ryujinx.Tests.HLE.Loaders.Processes
                 wholeSlotModdedFlags: [true, false],
                 patchRanges: [new ModLoader.PatchedRange(1, 0, 0x10)]);
 
-            Assert.That(ranges, Is.EqualTo([(0x1000UL, 0x1010UL)]));
+            Assert.That(ranges, Is.EqualTo(new[] { (0x1000UL, 0x1010UL) }));
         }
     }
 }

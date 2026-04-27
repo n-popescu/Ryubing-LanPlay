@@ -20,10 +20,9 @@ namespace Ryujinx.Tests.HLE.Loaders.Mods
 
             int count = patch.Patch(memory, protectedOffset: 0x100, ranges);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(count, Is.EqualTo(1));
-                Assert.That(ranges, Is.EqualTo([(0x50, 2)]));
+                Assert.That(ranges, Is.EqualTo(new[] { (0x50, 2) }));
                 Assert.That(memory[0x50], Is.EqualTo(0xaa));
                 Assert.That(memory[0x51], Is.EqualTo(0xbb));
             }
@@ -40,10 +39,9 @@ namespace Ryujinx.Tests.HLE.Loaders.Mods
 
             int count = patch.Patch(memory, appliedRanges: ranges);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(count, Is.EqualTo(1));
-                Assert.That(ranges, Is.EqualTo([(0x0c, 4)]));
+                Assert.That(ranges, Is.EqualTo(new[] { (0x0c, 4) }));
                 Assert.That(memory[0x0c..], Is.EqualTo(new byte[] { 1, 2, 3, 4 }));
             }
         }
@@ -59,7 +57,6 @@ namespace Ryujinx.Tests.HLE.Loaders.Mods
 
             int count = patch.Patch(memory, protectedOffset: 0x100, ranges);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(count, Is.Zero);
                 Assert.That(ranges, Is.Empty);
@@ -78,7 +75,6 @@ namespace Ryujinx.Tests.HLE.Loaders.Mods
 
             int count = patch.Patch(memory, protectedOffset: 0x100, ranges);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(count, Is.Zero);
                 Assert.That(ranges, Is.Empty);
@@ -97,7 +93,6 @@ namespace Ryujinx.Tests.HLE.Loaders.Mods
 
             int count = patch.Patch(memory, appliedRanges: ranges);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(count, Is.Zero);
                 Assert.That(ranges, Is.Empty);
@@ -117,10 +112,9 @@ namespace Ryujinx.Tests.HLE.Loaders.Mods
 
             int count = patch.Patch(memory, appliedRanges: ranges);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(count, Is.EqualTo(1));
-                Assert.That(ranges, Is.EqualTo([(1, 2)]));
+                Assert.That(ranges, Is.EqualTo(new[] { (1, 2) }));
                 Assert.That(memory, Is.EqualTo(new byte[] { 0, 0xbb, 0xcc, 0 }));
             }
         }
@@ -135,7 +129,6 @@ namespace Ryujinx.Tests.HLE.Loaders.Mods
 
             int count = patch.Patch(memory);
 
-            using (Assert.EnterMultipleScope())
             {
                 Assert.That(count, Is.EqualTo(1));
                 Assert.That(memory[0], Is.EqualTo(0x11));
