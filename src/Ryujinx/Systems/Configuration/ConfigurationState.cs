@@ -74,6 +74,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 EnableColorSpacePassthrough = Graphics.EnableColorSpacePassthrough,
                 EnablePtc = System.EnablePtc,
                 EnableLowPowerPtc = System.EnableLowPowerPtc,
+                EnableStockProfileSidecarMining = System.EnableStockProfileSidecarMining,
                 TickScalar = System.TickScalar,
                 EnableInternetAccess = System.EnableInternetAccess,
                 EnableFsIntegrityChecks = System.EnableFsIntegrityChecks,
@@ -204,6 +205,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             Graphics.ScalingFilter.Value = ScalingFilter.Bilinear;
             Graphics.ScalingFilterLevel.Value = 80;
             System.EnablePtc.Value = true;
+            System.EnableStockProfileSidecarMining.Value = false;
             System.EnableInternetAccess.Value = false;
             System.EnableFsIntegrityChecks.Value = true;
             System.FsGlobalAccessLogMode.Value = 0;

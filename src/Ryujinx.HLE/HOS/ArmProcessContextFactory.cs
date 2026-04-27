@@ -9,42 +9,35 @@ using Ryujinx.HLE.HOS.Kernel;
 using Ryujinx.HLE.HOS.Kernel.Process;
 using Ryujinx.Memory;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace Ryujinx.HLE.HOS
 {
-    class ArmProcessContextFactory : IProcessContextFactory
+    internal class ArmProcessContextFactory(
+        ITickSource tickSource,
+        GpuContext gpu,
+        string titleIdText,
+        string displayVersion,
+        string stockDisplayVersion,
+        IReadOnlyList<(ulong Start, ulong Size)> moddedAddressRanges,
+        bool enableStockProfileSidecarMining,
+        bool diskCacheEnabled,
+        ulong codeAddress,
+        ulong codeSize) : IProcessContextFactory
     {
-        private readonly ITickSource _tickSource;
-        private readonly GpuContext _gpu;
-        private readonly string _titleIdText;
-        private readonly string _displayVersion;
-        private readonly bool _diskCacheEnabled;
-        private readonly string _diskCacheSelector;
-        private readonly ulong _codeAddress;
-        private readonly ulong _codeSize;
+        private readonly ITickSource _tickSource = tickSource;
+        private readonly GpuContext _gpu = gpu;
+        private readonly string _titleIdText = titleIdText;
+        private readonly string _displayVersion = displayVersion;
+        private readonly string _stockDisplayVersion = stockDisplayVersion;
+        private readonly IReadOnlyList<(ulong Start, ulong Size)> _moddedAddressRanges = moddedAddressRanges;
+        private readonly bool _enableStockProfileSidecarMining = enableStockProfileSidecarMining;
+        private readonly bool _diskCacheEnabled = diskCacheEnabled;
+        private readonly ulong _codeAddress = codeAddress;
+        private readonly ulong _codeSize = codeSize;
 
         public IDiskCacheLoadState DiskCacheLoadState { get; private set; }
-
-        public ArmProcessContextFactory(
-            ITickSource tickSource,
-            GpuContext gpu,
-            string titleIdText,
-            string displayVersion,
-            bool diskCacheEnabled,
-            string diskCacheSelector,
-            ulong codeAddress,
-            ulong codeSize)
-        {
-            _tickSource = tickSource;
-            _gpu = gpu;
-            _titleIdText = titleIdText;
-            _displayVersion = displayVersion;
-            _diskCacheEnabled = diskCacheEnabled;
-            _diskCacheSelector = diskCacheSelector;
-            _codeAddress = codeAddress;
-            _codeSize = codeSize;
-        }
 
         public IProcessContext Create(KernelContext context, ulong pid, ulong addressSpaceSize, InvalidAccessHandler invalidAccessHandler, bool for64Bit)
         {
@@ -118,7 +111,15 @@ namespace Ryujinx.HLE.HOS
                 }
             }
 
-            DiskCacheLoadState = processContext.Initialize(_titleIdText, _displayVersion, _diskCacheEnabled, _codeAddress, _codeSize, _diskCacheSelector ?? "default");
+            DiskCacheLoadState = processContext.Initialize(
+                _titleIdText,
+                _displayVersion,
+                _diskCacheEnabled,
+                _codeAddress,
+                _codeSize,
+                _stockDisplayVersion,
+                _moddedAddressRanges,
+                _enableStockProfileSidecarMining);
 
             return processContext;
         }

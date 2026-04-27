@@ -34,6 +34,12 @@
                         <TextBlock Text="{ext:Locale SettingsTabSystemEnablePptc}"
                                    ToolTip.Tip="{ext:Locale PptcToggleTooltip}" />
                     </CheckBox>
+                    <CheckBox Margin="20,0,0,0"
+                              IsChecked="{Binding EnableStockProfileSidecarMining}"
+                              IsEnabled="{Binding EnablePptc}">
+                        <TextBlock Text="{ext:Locale SettingsTabCpuEnableStockProfileSidecarMining}"
+                                   ToolTip.Tip="{ext:Locale StockProfileSidecarMiningTooltip}" />
+                    </CheckBox>
                     <CheckBox IsChecked="{Binding EnableLowPowerPptc}">
                         <TextBlock Text="{ext:Locale SettingsTabSystemEnableLowPowerPptc}"
                                    ToolTip.Tip="{ext:Locale LowPowerPptcToggleTooltip}" />

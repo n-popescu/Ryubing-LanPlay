@@ -104,6 +104,7 @@ namespace Ryujinx.HLE
             System.EnablePtc                        = Configuration.EnablePtc;
             System.FsIntegrityCheckLevel            = Configuration.FsIntegrityCheckLevel;
             System.GlobalAccessLogMode              = Configuration.FsGlobalAccessLogMode;
+            System.EnableStockProfileSidecarMining  = Configuration.EnableStockProfileSidecarMining;
             
             UpdateVSyncInterval();
 #pragma warning restore IDE0055

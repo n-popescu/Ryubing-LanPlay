@@ -237,6 +237,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         }
         public bool EnablePptc { get; set; }
         public bool EnableLowPowerPptc { get; set; }
+        public bool EnableStockProfileSidecarMining { get; set; }
 
 
         public long TurboMultiplier
@@ -686,6 +687,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             // CPU
             EnablePptc = config.System.EnablePtc;
             EnableLowPowerPptc = config.System.EnableLowPowerPtc;
+            EnableStockProfileSidecarMining = config.System.EnableStockProfileSidecarMining;
             MemoryMode = (int)config.System.MemoryManagerMode.Value;
             UseHypervisor = config.System.UseHypervisor;
             TurboMultiplier = config.System.TickScalar;
@@ -796,6 +798,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             // CPU
             config.System.EnablePtc.Value = EnablePptc;
             config.System.EnableLowPowerPtc.Value = EnableLowPowerPptc;
+            config.System.EnableStockProfileSidecarMining.Value = EnableStockProfileSidecarMining;
             config.System.MemoryManagerMode.Value = (MemoryManagerMode)MemoryMode;
             config.System.UseHypervisor.Value = UseHypervisor;
             config.System.TickScalar.Value = TurboMultiplier;

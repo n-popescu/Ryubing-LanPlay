@@ -277,6 +277,11 @@ namespace Ryujinx.Ava.Systems.Configuration
         public long TickScalar { get; set; }
 
         /// <summary>
+        /// Enables stock PTC profile mining from ExeFS sidecar profiles.
+        /// </summary>
+        public bool EnableStockProfileSidecarMining { get; set; }
+
+        /// <summary>
         /// Enables or disables guest Internet access
         /// </summary>
         public bool EnableInternetAccess { get; set; }

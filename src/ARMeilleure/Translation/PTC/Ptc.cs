@@ -4,7 +4,9 @@ using ARMeilleure.CodeGen.Unwinding;
 using ARMeilleure.Common;
 using ARMeilleure.Memory;
 using ARMeilleure.State;
+using ARMeilleure.Translation.Cache;
 using Humanizer;
+using Microsoft.IO;
 using Ryujinx.Common;
 using Ryujinx.Common.Configuration;
 using Ryujinx.Common.Logging;
@@ -99,11 +101,23 @@ namespace ARMeilleure.Translation.PTC
 
             CachePathActual = string.Empty;
             CachePathBackup = string.Empty;
+            StockCachePathActual = string.Empty;
+            StockCachePathBackup = string.Empty;
+            ModdedAddressRangesForOverlay = [];
+            HasOverlay = false;
+            EnableStockProfileSidecarMining = false;
 
             Disable();
         }
 
-        public void Initialize(string titleIdText, string displayVersion, bool enabled, MemoryManagerType memoryMode, string cacheSelector)
+        public void Initialize(
+            string titleIdText,
+            string displayVersion,
+            bool enabled,
+            MemoryManagerType memoryMode,
+            string stockDisplayVersion = null,
+            IReadOnlyList<(ulong Start, ulong Size)> moddedAddressRanges = null,
+            bool enableStockProfileSidecarMining = false)
         {
             Wait();
 
@@ -119,6 +133,11 @@ namespace ARMeilleure.Translation.PTC
 
                 CachePathActual = string.Empty;
                 CachePathBackup = string.Empty;
+                StockCachePathActual = string.Empty;
+                StockCachePathBackup = string.Empty;
+                ModdedAddressRangesForOverlay = [];
+                HasOverlay = false;
+                EnableStockProfileSidecarMining = false;
 
                 Disable();
 
@@ -129,7 +148,7 @@ namespace ARMeilleure.Translation.PTC
             DisplayVersion = !string.IsNullOrEmpty(displayVersion) ? displayVersion : DisplayVersionDefault;
             _memoryMode = memoryMode;
 
-            Logger.Info?.Print(LogClass.Ptc, $"PPTC (v{InternalVersion}) Profile: {DisplayVersion}-{cacheSelector}");
+            Logger.Info?.Print(LogClass.Ptc, $"PPTC (v{InternalVersion}) Profile: {DisplayVersion}");
 
             string workPathActual = Path.Combine(AppDataManager.GamesDirPath, TitleIdText, "cache", "cpu", ActualDir);
             string workPathBackup = Path.Combine(AppDataManager.GamesDirPath, TitleIdText, "cache", "cpu", BackupDir);
@@ -144,8 +163,23 @@ namespace ARMeilleure.Translation.PTC
                 Directory.CreateDirectory(workPathBackup);
             }
 
-            CachePathActual = Path.Combine(workPathActual, DisplayVersion) + "-" + cacheSelector;
-            CachePathBackup = Path.Combine(workPathBackup, DisplayVersion) + "-" + cacheSelector;
+            CachePathActual = Path.Combine(workPathActual, DisplayVersion);
+            CachePathBackup = Path.Combine(workPathBackup, DisplayVersion);
+            HasOverlay = !string.IsNullOrEmpty(stockDisplayVersion) && stockDisplayVersion != DisplayVersion;
+            ModdedAddressRangesForOverlay = moddedAddressRanges ?? [];
+            EnableStockProfileSidecarMining = enableStockProfileSidecarMining;
+
+            if (HasOverlay)
+            {
+                StockCachePathActual = Path.Combine(workPathActual, stockDisplayVersion);
+                StockCachePathBackup = Path.Combine(workPathBackup, stockDisplayVersion);
+                WriteSidecarProfileMetadata(stockDisplayVersion);
+            }
+            else
+            {
+                StockCachePathActual = string.Empty;
+                StockCachePathBackup = string.Empty;
+            }
 
             PreLoad();
             Profiler.PreLoad();
@@ -172,6 +206,41 @@ namespace ARMeilleure.Translation.PTC
         private bool AreCarriersEmpty()
         {
             return _infosStream.Length == 0L && _codesList.Count == 0 && _relocsStream.Length == 0L && _unwindInfosStream.Length == 0L;
+        }
+
+        internal bool HasOverlay { get; private set; }
+        internal string StockCachePathActual { get; private set; }
+        internal string StockCachePathBackup { get; private set; }
+        internal bool EnableStockProfileSidecarMining { get; private set; }
+        // Sorted by Start ascending, no overlapping or adjacent entries.
+        // Established by ProcessLoaderHelper.MergeRanges and preserved on assignment.
+        internal IReadOnlyList<(ulong Start, ulong Size)> ModdedAddressRangesForOverlay { get; private set; }
+        internal bool IsAddressInModdedRangeForOverlay(ulong address)
+        {
+            return IsInModdedRange(address);
+        }
+
+        private void WriteSidecarProfileMetadata(string stockDisplayVersion)
+        {
+            if (!HasOverlay)
+            {
+                return;
+            }
+
+            PtcSidecarProfileMetadata metadata = PtcSidecarProfileMetadata.Create(
+                stockDisplayVersion,
+                DisplayVersion,
+                ModdedAddressRangesForOverlay);
+
+            try
+            {
+                metadata.Save($"{CachePathActual}.profilemeta");
+                metadata.Save($"{CachePathBackup}.profilemeta");
+            }
+            catch (IOException exception)
+            {
+                Logger.Warning?.Print(LogClass.Ptc, $"Failed to write sidecar profile metadata: {exception.Message}");
+            }
         }
 
         private void ResetCarriersIfNeeded()
@@ -429,6 +498,182 @@ namespace ARMeilleure.Translation.PTC
             return true;
         }
 
+        private unsafe bool TryLoadFileIntoCarriers(
+            string fileName,
+            RecyclableMemoryStream infosStream,
+            List<byte[]> codesList,
+            RecyclableMemoryStream relocsStream,
+            RecyclableMemoryStream unwindInfosStream,
+            bool invalidateOnFailure)
+        {
+            using FileStream compressedStream = new(fileName, FileMode.Open);
+            using DeflateStream deflateStream = new(compressedStream, CompressionMode.Decompress, true);
+
+            void InvalidateIfNeeded()
+            {
+                if (invalidateOnFailure)
+                {
+                    InvalidateCompressedStream(compressedStream);
+                }
+            }
+
+            OuterHeader outerHeader = DeserializeStructure<OuterHeader>(compressedStream);
+
+            if (!outerHeader.IsHeaderValid())
+            {
+                InvalidateIfNeeded();
+                return false;
+            }
+
+            if (outerHeader.Magic != _outerHeaderMagic)
+            {
+                InvalidateIfNeeded();
+                return false;
+            }
+
+            if (outerHeader.CacheFileVersion != InternalVersion)
+            {
+                InvalidateIfNeeded();
+                return false;
+            }
+
+            if (outerHeader.Endianness != GetEndianness())
+            {
+                InvalidateIfNeeded();
+                return false;
+            }
+
+            if (outerHeader.FeatureInfo != GetFeatureInfo())
+            {
+                InvalidateIfNeeded();
+                return false;
+            }
+
+            if (outerHeader.MemoryManagerMode != GetMemoryManagerMode())
+            {
+                InvalidateIfNeeded();
+                return false;
+            }
+
+            if (outerHeader.OSPlatform != GetOSPlatform())
+            {
+                InvalidateIfNeeded();
+                return false;
+            }
+
+            if (outerHeader.Architecture != (uint)RuntimeInformation.ProcessArchitecture)
+            {
+                InvalidateIfNeeded();
+                return false;
+            }
+
+            IntPtr intPtr = IntPtr.Zero;
+
+            try
+            {
+                intPtr = Marshal.AllocHGlobal(new IntPtr(outerHeader.UncompressedStreamSize));
+
+                using UnmanagedMemoryStream stream = new((byte*)intPtr.ToPointer(), outerHeader.UncompressedStreamSize, outerHeader.UncompressedStreamSize, FileAccess.ReadWrite);
+                try
+                {
+                    deflateStream.CopyTo(stream);
+                }
+                catch
+                {
+                    InvalidateIfNeeded();
+                    return false;
+                }
+
+                Debug.Assert(stream.Position == stream.Length);
+
+                _ = stream.Seek(0L, SeekOrigin.Begin);
+
+                InnerHeader innerHeader = DeserializeStructure<InnerHeader>(stream);
+
+                if (!innerHeader.IsHeaderValid())
+                {
+                    InvalidateIfNeeded();
+                    return false;
+                }
+
+                if (innerHeader.Magic != _innerHeaderMagic)
+                {
+                    InvalidateIfNeeded();
+                    return false;
+                }
+
+                ReadOnlySpan<byte> infosBytes = new(stream.PositionPointer, innerHeader.InfosLength);
+                _ = stream.Seek(innerHeader.InfosLength, SeekOrigin.Current);
+
+                Hash128 infosHash = Hash128.ComputeHash(infosBytes);
+
+                if (innerHeader.InfosHash != infosHash)
+                {
+                    InvalidateIfNeeded();
+                    return false;
+                }
+
+                ReadOnlySpan<byte> codesBytes = (int)innerHeader.CodesLength > 0 ? new(stream.PositionPointer, (int)innerHeader.CodesLength) : [];
+                _ = stream.Seek(innerHeader.CodesLength, SeekOrigin.Current);
+
+                Hash128 codesHash = Hash128.ComputeHash(codesBytes);
+
+                if (innerHeader.CodesHash != codesHash)
+                {
+                    InvalidateIfNeeded();
+                    return false;
+                }
+
+                ReadOnlySpan<byte> relocsBytes = new(stream.PositionPointer, innerHeader.RelocsLength);
+                _ = stream.Seek(innerHeader.RelocsLength, SeekOrigin.Current);
+
+                Hash128 relocsHash = Hash128.ComputeHash(relocsBytes);
+
+                if (innerHeader.RelocsHash != relocsHash)
+                {
+                    InvalidateIfNeeded();
+                    return false;
+                }
+
+                ReadOnlySpan<byte> unwindInfosBytes = new(stream.PositionPointer, innerHeader.UnwindInfosLength);
+                _ = stream.Seek(innerHeader.UnwindInfosLength, SeekOrigin.Current);
+
+                Hash128 unwindInfosHash = Hash128.ComputeHash(unwindInfosBytes);
+
+                if (innerHeader.UnwindInfosHash != unwindInfosHash)
+                {
+                    InvalidateIfNeeded();
+                    return false;
+                }
+
+                Debug.Assert(stream.Position == stream.Length);
+
+                _ = stream.Seek(Unsafe.SizeOf<InnerHeader>(), SeekOrigin.Begin);
+
+                infosStream.Write(infosBytes);
+                _ = stream.Seek(innerHeader.InfosLength, SeekOrigin.Current);
+
+                codesList.ReadFrom(stream);
+
+                relocsStream.Write(relocsBytes);
+                _ = stream.Seek(innerHeader.RelocsLength, SeekOrigin.Current);
+
+                unwindInfosStream.Write(unwindInfosBytes);
+                _ = stream.Seek(innerHeader.UnwindInfosLength, SeekOrigin.Current);
+
+                Debug.Assert(stream.Position == stream.Length);
+            }
+            finally
+            {
+                if (intPtr != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(intPtr);
+                }
+            }
+
+            return true;
+        }
+
         private static void InvalidateCompressedStream(FileStream compressedStream)
         {
             compressedStream.SetLength(0L);
@@ -570,11 +815,20 @@ namespace ARMeilleure.Translation.PTC
             }
         }
 
+        internal void SaveForTests(string fileName)
+        {
+            Save(fileName);
+        }
+
         public void LoadTranslations(Translator translator)
         {
             if (AreCarriersEmpty() || ContainsBlacklistedFunctions())
             {
-                ResetCarriersIfNeeded();
+                if (HasOverlay)
+                {
+                    ImportStockTranslations(translator);
+                }
+
                 return;
             }
 
@@ -652,7 +906,185 @@ namespace ARMeilleure.Translation.PTC
                 throw new Exception("The length of a memory stream has changed, or its position has not reached or has exceeded its end.");
             }
 
+            if (HasOverlay)
+            {
+                ImportStockTranslations(translator);
+            }
+
             Logger.Info?.Print(LogClass.Ptc, $"{translator.Functions.Count} translated functions loaded");
+        }
+
+        private void ImportStockTranslations(Translator translator)
+        {
+            string fileNameActual = $"{StockCachePathActual}.cache";
+            string fileNameBackup = $"{StockCachePathBackup}.cache";
+
+            if (File.Exists(fileNameActual) && new FileInfo(fileNameActual).Length != 0L)
+            {
+                if (TryImportStockFile(translator, fileNameActual, isBackup: false))
+                {
+                    return;
+                }
+            }
+
+            if (File.Exists(fileNameBackup) && new FileInfo(fileNameBackup).Length != 0L)
+            {
+                _ = TryImportStockFile(translator, fileNameBackup, isBackup: true);
+            }
+        }
+
+        private bool TryImportStockFile(Translator translator, string fileName, bool isBackup)
+        {
+            using RecyclableMemoryStream infosStream = MemoryStreamManager.Shared.GetStream();
+            List<byte[]> codesList = [];
+            using RecyclableMemoryStream relocsStream = MemoryStreamManager.Shared.GetStream();
+            using RecyclableMemoryStream unwindInfosStream = MemoryStreamManager.Shared.GetStream();
+
+            if (!TryLoadFileIntoCarriers(fileName, infosStream, codesList, relocsStream, unwindInfosStream, invalidateOnFailure: false))
+            {
+                return false;
+            }
+
+            _ = infosStream.Seek(0L, SeekOrigin.Begin);
+            _ = relocsStream.Seek(0L, SeekOrigin.Begin);
+            _ = unwindInfosStream.Seek(0L, SeekOrigin.Begin);
+
+            using BinaryReader relocsReader = new(relocsStream, EncodingCache.UTF8NoBOM, true);
+            using BinaryReader unwindInfosReader = new(unwindInfosStream, EncodingCache.UTF8NoBOM, true);
+
+            int imported = 0;
+
+            for (int index = 0; index < codesList.Count; index++)
+            {
+                InfoEntry infoEntry = DeserializeStructure<InfoEntry>(infosStream);
+
+                if (infoEntry.Stubbed)
+                {
+                    _ = relocsStream.Seek(infoEntry.RelocEntriesCount * RelocEntry.Stride, SeekOrigin.Current);
+                    SkipUnwindInfo(unwindInfosReader, unwindInfosStream);
+                    continue;
+                }
+
+                byte[] code = codesList[index];
+                RelocEntry[] relocEntries = infoEntry.RelocEntriesCount != 0
+                    ? GetRelocEntries(relocsReader, infoEntry.RelocEntriesCount)
+                    : [];
+                UnwindInfo unwindInfo = ReadUnwindInfo(unwindInfosReader);
+
+                if (TryInstallStockEntry(translator, infoEntry, code, relocEntries, unwindInfo))
+                {
+                    imported++;
+                }
+            }
+
+            Logger.Info?.Print(LogClass.Ptc, $"Imported {imported} stock translations from {(isBackup ? "backup" : "primary")} cache.");
+            return true;
+        }
+
+        private bool TryInstallStockEntry(
+            Translator translator,
+            InfoEntry infoEntry,
+            byte[] code,
+            RelocEntry[] relocEntries,
+            UnwindInfo unwindInfo)
+        {
+            if (IsInModdedRange(infoEntry.Address))
+            {
+                return false;
+            }
+
+            if (translator.Functions.ContainsKey(infoEntry.Address))
+            {
+                return false;
+            }
+
+            if (infoEntry.Hash != ComputeHash(translator.Memory, infoEntry.Address, infoEntry.GuestSize))
+            {
+                return false;
+            }
+
+            if (RelocsReferenceModdedRange(relocEntries))
+            {
+                return false;
+            }
+
+            Counter<uint> callCounter = null;
+
+            if (relocEntries.Length != 0)
+            {
+                PatchCode(translator, code, relocEntries, out callCounter);
+            }
+
+            TranslatedFunction func = FastTranslate(code, callCounter, infoEntry.GuestSize, unwindInfo, infoEntry.HighCq);
+
+            if (translator.Functions.TryAdd(infoEntry.Address, infoEntry.GuestSize, func))
+            {
+                translator.RegisterFunction(infoEntry.Address, func);
+                return true;
+            }
+
+            JitCache.Unmap(func.FuncPointer);
+            func.CallCounter?.Dispose();
+            return false;
+        }
+
+        private bool IsInModdedRange(ulong address)
+        {
+            IReadOnlyList<(ulong Start, ulong Size)> ranges = ModdedAddressRangesForOverlay;
+
+            if (ranges == null || ranges.Count == 0)
+            {
+                return false;
+            }
+
+            int left = 0;
+            int right = ranges.Count - 1;
+            int candidateIndex = -1;
+
+            while (left <= right)
+            {
+                int middle = left + ((right - left) >> 1);
+                (ulong start, _) = ranges[middle];
+
+                if (start <= address)
+                {
+                    candidateIndex = middle;
+                    left = middle + 1;
+                }
+                else
+                {
+                    right = middle - 1;
+                }
+            }
+
+            if (candidateIndex < 0)
+            {
+                return false;
+            }
+
+            (ulong rangeStart, ulong rangeSize) = ranges[candidateIndex];
+            return address - rangeStart < rangeSize;
+        }
+
+        private bool RelocsReferenceModdedRange(RelocEntry[] relocEntries)
+        {
+            if (ModdedAddressRangesForOverlay == null)
+            {
+                return false;
+            }
+
+            foreach (RelocEntry relocEntry in relocEntries)
+            {
+                Symbol symbol = relocEntry.Symbol;
+
+                if (symbol.Type == SymbolType.FunctionTable &&
+                    IsInModdedRange(symbol.Value))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private int GetEntriesCount()
@@ -674,9 +1106,14 @@ namespace ARMeilleure.Translation.PTC
 
         private void SkipUnwindInfo(BinaryReader unwindInfosReader)
         {
+            SkipUnwindInfo(unwindInfosReader, _unwindInfosStream);
+        }
+
+        private static void SkipUnwindInfo(BinaryReader unwindInfosReader, Stream unwindInfosStream)
+        {
             int pushEntriesLength = unwindInfosReader.ReadInt32();
 
-            _unwindInfosStream.Seek(pushEntriesLength * UnwindPushEntry.Stride + UnwindInfo.Stride, SeekOrigin.Current);
+            _ = unwindInfosStream.Seek((pushEntriesLength * UnwindPushEntry.Stride) + UnwindInfo.Stride, SeekOrigin.Current);
         }
 
         private byte[] ReadCode(int index, int codeLength)
@@ -830,6 +1267,13 @@ namespace ARMeilleure.Translation.PTC
         public void MakeAndSaveTranslations(Translator translator)
         {
             ConcurrentQueue<(ulong address, PtcProfiler.FuncProfile funcProfile)> profiledFuncsToTranslate = Profiler.GetProfiledFuncsToTranslate(translator.Functions);
+
+            foreach ((ulong address, PtcProfiler.FuncProfile funcProfile) in profiledFuncsToTranslate)
+            {
+                Logger.Debug?.Print(
+                    LogClass.Ptc,
+                    $"Batch profile entry: address=0x{address:X16}, mode={funcProfile.Mode}, highCq={funcProfile.HighCq}, modded={IsInModdedRange(address)}");
+            }
 
             _translateCount = 0;
             _translateTotalCount = profiledFuncsToTranslate.Count;

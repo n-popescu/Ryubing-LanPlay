@@ -344,6 +344,11 @@ namespace Ryujinx.Ava.Systems.Configuration
             public ReactiveObject<bool> EnablePtc { get; private set; }
 
             /// <summary>
+            /// Enables stock PTC profile mining from ExeFS sidecar profiles
+            /// </summary>
+            public ReactiveObject<bool> EnableStockProfileSidecarMining { get; private set; }
+
+            /// <summary>
             /// Clock tick scalar, in percent points (100 = 1.0).
             /// </summary>
             public ReactiveObject<long> TickScalar { get; set; }
@@ -430,6 +435,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 EnableDockedMode.LogChangesToValue(nameof(EnableDockedMode));
                 EnablePtc = new ReactiveObject<bool>();
                 EnablePtc.LogChangesToValue(nameof(EnablePtc));
+                EnableStockProfileSidecarMining = new ReactiveObject<bool>();
+                EnableStockProfileSidecarMining.LogChangesToValue(nameof(EnableStockProfileSidecarMining));
                 EnableLowPowerPtc = new ReactiveObject<bool>();
                 EnableLowPowerPtc.LogChangesToValue(nameof(EnableLowPowerPtc));
                 EnableLowPowerPtc.Event += (_, evnt)
@@ -921,6 +928,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 Graphics.VSyncMode,
                 System.EnableDockedMode,
                 System.EnablePtc,
+                System.EnableStockProfileSidecarMining,
                 System.TickScalar,
                 System.EnableInternetAccess,
                 System.EnableFsIntegrityChecks

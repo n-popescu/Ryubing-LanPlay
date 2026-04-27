@@ -322,6 +322,7 @@ namespace Ryujinx.Headless
                         options.VSyncMode,
                         !options.DisableDockedMode,
                         !options.DisablePTC,
+                        false,
                         ITickSource.RealityTickScalar,
                         options.EnableInternetAccess,
                         !options.DisableFsIntegrityChecks ? IntegrityCheckLevel.ErrorOnInvalid : IntegrityCheckLevel.None,

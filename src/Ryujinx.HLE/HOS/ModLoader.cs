@@ -21,6 +21,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using LazyFile = Ryujinx.HLE.HOS.Services.Fs.FileSystemProxy.LazyFile;
 using Path = System.IO.Path;
 
@@ -595,10 +596,17 @@ namespace Ryujinx.HLE.HOS
             public BitVector32 Stubs;
             public BitVector32 Replaces;
             public MetaLoader Npdm;
+            public byte[] NpdmBytes;
             public string Hash;
 
             public bool Modified => (Stubs.Data | Replaces.Data) != 0;
         }
+
+        internal readonly record struct PatchedRange(int CompactedIndex, int ProgramOffset, int Size);
+
+        internal readonly record struct PatchApplyResult(
+            BitVector32 PatchedSlots,
+            IReadOnlyList<PatchedRange> Ranges);
 
         internal ModLoadResult ApplyExefsMods(ulong applicationId, NsoExecutable[] nsos)
         {
@@ -666,8 +674,9 @@ namespace Ryujinx.HLE.HOS
                         continue;
                     }
 
+                    modLoadResult.NpdmBytes = File.ReadAllBytes(npdmFile.FullName);
                     modLoadResult.Npdm = new MetaLoader();
-                    modLoadResult.Npdm.Load(File.ReadAllBytes(npdmFile.FullName));
+                    _ = modLoadResult.Npdm.Load(modLoadResult.NpdmBytes);
 
                     Logger.Info?.Print(LogClass.ModLoader, "main.npdm replaced");
                 }
@@ -684,7 +693,7 @@ namespace Ryujinx.HLE.HOS
 
             if (!string.IsNullOrEmpty(tempHash))
             {
-                modLoadResult.Hash += Convert.ToHexStringLower(MD5.HashData(tempHash.ToBytes()));
+                modLoadResult.Hash += Convert.ToHexStringLower(MD5.HashData(Encoding.UTF8.GetBytes(tempHash)));
             }
 
             return modLoadResult;
@@ -704,7 +713,7 @@ namespace Ryujinx.HLE.HOS
             ApplyProgramPatches(nroPatches, 0, nro);
         }
 
-        internal bool ApplyNsoPatches(ulong applicationId, params ReadOnlySpan<IExecutable> programs)
+        internal PatchApplyResult ApplyNsoPatches(ulong applicationId, params IExecutable[] programs)
         {
             IEnumerable<Mod<DirectoryInfo>> nsoMods = _patches.NsoPatches;
 
@@ -768,10 +777,8 @@ namespace Ryujinx.HLE.HOS
             }
         }
 
-        private static bool ApplyProgramPatches(IEnumerable<Mod<DirectoryInfo>> mods, int protectedOffset, params ReadOnlySpan<IExecutable> programs)
+        private static PatchApplyResult ApplyProgramPatches(IEnumerable<Mod<DirectoryInfo>> mods, int protectedOffset, params IExecutable[] programs)
         {
-            int count = 0;
-
             MemPatch[] patches = new MemPatch[programs.Length];
 
             for (int i = 0; i < patches.Length; ++i)
@@ -845,12 +852,24 @@ namespace Ryujinx.HLE.HOS
             }
 
             // Apply patches
+            BitVector32 patched = new();
+            List<PatchedRange> ranges = [];
+
             for (int i = 0; i < programs.Length; ++i)
             {
-                count += patches[i].Patch(programs[i].Program, protectedOffset);
+                List<(int Offset, int Size)> localRanges = [];
+                int applied = patches[i].Patch(programs[i].Program, protectedOffset, localRanges);
+
+                if (applied > 0)
+                {
+                    patched[1 << i] = true;
+                    ranges.AddRange(localRanges.Select(range => new PatchedRange(i, range.Offset, range.Size)));
+                }
             }
 
-            return count > 0;
+            return new PatchApplyResult(
+                patched,
+                ranges.Count == 0 ? Array.Empty<PatchedRange>() : ranges);
         }
     }
 }

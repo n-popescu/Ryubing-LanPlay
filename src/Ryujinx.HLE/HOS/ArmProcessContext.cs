@@ -3,6 +3,7 @@ using Ryujinx.Cpu;
 using Ryujinx.Graphics.Gpu;
 using Ryujinx.HLE.HOS.Kernel.Process;
 using Ryujinx.Memory;
+using System.Collections.Generic;
 
 namespace Ryujinx.HLE.HOS
 {
@@ -14,7 +15,9 @@ namespace Ryujinx.HLE.HOS
             bool diskCacheEnabled,
             ulong codeAddress,
             ulong codeSize,
-            string cacheSelector);
+            string stockDisplayVersion,
+            IReadOnlyList<(ulong Start, ulong Size)> moddedAddressRanges,
+            bool enableStockProfileSidecarMining);
     }
 
     class ArmProcessContext<T> : IArmProcessContext where T : class, IVirtualMemoryManagerTracked, IMemoryManager
@@ -69,10 +72,12 @@ namespace Ryujinx.HLE.HOS
             bool diskCacheEnabled,
             ulong codeAddress,
             ulong codeSize,
-            string cacheSelector)
+            string stockDisplayVersion,
+            IReadOnlyList<(ulong Start, ulong Size)> moddedAddressRanges,
+            bool enableStockProfileSidecarMining)
         {
             _cpuContext.PrepareCodeRange(codeAddress, codeSize);
-            return _cpuContext.LoadDiskCache(titleIdText, displayVersion, diskCacheEnabled, cacheSelector);
+            return _cpuContext.LoadDiskCache(titleIdText, displayVersion, diskCacheEnabled, stockDisplayVersion, moddedAddressRanges, enableStockProfileSidecarMining);
         }
 
         public void InvalidateCacheRegion(ulong address, ulong size)

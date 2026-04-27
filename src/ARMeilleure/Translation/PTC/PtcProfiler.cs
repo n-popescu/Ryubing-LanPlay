@@ -25,7 +25,7 @@ namespace ARMeilleure.Translation.PTC
     {
         private const string OuterHeaderMagicString = "Pohd\0\0\0\0";
 
-        private const uint InternalVersion = 7007; //! Not to be incremented manually for each change to the ARMeilleure project.
+        private const uint InternalVersion = 7010; //! Not to be incremented manually for each change to the ARMeilleure project.
 
         private static readonly uint[] _migrateInternalVersions =
         [
@@ -163,119 +163,393 @@ namespace ARMeilleure.Translation.PTC
         {
             _lastHash = default;
 
+            if (_ptc.HasOverlay)
+            {
+                string fileNameActual = $"{_ptc.CachePathActual}.info";
+                string fileNameBackup = $"{_ptc.CachePathBackup}.info";
+
+                if (File.Exists(fileNameActual) && new FileInfo(fileNameActual).Length != 0L)
+                {
+                    if (!TryImportOverlayProfile(fileNameActual) &&
+                        File.Exists(fileNameBackup) && new FileInfo(fileNameBackup).Length != 0L)
+                    {
+                        _ = TryImportOverlayProfile(fileNameBackup);
+                    }
+                }
+                else if (File.Exists(fileNameBackup) && new FileInfo(fileNameBackup).Length != 0L)
+                {
+                    _ = TryImportOverlayProfile(fileNameBackup);
+                }
+
+                ImportStockProfile();
+            }
+            else
+            {
+                string fileNameActual = $"{_ptc.CachePathActual}.info";
+                string fileNameBackup = $"{_ptc.CachePathBackup}.info";
+
+                FileInfo fileInfoActual = new(fileNameActual);
+                FileInfo fileInfoBackup = new(fileNameBackup);
+
+                if (fileInfoActual.Exists && fileInfoActual.Length != 0L)
+                {
+                    if (!Load(fileNameActual, false))
+                    {
+                        if (fileInfoBackup.Exists && fileInfoBackup.Length != 0L)
+                        {
+                            _ = Load(fileNameBackup, true);
+                        }
+                    }
+                }
+                else if (fileInfoBackup.Exists && fileInfoBackup.Length != 0L)
+                {
+                    _ = Load(fileNameBackup, true);
+                }
+
+                MineSidecarProfilesForStockLaunch();
+            }
+        }
+
+        internal static (int Added, int Upgraded) MergeProfileHintsFromSidecar(
+            Dictionary<ulong, FuncProfile> target,
+            IReadOnlyDictionary<ulong, FuncProfile> source,
+            IReadOnlyList<PtcSidecarProfileMetadata.AddressRange> moddedRanges)
+        {
+            int added = 0;
+            int upgraded = 0;
+
+            foreach ((ulong address, FuncProfile sourceProfile) in source)
+            {
+                if (IsInPersistedRange(address, moddedRanges))
+                {
+                    continue;
+                }
+
+                if (!target.TryGetValue(address, out FuncProfile targetProfile))
+                {
+                    target[address] = sourceProfile;
+                    added++;
+                    continue;
+                }
+
+                if (!targetProfile.HighCq && sourceProfile.HighCq)
+                {
+                    target[address] = new FuncProfile(targetProfile.Mode, highCq: true, targetProfile.Blacklist);
+                    upgraded++;
+                }
+            }
+
+            return (added, upgraded);
+        }
+
+        private static bool IsInPersistedRange(ulong address, IReadOnlyList<PtcSidecarProfileMetadata.AddressRange> ranges)
+        {
+            if (ranges == null)
+            {
+                return false;
+            }
+
+            foreach (PtcSidecarProfileMetadata.AddressRange range in ranges)
+            {
+                if (address >= range.Start && address < range.Start + range.Size)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private IEnumerable<(string ProfilePath, PtcSidecarProfileMetadata Metadata)> EnumerateStockMiningCandidates()
+        {
+            string actualDirectory = Path.GetDirectoryName(_ptc.CachePathActual);
+            string backupDirectory = Path.GetDirectoryName(_ptc.CachePathBackup);
+            string prefix = $"{_ptc.DisplayVersion}-";
+
+            HashSet<string> seenSidecars = [];
+
+            foreach (string directory in new[] { actualDirectory, backupDirectory })
+            {
+                if (string.IsNullOrEmpty(directory) || !Directory.Exists(directory))
+                {
+                    continue;
+                }
+
+                foreach (string metadataPath in Directory.EnumerateFiles(directory, $"{prefix}*.profilemeta"))
+                {
+                    if (!PtcSidecarProfileMetadata.TryLoad(metadataPath, out PtcSidecarProfileMetadata metadata))
+                    {
+                        continue;
+                    }
+
+                    if (metadata.StockDisplayVersion != _ptc.DisplayVersion)
+                    {
+                        continue;
+                    }
+
+                    string profilePath = Path.Combine(directory, $"{metadata.SidecarDisplayVersion}.info");
+                    if (!File.Exists(profilePath) || new FileInfo(profilePath).Length == 0L)
+                    {
+                        // Orphaned metadata: the sidecar .info it points at no longer exists.
+                        // Garbage-collect the orphan so users who prune cache files manually don't
+                        // accumulate stale .profilemeta indefinitely. Best-effort; ignore failures.
+                        try
+                        {
+                            File.Delete(metadataPath);
+                            Logger.Debug?.Print(LogClass.Ptc, $"Deleted orphaned sidecar metadata: {metadataPath}");
+                        }
+                        catch (IOException)
+                        {
+                        }
+                        catch (UnauthorizedAccessException)
+                        {
+                        }
+
+                        continue;
+                    }
+
+                    if (!seenSidecars.Add(metadata.SidecarDisplayVersion))
+                    {
+                        continue;
+                    }
+
+                    yield return (profilePath, metadata);
+                }
+            }
+        }
+
+        private void MineSidecarProfilesForStockLaunch()
+        {
+            if (_ptc.HasOverlay || !_ptc.EnableStockProfileSidecarMining)
+            {
+                return;
+            }
+
+            int addedTotal = 0;
+            int upgradedTotal = 0;
+
+            foreach ((string profilePath, PtcSidecarProfileMetadata metadata) in EnumerateStockMiningCandidates())
+            {
+                if (!TryLoadProfile(profilePath, invalidateOnFailure: false, out Dictionary<ulong, FuncProfile> sidecarProfile, out _))
+                {
+                    continue;
+                }
+
+                lock (_lock)
+                {
+                    (int added, int upgraded) = MergeProfileHintsFromSidecar(ProfiledFuncs, sidecarProfile, metadata.ModdedRanges);
+                    addedTotal += added;
+                    upgradedTotal += upgraded;
+                }
+            }
+
+            if (addedTotal == 0 && upgradedTotal == 0)
+            {
+                return;
+            }
+
+            SaveStockProfileAfterMining();
+
+            Logger.Info?.Print(
+                LogClass.Ptc,
+                $"Mined {addedTotal} new profile hints + {upgradedTotal} HighCq upgrades from ExeFS sidecar profiles.");
+        }
+
+        private void SaveStockProfileAfterMining()
+        {
+            // Best-effort write. A concurrent stock launch in another Ryujinx instance can hold
+            // the file, in which case we fail-soft and skip this mining write — symmetric with
+            // WriteSidecarProfileMetadata's IOException handling. The merged in-memory profile
+            // is still used for this session; it just isn't persisted to disk.
             string fileNameActual = $"{_ptc.CachePathActual}.info";
             string fileNameBackup = $"{_ptc.CachePathBackup}.info";
 
-            FileInfo fileInfoActual = new(fileNameActual);
-            FileInfo fileInfoBackup = new(fileNameBackup);
-
-            if (fileInfoActual.Exists && fileInfoActual.Length != 0L)
+            try
             {
-                if (!Load(fileNameActual, false))
+                FileInfo fileInfoActual = new(fileNameActual);
+
+                if (fileInfoActual.Exists && fileInfoActual.Length != 0L)
                 {
-                    if (fileInfoBackup.Exists && fileInfoBackup.Length != 0L)
+                    File.Copy(fileNameActual, fileNameBackup, true);
+                }
+
+                Save(fileNameActual);
+            }
+            catch (IOException exception)
+            {
+                Logger.Warning?.Print(LogClass.Ptc, $"Stock profile mining write skipped: {exception.Message}");
+            }
+        }
+
+        private void ImportStockProfile()
+        {
+            string fileNameActual = $"{_ptc.StockCachePathActual}.info";
+            string fileNameBackup = $"{_ptc.StockCachePathBackup}.info";
+
+            if (File.Exists(fileNameActual) && new FileInfo(fileNameActual).Length != 0L)
+            {
+                if (TryImportStockProfile(fileNameActual))
+                {
+                    return;
+                }
+            }
+
+            if (File.Exists(fileNameBackup) && new FileInfo(fileNameBackup).Length != 0L)
+            {
+                _ = TryImportStockProfile(fileNameBackup);
+            }
+        }
+
+        private bool TryImportStockProfile(string fileName)
+        {
+            if (!TryLoadProfile(fileName, invalidateOnFailure: false, out Dictionary<ulong, FuncProfile> stockProfile, out _))
+            {
+                return false;
+            }
+
+            lock (_lock)
+            {
+                foreach ((ulong address, FuncProfile profile) in stockProfile)
+                {
+                    if (!_ptc.IsAddressInModdedRangeForOverlay(address) && !ProfiledFuncs.ContainsKey(address))
                     {
-                        Load(fileNameBackup, true);
+                        ProfiledFuncs[address] = profile;
                     }
                 }
             }
-            else if (fileInfoBackup.Exists && fileInfoBackup.Length != 0L)
+
+            return true;
+        }
+
+        private bool TryImportOverlayProfile(string fileName)
+        {
+            if (!TryLoadProfile(fileName, invalidateOnFailure: false, out Dictionary<ulong, FuncProfile> profile, out _))
             {
-                Load(fileNameBackup, true);
+                return false;
             }
+
+            lock (_lock)
+            {
+                foreach ((ulong address, FuncProfile funcProfile) in profile)
+                {
+                    if (!_ptc.IsAddressInModdedRangeForOverlay(address) && !ProfiledFuncs.ContainsKey(address))
+                    {
+                        ProfiledFuncs[address] = funcProfile;
+                    }
+                }
+            }
+
+            return true;
         }
 
         private bool Load(string fileName, bool isBackup)
         {
-            using (FileStream compressedStream = new(fileName, FileMode.Open))
-            using (DeflateStream deflateStream = new(compressedStream, CompressionMode.Decompress, true))
+            if (!TryLoadProfile(fileName, invalidateOnFailure: true, out Dictionary<ulong, FuncProfile> profiledFuncs, out Hash128 lastHash))
             {
-                OuterHeader outerHeader = DeserializeStructure<OuterHeader>(compressedStream);
-
-                if (!outerHeader.IsHeaderValid())
-                {
-                    InvalidateCompressedStream(compressedStream);
-
-                    return false;
-                }
-
-                if (outerHeader.Magic != _outerHeaderMagic)
-                {
-                    InvalidateCompressedStream(compressedStream);
-
-                    return false;
-                }
-
-                if (outerHeader.InfoFileVersion != InternalVersion && !_migrateInternalVersions.Contains(outerHeader.InfoFileVersion))
-                {
-                    InvalidateCompressedStream(compressedStream);
-
-                    return false;
-                }
-
-                if (outerHeader.Endianness != Ptc.GetEndianness())
-                {
-                    InvalidateCompressedStream(compressedStream);
-
-                    return false;
-                }
-
-                using RecyclableMemoryStream stream = MemoryStreamManager.Shared.GetStream();
-                Debug.Assert(stream.Seek(0L, SeekOrigin.Begin) == 0L && stream.Length == 0L);
-
-                try
-                {
-                    deflateStream.CopyTo(stream);
-                }
-                catch
-                {
-                    InvalidateCompressedStream(compressedStream);
-
-                    return false;
-                }
-
-                Debug.Assert(stream.Position == stream.Length);
-
-                stream.Seek(0L, SeekOrigin.Begin);
-
-                Hash128 expectedHash = DeserializeStructure<Hash128>(stream);
-
-                Hash128 actualHash = Hash128.ComputeHash(GetReadOnlySpan(stream));
-
-                if (actualHash != expectedHash)
-                {
-                    InvalidateCompressedStream(compressedStream);
-
-                    return false;
-                }
-
-                Func<ulong, FuncProfile, (ulong, FuncProfile)> migrateEntryFunc = null;
-
-                switch (outerHeader.InfoFileVersion)
-                {
-                    case InternalVersion:
-                        ProfiledFuncs = Deserialize(stream);
-                        break;
-                    case 1866:
-                        migrateEntryFunc = (address, profile) => (address + 0x500000UL, profile);
-                        goto case 5518;
-                    case 5518:
-                        ProfiledFuncs = DeserializeAddBlacklist(stream, migrateEntryFunc);
-                        break;
-                    default:
-                        Logger.Error?.Print(LogClass.Ptc, $"No migration path for {nameof(outerHeader.InfoFileVersion)} '{outerHeader.InfoFileVersion}'. Discarding cache.");
-                        InvalidateCompressedStream(compressedStream);
-                        return false;
-                }
-
-                Debug.Assert(stream.Position == stream.Length);
-
-                _lastHash = actualHash;
+                return false;
             }
+
+            ProfiledFuncs = profiledFuncs;
+            _lastHash = lastHash;
 
             long fileSize = new FileInfo(fileName).Length;
 
             Logger.Info?.Print(LogClass.Ptc, $"{(isBackup ? "Loaded Backup Profiling Info" : "Loaded Profiling Info")} (size: {fileSize} bytes, profiled functions: {ProfiledFuncs.Count}).");
+
+            return true;
+        }
+
+        private bool TryLoadProfile(string fileName, bool invalidateOnFailure, out Dictionary<ulong, FuncProfile> profiledFuncs, out Hash128 lastHash)
+        {
+            profiledFuncs = null;
+            lastHash = default;
+
+            using FileStream compressedStream = new(fileName, FileMode.Open);
+            using DeflateStream deflateStream = new(compressedStream, CompressionMode.Decompress, true);
+            void InvalidateIfNeeded()
+            {
+                if (invalidateOnFailure)
+                {
+                    InvalidateCompressedStream(compressedStream);
+                }
+            }
+
+            OuterHeader outerHeader = DeserializeStructure<OuterHeader>(compressedStream);
+
+            if (!outerHeader.IsHeaderValid())
+            {
+                InvalidateIfNeeded();
+
+                return false;
+            }
+
+            if (outerHeader.Magic != _outerHeaderMagic)
+            {
+                InvalidateIfNeeded();
+
+                return false;
+            }
+
+            if (outerHeader.InfoFileVersion != InternalVersion && !_migrateInternalVersions.Contains(outerHeader.InfoFileVersion))
+            {
+                InvalidateIfNeeded();
+
+                return false;
+            }
+
+            if (outerHeader.Endianness != Ptc.GetEndianness())
+            {
+                InvalidateIfNeeded();
+
+                return false;
+            }
+
+            using RecyclableMemoryStream stream = MemoryStreamManager.Shared.GetStream();
+            Debug.Assert(stream.Seek(0L, SeekOrigin.Begin) == 0L && stream.Length == 0L);
+
+            try
+            {
+                deflateStream.CopyTo(stream);
+            }
+            catch
+            {
+                InvalidateIfNeeded();
+
+                return false;
+            }
+
+            Debug.Assert(stream.Position == stream.Length);
+
+            _ = stream.Seek(0L, SeekOrigin.Begin);
+
+            Hash128 expectedHash = DeserializeStructure<Hash128>(stream);
+
+            Hash128 actualHash = Hash128.ComputeHash(GetReadOnlySpan(stream));
+
+            if (actualHash != expectedHash)
+            {
+                InvalidateIfNeeded();
+
+                return false;
+            }
+
+            switch (outerHeader.InfoFileVersion)
+            {
+                case InternalVersion:
+                    profiledFuncs = Deserialize(stream);
+                    break;
+                case 1866:
+                    profiledFuncs = Deserialize(stream, (address, profile) => (address + 0x500000UL, profile));
+                    break;
+                default:
+                    Logger.Error?.Print(LogClass.Ptc, $"No migration path for {nameof(outerHeader.InfoFileVersion)} '{outerHeader.InfoFileVersion}'. Discarding cache.");
+                    InvalidateIfNeeded();
+                    return false;
+            }
+
+            Debug.Assert(stream.Position == stream.Length);
+
+            lastHash = actualHash;
 
             return true;
         }
@@ -398,6 +672,11 @@ namespace ARMeilleure.Translation.PTC
             {
                 Logger.Info?.Print(LogClass.Ptc, $"Saved Profiling Info (size: {fileSize} bytes, profiled functions: {profiledFuncsCount}).");
             }
+        }
+
+        internal void SaveForTests(string fileName)
+        {
+            Save(fileName);
         }
 
         private static void Serialize(Stream stream, Dictionary<ulong, FuncProfile> profiledFuncs)
