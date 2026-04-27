@@ -1,13 +1,9 @@
 using System.Collections.Generic;
 using Ryujinx.Common.Logging;
 using Gommon;
-/* For use when working on json stuff
 using Ryujinx.Ava.Common.Locale;
-using Ryujinx.Common.Utilities;
 using System;
-using System.IO;
-using System.Text.Json.Serialization;
-*/
+using System.Text.Json;
 
 namespace Ryujinx.Common
 {
@@ -16,11 +12,11 @@ namespace Ryujinx.Common
     {
         public static void PrintSplash()
         {
-            Logger.Notice.Print(LogClass.Application, "   ___                 __    _              ");
+            Logger.Notice.Print(LogClass.Application,  "   ___                 __    _              ");
             Logger.Notice.Print(LogClass.Application, @"  / _ \  __ __ __ __  / /   (_)  ___   ___ _");
             Logger.Notice.Print(LogClass.Application, @" / , _/ / // // // / / _ \ / /  / _ \ / _ `/");
             Logger.Notice.Print(LogClass.Application, @"/_/|_|  \_, / \_,_/ /_.__//_/  /_//_/ \_, / ");
-            Logger.Notice.Print(LogClass.Application, "       /___/                         /___/  ");
+            Logger.Notice.Print(LogClass.Application,  "       /___/                         /___/  ");
 
             Logger.Notice.Print(LogClass.Application, "");
             Logger.Notice.Print(LogClass.Application, GetSplash());
@@ -33,13 +29,39 @@ namespace Ryujinx.Common
         {
             if (string.IsNullOrEmpty(_Final_Splash))
             {
-                _Final_Splash = _Main_Splashes.GetRandomElement();
+                _Final_Splash = _Get_Lang_Json();
             }
 
             return $"{_Final_Splash}";
         }
+        
+        private static SplashLocalesJson _Splash_Json; 
 
-        // This list contains all splashes. Additions are welcome to this list : ) - Awesomeangotti
+        private static string _Get_Lang_Json()
+        {
+            foreach (string uri in EmbeddedResources.GetAllAvailableResources("Ryujinx/Assets/Splashes", ".json"))
+            {
+                string data;
+                string path = uri[..^".json".Length];
+                path = path.Replace('.', '/');
+                path = path.Append(".json");
+                data = EmbeddedResources.ReadAllText(path);
+                _Splash_Json = JsonSerializer.Deserialize<SplashLocalesJson>(data); // There will theoretically only ever be one splashes.json
+            }
+            return _Splash_Json.Locales.GetRandomElement().Translations["en_US"]; // Just need to get locale selection now
+        }
+        
+        public struct SplashLocalesJson
+        {
+            public List<SplashLocalesEntry> Locales { get; set; }
+        }
+
+        public struct SplashLocalesEntry
+        {
+            public Dictionary<string, string> Translations { get; set; }
+        }
+        
+        // Original splash list. Held here for temporary reasons
         private static List<string> _Main_Splashes = new()
         {
             "Ryubing is my middle name",
@@ -98,23 +120,16 @@ namespace Ryujinx.Common
             "Async shader compilation would destroy my soul",
             "Trans rights are human rights!",
             ":3",
+            ":3",
             "Please connect a controller!",
             "Never gonna give you up!",
             "The game was rigged from the start",
             "Ganon is watching you!",
-        }; // My working codes stops here. The rest is experimental
+            "Now with 100% less JSON in the splash code!",
+            "With every splash I get closer to insanity!",
 
-        // Saving my place for now. This commented out code below here is my piss poor attempt at json parsing or deserializing or whatever it is.
-        
-        /*
-        private static List<string> _Json_List;
+        };
 
-        // Please free me from this JSON prison.
-        private static void _Make_Splash_List()
-        {
-            _Json_List = JsonHelper.DeserializeFromFile("Ryujinx/Assets/Splashes/Splash.json", JsonHelper.JsonSerializerContext);
-        }
-        */
     }
 
 }
