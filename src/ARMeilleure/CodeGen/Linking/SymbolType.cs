@@ -24,5 +24,10 @@ namespace ARMeilleure.CodeGen.Linking
         /// Refers to a special symbol which is handled by <see cref="Translation.PTC.Ptc.PatchCode"/>.
         /// </summary>
         Special,
+
+        /// <summary>
+        /// Refers to a guest address used by relocations targeting code memory.
+        /// </summary>
+        GuestAddress,
     }
 }

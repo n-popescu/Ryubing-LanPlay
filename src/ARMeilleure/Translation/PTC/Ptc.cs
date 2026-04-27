@@ -30,7 +30,7 @@ namespace ARMeilleure.Translation.PTC
     using Arm64HardwareCapabilities = CodeGen.Arm64.HardwareCapabilities;
     using X86HardwareCapabilities = CodeGen.X86.HardwareCapabilities;
 
-    class Ptc : IPtcLoadState
+    class Ptc : IPtcLoadState, IDisposable
     {
         private const string OuterHeaderMagicString = "PTCohd\0\0";
         private const string InnerHeaderMagicString = "PTCihd\0\0";
@@ -1077,7 +1077,7 @@ namespace ARMeilleure.Translation.PTC
             {
                 Symbol symbol = relocEntry.Symbol;
 
-                if (symbol.Type == SymbolType.FunctionTable &&
+                if ((symbol.Type == SymbolType.FunctionTable || symbol.Type == SymbolType.GuestAddress) &&
                     IsInModdedRange(symbol.Value))
                 {
                     return true;
@@ -1189,6 +1189,10 @@ namespace ARMeilleure.Translation.PTC
                 else if (symbol == FunctionTableSymbol)
                 {
                     imm = translator.FunctionTable.Base;
+                }
+                else if (symbol.Type == SymbolType.GuestAddress)
+                {
+                    imm = (nint)symbol.Value;
                 }
 
                 if (imm == null)
