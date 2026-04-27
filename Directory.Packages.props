@@ -8,6 +8,7 @@
     <PackageVersion Include="Avalonia.Desktop" Version="11.3.12" />
     <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.12" />
     <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="11.3.12" />
+    <PackageVersion Include="SharpCompress" Version="0.47.4" />
     <PackageVersion Include="Svg.Controls.Avalonia" Version="11.3.9.4" />
     <PackageVersion Include="Svg.Controls.Skia.Avalonia" Version="11.3.9.4" />
     <PackageVersion Include="Microsoft.Build.Framework" Version="17.11.4" />
@@ -16,7 +17,7 @@
     <PackageVersion Include="Projektanker.Icons.Avalonia" Version="9.6.2" />
     <PackageVersion Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.6.2" />
     <PackageVersion Include="Projektanker.Icons.Avalonia.MaterialDesign" Version="9.6.2" />
-    <PackageVersion Include="ppy.SDL3-CS" Version="2025.920.0" />
+    <PackageVersion Include="Ryujinx.SDL3-CS" Version="2026.426.0" />
     <PackageVersion Include="CommandLineParser" Version="2.9.1" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageVersion Include="Concentus" Version="2.2.2" />
@@ -42,13 +43,12 @@
     <PackageVersion Include="Ryujinx.Graphics.Nvdec.Dependencies.AllArch" Version="6.1.2-build3" />
     <PackageVersion Include="Ryujinx.Graphics.Vulkan.Dependencies.MoltenVK" Version="1.2.0" />
     <PackageVersion Include="Ryujinx.LibHac" Version="0.21.0-alpha.129" />
-    <PackageVersion Include="Ryujinx.UpdateClient" Version="1.0.44" />
-    <PackageVersion Include="Ryujinx.Systems.Update.Common" Version="1.0.44" />
+    <PackageVersion Include="Ryujinx.UpdateClient" Version="2.0.6" />
+    <PackageVersion Include="Ryujinx.Systems.Update.Common" Version="2.0.6" />
     <PackageVersion Include="Gommon" Version="2.8.0.1" />
     <PackageVersion Include="securifybv.ShellLink" Version="0.1.0" />
     <PackageVersion Include="Sep" Version="0.11.1" />
     <PackageVersion Include="shaderc.net" Version="0.1.0" />
-    <PackageVersion Include="SharpZipLib" Version="1.4.2" />
     <PackageVersion Include="Silk.NET.Vulkan" Version="2.22.0" />
     <PackageVersion Include="Silk.NET.Vulkan.Extensions.EXT" Version="2.22.0" />
     <PackageVersion Include="Silk.NET.Vulkan.Extensions.KHR" Version="2.22.0" />

@@ -24,9 +24,11 @@ using Ryujinx.Headless;
 using Ryujinx.SDL3.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Ryujinx.Ava
@@ -52,6 +54,22 @@ namespace Ryujinx.Ava
 
             if (OperatingSystem.IsWindows())
             {
+#if !DEBUG
+                // this fixes the "hide console" option by forcing the emulator to launch in an old-school cmd
+                if (!Console.Title.Contains("conhost.exe"))
+                {
+                    StringBuilder sb = new();
+
+                    foreach (string arg in args)
+                    {
+                        sb.Append(arg.Contains(' ') ? $" \"{arg}\"" : $" {arg}");
+                    }
+                    
+                    Process.Start("conhost.exe", $"{Environment.ProcessPath} {sb}");
+                    return 0;
+                }
+#endif
+                
                 if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
                 {
                     Logger.Error?.PrintMsg(LogClass.Application, "Ryujinx is not intended to be run on an outdated version of Windows. Exiting...");
