@@ -4701,6 +4701,31 @@
       }
     },
     {
+      "ID": "SettingsTabCpuEnableStockProfileSidecarMining",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Mine Stock PTC Profile From ExeFS Sidecars",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
       "ID": "SettingsTabSystemTurboMultiplier",
       "Translations": {
         "ar_SA": "",
@@ -16398,6 +16423,31 @@
         "uk_UA": "Завантажувати PPTC використовуючи третину від кількості ядер.",
         "zh_CN": "使用三分之一的核心数加载 PPTC。",
         "zh_TW": "使用 CPU 核心數量的三分之一載入 PPTC。"
+      }
+    },
+    {
+      "ID": "StockProfileSidecarMiningTooltip",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "When loading a modded game, also opens the stock (unmodded) ExeFS to mine its PTC profile sidecar so that compatible cached translations from the stock build can be reused.\n\nLeave OFF if unsure.",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
       }
     },
     {

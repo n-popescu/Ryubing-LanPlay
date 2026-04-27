@@ -104,6 +104,11 @@ namespace Ryujinx.HLE
         internal readonly bool EnablePtc;
 
         /// <summary>
+        /// Control if stock profile sidecar mining from ExeFS overlays is enabled.
+        /// </summary>
+        internal readonly bool EnableStockProfileSidecarMining;
+
+        /// <summary>
         /// Control the arbitrary scalar applied to emulated CPU tick timing.
         /// </summary>
         public long TickScalar { get; set; }
@@ -221,6 +226,7 @@ namespace Ryujinx.HLE
                                 VSyncMode vSyncMode,
                                 bool enableDockedMode,
                                 bool enablePtc,
+                                bool enableStockProfileSidecarMining,
                                 long tickScalar,
                                 bool enableInternetAccess,
                                 IntegrityCheckLevel fsIntegrityCheckLevel,
@@ -250,6 +256,7 @@ namespace Ryujinx.HLE
             CustomVSyncInterval = customVSyncInterval;
             EnableDockedMode = enableDockedMode;
             EnablePtc = enablePtc;
+            EnableStockProfileSidecarMining = enableStockProfileSidecarMining;
             TickScalar = tickScalar;
             EnableInternetAccess = enableInternetAccess;
             FsIntegrityCheckLevel = fsIntegrityCheckLevel;

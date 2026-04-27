@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Ryujinx.Cpu
 {
@@ -48,7 +49,13 @@ namespace Ryujinx.Cpu
         /// <param name="displayVersion">Version of the application</param>
         /// <param name="enabled">True if the cache should be loaded from disk if it exists, false otherwise</param>
         /// <returns>Disk cache load progress reporter and manager</returns>
-        IDiskCacheLoadState LoadDiskCache(string titleIdText, string displayVersion, bool enabled, string cacheSelector);
+        IDiskCacheLoadState LoadDiskCache(
+            string titleIdText,
+            string displayVersion,
+            bool enabled,
+            string stockDisplayVersion = null,
+            IReadOnlyList<(ulong Start, ulong Size)> moddedAddressRanges = null,
+            bool enableStockProfileSidecarMining = false);
 
         /// <summary>
         /// Indicates that code has been loaded into guest memory, and that it might be executed in the future.

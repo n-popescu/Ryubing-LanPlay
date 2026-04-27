@@ -2,6 +2,7 @@ using ARMeilleure.Common;
 using ARMeilleure.Memory;
 using Ryujinx.Cpu.Jit;
 using Ryujinx.Cpu.LightningJit.State;
+using System.Collections.Generic;
 
 namespace Ryujinx.Cpu.LightningJit
 {
@@ -46,7 +47,13 @@ namespace Ryujinx.Cpu.LightningJit
         }
 
         /// <inheritdoc/>
-        public IDiskCacheLoadState LoadDiskCache(string titleIdText, string displayVersion, bool enabled, string cacheSelector)
+        public IDiskCacheLoadState LoadDiskCache(
+            string titleIdText,
+            string displayVersion,
+            bool enabled,
+            string stockDisplayVersion = null,
+            IReadOnlyList<(ulong Start, ulong Size)> moddedAddressRanges = null,
+            bool enableStockProfileSidecarMining = false)
         {
             return new DummyDiskCacheLoadState();
         }

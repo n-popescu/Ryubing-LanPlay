@@ -18,9 +18,9 @@ using Ryujinx.HLE.HOS.Services.Apm;
 using Ryujinx.HLE.HOS.Services.Caps;
 using Ryujinx.HLE.HOS.Services.Mii;
 using Ryujinx.HLE.HOS.Services.Nfc.AmiiboDecryption;
+using Ryujinx.HLE.HOS.Services.Nfc.Mifare.MifareManager;
 using Ryujinx.HLE.HOS.Services.Nfc.Nfp;
 using Ryujinx.HLE.HOS.Services.Nfc.Nfp.NfpManager;
-using Ryujinx.HLE.HOS.Services.Nfc.Mifare.MifareManager;
 using Ryujinx.HLE.HOS.Services.Nv;
 using Ryujinx.HLE.HOS.Services.Nv.NvDrvServices.NvHostCtrl;
 using Ryujinx.HLE.HOS.Services.Pcv.Bpc;
@@ -102,6 +102,8 @@ namespace Ryujinx.HLE.HOS
         private bool _isDisposed;
 
         public bool EnablePtc { get; set; }
+
+        public bool EnableStockProfileSidecarMining { get; set; }
 
         public IntegrityCheckLevel FsIntegrityCheckLevel { get; set; }
 

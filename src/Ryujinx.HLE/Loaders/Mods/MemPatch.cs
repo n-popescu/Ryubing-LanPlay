@@ -60,10 +60,10 @@ namespace Ryujinx.HLE.Loaders.Mods
         /// overlapping patches always apply the same way.
         /// </remarks>
         /// <param name="memory">The span of bytes to patch</param>
-        /// <param name="maxSize">The maximum size of the slice of patchable memory</param>
         /// <param name="protectedOffset">A secondary offset used in special cases (NSO header)</param>
+        /// <param name="appliedRanges">Optional program-relative ranges written by this patch</param>
         /// <returns>Successful patches count</returns>
-        public int Patch(Span<byte> memory, int protectedOffset = 0)
+        public int Patch(Span<byte> memory, int protectedOffset = 0, IList<(int Offset, int Size)> appliedRanges = null)
         {
             int count = 0;
             foreach ((uint offset, byte[] patch) in _patches.OrderBy(item => item.Key))
@@ -85,15 +85,26 @@ namespace Ryujinx.HLE.Loaders.Mods
 
                 patchOffset -= protectedOffset;
 
+                if (patchOffset >= memory.Length)
+                {
+                    continue; // Add warning?
+                }
+
                 if (patchOffset + patchSize > memory.Length)
                 {
                     Logger.Warning?.Print(LogClass.ModLoader, $"Patch offset ({patchOffset:x}) + size ({patchSize}) is greater than the size of the memory buffer ({memory.Length}). Attempting to fix this...");
                     patchSize = memory.Length - patchOffset;
                 }
 
+                if (patchSize <= 0)
+                {
+                    continue;
+                }
+
                 Logger.Info?.Print(LogClass.ModLoader, $"Patching address offset {patchOffset:x} <= {BitConverter.ToString(patch).Replace('-', ' ')} len={patchSize}");
 
                 patch.AsSpan(0, patchSize).CopyTo(memory.Slice(patchOffset, patchSize));
+                appliedRanges?.Add((patchOffset, patchSize));
 
                 count++;
             }

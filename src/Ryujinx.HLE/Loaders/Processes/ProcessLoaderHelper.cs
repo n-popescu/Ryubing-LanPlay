@@ -20,6 +20,8 @@ using Ryujinx.HLE.Loaders.Executables;
 using Ryujinx.Horizon.Common;
 using Ryujinx.Horizon.Sdk.Arp;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using ApplicationId = LibHac.Ncm.ApplicationId;
 
@@ -31,6 +33,98 @@ namespace Ryujinx.HLE.Loaders.Processes
         //       You also need to add a new migration path and adjust the existing ones.
         // TODO: Remove this workaround when ASLR is implemented.
         private const ulong CodeStartOffset = 0x500000UL;
+
+        internal static List<(ulong Start, ulong Size)> MergeRanges(IEnumerable<(ulong Start, ulong Size)> ranges)
+        {
+            List<(ulong Start, ulong Size)> sortedRanges = [.. ranges
+                .Where(range => range.Size != 0)
+                .OrderBy(range => range.Start)];
+
+            if (sortedRanges.Count == 0)
+            {
+                return [];
+            }
+
+            List<(ulong Start, ulong Size)> mergedRanges = [];
+            (ulong Start, ulong Size) current = sortedRanges[0];
+
+            for (int i = 1; i < sortedRanges.Count; i++)
+            {
+                (ulong Start, ulong Size) next = sortedRanges[i];
+                ulong currentEnd = current.Start + current.Size;
+                ulong nextEnd = next.Start + next.Size;
+
+                if (next.Start <= currentEnd)
+                {
+                    current.Size = Math.Max(currentEnd, nextEnd) - current.Start;
+                }
+                else
+                {
+                    mergedRanges.Add(current);
+                    current = next;
+                }
+            }
+
+            mergedRanges.Add(current);
+
+            // Invariant: sorted by Start ascending, with no overlapping or adjacent entries.
+            return mergedRanges;
+        }
+
+        internal static List<(ulong Start, ulong Size)> BuildModdedAddressRanges(
+            ulong[] nsoBase,
+            uint[] nsoSizes,
+            bool[] wholeSlotModdedFlags,
+            IReadOnlyList<ModLoader.PatchedRange> patchRanges)
+        {
+            List<(ulong Start, ulong Size)> ranges = [];
+
+            if (wholeSlotModdedFlags != null)
+            {
+                for (int index = 0; index < nsoBase.Length && index < nsoSizes.Length && index < wholeSlotModdedFlags.Length; index++)
+                {
+                    if (wholeSlotModdedFlags[index])
+                    {
+                        ranges.Add((nsoBase[index], nsoSizes[index]));
+                    }
+                }
+            }
+
+            if (patchRanges != null)
+            {
+                foreach (ModLoader.PatchedRange range in patchRanges)
+                {
+                    if (range.CompactedIndex < 0 ||
+                        range.CompactedIndex >= nsoBase.Length ||
+                        range.CompactedIndex >= nsoSizes.Length ||
+                        range.ProgramOffset < 0 ||
+                        range.Size <= 0)
+                    {
+                        continue;
+                    }
+
+                    ulong programOffset = (ulong)range.ProgramOffset;
+                    ulong size = (ulong)range.Size;
+                    ulong nsoSize = nsoSizes[range.CompactedIndex];
+
+                    if (programOffset > nsoSize || size > nsoSize - programOffset)
+                    {
+                        continue;
+                    }
+
+                    ulong startBase = nsoBase[range.CompactedIndex];
+
+                    if (startBase > ulong.MaxValue - programOffset)
+                    {
+                        continue;
+                    }
+
+                    ranges.Add((startBase + programOffset, size));
+                }
+            }
+
+            return MergeRanges(ranges);
+        }
 
         public static LibHac.Result RegisterProgramMapInfo(Switch device, IFileSystem partitionFileSystem)
         {
@@ -183,8 +277,10 @@ namespace Ryujinx.HLE.Loaders.Processes
                 context.Device.Gpu,
                 string.Empty,
                 string.Empty,
-                false,
+                string.Empty,
                 null,
+                false,
+                false,
                 codeAddress,
                 codeSize);
 
@@ -225,7 +321,9 @@ namespace Ryujinx.HLE.Loaders.Processes
             MetaLoader metaLoader,
             BlitStruct<ApplicationControlProperty> applicationControlProperties,
             bool diskCacheEnabled,
-            string diskCacheSelector,
+            string ptcCacheVariantSuffix,
+            bool[] wholeSlotModdedFlags,
+            IReadOnlyList<ModLoader.PatchedRange> patchRanges,
             bool allowCodeMemoryForJit,
             string name,
             ulong programId,
@@ -264,6 +362,7 @@ namespace Ryujinx.HLE.Loaders.Processes
             }
 
             ulong[] nsoBase = new ulong[executables.Length];
+            uint[] nsoSizes = new uint[executables.Length];
 
             for (int index = 0; index < executables.Length; index++)
             {
@@ -286,6 +385,7 @@ namespace Ryujinx.HLE.Loaders.Processes
                 }
 
                 nsoSize = BitUtils.AlignUp<uint>(nsoSize, KPageTableBase.PageSize);
+                nsoSizes[index] = nsoSize;
 
                 nsoBase[index] = codeStart + codeSize;
 
@@ -300,6 +400,8 @@ namespace Ryujinx.HLE.Loaders.Processes
                     codeSize += argsSize;
                 }
             }
+
+            List<(ulong Start, ulong Size)> moddedAddressRanges = BuildModdedAddressRanges(nsoBase, nsoSizes, wholeSlotModdedFlags, patchRanges);
 
             int codePagesCount = (int)(codeSize / KPageTableBase.PageSize);
             int personalMmHeapPagesCount = (int)(meta.SystemResourceSize / KPageTableBase.PageSize);
@@ -362,24 +464,23 @@ namespace Ryujinx.HLE.Loaders.Processes
                 return ProcessResult.Failed;
             }
 
-            string displayVersion;
+            string stockDisplayVersion = metaLoader.ProgramId > 0x0100000000007FFF
+                ? applicationControlProperties.Value.DisplayVersionString.ToString()
+                : device.System.ContentManager.GetCurrentFirmwareVersion()?.VersionString ?? string.Empty;
 
-            if (metaLoader.ProgramId > 0x0100000000007FFF)
-            {
-                displayVersion = applicationControlProperties.Value.DisplayVersionString.ToString();
-            }
-            else
-            {
-                displayVersion = device.System.ContentManager.GetCurrentFirmwareVersion()?.VersionString ?? string.Empty;
-            }
+            string displayVersion = string.IsNullOrEmpty(ptcCacheVariantSuffix)
+                ? stockDisplayVersion
+                : stockDisplayVersion + ptcCacheVariantSuffix;
 
             ArmProcessContextFactory processContextFactory = new(
                 context.Device.System.TickSource,
                 context.Device.Gpu,
                 $"{programId:x16}",
                 displayVersion,
+                stockDisplayVersion,
+                moddedAddressRanges,
+                context.Device.System.EnableStockProfileSidecarMining,
                 diskCacheEnabled,
-                diskCacheSelector,
                 codeStart,
                 codeSize);
 
