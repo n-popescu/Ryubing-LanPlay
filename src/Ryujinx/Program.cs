@@ -136,6 +136,16 @@ namespace Ryujinx.Ava
                             "Ryujinx is not intended to be run as administrator.", "Ok");
                         return 0;
                     }
+                    
+                    string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+                    
+                    if (Environment.CurrentDirectory.StartsWithIgnoreCase(downloadsPath))
+                    {
+                        Logger.Error?.PrintMsg(LogClass.Application, "Ryujinx is not intended to be run from the Downloads folder. Exiting...");
+                        macOSNativeInterop.SimpleMessageBox($"Ryujinx {Version}",
+                            "Ryujinx is not intended to be run from the Downloads folder.", "Ok");
+                        return 0;
+                    }
                 }
 
                 if (OperatingSystem.IsLinux())
