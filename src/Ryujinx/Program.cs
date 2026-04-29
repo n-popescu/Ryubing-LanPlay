@@ -137,13 +137,23 @@ namespace Ryujinx.Ava
                         return 0;
                     }
                     
-                    string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+                    string downloadFiles = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
                     
-                    if (Environment.CurrentDirectory.StartsWithIgnoreCase(downloadsPath))
+                    if (Environment.CurrentDirectory.StartsWithIgnoreCase(downloadFiles))
                     {
                         Logger.Error?.PrintMsg(LogClass.Application, "Ryujinx is not intended to be run from the Downloads folder. Exiting...");
                         macOSNativeInterop.SimpleMessageBox($"Ryujinx {Version}",
                             "Ryujinx is not intended to be run from the Downloads folder.", "Ok");
+                        return 0;
+                    }
+                    
+                    string icloudFiles = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library/Mobile Documents/com~apple~CloudDocs");
+                    
+                    if (Environment.CurrentDirectory.StartsWithIgnoreCase(icloudFiles))
+                    {
+                        Logger.Error?.PrintMsg(LogClass.Application, "Ryujinx is not intended to be run from the iCloud folder. Exiting...");
+                        macOSNativeInterop.SimpleMessageBox($"Ryujinx {Version}",
+                            "Ryujinx is not intended to be run from the iCloud folder.", "Ok");
                         return 0;
                     }
                 }
