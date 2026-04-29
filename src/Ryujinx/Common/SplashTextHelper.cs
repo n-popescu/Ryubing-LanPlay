@@ -29,6 +29,10 @@ namespace Ryujinx.Common
             if (string.IsNullOrEmpty(_Final_Splash))
             {
                 _Final_Splash = _Get_Lang_Json();
+                if (string.IsNullOrEmpty(_Final_Splash))
+                {
+                    _Final_Splash = "Splash Text";
+                }
             }
 
             return $"{_Final_Splash}";
