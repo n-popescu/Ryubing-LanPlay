@@ -31,7 +31,7 @@
   <br>
   This is not a Ryujinx revival project. This is not a Phoenix project.
   <br>
-  Guides and documentation can be found on the <a href="https://git.greemdev.net/projects/Ryubing/wiki/Home">Wiki tab</a>.
+  Guides and documentation can be found on the <a href="https://git.ryujinx.app/projects/Ryubing/wiki/Home">Wiki tab</a>.
 </p>
 
 <p align="center">

@@ -18,7 +18,7 @@ jobs:
            ref: master
 
       - name: Update labels based on changes
-        uses: actions/labeler@v5
+        uses: actions/labeler@v6
         with:
           repo-token: ${{ secrets.LABELER_TOKEN }}
           configuration-path: .forgejo/labeler.yml
