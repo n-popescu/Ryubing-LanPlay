@@ -191,7 +191,7 @@ namespace Ryujinx.Graphics.Gpu
 
             if (IsVulkanRenderer(_context.Renderer) && GraphicsConfigurationState.ActiveVulkanFloatPresentation)
             {
-                physicalMemory.TextureCache.AddPreferredFloatPresentRange(range);
+                physicalMemory.TextureCache.AddPreferredFloatPresentTarget(info, range);
             }
 
             _frameQueue.Enqueue(new PresentationTexture(
@@ -218,7 +218,6 @@ namespace Ryujinx.Graphics.Gpu
             if (_frameQueue.TryDequeue(out PresentationTexture pt))
             {
                 pt.AcquireCallback(_context, pt.UserObj);
-                pt.Cache.SetPreferredFloatPresentAddress(pt.Range);
 
                 TextureSearchFlags flags = TextureSearchFlags.WithUpscale;
 
@@ -235,8 +234,7 @@ namespace Ryujinx.Graphics.Gpu
                 }
                 finally
                 {
-                    pt.Cache.ClearPreferredFloatPresentAddress();
-                    pt.Cache.RemovePreferredFloatPresentRange(pt.Range);
+                    pt.Cache.RemovePreferredFloatPresentTarget(pt.Range);
                 }
 
                 pt.Cache.Tick();

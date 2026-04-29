@@ -20,7 +20,66 @@ namespace Ryujinx.Graphics.Gpu.Image
     /// </summary>
     class TextureCache : IDisposable
     {
-        private const ulong InvalidPreferredFloatPresentAddress = ulong.MaxValue;
+        private readonly struct PreferredFloatPresentTarget
+        {
+            public MemoryRange Range { get; }
+            public int Width { get; }
+            public int Height { get; }
+            public int Stride { get; }
+            public int GobBlocksInY { get; }
+            public int GobBlocksInZ { get; }
+            public int BytesPerPixel { get; }
+            public bool IsLinear { get; }
+
+            public PreferredFloatPresentTarget(TextureInfo info, MultiRange range)
+            {
+                Range = range.GetSubRange(0);
+                Width = info.Width;
+                Height = info.Height;
+                Stride = info.Stride;
+                GobBlocksInY = info.GobBlocksInY;
+                GobBlocksInZ = info.GobBlocksInZ;
+                BytesPerPixel = info.FormatInfo.BytesPerPixel;
+                IsLinear = info.IsLinear;
+            }
+
+            public bool Matches(TextureInfo info, ulong address, bool allowRangeMatch)
+            {
+                if (info.Target != Target.Texture2D ||
+                    info.DepthOrLayers != 1 ||
+                    info.Levels != 1 ||
+                    info.SamplesInX != 1 ||
+                    info.SamplesInY != 1)
+                {
+                    return false;
+                }
+
+                ulong endAddress = address + (ulong)info.CalculateSizeInfo().TotalSize;
+
+                bool addressMatches = allowRangeMatch
+                    ? address >= Range.Address && endAddress <= Range.EndAddress
+                    : address == Range.Address;
+
+                if (!addressMatches ||
+                    info.IsLinear != IsLinear ||
+                    info.FormatInfo.BytesPerPixel != BytesPerPixel)
+                {
+                    return false;
+                }
+
+                if (IsLinear)
+                {
+                    return info.Stride == Stride &&
+                        info.Width == Width &&
+                        info.Height == Height;
+                }
+
+                return info.GobBlocksInY == GobBlocksInY &&
+                    info.GobBlocksInZ == GobBlocksInZ &&
+                    info.Width == Width &&
+                    info.Height == Height;
+            }
+        }
 
         private readonly struct OverlapInfo
         {
@@ -41,9 +100,8 @@ namespace Ryujinx.Graphics.Gpu.Image
 
         private readonly GpuContext _context;
         private readonly PhysicalMemory _physicalMemory;
-        private ulong _preferredFloatPresentAddress = InvalidPreferredFloatPresentAddress;
-        private readonly object _preferredFloatPresentRangesLock = new();
-        private readonly List<MemoryRange> _preferredFloatPresentRanges = [];
+        private readonly object _preferredFloatPresentTargetsLock = new();
+        private readonly List<PreferredFloatPresentTarget> _preferredFloatPresentTargets = [];
 
         private readonly MultiRangeList<Texture> _textures;
         private readonly HashSet<Texture> _partiallyMappedTextures;
@@ -411,57 +469,38 @@ namespace Ryujinx.Graphics.Gpu.Image
             return texture;
         }
 
-        public void AddPreferredFloatPresentRange(MultiRange range)
+        public void AddPreferredFloatPresentTarget(TextureInfo info, MultiRange range)
         {
-            MemoryRange subRange = range.GetSubRange(0);
-
-            lock (_preferredFloatPresentRangesLock)
+            lock (_preferredFloatPresentTargetsLock)
             {
-                _preferredFloatPresentRanges.Add(subRange);
+                _preferredFloatPresentTargets.Add(new PreferredFloatPresentTarget(info, range));
             }
         }
 
-        public void SetPreferredFloatPresentAddress(MultiRange range)
-        {
-            _preferredFloatPresentAddress = range.GetSubRange(0).Address;
-        }
-
-        public void RemovePreferredFloatPresentRange(MultiRange range)
+        public void RemovePreferredFloatPresentTarget(MultiRange range)
         {
             MemoryRange subRange = range.GetSubRange(0);
 
-            lock (_preferredFloatPresentRangesLock)
+            lock (_preferredFloatPresentTargetsLock)
             {
-                for (int i = 0; i < _preferredFloatPresentRanges.Count; i++)
+                for (int i = 0; i < _preferredFloatPresentTargets.Count; i++)
                 {
-                    if (_preferredFloatPresentRanges[i] == subRange)
+                    if (_preferredFloatPresentTargets[i].Range == subRange)
                     {
-                        _preferredFloatPresentRanges.RemoveAt(i);
+                        _preferredFloatPresentTargets.RemoveAt(i);
                         break;
                     }
                 }
             }
         }
 
-        public void ClearPreferredFloatPresentAddress()
+        private bool HasPreferredFloatPresentTarget(TextureInfo info, ulong address, bool allowRangeMatch)
         {
-            _preferredFloatPresentAddress = InvalidPreferredFloatPresentAddress;
-        }
-
-        private bool HasPreferredFloatPresentAddress(ulong address)
-        {
-            return address == _preferredFloatPresentAddress;
-        }
-
-        private bool HasPreferredFloatPresentRange(ulong address)
-        {
-            lock (_preferredFloatPresentRangesLock)
+            lock (_preferredFloatPresentTargetsLock)
             {
-                for (int i = 0; i < _preferredFloatPresentRanges.Count; i++)
+                for (int i = 0; i < _preferredFloatPresentTargets.Count; i++)
                 {
-                    MemoryRange range = _preferredFloatPresentRanges[i];
-
-                    if (address >= range.Address && address < range.EndAddress)
+                    if (_preferredFloatPresentTargets[i].Matches(info, address, allowRangeMatch))
                     {
                         return true;
                     }
@@ -471,16 +510,11 @@ namespace Ryujinx.Graphics.Gpu.Image
             }
         }
 
-        public bool IsPreferredFloatPresentTarget(ulong address, bool allowRangeMatch = false)
-        {
-            return HasPreferredFloatPresentAddress(address) || (allowRangeMatch && HasPreferredFloatPresentRange(address));
-        }
-
         public bool ShouldRecreateAsFloatPresent(Texture texture, bool allowRangeMatch = false)
         {
             return GraphicsConfigurationState.ActiveVulkanFloatPresentation &&
                 !texture.ForceRenderTargetFloatHost &&
-                IsPreferredFloatPresentTarget(texture.Range.GetSubRange(0).Address, allowRangeMatch);
+                HasPreferredFloatPresentTarget(texture.Info, texture.Range.GetSubRange(0).Address, allowRangeMatch);
         }
 
         /// <summary>
@@ -782,7 +816,7 @@ namespace Ryujinx.Graphics.Gpu.Image
                 GraphicsConfigurationState.ActiveVulkanFloatPresentation &&
                 !isSamplerTexture &&
                 info.Target != Target.TextureBuffer &&
-                IsPreferredFloatPresentTarget(address, isCopyTexture))
+                HasPreferredFloatPresentTarget(info, address, isCopyTexture))
             {
                 useRenderTargetFloatHost = true;
             }
