@@ -77,14 +77,14 @@ namespace Ryujinx.Input.SDL3
 
         private SDL_Gamepad* _gamepadHandle;
 
-        private NinHdRumbleGamepad _hdRumble;
+        private NpadHdRumble _hdRumble;
 
         private float _triggerThreshold;
 
         public SDL3Gamepad(SDL_Gamepad* gamepadHandle, string driverId)
         {
             _gamepadHandle = gamepadHandle;
-            _hdRumble = NinHdRumbleGamepad.Create(gamepadHandle);
+            _hdRumble = NpadHdRumble.Create(gamepadHandle);
             _buttonsUserMapping = new List<ButtonMappingEntry>(20);
 
             Name = SDL_GetGamepadName(_gamepadHandle);

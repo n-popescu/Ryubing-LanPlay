@@ -63,7 +63,7 @@ namespace Ryujinx.Input.SDL3
 
         private SDL_Gamepad* _gamepadHandle;
         
-        private NinHdRumbleGamepad _hdRumble;
+        private NpadHdRumble _hdRumble;
 
         private enum JoyConType
         {
@@ -79,7 +79,7 @@ namespace Ryujinx.Input.SDL3
         public SDL3JoyCon(SDL_Gamepad* gamepadHandle, string driverId)
         {
             _gamepadHandle = gamepadHandle;
-            _hdRumble = NinHdRumbleGamepad.Create(gamepadHandle);
+            _hdRumble = NpadHdRumble.Create(gamepadHandle);
             _buttonsUserMapping = new List<ButtonMappingEntry>(10);
 
             Name = SDL_GetGamepadName(_gamepadHandle);

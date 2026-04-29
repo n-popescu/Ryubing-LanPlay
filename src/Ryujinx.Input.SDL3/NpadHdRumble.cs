@@ -8,18 +8,18 @@ namespace Ryujinx.Input.SDL3
     /// <summary>
     /// Manages a HID handle of a gamepad to encode and write HD rumble commands for Nin controllers.
     /// </summary>
-    public unsafe class NinHdRumbleGamepad : IDisposable
+    public unsafe class NpadHdRumble : IDisposable
     {
         private readonly SDL_hid_device* _hidHandle;
 
         private int _globalCount;
 
-        private NinHdRumbleGamepad(SDL_hid_device* hidHandle)
+        private NpadHdRumble(SDL_hid_device* hidHandle)
         {
             _hidHandle = hidHandle;
         }
 
-        public static NinHdRumbleGamepad Create(SDL_Gamepad* gamepadHandle)
+        public static NpadHdRumble Create(SDL_Gamepad* gamepadHandle)
         {
             ushort vendor = SDL_GetGamepadVendor(gamepadHandle);
             if (vendor != 0x057e)
@@ -33,7 +33,7 @@ namespace Ryujinx.Input.SDL3
                 return null;
             }
 
-            return new NinHdRumbleGamepad(SDL_hid_open(vendor, product, 0));
+            return new NpadHdRumble(SDL_hid_open(vendor, product, 0));
         }
 
         // Some of the code was translated from https://github.com/MIZUSHIKI/JoyShockLibrary-plus-HDRumble
