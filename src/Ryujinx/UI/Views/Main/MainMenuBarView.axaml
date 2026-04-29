@@ -211,7 +211,6 @@
                     IsVisible="{Binding ShowSkylanderActions}"
                     InputGesture="Ctrl + D"
                     IsEnabled="{Binding HasSkylander}" />
-                <Separator IsVisible="{Binding ShowSkylanderActions}"/>
                 <MenuItem 
                     Command="{Binding SimulateWakeUpMessage}" 
                     Header="{ext:Locale MenuBarOptionsSimulateWakeUpMessage}" 
