@@ -23,6 +23,7 @@ namespace Ryujinx.Graphics.Gpu.Image
         private readonly struct PreferredFloatPresentTarget
         {
             public MemoryRange Range { get; }
+            public Format Format { get; }
             public int Width { get; }
             public int Height { get; }
             public int Stride { get; }
@@ -34,6 +35,7 @@ namespace Ryujinx.Graphics.Gpu.Image
             public PreferredFloatPresentTarget(TextureInfo info, MultiRange range)
             {
                 Range = range.GetSubRange(0);
+                Format = info.FormatInfo.Format;
                 Width = info.Width;
                 Height = info.Height;
                 Stride = info.Stride;
@@ -61,6 +63,7 @@ namespace Ryujinx.Graphics.Gpu.Image
                     : address == Range.Address;
 
                 if (!addressMatches ||
+                    info.FormatInfo.Format != Format ||
                     info.IsLinear != IsLinear ||
                     info.FormatInfo.BytesPerPixel != BytesPerPixel)
                 {
@@ -1068,7 +1071,10 @@ namespace Ryujinx.Graphics.Gpu.Image
 
                     if (oInfo.Compatibility <= TextureViewCompatibility.LayoutIncompatible)
                     {
-                        if (!overlap.IsView && texture.DataOverlaps(overlap, oInfo.Compatibility))
+                        if (!texture.ForceRenderTargetFloatHost &&
+                            !overlap.ForceRenderTargetFloatHost &&
+                            !overlap.IsView &&
+                            texture.DataOverlaps(overlap, oInfo.Compatibility))
                         {
                             texture.Group.RegisterIncompatibleOverlap(new TextureIncompatibleOverlap(overlap.Group, oInfo.Compatibility), true);
                         }
@@ -1152,7 +1158,11 @@ namespace Ryujinx.Graphics.Gpu.Image
                     {
                         bool dataOverlaps = texture.DataOverlaps(overlap, compatibility);
 
-                        if (!overlap.IsView && dataOverlaps && !incompatibleOverlaps.Any(incompatible => incompatible.Group == overlap.Group))
+                        if (!texture.ForceRenderTargetFloatHost &&
+                            !overlap.ForceRenderTargetFloatHost &&
+                            !overlap.IsView &&
+                            dataOverlaps &&
+                            !incompatibleOverlaps.Any(incompatible => incompatible.Group == overlap.Group))
                         {
                             incompatibleOverlaps.Add(new TextureIncompatibleOverlap(overlap.Group, compatibility));
                         }
