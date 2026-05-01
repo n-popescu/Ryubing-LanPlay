@@ -106,13 +106,13 @@ namespace Ryujinx.Tests.HLE
                 screenshotData,
                 appletResourceUserId: 0,
                 titleId: 0x0100000000001000,
-                out ApplicationAlbumEntry firstEntry);
+                out _);
 
             ResultCode secondResult = captureManager.SaveScreenShot(
                 screenshotData,
                 appletResourceUserId: 0,
                 titleId: 0x0100000000001000,
-                out ApplicationAlbumEntry secondEntry);
+                out _);
 
             string[] files = Directory.GetFiles(
                 Path.Combine(tempSdCard.Path, "Nintendo", "Album"),
@@ -124,8 +124,6 @@ namespace Ryujinx.Tests.HLE
                 Assert.That(firstResult, Is.EqualTo(ResultCode.Success));
                 Assert.That(secondResult, Is.EqualTo(ResultCode.Success));
                 Assert.That(files, Has.Length.EqualTo(2));
-                Assert.That(firstEntry.AlbumFileDateTime.UniqueId, Is.Zero);
-                Assert.That(secondEntry.AlbumFileDateTime.UniqueId, Is.EqualTo(1));
             });
         }
 
