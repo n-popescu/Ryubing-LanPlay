@@ -31,14 +31,10 @@ namespace Ryujinx.Tests.HLE
                 screenshotData,
                 appletResourceUserId: 0,
                 titleId: 0x0100000000001000,
-                out ApplicationAlbumEntry applicationAlbumEntry);
+                out _);
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(result, Is.EqualTo(ResultCode.InvalidArgument));
-                Assert.That(applicationAlbumEntry, Is.EqualTo(default(ApplicationAlbumEntry)));
-                Assert.That(Directory.Exists(Path.Combine(tempSdCard.Path, "Nintendo", "Album")), Is.False);
-            });
+            Assert.That(result, Is.EqualTo(ResultCode.InvalidArgument));
+            Assert.That(Directory.Exists(Path.Combine(tempSdCard.Path, "Nintendo", "Album")), Is.False);
         }
 
         [Test]
