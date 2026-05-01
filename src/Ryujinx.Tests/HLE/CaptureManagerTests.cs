@@ -33,7 +33,7 @@ namespace Ryujinx.Tests.HLE
                 titleId: 0x0100000000001000,
                 out _);
 
-            Assert.That(result, Is.EqualTo(ResultCode.InvalidArgument));
+            Assert.That(result, Is.EqualTo(ResultCode.NullInputBuffer));
             Assert.That(Directory.Exists(Path.Combine(tempSdCard.Path, "Nintendo", "Album")), Is.False);
         }
 

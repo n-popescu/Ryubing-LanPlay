@@ -85,7 +85,7 @@ namespace Ryujinx.HLE.HOS.Services.Caps
                     LogClass.ServiceCaps,
                     $"Invalid screenshot buffer size 0x{screenshotData.Length:X}; expected at least 0x{ScreenshotDataSize:X}.");
 
-                return ResultCode.InvalidArgument;
+                return ResultCode.NullInputBuffer;
             }
 
             DateTime currentDateTime = DateTime.Now;
