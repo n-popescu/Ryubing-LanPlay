@@ -36,7 +36,7 @@ namespace Ryujinx.Tests.HLE
             Assert.Multiple(() =>
             {
                 Assert.That(result, Is.EqualTo(ResultCode.InvalidArgument));
-                Assert.That(applicationAlbumEntry, Is.EqualTo(default));
+                Assert.That(applicationAlbumEntry, Is.EqualTo(default(ApplicationAlbumEntry)));
                 Assert.That(Directory.Exists(Path.Combine(tempSdCard.Path, "Nintendo", "Album")), Is.False);
             });
         }
