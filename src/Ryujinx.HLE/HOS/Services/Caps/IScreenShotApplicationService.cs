@@ -45,7 +45,7 @@ namespace Ryujinx.HLE.HOS.Services.Caps
                     LogClass.ServiceCaps,
                     $"Invalid screenshot buffer size 0x{screenshotDataSize:X}; expected at least 0x{ScreenshotDataSize:X}.");
 
-                return ResultCode.InvalidArgument;
+                return ResultCode.NullInputBuffer;
             }
 
             byte[] screenshotData = context.Memory.GetSpan(screenshotDataPosition, (int)screenshotDataSize, true).ToArray();
@@ -90,7 +90,7 @@ namespace Ryujinx.HLE.HOS.Services.Caps
                     LogClass.ServiceCaps,
                     $"Invalid screenshot buffer size 0x{screenshotDataSize:X}; expected at least 0x{ScreenshotDataSize:X}.");
 
-                return ResultCode.InvalidArgument;
+                return ResultCode.NullInputBuffer;
             }
 
             // TODO: Parse the application data: At 0x00 it's UserData (Size of 0x400), at 0x404 it's a uint UserDataSize (Always empty for now).
@@ -135,7 +135,7 @@ namespace Ryujinx.HLE.HOS.Services.Caps
                     LogClass.ServiceCaps,
                     $"Invalid screenshot buffer size 0x{screenshotDataSize:X}; expected at least 0x{ScreenshotDataSize:X}.");
 
-                return ResultCode.InvalidArgument;
+                return ResultCode.NullInputBuffer;
             }
 
             // TODO: Parse the UserIdList.
