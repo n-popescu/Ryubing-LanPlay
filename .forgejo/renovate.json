@@ -6,17 +6,6 @@
   "enabledManagers": ["nuget", "github-actions"],
   "packageRules": [
     {
-      "matchDepNames": "Avalonia.*",
-      "matchDepTypes": "nuget",
-      "dependencyDashboardApproval": true
-    },
-    {
-      "matchDepNames": "FluentAvaloniaUI",
-      "matchDepTypes": "nuget",
-      "dependencyDashboardApproval": true
-    },
-    {
-      "matchDepNames": "FluentAvaloniaUI.*",
       "matchDepTypes": "nuget",
       "dependencyDashboardApproval": true
     },
