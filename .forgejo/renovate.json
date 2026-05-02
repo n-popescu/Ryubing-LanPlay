@@ -2,5 +2,18 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "renovate/config"
+  ],
+  "enabledManagers": ["nuget", "github-actions"],
+  "packageRules": [
+    {
+      "matchDepNames": "Avalonia.*",
+      "matchDepTypes": "nuget",
+      "dependencyDashboardApproval": true
+    },
+    {
+      "matchDepNames": "Gommon",
+      "matchDepTypes": "nuget",
+      "enabled": false
+    }
   ]
 }
