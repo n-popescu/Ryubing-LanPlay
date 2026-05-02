@@ -212,7 +212,7 @@ jobs:
       - macos_release
       - release
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         
       - name: Install GLI
         uses: actions/setup-gli@v1
