@@ -91,7 +91,7 @@ namespace Ryujinx.Ava.Systems
             }
 
             // If build URL not found, assume no new update is available.
-            if (_versionResponse.ArtifactUrl is null or "")
+            if (string.IsNullOrEmpty(_versionResponse.ArtifactUrl))
             {
                 if (showVersionUpToDate)
                 {
@@ -122,6 +122,8 @@ namespace Ryujinx.Ava.Systems
 
                 return default;
             }
+
+            _connectionCount = (int)_versionResponse.MaxConcurrency;
 
             return (currentVersion, newVersion);
         }
