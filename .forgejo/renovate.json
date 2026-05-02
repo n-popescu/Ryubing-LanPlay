@@ -11,6 +11,16 @@
       "dependencyDashboardApproval": true
     },
     {
+      "matchDepNames": "FluentAvaloniaUI",
+      "matchDepTypes": "nuget",
+      "dependencyDashboardApproval": true
+    },
+    {
+      "matchDepNames": "FluentAvaloniaUI.*",
+      "matchDepTypes": "nuget",
+      "dependencyDashboardApproval": true
+    },
+    {
       "matchDepNames": "Gommon",
       "matchDepTypes": "nuget",
       "enabled": false
