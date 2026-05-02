@@ -14,6 +14,21 @@
       "matchDepNames": "Gommon",
       "matchDepTypes": "nuget",
       "enabled": false
+    },
+    {
+      "description": "group Silk.NET packages",
+      "extends": ["renovate/config//groups/silkdotnet.json"],
+      "groupName": "Silk.NET"
+    },
+    {
+      "description": "group OpenTK packages",
+      "extends": ["renovate/config//groups/opentk.json"],
+      "groupName": "OpenTK"
+    },
+    {
+      "description": "group external Ryujinx packages",
+      "extends": ["renovate/config//groups/ryujinx.json"],
+      "groupName": "Ryujinx packages"
     }
   ]
 }
