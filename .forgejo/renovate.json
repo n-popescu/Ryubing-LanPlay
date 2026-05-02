@@ -34,11 +34,6 @@
       "description": "group OpenTK packages",
       "extends": ["renovate/config//groups/opentk.json"],
       "groupName": "OpenTK"
-    },
-    {
-      "description": "group external Ryujinx packages",
-      "extends": ["renovate/config//groups/ryujinx.json"],
-      "groupName": "Ryujinx packages"
     }
   ]
 }
