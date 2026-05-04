@@ -29,7 +29,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
                 {
                     ViewModel = new XciTrimmerViewModel(RyujinxApp.MainWindow.ViewModel)
                 },
-                Title = LocaleManager.Instance[LocaleKeys.XCITrimmerWindowTitle]
+                Title = LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerWindowTitle]
             };
 
             Style bottomBorder = new(x => x.OfType<Grid>().Name("DialogSpace").Child().OfType<Border>());

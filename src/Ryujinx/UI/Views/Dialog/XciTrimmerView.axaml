@@ -41,13 +41,13 @@
                                     <StackPanel>
                                         <RadioButton
                                             Checked="Sort_Checked"
-                                            Content="{ext:Locale XCITrimmerSortName}"
+                                            Content="{ext:Locale XCITrimmer_XCITrimmerSortName}"
                                             GroupName="Sort"
                                             IsChecked="{Binding IsSortedByName, Mode=OneTime}"
                                             Tag="Name" />
                                         <RadioButton
                                             Checked="Sort_Checked"
-                                            Content="{ext:Locale XCITrimmerSortSaved}"
+                                            Content="{ext:Locale XCITrimmer_XCITrimmerSortSaved}"
                                             GroupName="Sort"
                                             IsChecked="{Binding IsSortedBySaved, Mode=OneTime}"
                                             Tag="Saved" />
@@ -94,14 +94,14 @@
                         MinWidth="90"
                         Margin="5"
                         Command="{Binding SelectDisplayed}">
-                        <TextBlock Text="{ext:Locale XCITrimmerSelectDisplayed}" />
+                        <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerSelectDisplayed}" />
                     </Button>
                     <Button
                         Name="DeselectDisplayedButton"
                         MinWidth="90"
                         Margin="5"
                         Command="{Binding DeselectDisplayed}">
-                        <TextBlock Text="{ext:Locale XCITrimmerDeselectDisplayed}" />
+                        <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerDeselectDisplayed}" />
                     </Button>
                 </StackPanel>
             </Grid>
@@ -162,7 +162,7 @@
                                                 IsVisible="{Binding IsFailed}">
                                                 <TextBlock 
                                                     Classes="h1" 
-                                                    Text="{ext:Locale XCITrimmerTitleStatusFailed}" />
+                                                    Text="{ext:Locale XCITrimmer_XCITrimmerTitleStatusFailed}" />
                                                 <TextBlock 
                                                     Text="{Binding ., Converter={x:Static helpers:XCITrimmerFileStatusDetailConverter.Instance}}" 
                                                     MaxLines="5"
@@ -210,7 +210,7 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     MaxLines="1"
-                    Text="{ext:Locale XCITrimmerPotentialSavings}" />
+                    Text="{ext:Locale XCITrimmer_XCITrimmerPotentialSavings}" />
                 <TextBlock
                     Grid.Column="0"
                     Grid.Row="1"
@@ -219,7 +219,7 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     MaxLines="1"
-                    Text="{ext:Locale XCITrimmerActualSavings}" />
+                    Text="{ext:Locale XCITrimmer_XCITrimmerActualSavings}" />
                 <TextBlock
                     Grid.Column="1"
                     Grid.Row="0"
@@ -253,7 +253,7 @@
                         Margin="5"
                         Click="Trim"
                         IsEnabled="{Binding CanTrim}">
-                        <TextBlock Text="{ext:Locale XCITrimmerTrim}" />
+                        <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerTrim}" />
                     </Button>
                     <Button
                         Name="UntrimButton"
@@ -261,7 +261,7 @@
                         Margin="5"
                         Click="Untrim"
                         IsEnabled="{Binding CanUntrim}">
-                        <TextBlock Text="{ext:Locale XCITrimmerUntrim}" />
+                        <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerUntrim}" />
                     </Button>
                 </StackPanel>
                 <StackPanel

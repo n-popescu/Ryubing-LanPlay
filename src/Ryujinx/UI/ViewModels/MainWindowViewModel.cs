@@ -2317,7 +2317,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             if (notifyUser != null)
             {
                 await ContentDialogHelper.CreateWarningDialog(
-                    LocaleManager.Instance[LocaleKeys.TrimXCIFileFailedPrimaryText],
+                    LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimXCIFileFailedPrimaryText],
                     notifyUser
                 );
             }
@@ -2347,14 +2347,14 @@ namespace Ryujinx.Ava.UI.ViewModels
                 double currentFileSize = (double)trimmer.FileSizeB / 1024.0 / 1024.0;
                 double cartDataSize = (double)trimmer.DataSizeB / 1024.0 / 1024.0;
                 string secondaryText = LocaleManager.Instance.UpdateAndGetDynamicValue(
-                    LocaleKeys.TrimXCIFileDialogSecondaryText, currentFileSize, cartDataSize, savings);
+                    LocaleKeys.Dialog_XCITrimmer_TrimXCIFileDialogSecondaryText, currentFileSize, cartDataSize, savings);
 
                 UserResult result = await ContentDialogHelper.CreateConfirmationDialog(
-                    LocaleManager.Instance[LocaleKeys.TrimXCIFileDialogPrimaryText],
+                    LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimXCIFileDialogPrimaryText],
                     secondaryText,
                     LocaleManager.Instance[LocaleKeys.Continue],
                     LocaleManager.Instance[LocaleKeys.Cancel],
-                    LocaleManager.Instance[LocaleKeys.GameListContextMenuTrimXCI]
+                    LocaleManager.Instance[LocaleKeys.GameListContextMenu_TrimXCIButton]
                 );
 
                 if (result == UserResult.Yes)
@@ -2364,7 +2364,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                         Dispatcher.UIThread.Post(() =>
                         {
                             StatusBarProgressStatusText =
-                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBarXCIFileTrimming,
+                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_TrimmingXCIFile,
                                     Path.GetFileName(filename));
                             StatusBarProgressStatusVisible = true;
                             StatusBarProgressMaximum = 1;

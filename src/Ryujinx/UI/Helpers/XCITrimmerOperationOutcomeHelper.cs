@@ -9,17 +9,17 @@ namespace Ryujinx.Ava.UI.Helpers
         {
             public string LocalizedText => opOutcome switch
             {
-                OperationOutcome.NoTrimNecessary => LocaleManager.Instance[LocaleKeys.TrimXCIFileNoTrimNecessary],
-                OperationOutcome.NoUntrimPossible => LocaleManager.Instance[LocaleKeys.TrimXCIFileNoUntrimPossible],
+                OperationOutcome.NoTrimNecessary => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimXCIFileNoTrimNecessary],
+                OperationOutcome.NoUntrimPossible => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimXCIFileNoUntrimPossible],
                 OperationOutcome.ReadOnlyFileCannotFix => LocaleManager.Instance[
-                    LocaleKeys.TrimXCIFileReadOnlyFileCannotFix],
+                    LocaleKeys.Dialog_XCITrimmer_TrimXCIFileReadOnlyFileCannotFix],
                 OperationOutcome.FreeSpaceCheckFailed => LocaleManager.Instance[
-                    LocaleKeys.TrimXCIFileFreeSpaceCheckFailed],
-                OperationOutcome.InvalidXCIFile => LocaleManager.Instance[LocaleKeys.TrimXCIFileInvalidXCIFile],
-                OperationOutcome.FileIOWriteError => LocaleManager.Instance[LocaleKeys.TrimXCIFileFileIOWriteError],
-                OperationOutcome.FileSizeChanged => LocaleManager.Instance[LocaleKeys.TrimXCIFileFileSizeChanged],
-                OperationOutcome.Cancelled => LocaleManager.Instance[LocaleKeys.TrimXCIFileCancelled],
-                OperationOutcome.Undetermined => LocaleManager.Instance[LocaleKeys.TrimXCIFileFileUndertermined],
+                    LocaleKeys.Dialog_XCITrimmer_TrimXCIFileFreeSpaceCheckFailed],
+                OperationOutcome.InvalidXCIFile => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimXCIFileInvalidXCIFile],
+                OperationOutcome.FileIOWriteError => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimXCIFileFileIOWriteError],
+                OperationOutcome.FileSizeChanged => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimXCIFileFileSizeChanged],
+                OperationOutcome.Cancelled => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimXCIFileCancelled],
+                OperationOutcome.Undetermined => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimXCIFileFileUndertermined],
                 _ => null
             };
         }

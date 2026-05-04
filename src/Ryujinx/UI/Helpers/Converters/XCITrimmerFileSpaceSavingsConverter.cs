@@ -33,11 +33,11 @@ namespace Ryujinx.Ava.UI.Helpers
 
             if (app.CurrentSavingsB < app.PotentialSavingsB)
             {
-                return LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.TitleXCICanSaveLabel, ((app.PotentialSavingsB - app.CurrentSavingsB) / _bytesPerMB).CoerceAtLeast(0));
+                return LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.XCITrimmer_XCICanSaveLabel, ((app.PotentialSavingsB - app.CurrentSavingsB) / _bytesPerMB).CoerceAtLeast(0));
             }
             else
             {
-                return LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.TitleXCISavingLabel, (app.CurrentSavingsB / _bytesPerMB).CoerceAtLeast(0));
+                return LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.XCITrimmer_XCISavingLabel, (app.CurrentSavingsB / _bytesPerMB).CoerceAtLeast(0));
             }
         }
 

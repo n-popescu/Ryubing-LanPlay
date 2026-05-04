@@ -24,6 +24,31 @@
         "zh_CN": "系统固件版本：{0}",
         "zh_TW": "系統韌體版本: {0}"
       }
+    },
+    {
+      "ID": "TrimmingXCIFile",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "XCI-Datei trimmen: '{0}'",
+        "el_GR": "",
+        "en_US": "Trimming XCI File '{0}'",
+        "es_ES": "Recortando el Siguiente Archivo XCI: '{0}'",
+        "fr_FR": "Réduction du Fichier XCI '{0}'",
+        "he_IL": "",
+        "it_IT": "Riduzione della dimensione del file XCI '{0}'",
+        "ja_JP": "",
+        "ko_KR": "XCI 파일 '{0}' 트리밍",
+        "no_NO": "Trimming av XCI-filen '{0}'",
+        "pl_PL": "",
+        "pt_BR": "Reduzindo o Arquivo XCI '{0}'",
+        "ru_RU": "Обрезается XCI файл '{0}'",
+        "sv_SE": "Optimerar XCI-filen '{0}'",
+        "th_TH": "กำลังลดขนาดไฟล์ XCI '{0}'",
+        "tr_TR": "XCI dosyası kırpılıyor",
+        "uk_UA": "Обрізається XCI Файлів '{0}'",
+        "zh_CN": "正在瘦身 XCI 文件 '{0}'",
+        "zh_TW": "正在修剪 XCI 檔案 '{0}'"
+      }
     }
   ]
 }

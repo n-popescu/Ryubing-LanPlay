@@ -426,16 +426,16 @@ namespace Ryujinx.Ava.UI.ViewModels
                 {
                     return _processingMode switch
                     {
-                        ProcessingMode.Trimming => string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmerTitleStatusTrimming], DisplayedXCIFiles.Count),
-                        ProcessingMode.Untrimming => string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmerTitleStatusUntrimming], DisplayedXCIFiles.Count),
+                        ProcessingMode.Trimming => string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerTitleStatusTrimming], DisplayedXCIFiles.Count),
+                        ProcessingMode.Untrimming => string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerTitleStatusUntrimming], DisplayedXCIFiles.Count),
                         _ => string.Empty
                     };
                 }
                 else
                 {
                     return string.IsNullOrEmpty(Search) ?
-                        string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmerTitleStatusCount], SelectedXCIFiles.Count, AllXCIFiles.Count) :
-                        string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmerTitleStatusCountWithFilter], SelectedXCIFiles.Count, AllXCIFiles.Count, DisplayedXCIFiles.Count);
+                        string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerTitleStatusCount], SelectedXCIFiles.Count, AllXCIFiles.Count) :
+                        string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerTitleStatusCountWithFilter], SelectedXCIFiles.Count, AllXCIFiles.Count, DisplayedXCIFiles.Count);
                 }
             }
         }
@@ -466,8 +466,8 @@ namespace Ryujinx.Ava.UI.ViewModels
             {
                 return SortingField switch
                 {
-                    SortField.Name => LocaleManager.Instance[LocaleKeys.XCITrimmerSortName],
-                    SortField.Saved => LocaleManager.Instance[LocaleKeys.XCITrimmerSortSaved],
+                    SortField.Name => LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerSortName],
+                    SortField.Saved => LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerSortSaved],
                     _ => string.Empty,
                 };
             }
@@ -517,7 +517,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             get
             {
-                return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmerSavingsMb], AllXCIFiles.Sum(xci => xci.PotentialSavingsB / BytesPerMb));
+                return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerSavingsMb], AllXCIFiles.Sum(xci => xci.PotentialSavingsB / BytesPerMb));
             }
         }
 
@@ -525,7 +525,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             get
             {
-                return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmerSavingsMb], AllXCIFiles.Sum(xci => xci.CurrentSavingsB / BytesPerMb));
+                return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerSavingsMb], AllXCIFiles.Sum(xci => xci.CurrentSavingsB / BytesPerMb));
             }
         }
 
