@@ -2364,7 +2364,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                         Dispatcher.UIThread.Post(() =>
                         {
                             StatusBarProgressStatusText =
-                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_TrimmingXCIFile,
+                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_TrimmingXCI,
                                     Path.GetFileName(filename));
                             StatusBarProgressStatusVisible = true;
                             StatusBarProgressMaximum = 1;

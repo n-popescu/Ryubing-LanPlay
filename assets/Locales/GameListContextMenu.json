@@ -3,7 +3,7 @@
     {
       "ID": "TrimXCIButton",
       "Translations": {
-	    "ar_SA": "تقليم XCI",
+	      "ar_SA": "تقليم XCI",
         "de_DE": "Zuschneiden der XCI",
         "el_GR": "Κοπή XCI",
         "en_US": "Trim XCI",
@@ -13,7 +13,7 @@
         "it_IT": "Riduci il XCI",
         "ja_JP": "XCIをトリム",
         "ko_KR": "XCI 트림",
-        "no_NO": null,
+        "no_NO": "Trim XCI-filen",
         "pl_PL": "Przytnij XCI",
         "pt_BR": "Reduzir o XCI",
         "ru_RU": "Обрезать XCI",
