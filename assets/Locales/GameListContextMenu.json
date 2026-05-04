@@ -19,13 +19,11 @@
         "ru_RU": "Обрезать XCI",
         "sv_SE": "Optimera XCI",
         "th_TH": "ลดขนาด XCI",
-		"tr_TR": "XCI'yi Kırp",
+		    "tr_TR": "XCI'yi Kırp",
         "uk_UA": "Нарізка XCI",
         "zh_CN": "精简 XCI",
         "zh_TW": "修剪 XCI"
       }
     }
-
-   
   ]
 }
