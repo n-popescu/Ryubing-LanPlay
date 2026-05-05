@@ -1,7 +1,7 @@
 {
   "Locales": [
     {
-      "ID": "TitleStatusCount",
+      "ID": "StatusCount",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -26,7 +26,7 @@
       }
     },
     {
-      "ID": "TitleStatusCountWithFilter",
+      "ID": "StatusCountWithFilter",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -51,7 +51,7 @@
       }
     },
     {
-      "ID": "XCITrimmerTitleStatusTrimming",
+      "ID": "StatusTrimming",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -76,7 +76,7 @@
       }
     },
     {
-      "ID": "XCITrimmerTitleStatusUntrimming",
+      "ID": "StatusUntrimming",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -153,51 +153,51 @@
     {
       "ID": "XCITrimmerSelectDisplayed",
       "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Select Shown",
-        "es_ES": "Seleccionar Mostrado(s)",
-        "fr_FR": "Sélectionner Affiché",
-        "he_IL": "",
-        "it_IT": "Seleziona visualizzati",
-        "ja_JP": "",
-        "ko_KR": "표시됨 선택",
-        "no_NO": "Velg vist",
-        "pl_PL": "",
-        "pt_BR": "Marcar Todos",
-        "ru_RU": "Выбрать видимое",
-        "sv_SE": "Markera visade",
-        "th_TH": "เลือกรายการที่แสดง",
-        "tr_TR": "",
-        "uk_UA": "Вибрати показані",
-        "zh_CN": "选定显示的",
-        "zh_TW": "選擇已顯示"
+		    "ar_SA": "اختر الكل",
+        "de_DE": "Alles auswählen",
+        "el_GR": "Επιλογή όλων",
+        "en_US": "Select All",
+        "es_ES": "Seleccionar Todo",
+        "fr_FR": "Sélectionner Tout",
+        "he_IL": "בחר הכל",
+        "it_IT": "Seleziona tutto",
+        "ja_JP": "すべて選択",
+        "ko_KR": "모두 선택",
+        "no_NO": "Velg alle",
+        "pl_PL": "Zaznacz wszystko",
+        "pt_BR": "Selecionar tudo",
+        "ru_RU": "Выбрать все",
+        "sv_SE": "Markera alla",
+        "th_TH": "เลือกทั้งหมด",
+        "tr_TR": "Hepsini seç",
+        "uk_UA": "Вибрати все",
+        "zh_CN": "选择全部",
+        "zh_TW": "選擇全部"
       }
     },
     {
       "ID": "XCITrimmerDeselectDisplayed",
       "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Deselect Shown",
-        "es_ES": "Deseleccionar Mostrado(s)",
-        "fr_FR": "Désélectionner Affiché",
-        "he_IL": "",
-        "it_IT": "Deseleziona visualizzati",
-        "ja_JP": "",
-        "ko_KR": "표시됨 선택 취소",
-        "no_NO": "Opphev valg av Vist",
-        "pl_PL": "",
-        "pt_BR": "Desmarcar Todos",
-        "ru_RU": "Отменить выбор видимого",
-        "sv_SE": "Avmarkera visade",
-        "th_TH": "ยกเลิกการเลือกรายการที่แสดง",
-        "tr_TR": "",
-        "uk_UA": "Скасувати вибір показаного",
-        "zh_CN": "反选显示的",
-        "zh_TW": "取消選擇已顯示"
+        "ar_SA": "إلغاء تحديد",
+        "de_DE": "Abwählen",
+        "el_GR": "Αποεπιλογή",
+        "en_US": "Deselect",
+        "es_ES": "Deseleccionar",
+        "fr_FR": "Désélectionner",
+        "he_IL": "בטל בחירה",
+        "it_IT": "Deseleziona",
+        "ja_JP": "選択解除",
+        "ko_KR": "선택 취소",
+        "no_NO": "Avmarkere",
+        "pl_PL": "Odznacz",
+        "pt_BR": "Desmarcar",
+        "ru_RU": "Отменить выбор",
+        "sv_SE": "Avmarkera",
+        "th_TH": "ยกเลิกการเลือก",
+		    "tr_TR": "Kaldır",
+        "uk_UA": "Скасувати вибір",
+        "zh_CN": "取消选择",
+        "zh_TW": "取消選擇"
       }
     },
     {

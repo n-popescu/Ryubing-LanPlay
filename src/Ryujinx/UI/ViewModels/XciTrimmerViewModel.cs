@@ -93,6 +93,9 @@ namespace Ryujinx.Ava.UI.ViewModels
             SortAndFilter();
         }
 
+public bool AnySelected =>
+    _displayedXCIFiles.Any(xci => _selectedXCIFiles.Contains(xci));
+
         private void SortingChanged()
         {
             OnPropertiesChanged(
@@ -125,17 +128,31 @@ namespace Ryujinx.Ava.UI.ViewModels
             SortAndFilter();
         }
 
-        private void SelectionChanged(bool displayedChanged = true)
-        {
-            OnPropertiesChanged(
-                nameof(Status),
-                nameof(CanTrim),
-                nameof(CanUntrim),
-                nameof(SelectedXCIFiles));
+private void SelectionChanged(bool displayedChanged = true)
+{
+    OnPropertyChanged(nameof(Status));
+    OnPropertyChanged(nameof(CanTrim));
+    OnPropertyChanged(nameof(CanUntrim));
+    OnPropertyChanged(nameof(SelectedXCIFiles));
+OnPropertyChanged(nameof(AnySelected));
+    OnPropertyChanged(nameof(SelectToggleText));
 
-            if (displayedChanged)
-                OnPropertyChanged(nameof(SelectedDisplayedXCIFiles));
-        }
+    if (displayedChanged)
+        OnPropertyChanged(nameof(SelectedDisplayedXCIFiles));
+}
+
+public void ToggleSelect()
+{
+    if (AnySelected)
+        DeselectAll();
+    else
+        SelectAll();
+}
+        
+public string SelectToggleText =>
+    AnySelected
+        ? LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerDeselectDisplayed]
+        : LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerSelectDisplayed];
 
         private void ProcessingChanged()
         {

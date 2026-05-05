@@ -18,6 +18,12 @@ namespace Ryujinx.Ava.UI.Views.Dialog
             InitializeComponent();
         }
 
+        private void ToggleSelect(object sender, RoutedEventArgs e)
+{
+    if (DataContext is XciTrimmerViewModel vm)
+        vm.ToggleSelect();
+}
+
         public static async Task Show()
         {
             ContentDialog contentDialog = new()
