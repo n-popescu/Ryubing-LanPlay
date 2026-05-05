@@ -463,12 +463,12 @@ Dispatcher.UIThread.Post(() =>
                     return _processingMode switch
                     {
 ProcessingMode.Trimming => string.Format(
-    LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerTitleStatusTrimming],
+    LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusTrimming],
     _processingCurrent,
     _processingTotal),
 
 ProcessingMode.Untrimming => string.Format(
-    LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerTitleStatusUntrimming],
+    LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusUntrimming],
     _processingCurrent,
     _processingTotal),
                         _ => string.Empty
@@ -477,8 +477,8 @@ ProcessingMode.Untrimming => string.Format(
                 else
                 {
                     return string.IsNullOrEmpty(Search) ?
-                        string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_TitleStatusCount], SelectedXCIFiles.Count, AllXCIFiles.Count) :
-                        string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_TitleStatusCountWithFilter], SelectedXCIFiles.Count, AllXCIFiles.Count, DisplayedXCIFiles.Count);
+                        string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusCount], SelectedXCIFiles.Count, AllXCIFiles.Count) :
+                        string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusCountWithFilter], SelectedXCIFiles.Count, AllXCIFiles.Count, DisplayedXCIFiles.Count);
                 }
             }
         }
