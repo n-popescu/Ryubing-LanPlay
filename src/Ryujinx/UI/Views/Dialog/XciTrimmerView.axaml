@@ -25,20 +25,12 @@
                 Orientation="Horizontal"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center">
-                <Button
-                    Name="SelectAllButton"
-                    MinWidth="90"
-                    Margin="0,0,10,0"
-                    Command="{Binding SelectAll}">
-                    <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerSelectDisplayed}" />
-                </Button>
-                <Button
-                    Name="DeselectAllButton"
-                    MinWidth="90"
-                    Margin="0,0,0,0"
-                    Command="{Binding DeselectAll}">
-                    <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerDeselectDisplayed}" />
-                </Button>
+<Button
+    MinWidth="120"
+    Margin="0,0,10,0"
+    Click="ToggleSelect">
+    <TextBlock Text="{Binding SelectToggleText}" />
+</Button>
             </StackPanel>
             <StackPanel
                 Orientation="Horizontal"
