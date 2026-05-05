@@ -13,102 +13,101 @@
     x:DataType="viewModels:XciTrimmerViewModel"
     Focusable="True"
     mc:Ignorable="d">    
-    <Grid Margin="20 0 20 0" RowDefinitions="Auto,Auto,*,Auto,Auto">
+    <Grid Margin="25,10,25,0" RowDefinitions="Auto,Auto,*,Auto,Auto">
         <Panel
-            Margin="10 10 10 10"
+            Margin="0,0,0,10"
             Grid.Row="0">
             <TextBlock Text="{Binding Status}" />
         </Panel>
-        <Panel
-            Margin="0 0 10 10"
-            IsVisible="{Binding !Processing}"
-            Grid.Row="1">
-            <Grid ColumnDefinitions="Auto,*,Auto">
-                <StackPanel 
-                    Grid.Column="0"
-                    Orientation="Horizontal">
-                    <DropDownButton
-                        Width="150"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        Content="{Binding SortingFieldName}">
-                        <DropDownButton.Flyout>
-                            <Flyout Placement="Bottom">
-                                <StackPanel
-                                    Margin="0"
-                                    HorizontalAlignment="Stretch"
-                                    Orientation="Vertical">
-                                    <StackPanel>
-                                        <RadioButton
-                                            Checked="Sort_Checked"
-                                            Content="{ext:Locale XCITrimmer_XCITrimmerSortName}"
-                                            GroupName="Sort"
-                                            IsChecked="{Binding IsSortedByName, Mode=OneTime}"
-                                            Tag="Name" />
-                                        <RadioButton
-                                            Checked="Sort_Checked"
-                                            Content="{ext:Locale XCITrimmer_XCITrimmerSortSaved}"
-                                            GroupName="Sort"
-                                            IsChecked="{Binding IsSortedBySaved, Mode=OneTime}"
-                                            Tag="Saved" />
-                                    </StackPanel>
-                                    <Border
-                                        Width="60"
-                                        Height="2"
-                                        Margin="5"
-                                        HorizontalAlignment="Stretch"
-                                        BorderBrush="White"
-                                        BorderThickness="0,1,0,0">
-                                        <Separator Height="0" HorizontalAlignment="Stretch" />
-                                    </Border>
+        <Grid Margin="0,0,0,10" Grid.Row="1" IsVisible="{Binding !Processing}" ColumnDefinitions="Auto,*">
+            <StackPanel
+                Grid.Column="0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center">
+                <Button
+                    Name="SelectAllButton"
+                    MinWidth="90"
+                    Margin="0,0,10,0"
+                    Command="{Binding SelectAll}">
+                    <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerSelectDisplayed}" />
+                </Button>
+                <Button
+                    Name="DeselectAllButton"
+                    MinWidth="90"
+                    Margin="0,0,0,0"
+                    Command="{Binding DeselectAll}">
+                    <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerDeselectDisplayed}" />
+                </Button>
+            </StackPanel>
+            <StackPanel
+                Orientation="Horizontal"
+                Grid.Column="1"
+                HorizontalAlignment="Right">
+                <DropDownButton
+                    Width="150"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Content="{Binding SortingFieldName}">
+                    <DropDownButton.Flyout>
+                        <Flyout Placement="Bottom">
+                            <StackPanel
+                                Margin="0"
+                                HorizontalAlignment="Stretch"
+                                Orientation="Vertical">
+                                <StackPanel>
                                     <RadioButton
-                                        Checked="Order_Checked"
-                                        Content="{ext:Locale OrderAscending}"
-                                        GroupName="Order"
-                                        IsChecked="{Binding SortingAscending, Mode=OneTime}"
-                                        Tag="Ascending" />
+                                        Checked="Sort_Checked"
+                                        Content="{ext:Locale XCITrimmer_XCITrimmerSortName}"
+                                        GroupName="Sort"
+                                        IsChecked="{Binding IsSortedByName, Mode=OneTime}"
+                                        Tag="Name" />
                                     <RadioButton
-                                        Checked="Order_Checked"
-                                        Content="{ext:Locale OrderDescending}"
-                                        GroupName="Order"
-                                        IsChecked="{Binding !SortingAscending, Mode=OneTime}"
-                                        Tag="Descending" />
+                                        Checked="Sort_Checked"
+                                        Content="{ext:Locale XCITrimmer_XCITrimmerSortSaved}"
+                                        GroupName="Sort"
+                                        IsChecked="{Binding IsSortedBySaved, Mode=OneTime}"
+                                        Tag="Saved" />
                                 </StackPanel>
-                            </Flyout>
-                        </DropDownButton.Flyout>
-                    </DropDownButton>
-                </StackPanel>
+                                <Border
+                                    Width="60"
+                                    Height="2"
+                                    Margin="5"
+                                    HorizontalAlignment="Stretch"
+                                    BorderBrush="White"
+                                    BorderThickness="0,1,0,0">
+                                    <Separator Height="0" HorizontalAlignment="Stretch" />
+                                </Border>
+                                <RadioButton
+                                    Checked="Order_Checked"
+                                    Content="{ext:Locale OrderAscending}"
+                                    GroupName="Order"
+                                    IsChecked="{Binding SortingAscending, Mode=OneTime}"
+                                    Tag="Ascending" />
+                                <RadioButton
+                                    Checked="Order_Checked"
+                                    Content="{ext:Locale OrderDescending}"
+                                    GroupName="Order"
+                                    IsChecked="{Binding !SortingAscending, Mode=OneTime}"
+                                    Tag="Descending" />
+                            </StackPanel>
+                        </Flyout>
+                    </DropDownButton.Flyout>
+                </DropDownButton>
                 <TextBox
                     Grid.Column="1"
-                    MinHeight="29"
-                    MaxHeight="29"
-                    Margin="5 0 5 0"
-                    HorizontalAlignment="Stretch"
+                    Width="200"
+                    MaxWidth="200"
+                    Margin="5,0,0,0"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
                     Watermark="{ext:Locale Search}"
                     Text="{Binding Search}" />
-                <StackPanel
-                    Grid.Column="2"
-                    Orientation="Horizontal">
-                    <Button
-                        Name="SelectDisplayedButton"
-                        MinWidth="90"
-                        Margin="5"
-                        Command="{Binding SelectDisplayed}">
-                        <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerSelectDisplayed}" />
-                    </Button>
-                    <Button
-                        Name="DeselectDisplayedButton"
-                        MinWidth="90"
-                        Margin="5"
-                        Command="{Binding DeselectDisplayed}">
-                        <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerDeselectDisplayed}" />
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Panel>
+            </StackPanel>
+        </Grid>
         <Border
             Grid.Row="2"
-            Margin="0 0 0 10"
+            Margin="0,0,0,20"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             BorderBrush="{DynamicResource AppListHoverBackgroundColor}"
@@ -124,42 +123,47 @@
                 SelectedItems="{Binding SelectedDisplayedXCIFiles, Mode=OneWay}"
                 ItemsSource="{Binding DisplayedXCIFiles}"
                 IsEnabled="{Binding !Processing}">
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="Background" Value="Transparent" />
+                    </Style>
+                </ListBox.Styles>
                 <ListBox.DataTemplates>
                     <DataTemplate
                         DataType="models:XCITrimmerFileModel">
-                        <Panel Margin="10">
-                            <Grid ColumnDefinitions="65*,35*">
+                        <Grid ColumnDefinitions="65*,40*">
+                            <TextBlock
+                                Grid.Column="0"
+                                Margin="10,0,10,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                MaxLines="2"
+                                TextWrapping="Wrap"
+                                TextTrimming="CharacterEllipsis"
+                                Text="{Binding Name}">
+                            </TextBlock>
+                            <Grid Grid.Column="1" ColumnDefinitions="50*,70*">
+                                <ProgressBar
+                                    Height="10"
+                                    Margin="10,0,10,0"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    CornerRadius="5"
+                                    IsVisible="{Binding $parent[UserControl].((viewModels:XciTrimmerViewModel)DataContext).Processing}"
+                                    Maximum="100"
+                                    Minimum="0"
+                                    Value="{Binding PercentageProgress}" />
                                 <TextBlock
                                     Grid.Column="0"
-                                    Margin="10 0 10 0"
+                                    Margin="10,0,10,0"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
-                                    MaxLines="2"
-                                    TextWrapping="Wrap"
-                                    TextTrimming="CharacterEllipsis"
-                                    Text="{Binding Name}">
-                                </TextBlock>
-                                <Grid Grid.Column="1" ColumnDefinitions="45*,55*">
-                                    <ProgressBar
-                                        Height="10"
-                                        Margin="10 0 10 0"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Center"
-                                        CornerRadius="5"
-                                        IsVisible="{Binding $parent[UserControl].((viewModels:XciTrimmerViewModel)DataContext).Processing}"
-                                        Maximum="100"
-                                        Minimum="0"
-                                        Value="{Binding PercentageProgress}" />
-                                    <TextBlock
-                                        Grid.Column="0"
-                                        Margin="10 0 10 0"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        MaxLines="1"
-                                        Text="{Binding ., Converter={x:Static helpers:XCITrimmerFileStatusConverter.Instance}}">
+                                    MaxLines="1"
+                                    Text="{Binding ., Converter={x:Static helpers:XCITrimmerFileStatusConverter.Instance}}">
+                                    <ToolTip IsOpen="{Binding IsFailed}">
                                         <ToolTip.Tip>
-                                            <StackPanel
-                                                IsVisible="{Binding IsFailed}">
+                                            <StackPanel>
                                                 <TextBlock 
                                                     Classes="h1" 
                                                     Text="{ext:Locale XCITrimmer_XCITrimmerTitleStatusFailed}" />
@@ -172,74 +176,47 @@
                                                     TextWrapping="Wrap"/>
                                             </StackPanel>
                                         </ToolTip.Tip>
-                                    </TextBlock>
-                                    <TextBlock
-                                        Grid.Column="1"
-                                        Margin="10 0 10 0"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        MaxLines="1"
-                                        Text="{Binding ., Converter={x:Static helpers:XCITrimmerFileSpaceSavingsConverter.Instance}}">>
-                                    </TextBlock>
-                                </Grid>
+                                </ToolTip>
+                                </TextBlock>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Margin="10,0,10,0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    MaxLines="1"
+                                    Text="{Binding ., Converter={x:Static helpers:XCITrimmerFileSpaceSavingsConverter.Instance}}">
+                                </TextBlock>
                             </Grid>
-                        </Panel>
+                        </Grid>
                     </DataTemplate>
                 </ListBox.DataTemplates>
-                <ListBox.Styles>
-                    <Style Selector="ListBoxItem">
-                        <Setter Property="Background" Value="Transparent" />
-                    </Style>
-                </ListBox.Styles>
             </ListBox>
         </Border>
-        <Border
-            Grid.Row="3"
-            Margin="0 0 0 10"
-            HorizontalAlignment="Stretch"
-            BorderBrush="{DynamicResource AppListHoverBackgroundColor}"
-            BorderThickness="1"
-            CornerRadius="5"
-            Padding="2.5">
-            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
-                <TextBlock
-                    Grid.Column="0"
-                    Grid.Row="0"
-                    Classes="h1"
-                    Margin="5"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    MaxLines="1"
-                    Text="{ext:Locale XCITrimmer_XCITrimmerPotentialSavings}" />
-                <TextBlock
-                    Grid.Column="0"
-                    Grid.Row="1"
-                    Classes="h1"
-                    Margin="5"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    MaxLines="1"
-                    Text="{ext:Locale XCITrimmer_XCITrimmerActualSavings}" />
-                <TextBlock
-                    Grid.Column="1"
-                    Grid.Row="0"
-                    Margin="5"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    MaxLines="1"
-                    Text="{Binding PotentialSavings}" />
-                <TextBlock
-                    Grid.Column="1"
-                    Grid.Row="1"
-                    Margin="5"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    MaxLines="1"
-                    Text="{Binding ActualSavings}" />
-            </Grid>
-        </Border>
+        <StackPanel Grid.Row="3" Margin="0,0,0,20" Spacing="5" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+            <TextBlock
+                Classes="h1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                MaxLines="1"
+                Text="{ext:Locale XCITrimmer_TotalSavings}" />          
+            <TextBlock
+                Classes="h1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Regular"
+                MaxLines="1"
+                Text="{Binding ActualSavings}" />
+            <TextBlock
+                Classes="h1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Regular"
+                MaxLines="1"
+                Text="{Binding SavingsDifference}" />
+        </StackPanel>
         <Panel
             Grid.Row="4"
+            Margin="0,10,0,0"
             HorizontalAlignment="Stretch">
             <Grid ColumnDefinitions="*,Auto">
                 <StackPanel
@@ -250,7 +227,6 @@
                     <Button
                         Name="TrimButton"
                         MinWidth="90"
-                        Margin="5"
                         Click="Trim"
                         IsEnabled="{Binding CanTrim}">
                         <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerTrim}" />
@@ -258,7 +234,6 @@
                     <Button
                         Name="UntrimButton"
                         MinWidth="90"
-                        Margin="5"
                         Click="Untrim"
                         IsEnabled="{Binding CanUntrim}">
                         <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerUntrim}" />
@@ -272,7 +247,6 @@
                     <Button
                         Name="CancellingButton"
                         MinWidth="90"
-                        Margin="5"
                         Click="Cancel"
                         IsEnabled="False">
                         <Button.IsVisible>
@@ -286,7 +260,6 @@
                     <Button
                         Name="CancelButton"
                         MinWidth="90"
-                        Margin="5"
                         Click="Cancel">
                         <Button.IsVisible>
                             <MultiBinding Converter="{x:Static BoolConverters.And}">
@@ -299,10 +272,9 @@
                     <Button
                         Name="CloseButton"
                         MinWidth="90"
-                        Margin="5"
                         Click="Close"
                         IsVisible="{Binding !Processing}">
-                        <TextBlock Text="{ext:Locale InputDialogClose}" />
+                        <TextBlock Text="{ext:Locale SettingsButtonClose}" />
                     </Button>
                 </StackPanel>
             </Grid>
