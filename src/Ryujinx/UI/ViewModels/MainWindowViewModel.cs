@@ -2319,7 +2319,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             if (notifyUser != null)
             {
                 await ContentDialogHelper.CreateWarningDialog(
-                    LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_XCITrimFailedMessage],
+                    LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimFailedMessage],
                     notifyUser
                 );
             }

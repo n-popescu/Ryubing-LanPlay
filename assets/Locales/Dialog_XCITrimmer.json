@@ -50,7 +50,7 @@
       }
     },
     {
-      "ID": "NoTrimNecessaryMessage",
+      "ID": "TrimNotRequiredMessage",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -100,7 +100,7 @@
       }
     },
     {
-      "ID": "ReadOnlyXCICannotFixMessage",
+      "ID": "ReadOnlyFileCannotFixMessage",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -125,7 +125,7 @@
       }
     },
     {
-      "ID": "XCISizeChangedMessage",
+      "ID": "SizeChangedMessage",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -175,7 +175,7 @@
       }
     },
     {
-      "ID": "InvalidXCIMessage",
+      "ID": "InvalidDataMessage",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -200,7 +200,7 @@
       }
     },
     {
-      "ID": "XCIWriteErrorMessage",
+      "ID": "WriteErrorMessage",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -225,7 +225,7 @@
       }
     },
     {
-      "ID": "XCITrimFailedMessage",
+      "ID": "TrimFailedMessage",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -250,7 +250,7 @@
       }
     },
     {
-      "ID": "XCITrimCancelled",
+      "ID": "TrimCancelledMessage",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",

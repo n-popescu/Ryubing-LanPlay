@@ -9,14 +9,14 @@ namespace Ryujinx.Ava.UI.Helpers
         {
             public string LocalizedText => opOutcome switch
             {
-                OperationOutcome.NoTrimNecessary => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_NoTrimNecessaryMessage],
+                OperationOutcome.NoTrimNecessary => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimNotRequiredMessage],
                 OperationOutcome.NoUntrimPossible => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_NoUntrimPossibleMessage],
-                OperationOutcome.ReadOnlyFileCannotFix => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_ReadOnlyXCICannotFixMessage],
+                OperationOutcome.ReadOnlyFileCannotFix => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_ReadOnlyFileCannotFixMessage],
                 OperationOutcome.FreeSpaceCheckFailed => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_FreeSpaceCheckFailedMessage],
-                OperationOutcome.InvalidXCIFile => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_InvalidXCIMessage],
-                OperationOutcome.FileIOWriteError => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_XCIWriteErrorMessage],
-                OperationOutcome.FileSizeChanged => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_XCISizeChangedMessage],
-                OperationOutcome.Cancelled => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_XCITrimCancelled],
+                OperationOutcome.InvalidXCIFile => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_InvalidDataMessage],
+                OperationOutcome.FileIOWriteError => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_WriteErrorMessage],
+                OperationOutcome.FileSizeChanged => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_SizeChangedMessage],
+                OperationOutcome.Cancelled => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimCancelledMessage],
                 OperationOutcome.Undetermined => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_NoOperationPerformedMessage],
                 _ => null
             };
