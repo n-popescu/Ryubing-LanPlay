@@ -2345,11 +2345,11 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             if (trimmer.CanBeTrimmed)
             {
-                double savings = (double)trimmer.DiskSpaceSavingsB / 1024.0 / 1024.0;
-                double currentFileSize = (double)trimmer.FileSizeB / 1024.0 / 1024.0;
-                double cartDataSize = (double)trimmer.DataSizeB / 1024.0 / 1024.0;
+                int savings = (int)Math.Round((double)trimmer.DiskSpaceSavingsB / 1024.0 / 1024.0);
+                int currentFileSize = (int)Math.Round((double)trimmer.FileSizeB / 1024.0 / 1024.0);
+                int cartDataSize = (int)Math.Round((double)trimmer.DataSizeB / 1024.0 / 1024.0);
                 string secondaryText = LocaleManager.Instance.UpdateAndGetDynamicValue(
-                    LocaleKeys.Dialog_XCITrimmer_SecondaryMessage, currentFileSize, cartDataSize, savings);
+                    LocaleKeys.Dialog_XCITrimmer_SecondaryMessage, currentFileSize.ToString("0"), cartDataSize.ToString("0"), savings.ToString("0"));
 
                 UserResult result = await ContentDialogHelper.CreateConfirmationDialog(
                     LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_PrimaryMessage],
