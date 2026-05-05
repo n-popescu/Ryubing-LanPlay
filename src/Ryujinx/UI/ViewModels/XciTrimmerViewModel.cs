@@ -151,8 +151,8 @@ public void ToggleSelect()
         
 public string SelectToggleText =>
     AnySelected
-        ? LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerDeselectDisplayed]
-        : LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerSelectDisplayed];
+        ? LocaleManager.Instance[LocaleKeys.XCITrimmer_ClearSelectionButton]
+        : LocaleManager.Instance[LocaleKeys.XCITrimmer_SelectAllButton];
 
         private void ProcessingChanged()
         {
@@ -463,12 +463,12 @@ Dispatcher.UIThread.Post(() =>
                     return _processingMode switch
                     {
 ProcessingMode.Trimming => string.Format(
-    LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusTrimming],
+    LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusTrimmingLabel],
     _processingCurrent,
     _processingTotal),
 
 ProcessingMode.Untrimming => string.Format(
-    LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusUntrimming],
+    LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusUntrimmingLabel],
     _processingCurrent,
     _processingTotal),
                         _ => string.Empty
@@ -477,8 +477,8 @@ ProcessingMode.Untrimming => string.Format(
                 else
                 {
                     return string.IsNullOrEmpty(Search) ?
-                        string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusCount], SelectedXCIFiles.Count, AllXCIFiles.Count) :
-                        string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusCountWithFilter], SelectedXCIFiles.Count, AllXCIFiles.Count, DisplayedXCIFiles.Count);
+                        string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusCountLabel], SelectedXCIFiles.Count, AllXCIFiles.Count) :
+                        string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusCountWithFilterLabel], SelectedXCIFiles.Count, AllXCIFiles.Count, DisplayedXCIFiles.Count);
                 }
             }
         }
@@ -560,14 +560,14 @@ ProcessingMode.Untrimming => string.Format(
         {
             get
             {
-return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerSavingsMb], AllXCIFiles.Sum(xci => xci.PotentialSavingsB / BytesPerMb));            }
+return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_SavingsLabel], AllXCIFiles.Sum(xci => xci.PotentialSavingsB / BytesPerMb));            }
         }
 
         public string ActualSavings
         {
             get
             {
-return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerSavingsMb], AllXCIFiles.Sum(xci => xci.CurrentSavingsB / BytesPerMb));            }
+return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_SavingsLabel], AllXCIFiles.Sum(xci => xci.CurrentSavingsB / BytesPerMb));            }
         }
 
         public string SavingsDifference

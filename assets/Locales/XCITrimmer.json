@@ -1,7 +1,7 @@
 {
   "Locales": [
     {
-      "ID": "StatusCount",
+      "ID": "StatusCountLabel",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -26,7 +26,7 @@
       }
     },
     {
-      "ID": "StatusCountWithFilter",
+      "ID": "StatusCountWithFilterLabel",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -51,7 +51,7 @@
       }
     },
     {
-      "ID": "StatusTrimming",
+      "ID": "StatusTrimmingLabel",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -76,7 +76,7 @@
       }
     },
     {
-      "ID": "StatusUntrimming",
+      "ID": "StatusUntrimmingLabel",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -98,6 +98,56 @@
         "uk_UA": "Відновлення: {0}/{1}...",
         "zh_CN": "正在恢复：{0}/{1}...",
         "zh_TW": "正在恢復：{0}/{1}..."
+      }
+    },
+    {
+      "ID": "SelectAllButton",
+      "Translations": {
+		    "ar_SA": "اختر الكل",
+        "de_DE": "Alles auswählen",
+        "el_GR": "Επιλογή όλων",
+        "en_US": "Select All",
+        "es_ES": "Seleccionar Todo",
+        "fr_FR": "Sélectionner Tout",
+        "he_IL": "בחר הכל",
+        "it_IT": "Seleziona tutto",
+        "ja_JP": "すべて選択",
+        "ko_KR": "모두 선택",
+        "no_NO": "Velg alle",
+        "pl_PL": "Zaznacz wszystko",
+        "pt_BR": "Selecionar tudo",
+        "ru_RU": "Выбрать все",
+        "sv_SE": "Markera alla",
+        "th_TH": "เลือกทั้งหมด",
+        "tr_TR": "Hepsini seç",
+        "uk_UA": "Вибрати все",
+        "zh_CN": "选择全部",
+        "zh_TW": "選擇全部"
+      }
+    },
+    {
+      "ID": "ClearSelectionButton",
+      "Translations": {
+        "ar_SA": "مسح التحديد",
+        "de_DE": "Auswahl aufheben",
+        "el_GR": "Εκκαθάριση επιλογής",
+        "en_US": "Clear Selection",
+        "es_ES": "Borrar selección",
+        "fr_FR": "Effacer la sélection",
+        "he_IL": "נקה בחירה",
+        "it_IT": "Cancella selezione",
+        "ja_JP": "選択をクリア",
+        "ko_KR": "선택 해제",
+        "no_NO": "Fjern utvalg",
+        "pl_PL": "Wyczyść zaznaczenie",
+        "pt_BR": "Limpar seleção",
+        "ru_RU": "Очистить выделение",
+        "sv_SE": "Rensa markering",
+        "th_TH": "ล้างการเลือก",
+        "tr_TR": "Seçimi temizle",
+        "uk_UA": "Очистити вибір",
+        "zh_CN": "清除选择",
+        "zh_TW": "清除選擇"
       }
     },
     {
@@ -151,57 +201,7 @@
       }
     },
     {
-      "ID": "XCITrimmerSelectDisplayed",
-      "Translations": {
-		    "ar_SA": "اختر الكل",
-        "de_DE": "Alles auswählen",
-        "el_GR": "Επιλογή όλων",
-        "en_US": "Select All",
-        "es_ES": "Seleccionar Todo",
-        "fr_FR": "Sélectionner Tout",
-        "he_IL": "בחר הכל",
-        "it_IT": "Seleziona tutto",
-        "ja_JP": "すべて選択",
-        "ko_KR": "모두 선택",
-        "no_NO": "Velg alle",
-        "pl_PL": "Zaznacz wszystko",
-        "pt_BR": "Selecionar tudo",
-        "ru_RU": "Выбрать все",
-        "sv_SE": "Markera alla",
-        "th_TH": "เลือกทั้งหมด",
-        "tr_TR": "Hepsini seç",
-        "uk_UA": "Вибрати все",
-        "zh_CN": "选择全部",
-        "zh_TW": "選擇全部"
-      }
-    },
-    {
-      "ID": "XCITrimmerDeselectDisplayed",
-      "Translations": {
-        "ar_SA": "إلغاء تحديد",
-        "de_DE": "Abwählen",
-        "el_GR": "Αποεπιλογή",
-        "en_US": "Deselect",
-        "es_ES": "Deseleccionar",
-        "fr_FR": "Désélectionner",
-        "he_IL": "בטל בחירה",
-        "it_IT": "Deseleziona",
-        "ja_JP": "選択解除",
-        "ko_KR": "선택 취소",
-        "no_NO": "Avmarkere",
-        "pl_PL": "Odznacz",
-        "pt_BR": "Desmarcar",
-        "ru_RU": "Отменить выбор",
-        "sv_SE": "Avmarkera",
-        "th_TH": "ยกเลิกการเลือก",
-		    "tr_TR": "Kaldır",
-        "uk_UA": "Скасувати вибір",
-        "zh_CN": "取消选择",
-        "zh_TW": "取消選擇"
-      }
-    },
-    {
-      "ID": "XCIUntrimmableLabel",
+      "ID": "TrimmedLabel",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -226,7 +226,7 @@
       }
     },
     {
-      "ID": "XCITrimmableLabel",
+      "ID": "UntrimmedLabel",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -251,7 +251,7 @@
       }
     },
     {
-      "ID": "XCIPartialLabel",
+      "ID": "PartialLabel",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -276,7 +276,7 @@
       }
     },
     {
-      "ID": "XCIFailedLabel",
+      "ID": "FailedLabel",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -301,9 +301,9 @@
       }
     },
     {
-      "ID": "XCICanSaveLabel",
+      "ID": "SaveLabel",
       "Translations": {
-		"ar_SA": "حفظ {0} ميغابايت",
+        "ar_SA": "حفظ {0} ميغابايت",
         "de_DE": "Speichern {0} MB",
         "el_GR": "Αποθήκευση {0} MB",
         "en_US": "Save {0} MB",
@@ -316,38 +316,63 @@
         "no_NO": "Spare {0} MB",
         "pl_PL": "Zapisz {0} MB",
         "pt_BR": "Salvar {0} MB",
-		"ru_RU": "Освободить {0} Мб",
+        "ru_RU": "Освободить {0} Мб",
         "sv_SE": "Spara {0} MB",
         "th_TH": "บันทึก {0} เมกะไบต์",
         "tr_TR": "Kaydet {0} MB",
-		"uk_UA": "Зберегти {0} Мб",
+        "uk_UA": "Зберегти {0} Мб",
         "zh_CN": "能节约 {0} MB",
         "zh_TW": "可節省 {0} MB"
       }
     },
     {
-      "ID": "XCISavingLabel",
+      "ID": "SavedLabel",
+      "Translations": {
+		    "ar_SA": "تم حفظ {0} ميغابايت",
+        "de_DE": "Gespeichert {0} MB",
+        "el_GR": "Αποθηκεύτηκαν {0} MB",
+        "en_US": "Saved {0} MB",
+        "es_ES": "{0} MB Ahorrado(s)",
+        "fr_FR": "{0} Mo Économisés",
+        "he_IL": "נשמרו {0} מגה-בייט",
+        "it_IT": "Risparmiati {0} MB",
+        "ja_JP": "{0}MBが保存されました",
+        "ko_KR": "{0}MB 저장됨",
+        "no_NO": "Spart {0} Mb",
+        "pl_PL": "Zapisano {0} MB",
+        "pt_BR": "Salvo {0} Mb",
+		    "ru_RU": "Освобождено {0} Мб",
+        "sv_SE": "Sparade {0} Mb",
+        "th_TH": "บันทึกแล้ว {0} เมกะไบต์",
+        "tr_TR": "Kaydedildi {0} MB",
+		    "uk_UA": "Збережено {0} Мб",
+        "zh_CN": "节约了 {0} MB",
+        "zh_TW": "已節省 {0} MB"
+      }
+    },
+    {
+      "ID": "SavingsLabel",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
         "el_GR": "",
-        "en_US": "Saved {0:n0} Mb",
-        "es_ES": "{0:n0} Mb ahorrado(s)",
-        "fr_FR": "Sauvegardé {0:n0} Mo",
+        "en_US": "{0} MB",
+        "es_ES": null,
+        "fr_FR": "{0:n0} Mo",
         "he_IL": "",
-        "it_IT": "Risparmiati {0:n0} MB",
+        "it_IT": "{0:n0} MB",
         "ja_JP": "",
-        "ko_KR": "{0:n0}MB 저장됨",
-        "no_NO": "Spart {0:n0} Mb",
+        "ko_KR": "{0:n0}MB",
+        "no_NO": "",
         "pl_PL": "",
-        "pt_BR": "Salvo {0:n0} Mb",
-        "ru_RU": "Освобождено {0:n0} Мб",
-        "sv_SE": "Sparade {0:n0} Mb",
-        "th_TH": "บันทึกแล้ว {0:n0} เมกะไบต์",
+        "pt_BR": null,
+        "ru_RU": "{0:n0} Мб",
+        "sv_SE": null,
+        "th_TH": "{0:n0} เมกะไบต์",
         "tr_TR": "",
-        "uk_UA": "Збережено {0:n0} Мб",
-        "zh_CN": "节约了 {0:n0} Mb",
-        "zh_TW": "已節省 {0:n0} Mb"
+        "uk_UA": "{0:n0} Мб",
+        "zh_CN": null,
+        "zh_TW": null
       }
     },
     {
@@ -383,7 +408,7 @@
         "el_GR": "Εξοικονόμηση Χώρου:",
         "en_US": "Space Savings:",
         "es_ES": "Ahorro de Espacio:",
-		        "fr_FR": "Économie d’Espace :",
+		    "fr_FR": "Économie d’Espace :",
         "he_IL": "חיסכון במקום:",
         "it_IT": "Risparmio di Spazio:",
         "ja_JP": "空き容量の節約:",
@@ -401,82 +426,6 @@
       }
     },
     {
-      "ID": "XCITrimmerPotentialSavings",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Potential Savings",
-        "es_ES": "Ahorro Potencial",
-        "fr_FR": "Économies Potentielles",
-        "he_IL": "",
-        "it_IT": "Risparmio potenziale",
-        "ja_JP": "",
-        "ko_KR": "잠재적 비용 절감",
-        "no_NO": "Potensielle besparelser",
-        "pl_PL": "",
-        "pt_BR": "Economia Potencial",
-        "ru_RU": "Потенциальная экономия места",
-        "sv_SE": "Möjlig besparning",
-        "th_TH": "พื้นที่ประหยัดได้",
-        "tr_TR": "",
-        "uk_UA": "Потенційна економія",
-        "zh_CN": "潜在的储存空间节省",
-        "zh_TW": "潛在節省的儲存空間"
-      }
-    },
-    {
-      "ID": "XCITrimmerActualSavings",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Actual Savings",
-        "es_ES": "Ahorro Real",
-        "fr_FR": "Économies Réelles",
-        "he_IL": "",
-        "it_IT": "Risparmio effettivo",
-        "ja_JP": "",
-        "ko_KR": "실제 비용 절감",
-        "no_NO": "Faktiske besparelser",
-        "pl_PL": "",
-        "pt_BR": "Economia Real",
-        "ru_RU": "Фактическая экономия места",
-        "sv_SE": "Faktisk besparning",
-        "th_TH": "พื้นที่ที่ประหยัดจริง",
-        "tr_TR": "",
-        "uk_UA": "Зекономлено",
-        "zh_CN": "实际的储存空间节省",
-        "zh_TW": "實際節省的儲存空間"
-      }
-    },
-    {
-      "ID": "XCITrimmerSavingsMb",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "{0:n0} Mb",
-        "es_ES": null,
-        "fr_FR": "{0:n0} Mo",
-        "he_IL": "",
-        "it_IT": "{0:n0} MB",
-        "ja_JP": "",
-        "ko_KR": "{0:n0}MB",
-        "no_NO": "",
-        "pl_PL": "",
-        "pt_BR": null,
-        "ru_RU": "{0:n0} Мб",
-        "sv_SE": null,
-        "th_TH": "{0:n0} เมกะไบต์",
-        "tr_TR": "",
-        "uk_UA": "{0:n0} Мб",
-        "zh_CN": null,
-        "zh_TW": null
-      }
-    },
-
-        {
       "ID": "CanStillSaveMB",
       "Translations": {
         "ar_SA": "({0} MB المتبقية)",
@@ -492,11 +441,11 @@
         "no_NO": "({0} MB gjenstående)",
         "pl_PL": "({0} MB pozostałe)",
         "pt_BR": "({0} MB restantes)",
-		        "ru_RU": "(Осталось {0} Мб)",
+		    "ru_RU": "(Осталось {0} Мб)",
         "sv_SE": "({0} MB kvar)",
         "th_TH": "(เหลือ {0} MB)",
         "tr_TR": "({0} MB Kalan)",
-		        "uk_UA": "(Залишилося {0} Мб)",
+		    "uk_UA": "(Залишилося {0} Мб)",
         "zh_CN": "(剩余 {0} MB)",
         "zh_TW": "(剩餘 {0} MB)"
       }
