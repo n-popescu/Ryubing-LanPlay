@@ -228,7 +228,7 @@
     {
       "ID": "XCITrimmerButton",
       "Translations": {
-	        "ar_SA": "محرر XCI",
+	      "ar_SA": "محرر XCI",
         "de_DE": "XCI-Trimmer",
         "el_GR": "Επεξεργαστής XCI",
         "en_US": "XCI Trimmer",
@@ -240,14 +240,14 @@
         "ko_KR": "XCI 파일 트리머",
         "no_NO": "Trim XCI-filer",
         "pl_PL": "Przycinacz XCI",
-        "pt_BR": "Reduzir Arquivos XCI",
-        "ru_RU": "Обрезать XCI файлы",
-        "sv_SE": "Optimera XCI-filer",
-        "th_TH": "ตัดแต่งไฟล์ XCI",
-        "tr_TR": "",
-        "uk_UA": "Обрізати XCI файли",
-        "zh_CN": "瘦身 XCI 文件",
-        "zh_TW": "修剪 XCI 檔案"
+        "pt_BR": "Cortador de XCI",
+        "ru_RU": "Триммер XCI",
+        "sv_SE": "XCI-trimmer",
+        "th_TH": "ตัวตัด XCI",
+        "tr_TR": "XCI Kesici",
+        "uk_UA": "Тример XCI",
+        "zh_CN": "XCI 剪裁工具",
+        "zh_TW": "XCI 修剪工具"
       }
     },
     {

@@ -105,6 +105,7 @@
         CommandParameter="{Binding}"
 		Header="{ext:Locale GameListContextMenu_TrimXCIButton}"
         IsEnabled="{Binding TrimXCIEnabled}"
+        IsVisible="{Binding IsXCIFile}"
         Icon="{ext:Icon fa-solid fa-scissors}" />
     <MenuItem Header="{ext:Locale GameListContextMenuCacheManagement}" Icon="{ext:Icon fa-solid fa-memory}">
         <MenuItem

@@ -496,6 +496,8 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public bool HasCompatibilityEntry => SelectedApplication.HasPlayabilityInfo;
 
+        public bool IsXCIFile => Path.GetExtension(SelectedApplication.Path)?.ToLower() == ".xci";
+
         public bool HasDlc => ApplicationLibrary.HasDlcs(SelectedApplication.Id);
 
         public bool OpenUserSaveDirectoryEnabled => SelectedApplication.HasControlHolder &&
@@ -2317,7 +2319,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             if (notifyUser != null)
             {
                 await ContentDialogHelper.CreateWarningDialog(
-                    LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimXCIFileFailedPrimaryText],
+                    LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_XCITrimFailedMessage],
                     notifyUser
                 );
             }
@@ -2347,10 +2349,10 @@ namespace Ryujinx.Ava.UI.ViewModels
                 double currentFileSize = (double)trimmer.FileSizeB / 1024.0 / 1024.0;
                 double cartDataSize = (double)trimmer.DataSizeB / 1024.0 / 1024.0;
                 string secondaryText = LocaleManager.Instance.UpdateAndGetDynamicValue(
-                    LocaleKeys.Dialog_XCITrimmer_TrimXCIFileDialogSecondaryText, currentFileSize, cartDataSize, savings);
+                    LocaleKeys.Dialog_XCITrimmer_SecondaryMessage, currentFileSize, cartDataSize, savings);
 
                 UserResult result = await ContentDialogHelper.CreateConfirmationDialog(
-                    LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimXCIFileDialogPrimaryText],
+                    LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_PrimaryMessage],
                     secondaryText,
                     LocaleManager.Instance[LocaleKeys.Continue],
                     LocaleManager.Instance[LocaleKeys.Cancel],
