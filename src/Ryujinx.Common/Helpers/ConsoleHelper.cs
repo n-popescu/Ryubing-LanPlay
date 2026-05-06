@@ -12,11 +12,12 @@ namespace Ryujinx.Common.Helper
         private static partial nint GetConsoleWindow();
 
         [SupportedOSPlatform("windows")]
-        [LibraryImport("user32")]
+        [LibraryImport("kernel32", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static partial bool ShowWindow(nint hWnd, int nCmdShow);
+        private static partial bool FreeConsole();
 
         public static bool SetConsoleWindowStateSupported => OperatingSystem.IsWindows();
+        public static bool HasConsoleWindow => OperatingSystem.IsWindows() && GetConsoleWindow() != nint.Zero;
 
         public static void SetConsoleWindowState(bool show)
         {
@@ -33,18 +34,31 @@ namespace Ryujinx.Common.Helper
         [SupportedOSPlatform("windows")]
         private static void SetConsoleWindowStateWindows(bool show)
         {
-            const int SW_HIDE = 0;
-            const int SW_SHOW = 5;
-
-            nint hWnd = GetConsoleWindow();
-
-            if (hWnd == nint.Zero)
+            if (show)
             {
-                Logger.Warning?.Print(LogClass.Application, "Attempted to show/hide console window but console window does not exist");
+                if (GetConsoleWindow() != nint.Zero)
+                {
+                    Logger.SetConsoleTargetEnabled(true);
+                }
                 return;
             }
 
-            ShowWindow(hWnd, show ? SW_SHOW : SW_HIDE);
+            Logger.SetConsoleTargetEnabled(false);
+            DetachConsole();
+        }
+
+        [SupportedOSPlatform("windows")]
+        private static void DetachConsole()
+        {
+            if (GetConsoleWindow() == nint.Zero)
+            {
+                return;
+            }
+
+            if (!FreeConsole())
+            {
+                Logger.Warning?.Print(LogClass.Application, "Attempted to detach console window but the operation failed");
+            }
         }
     }
 }
