@@ -2067,7 +2067,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             Win32NativeInterop.SetWindowLongPtrW(hwnd, Win32NativeInterop.GWL_STYLE,
                 unchecked((nint)(Win32NativeInterop.WS_POPUP | Win32NativeInterop.WS_VISIBLE)));
 
-            var screen = Window.Screens.ScreenFromVisual(Window);
+            Avalonia.Platform.Screen? screen = Window.Screens.ScreenFromVisual(Window);
             int w = screen?.Bounds.Width ?? 0;
             int h = screen?.Bounds.Height ?? 0;
 
