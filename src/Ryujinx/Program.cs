@@ -85,7 +85,7 @@ namespace Ryujinx.Ava
             CoreDumpArg = coreDumpArg;
 
             // TODO: Ryujinx causes core dumps on Linux when it exits "uncleanly", eg. through an unhandled exception.
-            //       This is undesirable and causes very odd behavior during development (the process stops responding, 
+            //       This is undesirable and causes very odd behavior during development (the process stops responding,
             //       the .NET debugger freezes or suddenly detaches, /tmp/ gets filled etc.), unless explicitly requested by the user.
             //       This needs to be investigated, but calling prctl() is better than modifying system-wide settings or leaving this be.
             if (!coreDumpArg)
@@ -242,7 +242,7 @@ namespace Ryujinx.Ava
                     ConfigurationPath = appDataConfigurationPath;
                 }
             }
-        
+
             if (ConfigurationPath == null)
             {
                 // No configuration, we load the default values and save it to disk
@@ -313,28 +313,28 @@ namespace Ryujinx.Ava
                     _ => ConfigurationState.Instance.HideCursor,
                 };
 
-            // Check if memoryManagerMode was overridden. 
+            // Check if memoryManagerMode was overridden.
             if (CommandLineState.OverrideMemoryManagerMode is not null)
                 if (Enum.TryParse(CommandLineState.OverrideMemoryManagerMode, true, out MemoryManagerMode result))
                 {
                     ConfigurationState.Instance.System.MemoryManagerMode.Value = result;
                 }
 
-            // Check if PPTC was overridden. 
+            // Check if PPTC was overridden.
             if (CommandLineState.OverridePPTC is not null)
                 if (Enum.TryParse(CommandLineState.OverridePPTC, true, out bool result))
                 {
                     ConfigurationState.Instance.System.EnablePtc.Value = result;
                 }
 
-            // Check if region was overridden. 
+            // Check if region was overridden.
             if (CommandLineState.OverrideSystemRegion is not null)
                 if (Enum.TryParse(CommandLineState.OverrideSystemRegion, true, out Region result))
                 {
                     ConfigurationState.Instance.System.Region.Value = result;
                 }
 
-            //Check if language was overridden. 
+            //Check if language was overridden.
             if (CommandLineState.OverrideSystemLanguage is not null)
                 if (Enum.TryParse(CommandLineState.OverrideSystemLanguage, true, out Language result))
                 {
