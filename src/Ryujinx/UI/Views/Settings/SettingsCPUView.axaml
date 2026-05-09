@@ -101,7 +101,7 @@
                             Text="{ext:Locale SettingsTabSystemTurboMultiplier}"
                             ToolTip.Tip="{ext:Locale SettingsTabSystemTurboMultiplierToolTip}"
                             Width="250" />
-                        <ui:NumberBox ToolTip.Tip="{ext:Locale SettingsTabSystemTurboMultiplierValueToolTip}"
+                        <ui:FANumberBox ToolTip.Tip="{ext:Locale SettingsTabSystemTurboMultiplierValueToolTip}"
                                       Value="{Binding TurboMultiplier}"
                                       Width="165"
                                       SmallChange="1.0"

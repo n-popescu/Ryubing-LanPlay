@@ -7,6 +7,7 @@ using Ryujinx.Ava.UI.ViewModels;
 using Ryujinx.HLE.FileSystem;
 using SkiaSharp;
 using System.IO;
+using NavigationEventArgs = FluentAvalonia.UI.Navigation.FANavigationEventArgs;
 
 namespace Ryujinx.Ava.UI.Views.User
 {
@@ -26,7 +27,7 @@ namespace Ryujinx.Ava.UI.Views.User
         {
             InitializeComponent();
 
-            AddHandler(Frame.NavigatedToEvent, (s, e) =>
+            AddHandler(FAFrame.NavigatedToEvent, (s, e) =>
             {
                 NavigatedTo(e);
             }, RoutingStrategies.Direct);
@@ -36,7 +37,7 @@ namespace Ryujinx.Ava.UI.Views.User
         {
             if (Program.PreviewerDetached)
             {
-                if (arg.NavigationMode == NavigationMode.New)
+                if (arg.NavigationMode == FANavigationMode.New)
                 {
                     (_parent, _profile) = ((NavigationDialogHost, TempProfile))arg.Parameter;
                     ContentManager = _parent.ContentManager;

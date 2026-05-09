@@ -29,7 +29,7 @@
                      Name="SearchBoxFlush" 
                      Margin="0, 5, 0, 5" 
                      HorizontalAlignment="Stretch" 
-                     Watermark="{ext:Locale LdnGameListSearchBoxWatermark}"
+                     PlaceholderText="{ext:Locale LdnGameListSearchBoxWatermark}"
                      TextChanged="TextBox_OnTextChanged"/>
             <Button 
                 Grid.Column="2" 
@@ -53,7 +53,7 @@
                 VerticalAlignment="Stretch" 
                 IsEnabled="{Binding !IsRefreshing}"
                 ToolTip.Tip="{ext:Locale LdnGameListRefreshToolTip}">
-                <facontrols:SymbolIcon Symbol="Refresh" />
+                <facontrols:FASymbolIcon Symbol="Refresh" />
             </Button>
             <StackPanel Grid.Column="4" Orientation="Horizontal" Margin="10, 5, 0, 5">
                 <DropDownButton
@@ -138,7 +138,7 @@
         <!-- UI NormalControls -->
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto" Name="NormalControls">
             <TextBox Name="SearchBoxNormal" Grid.Column="0" Margin="20, 5, 0, 5" HorizontalAlignment="Stretch" 
-                     Watermark="{ext:Locale LdnGameListSearchBoxWatermark}" TextChanged="TextBox_OnTextChanged" />
+                     PlaceholderText="{ext:Locale LdnGameListSearchBoxWatermark}" TextChanged="TextBox_OnTextChanged" />
             <Button 
                 Grid.Column="1" 
                 Name="InfoNormal" 
@@ -151,7 +151,7 @@
                 Content="{ext:Icon fa-solid fa-info}"
                 ToolTip.Tip="{ext:Locale LdnGameListInfoButtonToolTip}"/>
             <Button Grid.Column="2" Name="RefreshNormal" Margin="10, 5, 0, 5" MinWidth="32" MinHeight="32" ClipToBounds="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsEnabled="{Binding !IsRefreshing}">
-                <facontrols:SymbolIcon Symbol="Refresh" />
+                <facontrols:FASymbolIcon Symbol="Refresh" />
             </Button>
             <StackPanel Grid.Column="3" Orientation="Horizontal" Margin="10, 5, 0, 5">
                 <DropDownButton

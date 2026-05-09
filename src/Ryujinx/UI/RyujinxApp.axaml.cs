@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
@@ -46,7 +47,7 @@ namespace Ryujinx.Ava
             return clipboard != null;
         }
 
-        public static void SetTaskbarProgress(TaskBarProgressBarState state) => MainWindow.PlatformFeatures.SetTaskBarProgressBarState(state);
+        public static void SetTaskbarProgress(FATaskBarProgressBarState state) => MainWindow.PlatformFeatures.SetTaskBarProgressBarState(state);
         public static void SetTaskbarProgressValue(ulong current, ulong total) => MainWindow.PlatformFeatures.SetTaskBarProgressBarValue(current, total);
         public static void SetTaskbarProgressValue(long current, long total) => SetTaskbarProgressValue(Convert.ToUInt64(current), Convert.ToUInt64(total));
 
@@ -58,6 +59,10 @@ namespace Ryujinx.Ava
             FAUISettings.SetAnimationsEnabledAtAppLevel(false);
 
             AvaloniaXamlLoader.Load(this);
+
+#if DEBUG
+            this.AttachDeveloperTools(options => options.Gesture = new KeyGesture(Key.F12, KeyModifiers.Control));
+#endif
 
             if (OperatingSystem.IsMacOS())
             {

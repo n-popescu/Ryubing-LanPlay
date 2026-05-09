@@ -77,7 +77,7 @@
                             VerticalAlignment="Center"
                             ToolTip.Tip="{ext:Locale ControllerSettingsCancelCurrentChangesToolTip}"
                             Command="{Binding RevertChanges}">
-                        <ui:SymbolIcon
+                        <ui:FASymbolIcon
                             Symbol="Cancel"
                             FontSize="15"
                             Height="20" />
@@ -122,7 +122,7 @@
                             </Style>
                         </ui:FAComboBox.Styles>
                     </ui:FAComboBox>
-                    <ui:SymbolIcon
+                    <ui:FASymbolIcon
                         Grid.Column="1"
                         Symbol="Link"
                         FontSize="12"
@@ -139,7 +139,7 @@
                         ToolTip.Tip="{ext:Locale ControllerSettingsBindProfileToolTip}"
                         IsEnabled="{Binding CanBindSelectedProfile}"
                         Click="LinkProfileButton_OnClick">
-                        <ui:SymbolIcon
+                        <ui:FASymbolIcon
                             Symbol="Link"
                             FontSize="15"
                             Height="20" />
@@ -152,7 +152,7 @@
                             ToolTip.Tip="{ext:Locale ControllerSettingsLoadProfileToolTip}"
                             IsEnabled="{Binding ShowSettings}"
                             Click="LoadProfileButton_OnClick">
-                        <ui:SymbolIcon
+                        <ui:FASymbolIcon
                             Symbol="OpenFolder"
                             FontSize="15"
                             Height="20" />
@@ -165,7 +165,7 @@
                             ToolTip.Tip="{ext:Locale ControllerSettingsSaveProfileToolTip}"
                             IsEnabled="{Binding CanDeleteOrSaveProfile}"
                             Command="{Binding SaveProfile}">
-                        <ui:SymbolIcon
+                        <ui:FASymbolIcon
                             Symbol="Save"
                             FontSize="15"
                             Height="20" />
@@ -178,7 +178,7 @@
                             ToolTip.Tip="{ext:Locale ControllerSettingsRemoveProfileToolTip}"
                             IsEnabled="{Binding CanDeleteOrSaveProfile}"
                             Command="{Binding RemoveProfile}">
-                        <ui:SymbolIcon
+                        <ui:FASymbolIcon
                             Symbol="Delete"
                             FontSize="15"
                             Height="20" />
@@ -219,7 +219,7 @@
                         VerticalAlignment="Center"
                         ToolTip.Tip="{ext:Locale ControllerSettingsRefresh}"
                         Command="{Binding RefreshInputDevices}">
-                        <ui:SymbolIcon
+                        <ui:FASymbolIcon
                             Symbol="Sync"
                             FontSize="15"
                             Height="20"/>
@@ -232,7 +232,7 @@
                         ToolTip.Tip="{ext:Locale ControllerSettingsAssignedInputDevicesTooltip}"
                         IsEnabled="{Binding CanOpenAssignedDevices}"
                         Click="AssignedDevicesButton_OnClick">
-                        <ui:SymbolIcon
+                        <ui:FASymbolIcon
                             Symbol="Settings"
                             FontSize="15"
                             Height="20"/>
@@ -245,7 +245,7 @@
                         ToolTip.Tip="{ext:Locale ControllerSettingsResetKeybindsToDefault}"
                         IsEnabled="{Binding ShowSettings}"
                         Click="ResetCurrentDeviceToDefaultsButton_OnClick">
-                        <ui:SymbolIcon
+                        <ui:FASymbolIcon
                             Symbol="Undo"
                             FontSize="15"
                             Height="20"/>

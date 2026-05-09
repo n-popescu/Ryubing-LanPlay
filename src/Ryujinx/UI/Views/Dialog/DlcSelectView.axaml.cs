@@ -22,7 +22,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
         {
             DlcSelectViewModel viewModel = new(selectedTitleId, appLibrary);
 
-            ContentDialog contentDialog = new()
+            FAContentDialog contentDialog = new()
             {
                 PrimaryButtonText = LocaleManager.Instance[LocaleKeys.Continue],
                 SecondaryButtonText = string.Empty,

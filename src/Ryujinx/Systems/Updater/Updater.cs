@@ -132,11 +132,11 @@ namespace Ryujinx.Ava.Systems
             
             string updateFile = Path.Combine(_updateDir, "update.bin");
 
-            TaskDialog taskDialog = new()
+            FATaskDialog taskDialog = new()
             {
                 Header = LocaleManager.Instance[LocaleKeys.RyujinxUpdater],
                 SubHeader = LocaleManager.Instance[LocaleKeys.UpdaterDownloading],
-                IconSource = new SymbolIconSource { Symbol = Symbol.Download },
+                IconSource = new FASymbolIconSource { Symbol = FASymbol.Download },
                 ShowProgressBar = true,
                 XamlRoot = RyujinxApp.MainWindow,
             };
@@ -239,7 +239,7 @@ namespace Ryujinx.Ava.Systems
             }
         }
 
-        private static void DoUpdateWithMultipleThreads(TaskDialog taskDialog, string downloadUrl, string updateFile)
+        private static void DoUpdateWithMultipleThreads(FATaskDialog taskDialog, string downloadUrl, string updateFile)
         {
             // Multi-Threaded Updater
             long chunkSize = _buildSize / _connectionCount;
@@ -283,7 +283,7 @@ namespace Ryujinx.Ava.Systems
                     Interlocked.Exchange(ref progressPercentage[index], args.ProgressPercentage);
                     Interlocked.Add(ref totalProgressPercentage, args.ProgressPercentage);
 
-                    taskDialog.SetProgressBarState(totalProgressPercentage / _connectionCount, TaskDialogProgressState.Normal);
+                    taskDialog.SetProgressBarState(totalProgressPercentage / _connectionCount, FATaskDialogProgressState.Normal);
                 };
 
                 client.DownloadDataCompleted += (_, args) =>
@@ -357,7 +357,7 @@ namespace Ryujinx.Ava.Systems
             }
         }
 
-        private static void DoUpdateWithSingleThreadWorker(TaskDialog taskDialog, string downloadUrl, string updateFile)
+        private static void DoUpdateWithSingleThreadWorker(FATaskDialog taskDialog, string downloadUrl, string updateFile)
         {
             using HttpClient client = new();
             // We do not want to timeout while downloading
@@ -383,7 +383,7 @@ namespace Ryujinx.Ava.Systems
 
                 bytesWritten += readSize;
 
-                taskDialog.SetProgressBarState(GetPercentage(bytesWritten, totalBytes), TaskDialogProgressState.Normal);
+                taskDialog.SetProgressBarState(GetPercentage(bytesWritten, totalBytes), FATaskDialogProgressState.Normal);
                 RyujinxApp.SetTaskbarProgressValue(bytesWritten, totalBytes);
 
                 updateFileStream.Write(buffer, 0, readSize);
@@ -398,7 +398,7 @@ namespace Ryujinx.Ava.Systems
             return max == 0 ? 0 : value / max * 100;
         }
 
-        private static void DoUpdateWithSingleThread(TaskDialog taskDialog, string downloadUrl, string updateFile)
+        private static void DoUpdateWithSingleThread(FATaskDialog taskDialog, string downloadUrl, string updateFile)
         {
             Thread worker = new(() => DoUpdateWithSingleThreadWorker(taskDialog, downloadUrl, updateFile))
             {
@@ -439,11 +439,11 @@ namespace Ryujinx.Ava.Systems
             archive.WriteToDirectory(outputDirectoryPath);
         }
 
-        private static void InstallUpdate(TaskDialog taskDialog, string updateFile)
+        private static void InstallUpdate(FATaskDialog taskDialog, string updateFile)
         {
             // Extract Update
             taskDialog.SubHeader = LocaleManager.Instance[LocaleKeys.UpdaterExtracting];
-            taskDialog.SetProgressBarState(0, TaskDialogProgressState.Normal);
+            taskDialog.SetProgressBarState(0, FATaskDialogProgressState.Normal);
 
             if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
             {
@@ -460,7 +460,7 @@ namespace Ryujinx.Ava.Systems
             
             // The new decompression implementations don't have a way to show progress
             // so the progressbar is just set to 100% after the decompression is done
-            taskDialog.SetProgressBarState(100, TaskDialogProgressState.Normal);
+            taskDialog.SetProgressBarState(100, FATaskDialogProgressState.Normal);
 
             // Delete downloaded zip
             File.Delete(updateFile);
@@ -468,7 +468,7 @@ namespace Ryujinx.Ava.Systems
             List<string> allFiles = EnumerateFilesToDelete().ToList();
 
             taskDialog.SubHeader = LocaleManager.Instance[LocaleKeys.UpdaterRenaming];
-            taskDialog.SetProgressBarState(0, TaskDialogProgressState.Normal);
+            taskDialog.SetProgressBarState(0, FATaskDialogProgressState.Normal);
 
             // NOTE: On macOS, replacement is delayed to the restart phase.
             if (!OperatingSystem.IsMacOS())
@@ -484,7 +484,7 @@ namespace Ryujinx.Ava.Systems
 
                         Dispatcher.UIThread.InvokeAsync(() =>
                         {
-                            taskDialog.SetProgressBarState(GetPercentage(count, allFiles.Count), TaskDialogProgressState.Normal);
+                            taskDialog.SetProgressBarState(GetPercentage(count, allFiles.Count), FATaskDialogProgressState.Normal);
                         });
                     }
                     catch
@@ -496,7 +496,7 @@ namespace Ryujinx.Ava.Systems
                 Dispatcher.UIThread.InvokeAsync(() =>
                 {
                     taskDialog.SubHeader = LocaleManager.Instance[LocaleKeys.UpdaterAddingFiles];
-                    taskDialog.SetProgressBarState(0, TaskDialogProgressState.Normal);
+                    taskDialog.SetProgressBarState(0, FATaskDialogProgressState.Normal);
                 });
 
                 MoveAllFilesOver(_updatePublishDir, _homeDir, taskDialog);
@@ -587,7 +587,7 @@ namespace Ryujinx.Ava.Systems
             return files.Where(f => !new FileInfo(f).Attributes.HasFlag(FileAttributes.Hidden | FileAttributes.System));
         }
 
-        private static void MoveAllFilesOver(string root, string dest, TaskDialog taskDialog)
+        private static void MoveAllFilesOver(string root, string dest, FATaskDialog taskDialog)
         {
             int total = Directory.GetFiles(root, "*", SearchOption.AllDirectories).Length;
             foreach (string directory in Directory.GetDirectories(root))
@@ -611,7 +611,7 @@ namespace Ryujinx.Ava.Systems
 
                 Dispatcher.UIThread.InvokeAsync(() =>
                 {
-                    taskDialog.SetProgressBarState(GetPercentage(count, total), TaskDialogProgressState.Normal);
+                    taskDialog.SetProgressBarState(GetPercentage(count, total), FATaskDialogProgressState.Normal);
                 });
             }
         }

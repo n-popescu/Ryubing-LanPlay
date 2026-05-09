@@ -55,7 +55,7 @@
                     <TextBlock VerticalAlignment="Center"
                                Text="{ext:Locale SettingsTabSystemAudioVolume}"
                                Width="250" />
-                    <ui:NumberBox Value="{Binding Volume}"
+                    <ui:FANumberBox Value="{Binding Volume}"
                             Width="350"
                             SmallChange="1"
                             LargeChange="10"

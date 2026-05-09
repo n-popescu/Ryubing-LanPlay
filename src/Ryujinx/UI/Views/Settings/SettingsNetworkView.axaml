@@ -55,7 +55,7 @@
                         Width="250"
                         MaxLength="16"
                         ToolTip.Tip="{ext:Locale LdnPassphraseInputTooltip}"
-                        Watermark="{ext:Locale LdnPassphraseInputPublic}" />
+                        PlaceholderText="{ext:Locale LdnPassphraseInputPublic}" />
                     <Button
                         Name="GenLdnPassButton"
                         Grid.Column="1"

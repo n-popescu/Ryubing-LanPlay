@@ -39,7 +39,7 @@
             <settings:SettingsLoggingView Name="LoggingPage" />
             <settings:SettingsHacksView Name="HacksPage" />
         </Grid>
-        <ui:NavigationView
+        <ui:FANavigationView
             Grid.Row="1"
             IsSettingsVisible="False"
             Name="NavPanel"
@@ -52,7 +52,7 @@
             IsPaneToggleButtonVisible="False">
 
             <!-- For image -->
-            <ui:NavigationView.PaneHeader>
+            <ui:FANavigationView.PaneHeader>
                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center" RowDefinitions="Auto,Auto,Auto,5">
                     <TextBlock Text="{Binding GameId}"
                                HorizontalAlignment="Center"
@@ -72,54 +72,54 @@
                         TextAlignment="Center" Grid.Row="2" />
                     <Separator Height="1" Grid.Row="3" Margin="0,0,0,10" HorizontalAlignment="Stretch"/>
                 </Grid>
-            </ui:NavigationView.PaneHeader>
+            </ui:FANavigationView.PaneHeader>
                       
-            <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem
+            <ui:FANavigationView.MenuItems>
+                <ui:FANavigationViewItem
                     IsSelected="True"
                     Content="{ext:Locale SettingsTabGeneral}"
                     Tag="UiPage"
                     IconSource="New" />
-                <ui:NavigationViewItem
+                <ui:FANavigationViewItem
                     Content="{ext:Locale SettingsTabInput}"
                     Tag="InputPage"
                     IconSource="Games" />
-                <ui:NavigationViewItem
+                <ui:FANavigationViewItem
                     Content="{ext:Locale SettingsTabSystem}"
                     Tag="SystemPage"
                     IconSource="Settings" />
-                <ui:NavigationViewItem
+                <ui:FANavigationViewItem
                     Content="{ext:Locale SettingsTabCpu}"
                     Tag="CpuPage">
-                    <ui:NavigationViewItem.IconSource>
-                        <ui:FontIconSource
+                    <ui:FANavigationViewItem.IconSource>
+                        <ui:FAFontIconSource
                             FontFamily="avares://Ryujinx/Assets/Fonts#Segoe Fluent Icons"
                             Glyph="{helpers:GlyphValueConverter Chip}" />
-                    </ui:NavigationViewItem.IconSource>
-                </ui:NavigationViewItem>
-                <ui:NavigationViewItem
+                    </ui:FANavigationViewItem.IconSource>
+                </ui:FANavigationViewItem>
+                <ui:FANavigationViewItem
                     Content="{ext:Locale SettingsTabGraphics}"
                     Tag="GraphicsPage"
                     IconSource="Image" />
-                <ui:NavigationViewItem
+                <ui:FANavigationViewItem
                     Content="{ext:Locale SettingsTabAudio}"
                     IconSource="Audio"
                     Tag="AudioPage" />
-                <ui:NavigationViewItem
+                <ui:FANavigationViewItem
                     Content="{ext:Locale SettingsTabNetwork}"
                     Tag="NetworkPage"
                     IconSource="Globe" />
-                <ui:NavigationViewItem
+                <ui:FANavigationViewItem
                     Content="{ext:Locale SettingsTabLogging}"
                     Tag="LoggingPage"
                     IconSource="Document" />
-                <ui:NavigationViewItem
+                <ui:FANavigationViewItem
                     IsVisible="{Binding ShowDirtyHacks}"
                     Content="Dirty Hacks"
                     Tag="HacksPage"
                     IconSource="Code" />
-            </ui:NavigationView.MenuItems>
-        </ui:NavigationView>
+            </ui:FANavigationView.MenuItems>
+        </ui:FANavigationView>
         <Grid Grid.Row="3"
            ColumnDefinitions="Auto,*,Auto">
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="10" Spacing="10">

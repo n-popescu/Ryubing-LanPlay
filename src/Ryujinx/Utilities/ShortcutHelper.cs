@@ -19,7 +19,7 @@ namespace Ryujinx.Ava.Utilities
 
             MemoryStream iconDataStream = new(iconData);
             using SKBitmap image = SKBitmap.Decode(iconDataStream);
-            image.Resize(new SKImageInfo(128, 128), SKFilterQuality.High);
+            image.Resize(new SKImageInfo(128, 128), new SKSamplingOptions(SKFilterMode.Linear));
             SaveBitmapAsIcon(image, iconPath);
 
             Shortcut shortcut = Shortcut.CreateShortcut(basePath, GetArgsString(applicationFilePath, applicationId, args), iconPath, 0);

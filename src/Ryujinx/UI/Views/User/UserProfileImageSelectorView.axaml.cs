@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using Avalonia.VisualTree;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 using Gommon;
@@ -14,6 +13,7 @@ using Ryujinx.HLE.FileSystem;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.IO;
+using NavigationEventArgs = FluentAvalonia.UI.Navigation.FANavigationEventArgs;
 
 namespace Ryujinx.Ava.UI.Views.User
 {
@@ -26,7 +26,7 @@ namespace Ryujinx.Ava.UI.Views.User
         public UserProfileImageSelectorView()
         {
             InitializeComponent();
-            AddHandler(Frame.NavigatedToEvent, (s, e) =>
+            AddHandler(FAFrame.NavigatedToEvent, (s, e) =>
             {
                 NavigatedTo(e);
             }, RoutingStrategies.Direct);
@@ -38,11 +38,11 @@ namespace Ryujinx.Ava.UI.Views.User
             {
                 switch (arg.NavigationMode)
                 {
-                    case NavigationMode.New:
+                    case FANavigationMode.New:
                         (_parent, _profile) = ((NavigationDialogHost, TempProfile))arg.Parameter;
                         _contentManager = _parent.ContentManager;
 
-                        ((ContentDialog)_parent.Parent).Title = $"{LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle]} - {LocaleManager.Instance[LocaleKeys.ProfileImageSelectionHeader]}";
+                        ((FAContentDialog)_parent.Parent)?.Title = $"{LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle]} - {LocaleManager.Instance[LocaleKeys.ProfileImageSelectionHeader]}";
 
                         if (Program.PreviewerDetached)
                         {
@@ -51,7 +51,7 @@ namespace Ryujinx.Ava.UI.Views.User
                         }
 
                         break;
-                    case NavigationMode.Back:
+                    case FANavigationMode.Back:
                         if (_profile.Image != null)
                         {
                             _parent.GoBack();
@@ -64,9 +64,8 @@ namespace Ryujinx.Ava.UI.Views.User
 
         private async void Import_OnClick(object sender, RoutedEventArgs e)
         {
-            Optional<IStorageFile> result = await ((Window)this.GetVisualRoot()!).StorageProvider.OpenSingleFilePickerAsync(new FilePickerOpenOptions
+            Optional<IStorageFile> result = await ((Window)TopLevel.GetTopLevel(this))!.StorageProvider.OpenSingleFilePickerAsync(new FilePickerOpenOptions
             {
-                AllowMultiple = false,
                 FileTypeFilter = new List<FilePickerFileType>
                 {
                     new(LocaleManager.Instance[LocaleKeys.Common_FilePicker_AllSupportedFormats])
@@ -80,7 +79,7 @@ namespace Ryujinx.Ava.UI.Views.User
 
             if (result.HasValue)
             {
-                _profile.Image = ProcessProfileImage(File.ReadAllBytes(result.Value.Path.LocalPath));
+                _profile.Image = ProcessProfileImage(await File.ReadAllBytesAsync(result.Value.Path.LocalPath));
                 _parent.GoBack();
             }
         }
@@ -102,7 +101,7 @@ namespace Ryujinx.Ava.UI.Views.User
         {
             using SKBitmap bitmap = SKBitmap.Decode(buffer);
 
-            SKBitmap resizedBitmap = bitmap.Resize(new SKImageInfo(256, 256), SKFilterQuality.High);
+            SKBitmap resizedBitmap = bitmap.Resize(new SKImageInfo(256, 256), new SKSamplingOptions(SKFilterMode.Linear));
 
             using MemoryStream streamJpg = new();
 

@@ -81,7 +81,7 @@ namespace Ryujinx.Ava.UI.Applet
                         LocaleManager.Instance[LocaleKeys.DialogOpenSettingsWindowLabel],
                         string.Empty,
                         LocaleManager.Instance[LocaleKeys.SettingsButtonClose],
-                        (int)Symbol.Important,
+                        (int)FASymbol.Important,
                         deferEvent,
                         async window =>
                         {

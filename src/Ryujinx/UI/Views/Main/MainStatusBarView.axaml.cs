@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -27,7 +28,7 @@ namespace Ryujinx.Ava.UI.Views.Main
         {
             base.OnAttachedToVisualTree(e);
 
-            if (VisualRoot is MainWindow window)
+            if (TopLevel.GetTopLevel(this) is MainWindow window)
             {
                 Window = window;
                 ViewModel = window.ViewModel;

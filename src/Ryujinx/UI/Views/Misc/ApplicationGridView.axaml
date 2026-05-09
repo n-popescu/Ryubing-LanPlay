@@ -76,7 +76,7 @@
                                 </Panel>
                             </Grid>
                         </Border>
-                        <ui:SymbolIcon
+                        <ui:FASymbolIcon
                             Margin="2.5,2.5,0,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
@@ -84,7 +84,7 @@
                             Foreground="{DynamicResource FavoriteApplicationIconColor}"
                             IsVisible="{Binding Favorite}"
                             Symbol="StarFilled" />
-                        <ui:SymbolIcon
+                        <ui:FASymbolIcon
                             Margin="0,2.5,2.5,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"

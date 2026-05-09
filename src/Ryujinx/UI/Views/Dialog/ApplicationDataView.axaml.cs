@@ -18,7 +18,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
     {
         public static async Task Show(ApplicationData appData)
         {
-            ContentDialog contentDialog = new()
+            FAContentDialog contentDialog = new()
             {
                 Title = appData.Name,
                 PrimaryButtonText = string.Empty,
@@ -42,7 +42,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
                 return;
 
             if (RyujinxApp.AppLifetime.Windows.TryGetFirst(x => x is ContentDialogOverlayWindow, out Window window))
-                window.Close(ContentDialogResult.None);
+                window.Close(FAContentDialogResult.None);
 
             await CompatibilityListWindow.Show((string)playabilityLabel.Tag);
         }

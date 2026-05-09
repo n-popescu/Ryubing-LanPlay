@@ -8,6 +8,7 @@ using Ryujinx.Ava.UI.Controls;
 using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Ava.UI.Models;
 using Ryujinx.HLE.HOS.Services.Account.Acc;
+using NavigationEventArgs = FluentAvalonia.UI.Navigation.FANavigationEventArgs;
 using UserProfile = Ryujinx.Ava.UI.Models.UserProfile;
 
 namespace Ryujinx.Ava.UI.Views.User
@@ -24,7 +25,7 @@ namespace Ryujinx.Ava.UI.Views.User
         public UserEditorView()
         {
             InitializeComponent();
-            AddHandler(Frame.NavigatedToEvent, (s, e) =>
+            AddHandler(FAFrame.NavigatedToEvent, (s, e) =>
             {
                 NavigatedTo(e);
             }, RoutingStrategies.Direct);
@@ -36,7 +37,7 @@ namespace Ryujinx.Ava.UI.Views.User
             {
                 switch (arg.NavigationMode)
                 {
-                    case NavigationMode.New:
+                    case FANavigationMode.New:
                         (NavigationDialogHost parent, UserProfile profile, bool isNewUser) = ((NavigationDialogHost parent, UserProfile profile, bool isNewUser))arg.Parameter;
                         _isNewUser = isNewUser;
                         _profile = profile;
@@ -46,7 +47,7 @@ namespace Ryujinx.Ava.UI.Views.User
                         break;
                 }
 
-                ((ContentDialog)_parent.Parent).Title = $"{LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle]} - " +
+                ((FAContentDialog)_parent.Parent).Title = $"{LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle]} - " +
                                                         $"{(_isNewUser ? LocaleManager.Instance[LocaleKeys.UserEditorTitleCreate] : LocaleManager.Instance[LocaleKeys.UserEditorTitle])}";
 
                 AddPictureButton.IsVisible = _isNewUser;

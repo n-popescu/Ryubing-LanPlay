@@ -29,7 +29,7 @@
                      Name="SearchBoxFlush" 
                      Margin="0, 5, 0, 5" 
                      HorizontalAlignment="Stretch" 
-                     Watermark="{ext:Locale CompatibilityListSearchBoxWatermarkWithCount}" 
+                     PlaceholderText="{ext:Locale CompatibilityListSearchBoxWatermarkWithCount}" 
                      TextChanged="TextBox_OnTextChanged"/>
             <StackPanel Grid.Column="2" Orientation="Horizontal"  Margin="10, 5, 0, 5">
                 <DropDownButton
@@ -46,13 +46,13 @@
                                 Orientation="Vertical">
                                 <StackPanel>
                                     <RadioButton
-                                        Checked="Sort_Name_Checked"
+                                        IsCheckedChanged="Sort_Name_Checked"
                                         Content="{ext:Locale GameListSortStatusNameAscending}"
                                         GroupName="Sort"
                                         IsChecked="{Binding IsSortedByTitle, Mode=OneTime}"
                                         Tag="0" />
                                     <RadioButton
-                                        Checked="Sort_Name_Checked"
+                                        IsCheckedChanged="Sort_Name_Checked"
                                         Content="{ext:Locale GameListSortStatusNameDescending}"
                                         GroupName="Sort"
                                         Tag="1" />
@@ -67,18 +67,18 @@
                                     <Separator Height="0" HorizontalAlignment="Stretch" />
                                 </Border>
                                 <RadioButton
-                                    Checked="Sort_Status_Checked"
+                                    IsCheckedChanged="Sort_Status_Checked"
                                     Content="{ext:Locale GameListSortStatusDisable}"
                                     GroupName="Order"
                                     IsChecked="{Binding IsSortedByStatus, Mode=OneTime}"
                                     Tag="0" />
                                 <RadioButton
-                                    Checked="Sort_Status_Checked"
+                                    IsCheckedChanged="Sort_Status_Checked"
                                     Content="{ext:Locale GameListSortStatusAscending}"
                                     GroupName="Order"
                                     Tag="1" />
                                 <RadioButton
-                                    Checked="Sort_Status_Checked"
+                                    IsCheckedChanged="Sort_Status_Checked"
                                     Content="{ext:Locale GameListSortStatusDescending}"
                                     GroupName="Order"
                                     Tag="2" />
@@ -94,7 +94,7 @@
 
         <!-- UI NormalControls -->
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto,Auto" Name="NormalControls">
-            <TextBox Name="SearchBoxNormal" Grid.Column="0" Margin="15, 5, 0, 5" HorizontalAlignment="Stretch" Watermark="{ext:Locale CompatibilityListSearchBoxWatermarkWithCount}" TextChanged="TextBox_OnTextChanged" />
+            <TextBox Name="SearchBoxNormal" Grid.Column="0" Margin="15, 5, 0, 5" HorizontalAlignment="Stretch" PlaceholderText="{ext:Locale CompatibilityListSearchBoxWatermarkWithCount}" TextChanged="TextBox_OnTextChanged" />
             <StackPanel Grid.Column="1" Orientation="Horizontal"  Margin="10, 5, 5, 5">
                 <DropDownButton
                     Width="150"
@@ -110,13 +110,13 @@
                                 Orientation="Vertical">
                                 <StackPanel>
                                     <RadioButton
-                                        Checked="Sort_Name_Checked"
+                                        IsCheckedChanged="Sort_Name_Checked"
                                         Content="{ext:Locale GameListSortStatusNameAscending}"
                                         GroupName="Sort"
                                         IsChecked="{Binding IsSortedByTitle, Mode=OneTime}"
                                         Tag="0" />
                                     <RadioButton
-                                        Checked="Sort_Name_Checked"
+                                        IsCheckedChanged="Sort_Name_Checked"
                                         Content="{ext:Locale GameListSortStatusNameDescending}"
                                         GroupName="Sort"
                                         Tag="1" />
@@ -131,18 +131,18 @@
                                     <Separator Height="0" HorizontalAlignment="Stretch" />
                                 </Border>
                                 <RadioButton
-                                    Checked="Sort_Status_Checked"
+                                    IsCheckedChanged="Sort_Status_Checked"
                                     Content="{ext:Locale GameListSortStatusDisable}"
                                     GroupName="Order"
                                     IsChecked="{Binding IsSortedByStatus, Mode=OneTime}"
                                     Tag="0" />
                                 <RadioButton
-                                    Checked="Sort_Status_Checked"
+                                    IsCheckedChanged="Sort_Status_Checked"
                                     Content="{ext:Locale GameListSortStatusAscending}"
                                     GroupName="Order"
                                     Tag="1" />
                                 <RadioButton
-                                    Checked="Sort_Status_Checked"
+                                    IsCheckedChanged="Sort_Status_Checked"
                                     Content="{ext:Locale GameListSortStatusDescending}"
                                     GroupName="Order"
                                     Tag="2" />

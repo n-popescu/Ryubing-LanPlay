@@ -116,7 +116,7 @@
                             <ComboBoxItem
                                 Content="{ext:Locale SettingsTabGraphicsResolutionScaleCustom}" />
                         </ComboBox>
-                        <ui:NumberBox
+                        <ui:FANumberBox
                             Margin="10,0,0,0"
                             ToolTip.Tip="{ext:Locale ResolutionScaleEntryTooltip}"
                             MinWidth="150"

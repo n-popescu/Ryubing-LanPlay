@@ -12,15 +12,17 @@ using System.Threading.Tasks;
 
 namespace Ryujinx.Ava.UI.Windows
 {
-    public abstract class StyleableAppWindow : AppWindow
+    public abstract class StyleableAppWindow : FAAppWindow
     {
         public static async Task ShowAsync(StyleableAppWindow appWindow, Window owner = null)
         {
+/*
 #if DEBUG
-            appWindow.AttachDevTools(new KeyGesture(Key.F12, KeyModifiers.Control));
+        appWindow.AttachDevTools(new KeyGesture(Key.F12, KeyModifiers.Control));
 #endif
-            await appWindow.ShowDialog(owner ?? RyujinxApp.MainWindow);
-        }
+*/
+        await appWindow.ShowDialog(owner ?? RyujinxApp.MainWindow);
+    }
 
         protected StyleableAppWindow(bool useCustomTitleBar = false, double? titleBarHeight = null)
         {
@@ -33,7 +35,7 @@ namespace Ryujinx.Ava.UI.Windows
             if (useCustomTitleBar)
             {
                 TitleBar.ExtendsContentIntoTitleBar = !ConfigurationState.Instance.ShowOldUI;
-                TitleBar.TitleBarHitTestType = ConfigurationState.Instance.ShowOldUI ? TitleBarHitTestType.Simple : TitleBarHitTestType.Complex;
+                TitleBar.TitleBarHitTestType = ConfigurationState.Instance.ShowOldUI ? FATitleBarHitTestType.Simple : FATitleBarHitTestType.Complex;
 
                 if (TitleBar.ExtendsContentIntoTitleBar && titleBarHeight != null)
                     TitleBar.Height = titleBarHeight.Value;
@@ -47,21 +49,23 @@ namespace Ryujinx.Ava.UI.Windows
             FlowDirection = LocaleManager.Instance.IsRTL() ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
         }
 
-        protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+        /* protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
             base.OnApplyTemplate(e);
 
             ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.SystemChrome | ExtendClientAreaChromeHints.OSXThickTitleBar;
-        }
+        } */
     }
 
     public abstract class StyleableWindow : Window
     {
         public static async Task ShowAsync(StyleableWindow window, Window owner = null)
         {
+/*
 #if DEBUG
             window.AttachDevTools(new KeyGesture(Key.F12, KeyModifiers.Control));
 #endif
+*/
             await window.ShowDialog(owner ?? RyujinxApp.MainWindow);
         }
 
@@ -81,11 +85,11 @@ namespace Ryujinx.Ava.UI.Windows
             FlowDirection = LocaleManager.Instance.IsRTL() ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
         }
 
-        protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+        /* protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
             base.OnApplyTemplate(e);
 
             ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.SystemChrome | ExtendClientAreaChromeHints.OSXThickTitleBar;
-        }
+        } */
     }
 }

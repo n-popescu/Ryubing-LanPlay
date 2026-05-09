@@ -24,11 +24,11 @@ namespace Ryujinx.Ava.Systems
 
             bool shouldRestart = true;
 
-            TaskDialog taskDialog = new()
+            FATaskDialog taskDialog = new()
             {
                 Header = LocaleManager.Instance[LocaleKeys.RyujinxRebooter],
                 SubHeader = LocaleManager.Instance[LocaleKeys.DialogRebooterMessage],
-                IconSource = new SymbolIconSource { Symbol = Symbol.Games },
+                IconSource = new FASymbolIconSource { Symbol = FASymbol.Games },
                 XamlRoot = RyujinxApp.MainWindow,
             };
 

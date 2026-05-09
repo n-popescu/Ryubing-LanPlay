@@ -26,7 +26,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 
         public static async Task Show()
         {
-            ContentDialog contentDialog = new()
+            FAContentDialog contentDialog = new()
             {
                 PrimaryButtonText = string.Empty,
                 SecondaryButtonText = string.Empty,
@@ -58,7 +58,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 
         private void Close(object sender, RoutedEventArgs e)
         {
-            ((ContentDialog)Parent!).Hide();
+            ((FAContentDialog)Parent!).Hide();
         }
 
         private void Cancel(Object sender, RoutedEventArgs e)
