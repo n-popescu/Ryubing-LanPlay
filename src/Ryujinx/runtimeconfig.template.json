@@ -1,0 +1,10 @@
+{
+  "configProperties": {
+    "System.GC.Concurrent": true,
+    "System.GC.RetainVM": true,
+    "System.GC.DynamicAdaptation": 0,
+    "System.GC.Server": true,
+    "System.GC.HeapCount": 4,
+    "System.GC.NoAffinitize": 0
+  }
+}
