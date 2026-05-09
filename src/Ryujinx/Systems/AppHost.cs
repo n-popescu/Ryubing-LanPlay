@@ -46,6 +46,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -662,6 +663,7 @@ namespace Ryujinx.Ava.Systems
 
             _chrono.Stop();
             _playTimer.Stop();
+            GCSettings.LatencyMode = GCLatencyMode.Interactive;
         }
 
         public void DisposeGpu()
@@ -916,6 +918,7 @@ namespace Ryujinx.Ava.Systems
                 appMetadata => appMetadata.UpdatePreGame()
             );
             _playTimer.Start();
+            GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
         }
 
         internal void Resume()
@@ -926,6 +929,7 @@ namespace Ryujinx.Ava.Systems
             _playTimer.Start();
             _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device?.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI);
             Logger.Info?.Print(LogClass.Emulation, "Emulation was resumed.");
+            GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
         }
 
         internal void Pause()
@@ -936,6 +940,7 @@ namespace Ryujinx.Ava.Systems
             _playTimer.Stop();
             _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device?.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI, LocaleManager.Instance[LocaleKeys.Paused]);
             Logger.Info?.Print(LogClass.Emulation, "Emulation was paused.");
+            GCSettings.LatencyMode = GCLatencyMode.Interactive;
         }
 
         private void InitEmulatedSwitch()
