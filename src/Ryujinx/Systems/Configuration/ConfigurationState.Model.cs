@@ -514,6 +514,19 @@ namespace Ryujinx.Ava.Systems.Configuration
             public ReactiveObject<List<InputConfig>> InputConfig { get; private set; }
 
             /// <summary>
+            /// Player-level input routing assignments.
+            /// NOTE: This keeps dynamic input swap and multi-device ownership attached to the player,
+            /// not to the currently edited keyboard/controller profile.
+            /// </summary>
+            public ReactiveObject<List<PlayerInputAssignment>> PlayerInputAssignments { get; private set; }
+
+            /// <summary>
+            /// Whether to allow mapping the same input device to multiple players.
+            /// This is a global setting shared across all players.
+            /// </summary>
+            public ReactiveObject<bool> AllowDuplicateDeviceAssignment { get; private set; }
+
+            /// <summary>
             /// The speed of spectrum cycling for the Rainbow LED feature.
             /// </summary>
             public ReactiveObject<float> RainbowSpeed { get; }
@@ -525,6 +538,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 DisableInputWhenOutOfFocus = new ReactiveObject<bool>();
                 Hotkeys = new ReactiveObject<KeyboardHotkeys>();
                 InputConfig = new ReactiveObject<List<InputConfig>>();
+                PlayerInputAssignments = new ReactiveObject<List<PlayerInputAssignment>>();
+                AllowDuplicateDeviceAssignment = new ReactiveObject<bool>();
                 RainbowSpeed = new ReactiveObject<float>();
                 RainbowSpeed.Event += (_, args) => Rainbow.Speed = args.NewValue;
             }
