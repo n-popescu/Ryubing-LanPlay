@@ -27,7 +27,7 @@
                 Width="300"
                 HorizontalAlignment="Stretch"
                 MaxLength="{Binding MaxProfileNameLength}"
-                Watermark="{ext:Locale ProfileNameSelectionWatermark}"
+                PlaceholderText="{ext:Locale ProfileNameSelectionWatermark}"
                 Text="{Binding Name}" />
             <TextBlock Name="IdText" Text="{ext:Locale UserProfilesUserId}" />
             <TextBox
@@ -47,7 +47,7 @@
                 BorderBrush="{DynamicResource AppListHoverBackgroundColor}"
                 BorderThickness="1">
                 <Panel>
-                    <ui:SymbolIcon
+                    <ui:FASymbolIcon
                         FontSize="60"
                         Width="96"
                         Height="96"
@@ -79,7 +79,7 @@
                 Width="50"
                 MinWidth="50"
                 Click="BackButton_Click">
-                <ui:SymbolIcon Symbol="Back" />
+                <ui:FASymbolIcon Symbol="Back" />
             </Button>
         </StackPanel>
         <StackPanel

@@ -23,7 +23,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
         {
             using AboutWindowViewModel viewModel = new();
 
-            ContentDialog contentDialog = new()
+            FAContentDialog contentDialog = new()
             {
                 PrimaryButtonText = string.Empty,
                 SecondaryButtonText = string.Empty,

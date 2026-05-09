@@ -21,7 +21,7 @@
             Spacing="5"
             Orientation="Horizontal"
             IsVisible="{Binding ShowBundledContentNotice}">
-            <ui:FontIcon
+            <ui:FAFontIcon
                 Margin="0"
                 HorizontalAlignment="Stretch"
                 FontFamily="avares://FluentAvalonia/Fonts#Symbols"
@@ -63,7 +63,7 @@
                     MinHeight="29"
                     MaxHeight="29"
                     HorizontalAlignment="Stretch"
-                    Watermark="{ext:Locale Common_Search_SearchWatermark}"
+                    PlaceholderText="{ext:Locale Common_Search_SearchWatermark}"
                     Text="{Binding Search}" />
             </Grid>
         </Panel>
@@ -123,7 +123,7 @@
                                         MinWidth="0"
                                         MinHeight="0"
                                         Click="OpenLocation">
-                                        <ui:SymbolIcon
+                                        <ui:FASymbolIcon
                                             Symbol="OpenFolder"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center" />
@@ -135,7 +135,7 @@
                                         MinWidth="0"
                                         MinHeight="0"
                                         Click="RemoveDLC">
-                                        <ui:SymbolIcon
+                                        <ui:FASymbolIcon
                                             Symbol="Cancel"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center" />

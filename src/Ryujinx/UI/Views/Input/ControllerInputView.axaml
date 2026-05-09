@@ -7,7 +7,7 @@
     xmlns:controls="clr-namespace:Ryujinx.Ava.UI.Controls"
     xmlns:viewModels="clr-namespace:Ryujinx.Ava.UI.ViewModels.Input"
     xmlns:helpers="clr-namespace:Ryujinx.Ava.UI.Helpers"
-    xmlns:pt="using:Projektanker.Icons.Avalonia"
+    xmlns:pt="using:Optris.Icons.Avalonia"
     HorizontalAlignment="Stretch"
     VerticalAlignment="Stretch"
     d:DesignHeight="800"

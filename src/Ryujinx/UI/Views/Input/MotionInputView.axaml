@@ -115,7 +115,7 @@
                                 Margin="0,10,0,0"
                                 VerticalAlignment="Center"
                                 Text="{ext:Locale ControllerSettingsMotionControllerSlot}" />
-                            <ui:NumberBox
+                            <ui:FANumberBox
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Name="CemuHookSlotUpDown"
@@ -130,7 +130,7 @@
                                 Grid.Column="0"
                                 VerticalAlignment="Center"
                                 Text="{ext:Locale ControllerSettingsMotionRightJoyConSlot}" />
-                            <ui:NumberBox
+                            <ui:FANumberBox
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Name="CemuHookRightJoyConSlotUpDown"

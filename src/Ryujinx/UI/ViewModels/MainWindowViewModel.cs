@@ -287,9 +287,11 @@ namespace Ryujinx.Ava.UI.ViewModels
             SetMainContent = setMainContent;
             TopLevel = topLevel;
 
+/*
 #if DEBUG
             topLevel.AttachDevTools(new KeyGesture(Avalonia.Input.Key.F12, KeyModifiers.Control));
 #endif
+*/
 
             Window.ApplicationLibrary.TotalTimePlayedRecalculated += TotalTimePlayed_Recalculated;
         }
@@ -1473,7 +1475,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                         string.Empty,
                         string.Empty,
                         LocaleManager.Instance[LocaleKeys.InputDialogOk],
-                        (int)Symbol.Checkmark);
+                        (int)FASymbol.Checkmark);
                 });
             }
         }
@@ -2855,7 +2857,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     await using Stream fileStream = await iconFile.OpenWriteAsync();
 
                     using SKBitmap bitmap = SKBitmap.Decode(viewModel.SelectedApplication.Icon)
-                        .Resize(new SKSizeI(512, 512), SKFilterQuality.High);
+                        .Resize(new SKSizeI(512, 512), new SKSamplingOptions(SKFilterMode.Linear));
 
                     using SKData png = bitmap.Encode(SKEncodedImageFormat.Png, 100);
 

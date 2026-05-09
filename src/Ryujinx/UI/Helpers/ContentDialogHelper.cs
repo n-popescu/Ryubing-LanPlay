@@ -28,8 +28,8 @@ namespace Ryujinx.Ava.UI.Helpers
         private static bool _isChoiceDialogOpen;
         private static ContentDialogOverlayWindow _contentDialogOverlayWindow;
 
-        public static ContentDialog ApplyStyles(
-            this ContentDialog contentDialog,
+        public static FAContentDialog ApplyStyles(
+            this FAContentDialog contentDialog,
             double closeButtonWidth = 80,
             HorizontalAlignment buttonSpaceAlignment = HorizontalAlignment.Right)
         {
@@ -53,11 +53,11 @@ namespace Ryujinx.Ava.UI.Helpers
              string closeButton,
              UserResult primaryButtonResult = UserResult.Ok,
              ManualResetEvent deferResetEvent = null,
-             TypedEventHandler<ContentDialog, ContentDialogButtonClickEventArgs> deferCloseAction = null)
+             TypedEventHandler<FAContentDialog, FAContentDialogButtonClickEventArgs> deferCloseAction = null)
         {
             UserResult result = UserResult.None;
 
-            ContentDialog contentDialog = new()
+            FAContentDialog contentDialog = new()
             {
                 Title = title,
                 PrimaryButtonText = primaryButton,
@@ -102,7 +102,7 @@ namespace Ryujinx.Ava.UI.Helpers
             int iconSymbol,
             UserResult primaryButtonResult = UserResult.Ok,
             ManualResetEvent deferResetEvent = null,
-            TypedEventHandler<ContentDialog, ContentDialogButtonClickEventArgs> deferCloseAction = null)
+            TypedEventHandler<FAContentDialog, FAContentDialogButtonClickEventArgs> deferCloseAction = null)
         {
             Grid content = CreateTextDialogContent(primaryText, secondaryText, iconSymbol);
 
@@ -121,7 +121,7 @@ namespace Ryujinx.Ava.UI.Helpers
             Action onClick,
             UserResult primaryButtonResult = UserResult.Ok,
             ManualResetEvent deferResetEvent = null,
-            TypedEventHandler<ContentDialog, ContentDialogButtonClickEventArgs> deferCloseAction = null)
+            TypedEventHandler<FAContentDialog, FAContentDialogButtonClickEventArgs> deferCloseAction = null)
         {
             Grid content = CreateTextDialogContentWithButton(primaryText, secondaryText, iconSymbol, buttonText, onClick);
 
@@ -154,7 +154,7 @@ namespace Ryujinx.Ava.UI.Helpers
                 deferResetEvent,
                 DeferClose);
 
-            async void DeferClose(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+            async void DeferClose(FAContentDialog sender, FAContentDialogButtonClickEventArgs args)
             {
                 if (startedDeferring)
                 {
@@ -165,7 +165,7 @@ namespace Ryujinx.Ava.UI.Helpers
 
                 startedDeferring = true;
 
-                Deferral deferral = args.GetDeferral();
+                FADeferral deferral = args.GetDeferral();
 
                 sender.PrimaryButtonClick -= DeferClose;
 
@@ -198,9 +198,9 @@ namespace Ryujinx.Ava.UI.Helpers
                 MinHeight = 80,
             };
 
-            content.Children.Add(new SymbolIcon
+            content.Children.Add(new FASymbolIcon
             {
-                Symbol = (Symbol)symbol,
+                Symbol = (FASymbol)symbol,
                 Margin = new Thickness(10),
                 FontSize = 40,
                 FlowDirection = FlowDirection.LeftToRight,
@@ -243,9 +243,9 @@ namespace Ryujinx.Ava.UI.Helpers
                 MinHeight = 80,
             };
 
-            content.Children.Add(new SymbolIcon
+            content.Children.Add(new FASymbolIcon
             {
-                Symbol = (Symbol)symbol,
+                Symbol = (FASymbol)symbol,
                 Margin = new Thickness(10),
                 FontSize = 40,
                 FlowDirection = FlowDirection.LeftToRight,
@@ -267,10 +267,10 @@ namespace Ryujinx.Ava.UI.Helpers
                 Margin = new Thickness(2)
             });
 
-            buttonContent.Children.Add(new SymbolIcon
+            buttonContent.Children.Add(new FASymbolIcon
             {
                 FlowDirection = FlowDirection.LeftToRight,
-                Symbol = Symbol.Open
+                Symbol = FASymbol.Open
             });
 
             content.Children.Add(new TextBlock
@@ -318,7 +318,7 @@ namespace Ryujinx.Ava.UI.Helpers
                 acceptButton,
                 string.Empty,
                 closeButton,
-                (int)Symbol.Important);
+                (int)FASymbol.Important);
 
         internal static async Task<UserResult> CreateConfirmationDialog(
             string primaryText,
@@ -334,7 +334,7 @@ namespace Ryujinx.Ava.UI.Helpers
                 acceptButtonText,
                 string.Empty,
                 cancelButtonText,
-                (int)Symbol.Help,
+                (int)FASymbol.Help,
                 primaryButtonResult);
 
         internal static async Task<UserResult> CreateDeniableConfirmationDialog(
@@ -352,7 +352,7 @@ namespace Ryujinx.Ava.UI.Helpers
                 acceptButtonText,
                 noAcceptButtonText,
                 cancelButtonText,
-                (int)Symbol.Help,
+                (int)FASymbol.Help,
                 primaryButtonResult);
 
         internal static async Task<UserResult> CreateLocalizedConfirmationDialog(string primaryText, string secondaryText)
@@ -371,7 +371,7 @@ namespace Ryujinx.Ava.UI.Helpers
                 string.Empty,
                 string.Empty,
                 LocaleManager.Instance[LocaleKeys.InputDialogOk],
-                (int)Symbol.Important);
+                (int)FASymbol.Important);
 
         internal static async Task CreateUpdaterUpToDateInfoDialog(string primary, string secondaryText,
             string changelogUrl)
@@ -383,7 +383,7 @@ namespace Ryujinx.Ava.UI.Helpers
                 string.Empty,
                 string.Empty,
                 LocaleManager.Instance[LocaleKeys.InputDialogOk],
-                (int)Symbol.Important,
+                (int)FASymbol.Important,
                 LocaleManager.Instance[LocaleKeys.DialogUpdaterShowChangelogMessage],
                 () => OpenHelper.OpenUrl(changelogUrl));
         }
@@ -396,7 +396,7 @@ namespace Ryujinx.Ava.UI.Helpers
                 string.Empty,
                 string.Empty,
                 LocaleManager.Instance[LocaleKeys.InputDialogOk],
-                (int)Symbol.Important);
+                (int)FASymbol.Important);
 
         internal static async Task CreateErrorDialog(string errorMessage, string secondaryErrorMessage = "")
         {
@@ -409,7 +409,7 @@ namespace Ryujinx.Ava.UI.Helpers
                 secondaryErrorMessage,
                 string.Empty,
                 LocaleManager.Instance[LocaleKeys.InputDialogOk],
-                (int)Symbol.Dismiss);
+                (int)FASymbol.Dismiss);
         }
 
         internal static async Task<bool> CreateChoiceDialog(string title, string primary, string secondaryText)
@@ -428,7 +428,7 @@ namespace Ryujinx.Ava.UI.Helpers
                 LocaleManager.Instance[LocaleKeys.InputDialogYes],
                 string.Empty,
                 LocaleManager.Instance[LocaleKeys.InputDialogNo],
-                (int)Symbol.Help,
+                (int)FASymbol.Help,
                 UserResult.Yes);
 
             _isChoiceDialogOpen = false;
@@ -513,7 +513,7 @@ namespace Ryujinx.Ava.UI.Helpers
                 LocaleManager.Instance[LocaleKeys.InputDialogYes],
                 string.Empty,
                 LocaleManager.Instance[LocaleKeys.InputDialogNo],
-                (int)Symbol.Help,
+                (int)FASymbol.Help,
                 LocaleManager.Instance[LocaleKeys.DialogUpdaterShowChangelogMessage],
                 () => OpenHelper.OpenUrl(changelogUrl),
                 UserResult.Yes);
@@ -539,9 +539,9 @@ namespace Ryujinx.Ava.UI.Helpers
                 LocaleManager.Instance[LocaleKeys.DialogExitSubMessage]);
         }
 
-        public static async Task<ContentDialogResult> ShowAsync(ContentDialog contentDialog)
+        public static async Task<FAContentDialogResult> ShowAsync(FAContentDialog contentDialog)
         {
-            ContentDialogResult result;
+            FAContentDialogResult result;
             bool isTopDialog = true;
 
             Window parent = GetMainWindow();
@@ -563,9 +563,11 @@ namespace Ryujinx.Ava.UI.Helpers
                     ShowInTaskbar = false,
                 };
 
+/*
 #if DEBUG
                 _contentDialogOverlayWindow.AttachDevTools(new KeyGesture(Key.F12, KeyModifiers.Control));
 #endif
+*/
 
                 parent.PositionChanged += OverlayOnPositionChanged;
 
@@ -599,14 +601,14 @@ namespace Ryujinx.Ava.UI.Helpers
                     result = await ShowDialog();
                 }
 
-                result = await _contentDialogOverlayWindow.ShowDialog<ContentDialogResult>(parent);
+                result = await _contentDialogOverlayWindow.ShowDialog<FAContentDialogResult>(parent);
             }
             else
             {
                 result = await ShowDialog();
             }
 
-            async Task<ContentDialogResult> ShowDialog()
+            async Task<FAContentDialogResult> ShowDialog()
             {
                 if (_contentDialogOverlayWindow is not null)
                 {
@@ -616,7 +618,7 @@ namespace Ryujinx.Ava.UI.Helpers
                 }
                 else
                 {
-                    result = ContentDialogResult.None;
+                    result = FAContentDialogResult.None;
 
                     Logger.Warning?.Print(LogClass.UI, "Content dialog overlay failed to populate. Default value has been returned.");
                 }

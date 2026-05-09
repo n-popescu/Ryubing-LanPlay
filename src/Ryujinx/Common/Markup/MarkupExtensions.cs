@@ -1,5 +1,5 @@
 using Avalonia.Markup.Xaml.MarkupExtensions;
-using Projektanker.Icons.Avalonia;
+using Optris.Icons.Avalonia;
 using Ryujinx.Ava.Common.Locale;
 
 namespace Ryujinx.Ava.Common.Markup

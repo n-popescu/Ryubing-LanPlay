@@ -201,7 +201,7 @@
                             <TextBox
                                 Name="GameDirPathBox"
                                 Margin="0"
-                                Watermark="{ext:Locale AddGameDirBoxTooltip}"
+                                PlaceholderText="{ext:Locale AddGameDirBoxTooltip}"
                                 VerticalAlignment="Stretch" />
                             <Button
                                 Name="AddGameDirButton"
@@ -253,7 +253,7 @@
                             <TextBox
                                 Name="AutoloadDirPathBox"
                                 Margin="0"
-                                Watermark="{ext:Locale AddGameDirBoxTooltip}"
+                                PlaceholderText="{ext:Locale AddGameDirBoxTooltip}"
                                 VerticalAlignment="Stretch" />
                             <Button
                                 Name="AddAutoloadDirButton"

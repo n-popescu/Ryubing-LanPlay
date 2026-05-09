@@ -197,7 +197,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     string.Empty,
                     string.Empty,
                     LocaleManager.Instance[LocaleKeys.InputDialogOk],
-                    (int)Symbol.Checkmark
+                    (int)FASymbol.Checkmark
                 ));
         }
     }

@@ -37,12 +37,12 @@
                             Width="100"
                             VerticalAlignment="Center"
                             Text="Rrrrr"
-                            UseFloatingWatermark="True"
-                            Watermark="Hello" />
+                            UseFloatingPlaceholder="True"
+                            PlaceholderText="Hello" />
                         <CheckBox>Test Check</CheckBox>
                     </StackPanel>
                 </Grid>
-                <ui:NumberBox Value="1" />
+                <ui:FANumberBox Value="1" />
                 <MenuItem
                     Header="123 0000"
                     ToolTip.Tip="What this"/>
@@ -248,7 +248,7 @@
         <Setter Property="BorderBrush"
                 Value="{DynamicResource HighlightBrush}" />
     </Style>
-    <Style Selector="Button:not(windowing|MinMaxCloseControl Button)">
+    <Style Selector="Button:not(windowing|FAMinMaxCloseControl Button)">
         <Setter Property="MinWidth"
                 Value="80" />
     </Style>

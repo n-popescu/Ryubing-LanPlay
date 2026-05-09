@@ -65,16 +65,16 @@ namespace Ryujinx.Ava.UI.Applet
 
         public static async Task<UserResult> ShowControllerAppletDialog(MainWindow window, ControllerAppletUIArgs args)
         {
-            ContentDialog contentDialog = new();
+            FAContentDialog contentDialog = new();
             UserResult result = UserResult.Cancel;
             ControllerAppletDialog content = new(window, args);
 
             contentDialog.Title = LocaleManager.Instance[LocaleKeys.DialogControllerAppletTitle];
             contentDialog.Content = content;
 
-            void Handler(ContentDialog sender, ContentDialogClosedEventArgs eventArgs)
+            void Handler(FAContentDialog sender, FAContentDialogClosedEventArgs eventArgs)
             {
-                if (eventArgs.Result == ContentDialogResult.Primary)
+                if (eventArgs.Result == FAContentDialogResult.Primary)
                 {
                     result = UserResult.Ok;
                 }
@@ -125,7 +125,7 @@ namespace Ryujinx.Ava.UI.Applet
 
         public void Close()
         {
-            ((ContentDialog)Parent)?.Hide();
+            ((FAContentDialog)Parent)?.Hide();
         }
     }
 }

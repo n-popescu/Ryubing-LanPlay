@@ -25,7 +25,7 @@
             VerticalAlignment="Stretch"
             Command="{Binding SetListMode}"
             IsEnabled="{Binding IsGrid}">
-            <ui:FontIcon
+            <ui:FAFontIcon
                 Margin="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
@@ -39,7 +39,7 @@
             VerticalAlignment="Stretch"
             Command="{Binding SetGridMode}"
             IsEnabled="{Binding IsList}">
-            <ui:FontIcon
+            <ui:FAFontIcon
                 Margin="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
@@ -73,7 +73,7 @@
             DockPanel.Dock="Right"
             KeyUp="SearchBox_OnKeyUp"
             Text="{Binding SearchText}"
-            Watermark="{ext:Locale MenuSearch}" />
+            PlaceholderText="{ext:Locale MenuSearch}" />
         <DropDownButton
             Width="150"
             HorizontalAlignment="Right"
@@ -88,55 +88,55 @@
                         Orientation="Vertical">
                         <StackPanel>
                             <RadioButton
-                                Checked="Sort_Checked"
+                                IsCheckedChanged="Sort_Checked"
                                 Content="{ext:Locale CommonFavorite}"
                                 GroupName="Sort"
                                 IsChecked="{Binding IsSortedByFavorite, Mode=OneTime}"
                                 Tag="Favorite" />
                             <RadioButton
-                                Checked="Sort_Checked"
+                                IsCheckedChanged="Sort_Checked"
                                 Content="{ext:Locale Common_Sort_NameLabel}"
                                 GroupName="Sort"
                                 IsChecked="{Binding IsSortedByTitle, Mode=OneTime}"
                                 Tag="Title" />
                             <RadioButton
-                                Checked="Sort_Checked"
+                                IsCheckedChanged="Sort_Checked"
                                 Content="{ext:Locale DlcManagerTableHeadingTitleIdLabel}"
                                 GroupName="Sort"
                                 IsChecked="{Binding IsSortedByTitleId, Mode=OneTime}"
                                 Tag="TitleId" />
                             <RadioButton
-                                Checked="Sort_Checked"
+                                IsCheckedChanged="Sort_Checked"
                                 Content="{ext:Locale GameListSortDeveloper}"
                                 GroupName="Sort"
                                 IsChecked="{Binding IsSortedByDeveloper, Mode=OneTime}"
                                 Tag="Developer" />
                             <RadioButton
-                                Checked="Sort_Checked"
+                                IsCheckedChanged="Sort_Checked"
                                 Content="{ext:Locale GameListSortTimePlayed}"
                                 GroupName="Sort"
                                 IsChecked="{Binding IsSortedByTimePlayed, Mode=OneTime}"
                                 Tag="TotalTimePlayed" />
                             <RadioButton
-                                Checked="Sort_Checked"
+                                IsCheckedChanged="Sort_Checked"
                                 Content="{ext:Locale GameListSortLastPlayed}"
                                 GroupName="Sort"
                                 IsChecked="{Binding IsSortedByLastPlayed, Mode=OneTime}"
                                 Tag="LastPlayed" />
                             <RadioButton
-                                Checked="Sort_Checked"
+                                IsCheckedChanged="Sort_Checked"
                                 Content="{ext:Locale GameListSortFileExtension}"
                                 GroupName="Sort"
                                 IsChecked="{Binding IsSortedByType, Mode=OneTime}"
                                 Tag="FileType" />
                             <RadioButton
-                                Checked="Sort_Checked"
+                                IsCheckedChanged="Sort_Checked"
                                 Content="{ext:Locale GameListSortFileSize}"
                                 GroupName="Sort"
                                 IsChecked="{Binding IsSortedBySize, Mode=OneTime}"
                                 Tag="FileSize" />
                             <RadioButton
-                                Checked="Sort_Checked"
+                                IsCheckedChanged="Sort_Checked"
                                 Content="{ext:Locale GameListSortPath}"
                                 GroupName="Sort"
                                 IsChecked="{Binding IsSortedByPath, Mode=OneTime}"
@@ -152,13 +152,13 @@
                             <Separator Height="0" HorizontalAlignment="Stretch" />
                         </Border>
                         <RadioButton
-                            Checked="Order_Checked"
+                            IsCheckedChanged="Order_Checked"
                             Content="{ext:Locale Common_Sort_OrderAscending}"
                             GroupName="Order"
                             IsChecked="{Binding IsAscending, Mode=OneTime}"
                             Tag="Ascending" />
                         <RadioButton
-                            Checked="Order_Checked"
+                            IsCheckedChanged="Order_Checked"
                             Content="{ext:Locale Common_Sort_OrderDescending}"
                             GroupName="Order"
                             IsChecked="{Binding !IsAscending, Mode=OneTime}"

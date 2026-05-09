@@ -43,7 +43,7 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" />
     <PackageReference Include="Avalonia.Desktop" />
-    <PackageReference Include="Avalonia.Diagnostics" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Avalonia.Controls.DataGrid" />
     <PackageReference Include="Avalonia.Markup.Xaml.Loader" />
     <PackageReference Include="SharpCompress" />
@@ -57,9 +57,9 @@
     <PackageReference Include="CommandLineParser" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="DiscordRichPresence" />
-    <PackageReference Include="Projektanker.Icons.Avalonia" />
-    <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" />
-    <PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign" />
+    <PackageReference Include="Optris.Icons.Avalonia" />
+    <PackageReference Include="Optris.Icons.Avalonia.FontAwesome" />
+    <PackageReference Include="Optris.Icons.Avalonia.MaterialDesign" />
     <PackageReference Include="OpenTK.Core" />
     <PackageReference Include="Ryujinx.Audio.OpenAL" Condition="'$(RuntimeIdentifier)' != 'linux-x64' AND '$(RuntimeIdentifier)' != 'linux-arm64' AND '$(RuntimeIdentifier)' != 'osx-x64' AND '$(RuntimeIdentifier)' != 'osx-arm64'" />
     <PackageReference Include="Ryujinx.Graphics.Nvdec.Dependencies.AllArch" />

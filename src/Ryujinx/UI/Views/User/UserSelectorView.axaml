@@ -96,7 +96,7 @@
                                     CornerRadius="12"
                                     Padding="0"
                                     Click="EditUser">
-                                    <ui:SymbolIcon Symbol="Edit" />
+                                    <ui:FASymbolIcon Symbol="Edit" />
                                 </Button>
                             </Border>
                         </Grid>
@@ -117,7 +117,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Click="AddUser">
-                                <ui:SymbolIcon Symbol="Add" />
+                                <ui:FASymbolIcon Symbol="Add" />
                             </Button>
                             <Panel.Styles>
                                 <Style Selector="Panel">

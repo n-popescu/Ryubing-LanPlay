@@ -201,7 +201,7 @@
                                         TextAlignment="End"
                                         TextWrapping="Wrap" />
                                 </StackPanel>
-                                <ui:SymbolIcon
+                                <ui:FASymbolIcon
                                     Grid.Row="0"
                                     Grid.Column="0"
                                     Margin="-7.5,-7.5,0,0"
@@ -211,7 +211,7 @@
                                     Foreground="{DynamicResource FavoriteApplicationIconColor}"
                                     IsVisible="{Binding Favorite}"
                                     Symbol="StarFilled" />
-                                <ui:SymbolIcon
+                                <ui:FASymbolIcon
                                     Grid.Row="0"
                                     Grid.Column="0"
                                     Margin="0,-7.5,-7.5,0"

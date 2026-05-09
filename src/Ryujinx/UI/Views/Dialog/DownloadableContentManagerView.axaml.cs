@@ -21,7 +21,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 
         public static async Task Show(ApplicationLibrary applicationLibrary, ApplicationData applicationData)
         {
-            ContentDialog contentDialog = new()
+            FAContentDialog contentDialog = new()
             {
                 PrimaryButtonText = string.Empty,
                 SecondaryButtonText = string.Empty,
@@ -44,12 +44,12 @@ namespace Ryujinx.Ava.UI.Views.Dialog
         private void SaveAndClose(object sender, RoutedEventArgs routedEventArgs)
         {
             ViewModel.Save();
-            ((ContentDialog)Parent).Hide();
+            ((FAContentDialog)Parent).Hide();
         }
 
         private void Close(object sender, RoutedEventArgs e)
         {
-            ((ContentDialog)Parent).Hide();
+            ((FAContentDialog)Parent).Hide();
         }
 
         private void RemoveDLC(object sender, RoutedEventArgs e)

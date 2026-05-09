@@ -92,7 +92,7 @@ namespace Ryujinx.Ava.UI.Applet
                 return (defaultId, true);
             }
 
-            ContentDialog contentDialog = new()
+            FAContentDialog contentDialog = new()
             {
                 Title = LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle],
                 PrimaryButtonText = LocaleManager.Instance[LocaleKeys.Continue],
@@ -111,9 +111,9 @@ namespace Ryujinx.Ava.UI.Applet
 
             return (result, input);
 
-            void Handler(ContentDialog sender, ContentDialogClosedEventArgs eventArgs)
+            void Handler(FAContentDialog sender, FAContentDialogClosedEventArgs eventArgs)
             {
-                if (eventArgs.Result == ContentDialogResult.Primary)
+                if (eventArgs.Result == FAContentDialogResult.Primary)
                 {
                     result = viewModel.SelectedUserId;
                     input = true;

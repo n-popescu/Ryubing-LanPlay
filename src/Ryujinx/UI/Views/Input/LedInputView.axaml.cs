@@ -55,7 +55,7 @@ namespace Ryujinx.UI.Views.Input
         {
             LedInputView content = new(viewModel);
 
-            ContentDialog contentDialog = new()
+            FAContentDialog contentDialog = new()
             {
                 Title = LocaleManager.Instance[LocaleKeys.ControllerLedTitle],
                 PrimaryButtonText = LocaleManager.Instance[LocaleKeys.ControllerSettingsSave],
