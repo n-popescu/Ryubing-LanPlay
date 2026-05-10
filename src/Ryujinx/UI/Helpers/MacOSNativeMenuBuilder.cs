@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Threading;
 using Ryujinx.Ava.Common.Locale;
+using Ryujinx.Ava.Systems.Configuration;
 using Ryujinx.Ava.UI.ViewModels;
 using Ryujinx.Ava.UI.Views.Main;
 using Ryujinx.Ava.UI.Windows;
@@ -35,10 +36,46 @@ namespace Ryujinx.Ava.UI.Helpers
         private readonly MainMenuBarView _view;
         private readonly MainWindow _window;
         private readonly List<IDisposable> _bindings = new();
+        private static MacOSNativeMenuBuilder _current;
+
+        private static bool? s_useNativeMenuBar;
+
+        /// <summary>
+        /// Whether the macOS native menu bar should be used. Cached on first read so the
+        /// embedded menu strip and the native menu agree on a single mode for the
+        /// lifetime of the process; toggling the setting takes effect after a restart.
+        /// </summary>
+        public static bool UseNativeMenuBar
+        {
+            get
+            {
+                if (!OperatingSystem.IsMacOS())
+                    return false;
+
+                s_useNativeMenuBar ??= ConfigurationState.Instance?.UI.EnableMacOSNativeMenuBar.Value == true;
+
+                return s_useNativeMenuBar.Value;
+            }
+        }
+
+        public static void ApplyMenuBarMode(MainMenuBarView view)
+        {
+            if (!OperatingSystem.IsMacOS())
+                return;
+
+            if (UseNativeMenuBar)
+            {
+                TryAttach(view);
+            }
+            else
+            {
+                _current?.Detach();
+            }
+        }
 
         public static MacOSNativeMenuBuilder TryAttach(MainMenuBarView view)
         {
-            if (!OperatingSystem.IsMacOS())
+            if (!UseNativeMenuBar)
                 return null;
             if (view.Window is null || view.DataContext is not MainWindowViewModel)
                 return null;
@@ -48,6 +85,7 @@ namespace Ryujinx.Ava.UI.Helpers
 
             MacOSNativeMenuBuilder builder = new(view);
             builder.Build();
+            _current = builder;
             return builder;
         }
 
@@ -72,6 +110,8 @@ namespace Ryujinx.Ava.UI.Helpers
             LocaleManager.Instance.LocaleChanged -= OnLocaleChanged;
             _window.Closed -= OnWindowClosed;
             DisposeBindings();
+            if (_current == this)
+                _current = null;
         }
 
         private void OnLocaleChanged()

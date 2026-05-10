@@ -17,7 +17,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// <summary>
         /// The current version of the file format
         /// </summary>
-        public const int CurrentVersion = 71;
+        public const int CurrentVersion = 72;
 
         /// <summary>
         /// Version of the configuration file format
@@ -355,6 +355,11 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// Chooses the base style // Not Used
         /// </summary>
         public string BaseStyle { get; set; }
+
+        /// <summary>
+        /// Enables or disables the native macOS menu bar
+        /// </summary>
+        public bool EnableMacOSNativeMenuBar { get; set; }
 
         /// <summary>
         /// Chooses the view mode of the game list // Not Used

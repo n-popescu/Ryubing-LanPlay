@@ -134,6 +134,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             UI.ShownFileTypes.NSO.Value = shouldLoadFromFile ? cff.ShownFileTypes.NSO : UI.ShownFileTypes.NSO.Value;
             UI.LanguageCode.Value = shouldLoadFromFile ? cff.LanguageCode : UI.LanguageCode.Value;
             UI.BaseStyle.Value = shouldLoadFromFile ? cff.BaseStyle : UI.BaseStyle.Value;
+            UI.EnableMacOSNativeMenuBar.Value = shouldLoadFromFile ? cff.EnableMacOSNativeMenuBar : UI.EnableMacOSNativeMenuBar.Value;
             UI.GameListViewMode.Value = shouldLoadFromFile ? cff.GameListViewMode : UI.GameListViewMode.Value;
             UI.ShowNames.Value = shouldLoadFromFile ? cff.ShowNames : UI.ShowNames.Value;
             UI.IsAscendingOrder.Value = shouldLoadFromFile ? cff.IsAscendingOrder : UI.IsAscendingOrder.Value;
@@ -533,7 +534,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 {
                     if (cff.AudioBackend is AudioBackend.SDL2)
                         cff.AudioBackend = AudioBackend.SDL3;
-                })
+                }),
+                (72, static cff => cff.EnableMacOSNativeMenuBar = OperatingSystem.IsMacOS())
             );
     }
 }

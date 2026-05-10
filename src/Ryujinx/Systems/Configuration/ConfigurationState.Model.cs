@@ -152,6 +152,11 @@ namespace Ryujinx.Ava.Systems.Configuration
             public ReactiveObject<string> BaseStyle { get; private set; }
 
             /// <summary>
+            /// Enables or disables the native macOS menu bar
+            /// </summary>
+            public ReactiveObject<bool> EnableMacOSNativeMenuBar { get; private set; }
+
+            /// <summary>
             /// Start games in fullscreen mode
             /// </summary>
             public ReactiveObject<bool> StartFullscreen { get; private set; }
@@ -200,6 +205,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 ShownFileTypes = new ShownFileTypeSettings();
                 WindowStartup = new WindowStartupSettings();
                 BaseStyle = new ReactiveObject<string>();
+                EnableMacOSNativeMenuBar = new ReactiveObject<bool>();
                 StartFullscreen = new ReactiveObject<bool>();
                 StartNoUI = new ReactiveObject<bool>();
                 GameListViewMode = new ReactiveObject<int>();

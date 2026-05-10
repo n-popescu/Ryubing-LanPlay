@@ -55,6 +55,16 @@
                                 <TextBlock Classes="globalConfigMarker" IsVisible="{Binding IsGameTitleNotNull}" />
                             </StackPanel>
                         </CheckBox>
+                        <CheckBox
+                            IsVisible="{Binding ShowNativeMenuBarOption}"
+                            IsEnabled="{Binding !IsGameTitleNotNull}"
+                            Opacity="{Binding PanelOpacity}"
+                            IsChecked="{Binding EnableNativeMenuBar}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{ext:Locale SettingsTabGeneralEnableNativeMenuBar}" />
+                                <TextBlock Classes="globalConfigMarker" IsVisible="{Binding IsGameTitleNotNull}" />
+                            </StackPanel>
+                        </CheckBox>
                         <CheckBox IsChecked="{Binding EnableDiscordIntegration}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock VerticalAlignment="Center"

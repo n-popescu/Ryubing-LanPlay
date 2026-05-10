@@ -151,13 +151,15 @@ namespace Ryujinx.Ava.UI.ViewModels
         public bool SkipUserProfiles { get; set; }
         public bool RememberWindowState { get; set; }
         public bool ShowOldUI { get; set; }
+        public bool EnableNativeMenuBar { get; set; }
         public int HideCursor { get; set; }
         public int UpdateCheckerType { get; set; }
         public bool EnableDockedMode { get; set; }
         public bool EnableKeyboard { get; set; }
         public bool EnableMouse { get; set; }
-        public bool DisableInputWhenOutOfFocus { get; set; }        
+        public bool DisableInputWhenOutOfFocus { get; set; }
         public int FocusLostActionType { get; set; }
+        public bool ShowNativeMenuBarOption => OperatingSystem.IsMacOS() && !IsGameTitleNotNull;
 
         public bool UseGlobalInputConfig
         {
@@ -633,6 +635,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             ShowConfirmExit = config.ShowConfirmExit;
             RememberWindowState = config.RememberWindowState;
             ShowOldUI = config.ShowOldUI;
+            EnableNativeMenuBar = config.UI.EnableMacOSNativeMenuBar;
             HideCursor = (int)config.HideCursor.Value;
             UpdateCheckerType = (int)config.UpdateCheckerType.Value;
             FocusLostActionType = (int)config.FocusLostActionType.Value;
@@ -749,6 +752,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             config.ShowConfirmExit.Value = ShowConfirmExit;
             config.RememberWindowState.Value = RememberWindowState;
             config.ShowOldUI.Value = ShowOldUI;
+            config.UI.EnableMacOSNativeMenuBar.Value = EnableNativeMenuBar;
             config.HideCursor.Value = (HideCursorMode)HideCursor;
             config.UpdateCheckerType.Value = (UpdaterType)UpdateCheckerType;
             config.FocusLostActionType.Value = (FocusLostType)FocusLostActionType;

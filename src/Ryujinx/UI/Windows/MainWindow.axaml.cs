@@ -98,12 +98,10 @@ namespace Ryujinx.Ava.UI.Windows
             // Correctly size window when 'TitleBar' is enabled (Nov. 14, 2024)
             TitleBarHeight = (ConfigurationState.Instance.ShowOldUI ? TitleBar.Height : 0);
 
-            if (OperatingSystem.IsMacOS())
+            if (MacOSNativeMenuBuilder.UseNativeMenuBar)
             {
-                // The in-window menu strip is hidden on macOS (menus live in the system
-                // menu bar), which removes the natural top buffer above the View controls.
-                // Add an explicit top margin so they don't sit flush against the title bar
-                // and the spacing matches the existing 5px margin below them.
+                // The embedded menu strip is hidden when the native menu bar is active,
+                // which removes the natural top buffer above the View controls.
                 ViewControls.Margin = new Thickness(0, 5, 0, 0);
             }
 

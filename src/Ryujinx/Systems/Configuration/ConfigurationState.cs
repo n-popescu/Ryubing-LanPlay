@@ -126,6 +126,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 },
                 LanguageCode = UI.LanguageCode,
                 BaseStyle = UI.BaseStyle,
+                EnableMacOSNativeMenuBar = UI.EnableMacOSNativeMenuBar,
                 GameListViewMode = UI.GameListViewMode,
                 ShowNames = UI.ShowNames,
                 GridSize = UI.GridSize,
@@ -242,6 +243,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             UI.ShownFileTypes.NSO.Value = true;
             UI.LanguageCode.Value = "en_US";
             UI.BaseStyle.Value = "Dark";
+            UI.EnableMacOSNativeMenuBar.Value = OperatingSystem.IsMacOS();
             UI.GameListViewMode.Value = 0;
             UI.ShowNames.Value = true;
             UI.GridSize.Value = 2;
