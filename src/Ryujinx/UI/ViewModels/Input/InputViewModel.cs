@@ -710,10 +710,10 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                     assignedDevice.Type == assignedType &&
                     assignedDevice.Id == deviceId);
 
-                string boundProfile = editedItem?.BoundProfileName ?? assignment.Devices
+                string boundProfile = GetProfileNameOrDefault(editedItem?.BoundProfileName ?? assignment.Devices
                     .FirstOrDefault(assignedDevice =>
                         assignedDevice.Type == assignedType &&
-                        assignedDevice.Id == deviceId)?.ProfileName;
+                        assignedDevice.Id == deviceId)?.ProfileName);
 
                 // Find other players using this device
                 deviceToOtherPlayers.TryGetValue((assignedType, deviceId), out List<string> assignedOtherPlayers);
@@ -789,7 +789,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 {
                     Type = item.AssignedType,
                     Id = item.Id,
-                    ProfileName = item.BoundProfileName,
+                    ProfileName = GetPersistedProfileName(item.BoundProfileName),
                 });
             }
 
@@ -799,7 +799,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 {
                     Type = currentDevice.Type == DeviceType.Keyboard ? AssignedInputDeviceType.Keyboard : AssignedInputDeviceType.Controller,
                     Id = GetConfigDeviceId(currentDevice),
-                    ProfileName = FindInputDeviceAssignmentItem(currentDevice)?.BoundProfileName,
+                    ProfileName = GetPersistedProfileName(FindInputDeviceAssignmentItem(currentDevice)?.BoundProfileName),
                 });
             }
 
@@ -878,6 +878,25 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             return LocaleManager.Instance[LocaleKeys.ControllerSettingsProfileDefault];
         }
 
+        private string GetProfileNameOrDefault(string profileName)
+        {
+            return string.IsNullOrWhiteSpace(profileName)
+                ? GetCurrentProfileDefaultName()
+                : profileName;
+        }
+
+        private bool IsDefaultProfileName(string profileName)
+        {
+            return string.Equals(profileName, GetCurrentProfileDefaultName(), StringComparison.Ordinal);
+        }
+
+        private string GetPersistedProfileName(string profileName)
+        {
+            return string.IsNullOrWhiteSpace(profileName) || IsDefaultProfileName(profileName)
+                ? null
+                : profileName;
+        }
+
         private string GetBoundProfileNameForCurrentDevice()
         {
             if (!TryGetCurrentDevice(out (DeviceType Type, string Id, string Name) currentDevice))
@@ -885,17 +904,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 return GetCurrentProfileDefaultName();
             }
 
-            return FindInputDeviceAssignmentItem(currentDevice)?.BoundProfileName ?? GetCurrentProfileDefaultName();
-        }
-
-        private string GetRawBoundProfileNameForCurrentDevice()
-        {
-            if (!TryGetCurrentDevice(out (DeviceType Type, string Id, string Name) currentDevice))
-            {
-                return null;
-            }
-
-            return FindInputDeviceAssignmentItem(currentDevice)?.BoundProfileName;
+            return GetProfileNameOrDefault(FindInputDeviceAssignmentItem(currentDevice)?.BoundProfileName);
         }
 
         private void ClearInvalidBindingForCurrentDevice()
@@ -906,15 +915,15 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             }
 
             PlayerInputDeviceAssignmentItem item = FindInputDeviceAssignmentItem(currentDevice);
-            if (item != null && item.BoundProfileName != null)
+            if (item != null)
             {
-                item.BoundProfileName = null;
+                item.BoundProfileName = GetCurrentProfileDefaultName();
             }
         }
 
         public bool IsProfileLinked =>
             !string.IsNullOrWhiteSpace(ProfileName) &&
-            string.Equals(ProfileName, GetRawBoundProfileNameForCurrentDevice(), StringComparison.Ordinal);
+            string.Equals(ProfileName, GetBoundProfileNameForCurrentDevice(), StringComparison.Ordinal);
 
         private void ReplaceBoundProfileName(string previousProfileName, string nextProfileName)
         {
@@ -924,11 +933,13 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 return;
             }
 
+            string replacementProfileName = GetProfileNameOrDefault(nextProfileName);
+
             foreach (PlayerInputDeviceAssignmentItem item in PlayerInputDevices)
             {
                 if (string.Equals(item.BoundProfileName, previousProfileName, StringComparison.Ordinal))
                 {
-                    item.BoundProfileName = nextProfileName;
+                    item.BoundProfileName = replacementProfileName;
                 }
             }
         }
@@ -992,17 +1003,18 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             }
 
             DeviceType selectedType = target.DeviceType;
+            bool selectedDefaultProfile = IsDefaultProfileName(ProfileName);
 
             foreach (PlayerInputDeviceAssignmentItem item in PlayerInputDevices.Where(item => item.DeviceType == selectedType))
             {
-                if (string.Equals(item.BoundProfileName, ProfileName, StringComparison.Ordinal) ||
+                if ((!selectedDefaultProfile && string.Equals(item.BoundProfileName, ProfileName, StringComparison.Ordinal)) ||
                     item.Id == target.Id)
                 {
-                    item.BoundProfileName = null;
+                    item.BoundProfileName = GetCurrentProfileDefaultName();
                 }
             }
 
-            target.BoundProfileName = ProfileName;
+            target.BoundProfileName = GetProfileNameOrDefault(ProfileName);
 
             RefreshProfileBindingState();
             RefreshModifiedState();
