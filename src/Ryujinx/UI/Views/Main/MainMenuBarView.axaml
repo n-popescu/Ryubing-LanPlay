@@ -67,7 +67,8 @@
                 <MenuItem
                     Name="CloseRyujinxMenuItem"
                     Header="{ext:Locale MenuBarFileExit}"
-                    Icon="{ext:Icon fa-solid fa-power-off}" />
+                    Icon="{ext:Icon fa-solid fa-power-off}"
+                    IsVisible="{Binding ShowEmbeddedMenuBarItems}" />
             </MenuItem>
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBarOptions}">
                 <MenuItem
@@ -280,7 +281,8 @@
                 <MenuItem
                     Name="AboutWindowMenuItem"
                     Header="{ext:Locale MenuBarHelpAbout}"
-                    Icon="{ext:Icon fa-solid fa-circle-info}" />
+                    Icon="{ext:Icon fa-solid fa-circle-info}"
+                    IsVisible="{Binding ShowEmbeddedMenuBarItems}" />
                 <MenuItem
                     Name="CompatibilityListMenuItem"
                     Header="{ext:Locale CompatibilityListOpen}"
