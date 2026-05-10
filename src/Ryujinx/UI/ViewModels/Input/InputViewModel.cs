@@ -677,6 +677,16 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             foreach (PlayerIndex otherPlayer in otherPlayers)
             {
                 PlayerInputAssignment normalizedOtherAssignment = GetPersistedPlayerInputAssignment(otherPlayer);
+
+                // Only include players who participate in dynamic input swap.
+                // Players with dynamic swap disabled manage their device through
+                // the traditional InputConfig and should not appear in the
+                // Assigned Devices menu for other players.
+                if (!normalizedOtherAssignment.EnableDynamicInputSwap)
+                {
+                    continue;
+                }
+
                 string playerName = GetPlayerDisplayName(otherPlayer);
 
                 foreach (AssignedInputDevice device in normalizedOtherAssignment.Devices)
@@ -783,16 +793,21 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 EnableDynamicInputSwap = EnableDynamicGamepadSwap,
             };
 
-            foreach (PlayerInputDeviceAssignmentItem item in PlayerInputDevices.Where(item => item.IsAssigned))
+            if (EnableDynamicGamepadSwap)
             {
-                assignment.Devices.Add(new AssignedInputDevice
+                foreach (PlayerInputDeviceAssignmentItem item in PlayerInputDevices.Where(item => item.IsAssigned))
                 {
-                    Type = item.AssignedType,
-                    Id = item.Id,
-                    ProfileName = GetPersistedProfileName(item.BoundProfileName),
-                });
+                    assignment.Devices.Add(new AssignedInputDevice
+                    {
+                        Type = item.AssignedType,
+                        Id = item.Id,
+                        ProfileName = GetPersistedProfileName(item.BoundProfileName),
+                    });
+                }
             }
 
+            // When dynamic swap is off, or as a fallback when no devices are assigned,
+            // use the current device with its bound profile name.
             if (assignment.Devices.Count == 0 && TryGetCurrentDevice(out (DeviceType Type, string Id, string Name) currentDevice) && currentDevice.Type != DeviceType.None)
             {
                 assignment.Devices.Add(new AssignedInputDevice
@@ -967,26 +982,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         public bool CanBindSelectedProfile =>
             ShowSettings &&
-            GetCurrentAssignedInputDeviceForBinding() != null &&
             !string.IsNullOrWhiteSpace(ProfileName) &&
             ProfilesList.Contains(ProfileName);
-
-        private PlayerInputDeviceAssignmentItem GetCurrentAssignedInputDeviceForBinding()
-        {
-            if (!TryGetCurrentDevice(out (DeviceType Type, string Id, string Name) currentDevice) || currentDevice.Type == DeviceType.None)
-            {
-                return null;
-            }
-
-            PlayerInputDeviceAssignmentItem assignment = FindInputDeviceAssignmentItem(currentDevice);
-
-            if (assignment is not { IsAssigned: true })
-            {
-                return null;
-            }
-
-            return assignment;
-        }
 
         public void LinkCurrentProfileToCurrentDevice()
         {
@@ -995,7 +992,12 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 return;
             }
 
-            PlayerInputDeviceAssignmentItem target = GetCurrentAssignedInputDeviceForBinding();
+            if (!TryGetCurrentDevice(out (DeviceType Type, string Id, string Name) currentDevice) || currentDevice.Type == DeviceType.None)
+            {
+                return;
+            }
+
+            PlayerInputDeviceAssignmentItem target = FindInputDeviceAssignmentItem(currentDevice);
 
             if (target == null)
             {
