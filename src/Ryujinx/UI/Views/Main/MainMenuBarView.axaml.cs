@@ -118,6 +118,13 @@ namespace Ryujinx.Ava.UI.Views.Main
             {
                 Window = window;
                 DataContext = ViewModel = window.ViewModel;
+
+                // On macOS, mirror this menu into the system menu bar at the top of the screen.
+                // The in-window menu strip is hidden via MainWindowViewModel.ShowInWindowMenuBar.
+                if (OperatingSystem.IsMacOS())
+                {
+                    MacOSNativeMenuBuilder.TryAttach(this);
+                }
             }
         }
 

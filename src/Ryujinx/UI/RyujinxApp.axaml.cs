@@ -52,7 +52,11 @@ namespace Ryujinx.Ava
 
         public override void Initialize()
         {
-            Name = FormatTitle();
+            // On macOS, Application.Name drives the bold "App" entry in the system menu
+            // bar at the top of the screen. Use the bare app name there so it reads
+            // "Ryujinx" rather than "Ryujinx 1.2.3+commitsha". The window title (set
+            // separately on the Window itself) still includes the full version.
+            Name = OperatingSystem.IsMacOS() ? FullAppName : FormatTitle();
 
             // Disable menu animations
             FAUISettings.SetAnimationsEnabledAtAppLevel(false);

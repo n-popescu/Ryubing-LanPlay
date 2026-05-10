@@ -100,6 +100,13 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         [ObservableProperty] public partial bool ShowMenuAndStatusBar { get; set; } = true;
 
+        // Visibility of the in-window menu strip. Always hidden on macOS, where the
+        // menus are presented in the system menu bar at the top of the screen instead.
+        public bool ShowInWindowMenuBar => ShowMenuAndStatusBar && !OperatingSystem.IsMacOS();
+
+        partial void OnShowMenuAndStatusBarChanged(bool value) =>
+            OnPropertyChanged(nameof(ShowInWindowMenuBar));
+
         [ObservableProperty] public partial bool ShowStatusSeparator { get; set; }
 
         [ObservableProperty] public partial Brush ProgressBarForegroundColor { get; set; }
