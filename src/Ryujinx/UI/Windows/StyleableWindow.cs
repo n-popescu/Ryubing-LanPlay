@@ -8,6 +8,7 @@ using FluentAvalonia.UI.Windowing;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Systems.Configuration;
 using Ryujinx.Ava.UI.Controls;
+using Ryujinx.Ava.UI.Helpers;
 using System.Threading.Tasks;
 
 namespace Ryujinx.Ava.UI.Windows
@@ -40,6 +41,7 @@ namespace Ryujinx.Ava.UI.Windows
             }
 
             Icon = RyujinxLogo.Bitmap;
+            MacOSNativeMenuBuilder.TryApplyToWindow(this);
         }
 
         private void LocaleChanged()
@@ -74,6 +76,7 @@ namespace Ryujinx.Ava.UI.Windows
             LocaleChanged();
 
             Icon = new WindowIcon(RyujinxLogo.Bitmap);
+            MacOSNativeMenuBuilder.TryApplyToWindow(this);
         }
 
         private void LocaleChanged()

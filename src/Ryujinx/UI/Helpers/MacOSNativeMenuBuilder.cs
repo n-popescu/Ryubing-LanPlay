@@ -36,7 +36,9 @@ namespace Ryujinx.Ava.UI.Helpers
         private readonly MainMenuBarView _view;
         private readonly MainWindow _window;
         private readonly List<IDisposable> _bindings = new();
+        private readonly List<Window> _windows = new();
         private static MacOSNativeMenuBuilder _current;
+        private NativeMenu _root;
 
         private static bool? s_useNativeMenuBar;
 
@@ -79,7 +81,11 @@ namespace Ryujinx.Ava.UI.Helpers
                 return null;
             if (view.Window is null || view.DataContext is not MainWindowViewModel)
                 return null;
-            // Don't re-attach if a native menu is already installed.
+            if (_current is not null)
+            {
+                _current.ApplyToWindow(view.Window);
+                return _current;
+            }
             if (NativeMenu.GetMenu(view.Window) is not null)
                 return null;
 
@@ -87,6 +93,20 @@ namespace Ryujinx.Ava.UI.Helpers
             builder.Build();
             _current = builder;
             return builder;
+        }
+
+        /// <summary>
+        /// Re-applies the active builder's menu to a newly-shown window so child windows
+        /// (Settings, Compatibility List, LDN Game List, etc.) keep showing the menu while
+        /// they are key. macOS's menu bar is per-application but Avalonia tracks ownership
+        /// per-window, so each window must have the same NativeMenu instance attached.
+        /// </summary>
+        public static void TryApplyToWindow(Window window)
+        {
+            if (!UseNativeMenuBar || window is null)
+                return;
+
+            _current?.ApplyToWindow(window);
         }
 
         private MacOSNativeMenuBuilder(MainMenuBarView view)
@@ -97,7 +117,8 @@ namespace Ryujinx.Ava.UI.Helpers
 
         private void Build()
         {
-            NativeMenu.SetMenu(_window, MirrorItemsControl(_view.Menu));
+            _root = MirrorItemsControl(_view.Menu);
+            ApplyToWindow(_window);
 
             LocaleManager.Instance.LocaleChanged += OnLocaleChanged;
             _window.Closed += OnWindowClosed;
@@ -109,9 +130,29 @@ namespace Ryujinx.Ava.UI.Helpers
         {
             LocaleManager.Instance.LocaleChanged -= OnLocaleChanged;
             _window.Closed -= OnWindowClosed;
+            ClearFromWindows();
             DisposeBindings();
             if (_current == this)
                 _current = null;
+        }
+
+        private void ApplyToWindow(Window window)
+        {
+            if (_root is null || window is null || NativeMenu.GetMenu(window) is not null)
+                return;
+
+            NativeMenu.SetMenu(window, _root);
+            _windows.Add(window);
+        }
+
+        private void ClearFromWindows()
+        {
+            foreach (Window window in _windows)
+            {
+                NativeMenu.SetMenu(window, null);
+            }
+
+            _windows.Clear();
         }
 
         private void OnLocaleChanged()
@@ -124,8 +165,18 @@ namespace Ryujinx.Ava.UI.Helpers
                 return;
             }
 
+            // Avalonia's macOS NSMenu exporter tracks the NativeMenu instance once
+            // installed and throws "The menu being updated does not match" if SetMenu
+            // is called with a different instance. Mutate the existing root in place
+            // instead — clear its items, dispose old bindings, and re-walk the source.
             DisposeBindings();
-            NativeMenu.SetMenu(_window, MirrorItemsControl(_view.Menu));
+            _root.Items.Clear();
+            foreach (object child in _view.Menu.Items)
+            {
+                NativeMenuItemBase mirrored = MirrorItem(child);
+                if (mirrored is not null)
+                    _root.Add(mirrored);
+            }
         }
 
         private void DisposeBindings()
