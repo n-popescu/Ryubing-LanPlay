@@ -447,7 +447,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         private InputConfig GetDisplayedInputConfig(InputConfig persistedConfig)
         {
-            if (persistedConfig is not StandardControllerInputConfig)
+            if (persistedConfig is not StandardControllerInputConfig controllerConfig)
             {
                 return persistedConfig;
             }
@@ -456,7 +456,22 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             // instead of showing the stale persisted controller config.
             InputConfig activeConfig = _mainWindow?.ViewModel.AppHost?.NpadManager?.GetPlayerInputConfigByIndex((int)_playerId);
 
-            return activeConfig is StandardKeyboardInputConfig ? activeConfig : persistedConfig;
+            if (activeConfig is StandardKeyboardInputConfig)
+            {
+                return activeConfig;
+            }
+
+            // When no game is running (NpadManager unavailable) and the persisted controller
+            // device isn't currently connected, fall back to keyboard so the user isn't
+            // stuck on "Disabled".
+            if (activeConfig == null &&
+                !Devices.Any(device => device.Type == DeviceType.Controller && device.Id == controllerConfig.Id) &&
+                TryCreateKeyboardFallbackConfig(persistedConfig, out StandardKeyboardInputConfig fallbackConfig))
+            {
+                return fallbackConfig;
+            }
+
+            return persistedConfig;
         }
 
         private void FindPairedDeviceInConfigFile()
