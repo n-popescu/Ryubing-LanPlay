@@ -49,6 +49,13 @@
                                     Text="{ext:Locale SettingsTabInputUseGlobalInput}" />
                             </CheckBox>
                             <CheckBox
+                                ToolTip.Tip="{ext:Locale ControllerSettingsDynamicInputSwapTooltip}"
+                                IsChecked="{Binding ElementName=InputView, Path=ViewModel.EnableDynamicGamepadSwap, Mode=TwoWay}"
+                                IsEnabled="{Binding ElementName=InputView, Path=ViewModel.ShowSettings}">
+                                <TextBlock
+                                    Text="{ext:Locale ControllerSettingsDynamicInputSwap}" />
+                            </CheckBox>
+                            <CheckBox
                                 ToolTip.Tip="{ext:Locale DockModeToggleTooltip}"
                                 MinWidth="0"
                                 IsChecked="{Binding EnableDockedMode}">

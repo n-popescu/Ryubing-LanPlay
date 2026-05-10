@@ -1,8 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia;
-using Avalonia.Layout;
-using Avalonia.Media;
 using FluentAvalonia.UI.Controls;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Systems.Configuration;
@@ -102,57 +100,25 @@ namespace Ryujinx.Ava.UI.Views.Input
             if (sender is FAComboBox faComboBox)
             {
                 faComboBox.IsDropDownOpen = false;
-                ViewModel.RefreshModifiedState();
             }
+
+            ViewModel.RefreshModifiedState();
         }
 
-        private async void ResetCurrentDeviceToDefaultsButton_OnClick(object sender, RoutedEventArgs e)
+        private async void AssignedDevicesButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!ViewModel.NeedsResetCurrentDeviceToDefaultsConfirmation())
-            {
-                ViewModel.ResetCurrentDeviceToDefaults();
-                return;
-            }
+            await AssignedDevicesInputView.Show(ViewModel);
+            ViewModel.RefreshModifiedState();
+        }
 
-            Window owner = TopLevel.GetTopLevel(this) as Window;
+        private void LinkProfileButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            ViewModel?.LinkCurrentProfileToCurrentDevice();
+        }
 
-            StackPanel content = new()
-            {
-                Spacing = 4,
-                MaxWidth = 360,
-            };
-
-            content.Children.Add(new TextBlock
-            {
-                Text = LocaleManager.Instance[LocaleKeys.DialogControllerSettingsResetKeybindsConfirmMessage],
-                TextWrapping = TextWrapping.Wrap,
-                MaxWidth = 360,
-            });
-
-            content.Children.Add(new TextBlock
-            {
-                Text = LocaleManager.Instance[LocaleKeys.DialogControllerSettingsResetKeybindsConfirmSubMessage],
-                TextWrapping = TextWrapping.Wrap,
-                MaxWidth = 360,
-            });
-
-            ContentDialog contentDialog = new ContentDialog
-            {
-                Title = LocaleManager.Instance[LocaleKeys.RyujinxConfirm],
-                PrimaryButtonText = LocaleManager.Instance[LocaleKeys.InputDialogYes],
-                CloseButtonText = LocaleManager.Instance[LocaleKeys.InputDialogNo],
-                DefaultButton = ContentDialogButton.Primary,
-                Content = content,
-            }.ApplyStyles();
-
-            ContentDialogResult result = owner is not null
-                ? await contentDialog.ShowAsync(owner)
-                : await ContentDialogHelper.ShowAsync(contentDialog);
-
-            if (result == ContentDialogResult.Primary)
-            {
-                ViewModel.ResetCurrentDeviceToDefaults();
-            }
+        private void LoadProfileButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            ViewModel?.LoadProfile();
         }
 
         public void Dispose()
