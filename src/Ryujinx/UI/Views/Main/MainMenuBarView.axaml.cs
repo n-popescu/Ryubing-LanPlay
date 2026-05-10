@@ -199,30 +199,58 @@ namespace Ryujinx.Ava.UI.Views.Main
             ViewModel.AppHost.Device.EnableCheats();
         }
 
+        internal void RefreshDynamicNativeMenuState()
+        {
+            if (ViewModel?.AppHost?.Device?.System is null)
+                return;
+
+            RefreshAmiiboState();
+            RefreshSkylanderState();
+        }
+
         private void ScanAmiiboMenuItem_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
             if (sender is MenuItem)
-                ViewModel.IsAmiiboRequested = ViewModel.AppHost.Device.System.SearchingForAmiibo(out _);
+                RefreshAmiiboState();
         }
 
         private void ScanBinAmiiboMenuItem_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
             if (sender is MenuItem)
-                ViewModel.IsAmiiboBinRequested = ViewModel.IsAmiiboRequested && AmiiboBinReader.HasAmiiboKeyFile;
+                RefreshAmiiboState();
         }
 
         private void ScanSkylanderMenuItem_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
             if (sender is MenuItem)
-                ViewModel.IsSkylanderRequested = ViewModel.AppHost.Device.System.SearchingForSkylander(out _);
-                ViewModel.ShowSkylanderActions = string.Equals(ViewModel.AppHost.Device.Processes.ActiveApplication.ProgramIdText.ToUpper(), "0100CCC0002E6000");
+                RefreshSkylanderState();
         }
 
         private void RemoveSkylanderMenuItem_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
             if (sender is MenuItem)
-                ViewModel.HasSkylander = ViewModel.AppHost.Device.System.HasSkylander(out _);
-                ViewModel.ShowSkylanderActions = string.Equals(ViewModel.AppHost.Device.Processes.ActiveApplication.ProgramIdText.ToUpper(), "0100CCC0002E6000");
+                RefreshSkylanderState();
+        }
+
+        private void RefreshAmiiboState()
+        {
+            if (ViewModel?.AppHost?.Device?.System is null)
+                return;
+
+            ViewModel.IsAmiiboRequested = ViewModel.AppHost.Device.System.SearchingForAmiibo(out _);
+            ViewModel.IsAmiiboBinRequested = ViewModel.IsAmiiboRequested && AmiiboBinReader.HasAmiiboKeyFile;
+        }
+
+        private void RefreshSkylanderState()
+        {
+            if (ViewModel?.AppHost?.Device?.System is null)
+                return;
+
+            string programId = ViewModel.AppHost.Device.Processes.ActiveApplication?.ProgramIdText ?? string.Empty;
+
+            ViewModel.IsSkylanderRequested = ViewModel.AppHost.Device.System.SearchingForSkylander(out _);
+            ViewModel.HasSkylander = ViewModel.AppHost.Device.System.HasSkylander(out _);
+            ViewModel.ShowSkylanderActions = string.Equals(programId, "0100CCC0002E6000", StringComparison.OrdinalIgnoreCase);
         }
 
         private async Task InstallFileTypes()

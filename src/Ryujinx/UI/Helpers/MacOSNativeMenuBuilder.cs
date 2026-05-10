@@ -36,6 +36,7 @@ namespace Ryujinx.Ava.UI.Helpers
         private readonly MainMenuBarView _view;
         private readonly MainWindow _window;
         private readonly List<IDisposable> _bindings = new();
+        private readonly List<NativeMenu> _trackedMenus = new();
         private readonly List<Window> _windows = new();
         private static MacOSNativeMenuBuilder _current;
         private NativeMenu _root;
@@ -146,6 +147,7 @@ namespace Ryujinx.Ava.UI.Helpers
             _window.Closed -= OnWindowClosed;
             ClearFromWindows();
             DisposeBindings();
+            DisposeMenuEventHandlers();
             if (_current == this)
                 _current = null;
         }
@@ -184,6 +186,8 @@ namespace Ryujinx.Ava.UI.Helpers
             // is called with a different instance. Mutate the existing root in place
             // instead — clear its items, dispose old bindings, and re-walk the source.
             DisposeBindings();
+            DisposeMenuEventHandlers();
+            TrackMenu(_root);
             _root.Items.Clear();
             foreach (object child in _view.Menu.Items)
             {
@@ -200,11 +204,45 @@ namespace Ryujinx.Ava.UI.Helpers
             _bindings.Clear();
         }
 
+        private void DisposeMenuEventHandlers()
+        {
+            foreach (NativeMenu menu in _trackedMenus)
+            {
+                menu.NeedsUpdate -= OnNativeMenuNeedsUpdate;
+                menu.Opening -= OnNativeMenuNeedsUpdate;
+            }
+            _trackedMenus.Clear();
+        }
+
         // --- Generic mirror -------------------------------------------------
+
+        private NativeMenu CreateTrackedMenu()
+        {
+            NativeMenu menu = new();
+            TrackMenu(menu);
+            return menu;
+        }
+
+        private void TrackMenu(NativeMenu menu)
+        {
+            // Several ViewModel flags (Amiibo / Skylander) are populated lazily by
+            // AttachedToVisualTree on the embedded MenuItems, which never fires for
+            // their NativeMenuItem mirrors. Hook NeedsUpdate / Opening on every
+            // NativeMenu we build so we can re-pull the same state when the user
+            // opens any menu.
+            menu.NeedsUpdate += OnNativeMenuNeedsUpdate;
+            menu.Opening += OnNativeMenuNeedsUpdate;
+            _trackedMenus.Add(menu);
+        }
+
+        private void OnNativeMenuNeedsUpdate(object sender, EventArgs e)
+        {
+            _view.RefreshDynamicNativeMenuState();
+        }
 
         private NativeMenu MirrorItemsControl(ItemsControl source)
         {
-            NativeMenu native = new();
+            NativeMenu native = CreateTrackedMenu();
             foreach (object child in source.Items)
             {
                 NativeMenuItemBase mirrored = MirrorItem(child);
