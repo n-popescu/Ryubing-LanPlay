@@ -122,6 +122,20 @@ namespace Ryujinx.Ava.UI.Helpers
 
             LocaleManager.Instance.LocaleChanged += OnLocaleChanged;
             _window.Closed += OnWindowClosed;
+
+            // Avalonia hardcodes the macOS Apple-menu "Quit" item to just "Quit"
+            // (see AvaloniaNativeMenuExporter.PopulateStandardOSXMenuItems). Patch
+            // it to "Quit AppName" via NSApp.mainMenu. This must be deferred until
+            // after the exporter has built the menu in response to SetMenu above.
+            if (OperatingSystem.IsMacOS())
+            {
+                string appName = Application.Current?.Name ?? "Ryujinx";
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (OperatingSystem.IsMacOS())
+                        AppleMenu.RenameQuitItem($"Quit {appName}");
+                }, DispatcherPriority.Background);
+            }
         }
 
         private void OnWindowClosed(object sender, EventArgs e) => Detach();
