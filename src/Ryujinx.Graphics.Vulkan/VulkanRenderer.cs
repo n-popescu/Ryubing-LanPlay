@@ -901,7 +901,7 @@ namespace Ryujinx.Graphics.Vulkan
             };
         }
 
-        private void PrintGpuInformation()
+        private unsafe void PrintGpuInformation()
         {
             string gpuInfoMessage = $"{GpuRenderer} ({GpuVersion})";
             if (!GpuRenderer.StartsWithIgnoreCase(GpuVendor))
@@ -910,6 +910,51 @@ namespace Ryujinx.Graphics.Vulkan
             Logger.Notice.Print(LogClass.Gpu, gpuInfoMessage);
 
             Logger.Notice.Print(LogClass.Gpu, $"GPU Memory: {GetTotalGPUMemory() / (1024 * 1024)} MiB");
+
+            PrintNonUniformIndexingSupport();
+        }
+
+        private unsafe void PrintNonUniformIndexingSupport()
+        {
+            PhysicalDeviceVulkan12Features featuresVk12 = new()
+            {
+                SType = StructureType.PhysicalDeviceVulkan12Features,
+            };
+
+            PhysicalDeviceFeatures2 features2Vk12 = new()
+            {
+                SType = StructureType.PhysicalDeviceFeatures2,
+                PNext = &featuresVk12,
+            };
+
+            Api.GetPhysicalDeviceFeatures2(_physicalDevice.PhysicalDevice, &features2Vk12);
+
+            Logger.Notice.Print(LogClass.Gpu,
+                $"Non-uniform indexing (Vulkan 1.2): SampledImage={(bool)featuresVk12.ShaderSampledImageArrayNonUniformIndexing}, StorageImage={(bool)featuresVk12.ShaderStorageImageArrayNonUniformIndexing}");
+
+            bool hasDescriptorIndexingExt = _physicalDevice.IsDeviceExtensionPresent("VK_EXT_descriptor_indexing");
+            if (hasDescriptorIndexingExt)
+            {
+                PhysicalDeviceDescriptorIndexingFeaturesEXT featuresDescIdx = new()
+                {
+                    SType = StructureType.PhysicalDeviceDescriptorIndexingFeaturesExt,
+                };
+
+                PhysicalDeviceFeatures2 features2DescIdx = new()
+                {
+                    SType = StructureType.PhysicalDeviceFeatures2,
+                    PNext = &featuresDescIdx,
+                };
+
+                Api.GetPhysicalDeviceFeatures2(_physicalDevice.PhysicalDevice, &features2DescIdx);
+
+                Logger.Notice.Print(LogClass.Gpu,
+                    $"Non-uniform indexing (VK_EXT_descriptor_indexing): SampledImage={(bool)featuresDescIdx.ShaderSampledImageArrayNonUniformIndexing}, StorageImage={(bool)featuresDescIdx.ShaderStorageImageArrayNonUniformIndexing}");
+            }
+            else
+            {
+                Logger.Notice.Print(LogClass.Gpu, "Non-uniform indexing (VK_EXT_descriptor_indexing): extension not present");
+            }
         }
 
         public void Initialize(GraphicsDebugLevel logLevel)
