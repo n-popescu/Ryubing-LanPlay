@@ -21,6 +21,8 @@
     <NativeMenu.Menu>
         <NativeMenu>
             <NativeMenuItem Header="{ext:Locale MenuBarHelpAbout}" Click="AboutRyujinx_OnClick" />
+            <NativeMenuItemSeparator />
+            <NativeMenuItem Header="{ext:Locale MenuBarOptionsSettings}" Gesture="Meta+OemComma" Click="Settings_OnClick" />
         </NativeMenu>
     </NativeMenu.Menu>
 </Application>

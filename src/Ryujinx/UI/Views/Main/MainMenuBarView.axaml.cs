@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Gommon;
@@ -53,6 +54,12 @@ namespace Ryujinx.Ava.UI.Views.Main
             LdnGameListMenuItem.Command = Commands.Create(() => LdnGamesListWindow.Show());
 
             UpdateMenuItem.Command = MainWindowViewModel.UpdateCommand;
+
+            if (OperatingSystem.IsMacOS())
+            {
+                // Cmd+, is the standard macOS shortcut for application settings.
+                OpenSettingsMenuItem.InputGesture = KeyGesture.Parse("Cmd+OemComma");
+            }
 
             FaqMenuItem.Command =
                 SetupGuideMenuItem.Command =

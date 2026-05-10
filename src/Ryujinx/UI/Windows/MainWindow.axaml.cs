@@ -119,6 +119,11 @@ namespace Ryujinx.Ava.UI.Windows
             }
         }
 
+        public Task OpenSettings()
+        {
+            return MenuBarView.OpenSettings();
+        }
+
         /// <summary>
         /// Event handler for detecting OS theme change when using "Follow OS theme" option
         /// </summary>

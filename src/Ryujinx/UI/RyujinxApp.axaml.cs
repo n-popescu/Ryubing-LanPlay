@@ -162,5 +162,10 @@ namespace Ryujinx.Ava
         {
             await AboutView.Show();
         }
+
+        private async void Settings_OnClick(object sender, EventArgs e)
+        {
+            await MainWindow.OpenSettings();
+        }
     }
 }

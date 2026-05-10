@@ -132,6 +132,7 @@
                     Padding="0"
                     Header="{ext:Locale MenuBarOptionsSettings}"
                     Icon="{ext:Icon fa-solid fa-gear}"
+                    IsVisible="{Binding ShowEmbeddedMenuBarItems}"
                     Classes="withCheckbox">
                 </MenuItem>
                 <MenuItem
