@@ -11,6 +11,7 @@ using Ryujinx.Ava.UI.Windows;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using System.Windows.Input;
 
 namespace Ryujinx.Ava.UI.Helpers
 {
@@ -266,45 +267,99 @@ namespace Ryujinx.Ava.UI.Helpers
                 mi.GetObservable(HeaderedSelectingItemsControl.HeaderProperty)
                     .Select(h => h?.ToString() ?? string.Empty)));
 
-            // Command + parameter — the same ICommand instance the in-window menu uses.
-            _bindings.Add(native.Bind(NativeMenuItem.CommandProperty,
-                mi.GetObservable(MenuItem.CommandProperty)));
-            _bindings.Add(native.Bind(NativeMenuItem.CommandParameterProperty,
-                mi.GetObservable(MenuItem.CommandParameterProperty)));
-
-            // Enabled + visible state piggy-backs on the XAML bindings.
-            _bindings.Add(native.Bind(NativeMenuItem.IsEnabledProperty,
-                mi.GetObservable(InputElement.IsEnabledProperty)));
+            // Visible state piggy-backs on the XAML binding (used to swap the two
+            // Actions top-level menus based on game-running state, etc.).
             _bindings.Add(native.Bind(NativeMenuItem.IsVisibleProperty,
                 mi.GetObservable(Visual.IsVisibleProperty)));
 
-            // Keyboard shortcut.
-            if (mi.InputGesture is not null)
-                native.Gesture = mi.InputGesture;
-
-            // Toggle items in the XAML use a CheckBox in the Icon slot. Surface that as
-            // a native checkmark item bound to the same IsChecked observable.
-            if (mi.Icon is CheckBox cb)
+            if (HasSubMenu(mi))
             {
-                native.ToggleType = NativeMenuItemToggleType.CheckBox;
-                _bindings.Add(native.Bind(NativeMenuItem.IsCheckedProperty,
-                    cb.GetObservable(ToggleButton.IsCheckedProperty)
-                        .Select(c => c == true)));
-            }
-
-            // Recurse into submenu items (covers both static XAML children and any
-            // ItemsSource the code-behind has set, since both surface via Items).
-            bool hasChildren = false;
-            foreach (object _ in mi.Items)
-            {
-                hasChildren = true;
-                break;
-            }
-
-            if (hasChildren)
+                // Pure submenu container. Avalonia's NSMenuItem validator returns YES
+                // automatically for items with submenus, so we don't need IsEnabled
+                // wired up here.
                 native.Menu = MirrorItemsControl(mi);
+            }
+            else
+            {
+                // Leaf: command, command parameter, gesture, IsEnabled, and toggle state.
+                _bindings.Add(native.Bind(NativeMenuItem.IsEnabledProperty,
+                    mi.GetObservable(InputElement.IsEnabledProperty)));
+
+                // Defer command execution to the UI thread via Dispatcher.Post. NSMenu
+                // invokes the action synchronously on the menu-tracking runloop while
+                // the menu is still open, and a long-running command (Install Keys, Mii
+                // Editor load, etc.) on that thread freezes the entire menu and the
+                // app. The deferred wrapper also lets the underlying ICommand reference
+                // change at runtime — useful for items whose Command is wired up
+                // post-construction by the code-behind.
+                native.Command = new DeferredNativeMenuCommand(
+                    () => mi.Command,
+                    () => mi.CommandParameter);
+
+                if (mi.InputGesture is not null)
+                    native.Gesture = mi.InputGesture;
+
+                // Toggle items in the XAML use a CheckBox in the Icon slot. Surface
+                // that as a native checkmark item bound to the same IsChecked observable.
+                if (mi.Icon is CheckBox cbIcon)
+                {
+                    native.ToggleType = NativeMenuItemToggleType.CheckBox;
+                    _bindings.Add(native.Bind(NativeMenuItem.IsCheckedProperty,
+                        cbIcon.GetObservable(ToggleButton.IsCheckedProperty)
+                            .Select(c => c == true)));
+                }
+            }
 
             return native;
+        }
+
+        private static bool HasSubMenu(MenuItem menuItem)
+        {
+            return menuItem.HasSubMenu || menuItem.ItemCount > 0 || menuItem.ItemsSource is not null;
+        }
+
+        private sealed class DeferredNativeMenuCommand : ICommand
+        {
+            private readonly Func<ICommand> _commandAccessor;
+            private readonly Func<object> _parameterAccessor;
+
+            public DeferredNativeMenuCommand(Func<ICommand> commandAccessor, Func<object> parameterAccessor)
+            {
+                _commandAccessor = commandAccessor;
+                _parameterAccessor = parameterAccessor;
+            }
+
+            public event EventHandler CanExecuteChanged
+            {
+                add { }
+                remove { }
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                ICommand command = _commandAccessor();
+                object commandParameter = _parameterAccessor();
+
+                return command?.CanExecute(commandParameter) == true;
+            }
+
+            public void Execute(object parameter)
+            {
+                ICommand command = _commandAccessor();
+                object commandParameter = _parameterAccessor();
+
+                if (command?.CanExecute(commandParameter) != true)
+                    return;
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    ICommand deferredCommand = _commandAccessor();
+                    object deferredParameter = _parameterAccessor();
+
+                    if (deferredCommand?.CanExecute(deferredParameter) == true)
+                        deferredCommand.Execute(deferredParameter);
+                }, DispatcherPriority.Background);
+            }
         }
     }
 }
