@@ -257,6 +257,10 @@ namespace Ryujinx.Ava.UI.Helpers
         {
             if (item is Separator)
                 return new NativeMenuItemSeparator();
+            // The shown-file-types submenu uses raw CheckBoxes via ItemsSource rather
+            // than MenuItems, so handle them as toggle entries.
+            if (item is CheckBox cb)
+                return MirrorCheckBox(cb);
             if (item is not MenuItem mi)
                 return null;
 
@@ -318,15 +322,51 @@ namespace Ryujinx.Ava.UI.Helpers
             return menuItem.HasSubMenu || menuItem.ItemCount > 0 || menuItem.ItemsSource is not null;
         }
 
+        private NativeMenuItem MirrorCheckBox(CheckBox cb)
+        {
+            NativeMenuItem native = new()
+            {
+                ToggleType = NativeMenuItemToggleType.CheckBox,
+            };
+
+            _bindings.Add(native.Bind(NativeMenuItem.HeaderProperty,
+                cb.GetObservable(ContentControl.ContentProperty)
+                    .Select(c => c?.ToString() ?? string.Empty)));
+            _bindings.Add(native.Bind(NativeMenuItem.IsEnabledProperty,
+                cb.GetObservable(InputElement.IsEnabledProperty)));
+            _bindings.Add(native.Bind(NativeMenuItem.IsVisibleProperty,
+                cb.GetObservable(Visual.IsVisibleProperty)));
+            _bindings.Add(native.Bind(NativeMenuItem.IsCheckedProperty,
+                cb.GetObservable(ToggleButton.IsCheckedProperty)
+                    .Select(c => c == true)));
+
+            // Wrap the CheckBox's command so clicking the native item also toggles
+            // the underlying CheckBox.IsChecked. The XAML CheckBox normally toggles
+            // its own IsChecked on click as part of its event flow, but the native
+            // menu item only invokes Command — without this wrapper the checkmark
+            // would never update because nothing else moves the source state.
+            native.Command = new DeferredNativeMenuCommand(
+                () => cb.Command,
+                () => cb.CommandParameter,
+                () => cb.IsChecked = !(cb.IsChecked == true));
+
+            return native;
+        }
+
         private sealed class DeferredNativeMenuCommand : ICommand
         {
             private readonly Func<ICommand> _commandAccessor;
             private readonly Func<object> _parameterAccessor;
+            private readonly Action _beforeExecute;
 
-            public DeferredNativeMenuCommand(Func<ICommand> commandAccessor, Func<object> parameterAccessor)
+            public DeferredNativeMenuCommand(
+                Func<ICommand> commandAccessor,
+                Func<object> parameterAccessor,
+                Action beforeExecute = null)
             {
                 _commandAccessor = commandAccessor;
                 _parameterAccessor = parameterAccessor;
+                _beforeExecute = beforeExecute;
             }
 
             public event EventHandler CanExecuteChanged
@@ -356,8 +396,11 @@ namespace Ryujinx.Ava.UI.Helpers
                     ICommand deferredCommand = _commandAccessor();
                     object deferredParameter = _parameterAccessor();
 
-                    if (deferredCommand?.CanExecute(deferredParameter) == true)
-                        deferredCommand.Execute(deferredParameter);
+                    if (deferredCommand?.CanExecute(deferredParameter) != true)
+                        return;
+
+                    _beforeExecute?.Invoke();
+                    deferredCommand.Execute(deferredParameter);
                 }, DispatcherPriority.Background);
             }
         }
