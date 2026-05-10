@@ -35,7 +35,6 @@ namespace Ryujinx.Ava.UI.Windows
             if (useCustomTitleBar)
             {
                 TitleBar.ExtendsContentIntoTitleBar = !ConfigurationState.Instance.ShowOldUI;
-                TitleBar.TitleBarHitTestType = ConfigurationState.Instance.ShowOldUI ? FATitleBarHitTestType.Simple : FATitleBarHitTestType.Complex;
 
                 if (TitleBar.ExtendsContentIntoTitleBar && titleBarHeight != null)
                     TitleBar.Height = titleBarHeight.Value;
