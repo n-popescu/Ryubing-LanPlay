@@ -727,6 +727,16 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 // Find other players using this device
                 deviceToOtherPlayers.TryGetValue((assignedType, deviceId), out List<string> assignedOtherPlayers);
+
+                // When duplicates aren't allowed and another player already has this
+                // device, this player cannot claim it — override isAssigned regardless
+                // of what the persisted/default assignment says.
+                if (!AllowDuplicateDeviceAssignment &&
+                    assignedOtherPlayers != null && assignedOtherPlayers.Count > 0)
+                {
+                    isAssigned = false;
+                }
+
                 string assignedToPlayers = null;
                 if (isAssigned)
                 {
@@ -742,8 +752,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 // Disable if another player has this device AND duplicates are not allowed
                 bool isDisabledByOtherPlayer = !AllowDuplicateDeviceAssignment &&
-                    assignedOtherPlayers != null && assignedOtherPlayers.Count > 0 &&
-                    !isAssigned;
+                    assignedOtherPlayers != null && assignedOtherPlayers.Count > 0;
 
                 PlayerInputDevices.Add(new PlayerInputDeviceAssignmentItem
                 {
@@ -853,10 +862,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             if (firstAvailableItem != null)
             {
                 firstAvailableItem.IsAssigned = true;
-            }
-            else if (PlayerInputDevices.Count > 0)
-            {
-                PlayerInputDevices[0].IsAssigned = true;
             }
         }
 
@@ -1434,23 +1439,25 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                         }
                     }
 
-                    if (controllerIndex != -1)
+                    if (controllerIndex == -1)
                     {
-                        // Avalonia bug: setting a newly instanced ComboBox to 0
-                        // causes the selected item to show up blank.
-                        // Workaround: set the box to 1 and then 0.
-                        // See: https://github.com/AvaloniaUI/Avalonia/issues/4610
-                        //      https://github.com/AvaloniaUI/Avalonia/discussions/18834
-                        if (controllerIndex == 0)
-                        {
-                            ApplyControllerSelection(1);
-                        }
-
-                        ApplyControllerSelection(controllerIndex);
+                        controllerIndex = 0;
                     }
+
+                    // Avalonia bug: setting a newly instanced ComboBox to 0
+                    // causes the selected item to show up blank
+                    // Workaround: set the box to 1 and then 0
+                    if (controllerIndex == 0)
+                    {
+                        ApplyControllerSelection(1);
+                    }
+
+                    ApplyControllerSelection(controllerIndex);
                 }
                 else
                 {
+                    // Avalonia bug workaround: set to 1 then 0
+                    ApplyControllerSelection(1);
                     ApplyControllerSelection(0);
                 }
             }
