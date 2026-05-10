@@ -1,7 +1,7 @@
 name: Build PR
 
 on:
-  pull_request_target:
+  pull_request:
     branches: [ master ]
     paths:
       - '**'
@@ -63,7 +63,7 @@ jobs:
       - name: Change config filename
         run: sed -r --in-place 's/\%\%RYUJINX_CONFIG_FILE_NAME\%\%/PRConfig\.json/g;' src/Ryujinx.Common/ReleaseInformation.cs
         shell: bash
-        if: forgejo.event_name == 'pull_request_target'
+        if: forgejo.event_name == 'pull_request'
 
       - name: 'Cache: ~/.nuget/packages'
         uses: actions/cache@v5
@@ -85,7 +85,7 @@ jobs:
 
       - name: Publish Ryujinx
         run: dotnet publish -c "${{ matrix.configuration }}" -r "${{ matrix.platform.name }}" -o ./publish -p:Version="${{ steps.version_info.outputs.result }}" -p:DebugType=embedded -p:SourceRevisionId="${{ steps.version_info.outputs.git_short_hash }}" -p:ExtraDefineConstants=DISABLE_UPDATER src/Ryujinx --self-contained 
-        if: forgejo.event_name == 'pull_request_target'
+        if: forgejo.event_name == 'pull_request'
 
       - name: Packing Windows builds
         if: contains(matrix.platform.name, 'win')
@@ -98,10 +98,10 @@ jobs:
         with:
           name: ryujinx-${{ matrix.configuration }}-${{ steps.version_info.outputs.result }}+${{ steps.version_info.outputs.git_short_hash }}-${{ matrix.platform.zip_os_name }}
           path: artifact
-        if: forgejo.event_name == 'pull_request_target' && contains(matrix.platform.name, 'win')
+        if: forgejo.event_name == 'pull_request' && contains(matrix.platform.name, 'win')
 
       - name: Build AppImage
-        if: forgejo.event_name == 'pull_request_target' && contains(matrix.platform.name, 'linux')
+        if: forgejo.event_name == 'pull_request' && contains(matrix.platform.name, 'linux')
         run: |
           chmod +x ./publish/Ryujinx ./publish/Ryujinx.sh
 
@@ -134,7 +134,7 @@ jobs:
 
       - name: Upload Ryujinx AppImage artifact
         uses: actions/upload-artifact@v5
-        if: forgejo.event_name == 'pull_request_target' && contains(matrix.platform.name, 'linux')
+        if: forgejo.event_name == 'pull_request' && contains(matrix.platform.name, 'linux')
         with:
           name: ryujinx-${{ matrix.configuration }}-${{ steps.version_info.outputs.result }}+${{ steps.version_info.outputs.git_short_hash }}-${{ matrix.platform.zip_os_name }}-AppImage
           path: publish_appimage
@@ -182,7 +182,7 @@ jobs:
       - name: Change config filename
         run: sed -r --in-place 's/\%\%RYUJINX_CONFIG_FILE_NAME\%\%/PRConfig\.json/g;' src/Ryujinx.Common/ReleaseInformation.cs
         shell: bash
-        if: forgejo.event_name == 'pull_request_target'
+        if: forgejo.event_name == 'pull_request'
 
       - name: 'Cache: ~/.nuget/packages'
         uses: actions/cache@v5
@@ -201,47 +201,4 @@ jobs:
         with:
           name: ryujinx-${{ matrix.configuration }}-${{ steps.version_info.outputs.result }}+${{ steps.version_info.outputs.git_short_hash }}-macos_universal
           path: "publish/*.tar.gz"
-        if: forgejo.event_name == 'pull_request_target'
-
-  post_comment:
-    name: Post comment linking uploaded artifacts
-    runs-on: ubuntu-latest
-    needs: 
-      - build
-      - build_macos
-    steps:
-      - uses: actions/github-script@v9
-        env:
-          COMMENTER_TOKEN: ${{ secrets.COMMENTER_TOKEN }}
-        with:
-          github-token: 'n/a'
-          script: |
-            const forgejo = getOctokit(process.env.COMMENTER_TOKEN, {
-              baseUrl: 'https://git.ryujinx.app/api/v1'
-            });
-
-            const {owner, repo} = context.repo;
-            const run_id = ${{ env.FORGEJO_RUN_ID }};
-
-            const issue_number = ${{ forgejo.event.pull_request.number }};
-            core.info(`Using run ID ${run_id} from pull request ${issue_number}`);
-
-            const {data: {artifacts}} = await forgejo.rest.actions.listWorkflowRunArtifacts({owner, repo, run_id});
-            if (artifacts == undefined || !artifacts.length) {
-              return core.error(`No artifacts found for run ID`);
-            }
-            let body = `Download the artifacts for this pull request:\n`;
-            for (const art of artifacts) {
-              const url = `https://git.ryujinx.app/api/v1/repos/${owner}/${repo}/actions/artifacts/${art.id}/zip`;
-              body += `\n* [${art.name}](${url})`;
-            }
-
-            const {data: comments} = await forgejo.rest.issues.listComments({repo, owner, issue_number});
-            const existing_comment = comments.find((c) => c.user.login === 'forgejo-actions');
-            if (existing_comment) {
-              core.info(`Updating comment ${existing_comment.id}`);
-              await forgejo.rest.issues.updateComment({repo, owner, comment_id: existing_comment.id, body});
-            } else {
-              core.info(`Creating a comment`);
-              await forgejo.rest.issues.createComment({repo, owner, issue_number, body});
-            }
+        if: forgejo.event_name == 'pull_request'
