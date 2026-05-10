@@ -103,13 +103,13 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         // XAML Flags
         public bool ShowSettings => _device > 0;
-        public bool IsController => _device > 1;
-        public bool IsKeyboard => !IsController;
+        public bool IsController => CurrentDeviceType == DeviceType.Controller;
+        public bool IsKeyboard => CurrentDeviceType == DeviceType.Keyboard;
         public bool CanOpenAssignedDevices => ShowSettings && EnableDynamicGamepadSwap;
         public bool IsRight { get; set; }
         public bool IsLeft { get; set; }
-        public bool HasLed => (SelectedGamepad.Features & GamepadFeaturesFlag.Led) != 0;
-        public bool CanClearLed => SelectedGamepad.Name.ContainsIgnoreCase("DualSense");
+        public bool HasLed => (SelectedGamepad?.Features & GamepadFeaturesFlag.Led) != 0;
+        public bool CanClearLed => SelectedGamepad?.Name?.ContainsIgnoreCase("DualSense") == true;
 
         public event Action NotifyChangesEvent;
 
@@ -496,20 +496,20 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         {
             if (UseGlobalConfig && Program.UseExtraConfig)
             {
-                return ConfigurationState.InstanceExtra.Hid.InputConfig.Value;
+                return ConfigurationState.InstanceExtra.Hid.InputConfig.Value ?? [];
             }
 
-            return ConfigurationState.Instance.Hid.InputConfig.Value;
+            return ConfigurationState.Instance.Hid.InputConfig.Value ?? [];
         }
 
         private List<PlayerInputAssignment> GetPersistedPlayerInputAssignments()
         {
             if (UseGlobalConfig && Program.UseExtraConfig)
             {
-                return ConfigurationState.InstanceExtra.Hid.PlayerInputAssignments.Value;
+                return ConfigurationState.InstanceExtra.Hid.PlayerInputAssignments.Value ?? [];
             }
 
-            return ConfigurationState.Instance.Hid.PlayerInputAssignments.Value;
+            return ConfigurationState.Instance.Hid.PlayerInputAssignments.Value ?? [];
         }
 
         private PlayerInputAssignment GetPersistedPlayerInputAssignment()
@@ -524,7 +524,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             if (persistedAssignment == null)
             {
-                return BuildDefaultPlayerInputAssignment(persistedConfig);
+                return BuildDefaultPlayerInputAssignment(playerIndex, persistedConfig);
             }
 
             PlayerInputAssignment normalizedAssignment = PlayerInputAssignmentHelper.Normalize(
@@ -533,7 +533,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             return normalizedAssignment.Devices.Count > 0 || persistedConfig == null
                 ? normalizedAssignment
-                : BuildDefaultPlayerInputAssignment(persistedConfig);
+                : BuildDefaultPlayerInputAssignment(playerIndex, persistedConfig);
         }
 
         private void LoadConfiguration(InputConfig inputConfig = null, bool reloadPlayerInputDevices = true)
@@ -598,11 +598,11 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         // Note: player-level routing is stored separately from the selected keyboard/controller profile,
         // so changing the edited device does not silently clear dynamic input swap or assigned devices.
-        private PlayerInputAssignment BuildDefaultPlayerInputAssignment(InputConfig persistedConfig)
+        private PlayerInputAssignment BuildDefaultPlayerInputAssignment(PlayerIndex playerIndex, InputConfig persistedConfig)
         {
             PlayerInputAssignment assignment = new()
             {
-                PlayerIndex = _playerId,
+                PlayerIndex = playerIndex,
                 EnableDynamicInputSwap = persistedConfig?.EnableDynamicGamepadSwap ?? false,
             };
 
@@ -1252,7 +1252,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             config.Id = GetConfigDeviceId(device);
             config.Name = device.Name;
             config.PlayerIndex = _playerId;
-            config.ControllerType = Controllers[_controller].Type;
+            config.ControllerType = GetSelectedControllerType();
             config.EnableDynamicGamepadSwap = EnableDynamicGamepadSwap;
 
             return config;
@@ -1391,6 +1391,16 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             device = Devices[_device];
             return true;
+        }
+
+        private DeviceType CurrentDeviceType =>
+            _device >= 0 && _device < Devices.Count ? Devices[_device].Type : DeviceType.None;
+
+        private ControllerType GetSelectedControllerType()
+        {
+            return _controller >= 0 && _controller < Controllers.Count
+                ? Controllers[_controller].Type
+                : ControllerType.ProController;
         }
 
         private static string GetGamepadId((DeviceType Type, string Id, string Name) device)
@@ -1557,7 +1567,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         private string GetProfileBasePath()
         {
             string path = AppDataManager.ProfilesDirPath;
-            DeviceType type = Devices[Device == -1 ? 0 : Device].Type;
+            DeviceType type = CurrentDeviceType;
 
             if (type == DeviceType.Keyboard)
             {
@@ -1616,7 +1626,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 config = InputConfigDefaults.CreateDefaultKeyboardConfiguration(
                     activeDevice.Id,
                     activeDevice.Name,
-                    ControllerType.ProController,
+                    GetSelectedControllerType(),
                     _playerId);
             }
             else if (activeDevice.Type == DeviceType.Controller)
@@ -1650,7 +1660,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 config = InputConfigDefaults.CreateDefaultControllerConfiguration(
                     id,
                     name,
-                    ControllerType.ProController,
+                    GetSelectedControllerType(),
                     _playerId,
                     isNintendoStyle);
             }
@@ -1676,7 +1686,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 return false;
             }
 
-            ControllerType controllerType = sourceConfig?.ControllerType ?? ControllerType.ProController;
+            ControllerType controllerType = sourceConfig?.ControllerType ?? GetSelectedControllerType();
             PlayerIndex playerIndex = sourceConfig?.PlayerIndex ?? _playerId;
 
             fallbackConfig = InputConfigDefaults.CreateDefaultKeyboardConfiguration(
@@ -1878,13 +1888,13 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             if (UseGlobalConfig && Program.UseExtraConfig)
             {
-                newConfig.AddRange(ConfigurationState.InstanceExtra.Hid.InputConfig.Value);
-                newAssignments.AddRange(ConfigurationState.InstanceExtra.Hid.PlayerInputAssignments.Value);
+                newConfig.AddRange(ConfigurationState.InstanceExtra.Hid.InputConfig.Value ?? []);
+                newAssignments.AddRange(ConfigurationState.InstanceExtra.Hid.PlayerInputAssignments.Value ?? []);
             }
             else
             {
-                newConfig.AddRange(ConfigurationState.Instance.Hid.InputConfig.Value);
-                newAssignments.AddRange(ConfigurationState.Instance.Hid.PlayerInputAssignments.Value);
+                newConfig.AddRange(ConfigurationState.Instance.Hid.InputConfig.Value ?? []);
+                newAssignments.AddRange(ConfigurationState.Instance.Hid.PlayerInputAssignments.Value ?? []);
             }
 
             newConfig.RemoveAll(static inputConfig => inputConfig == null);
@@ -1899,6 +1909,12 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             {
                 InputConfig config = GetSelectedDeviceConfig();
                 PlayerInputAssignment assignment = GetEditedPlayerInputAssignment();
+
+                if (config == null)
+                {
+                    IsModified = true;
+                    return;
+                }
 
                 int i = newConfig.FindIndex(x => x.PlayerIndex == PlayerId);
                 if (i == -1)

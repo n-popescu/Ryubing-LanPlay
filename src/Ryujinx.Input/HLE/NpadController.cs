@@ -329,23 +329,20 @@ namespace Ryujinx.Input.HLE
                 _config = config;
                 UpdateDynamicConfigurations(config);
 
-                if (_controllerConfig?.Motion != null)
-                {
-                    bool needsMotionInputUpdate = oldControllerConfig == null ||
-                        oldControllerConfig.Motion.EnableMotion != _controllerConfig.Motion.EnableMotion ||
-                        oldControllerConfig.Motion.MotionBackend != _controllerConfig.Motion.MotionBackend;
-
-                    if (needsMotionInputUpdate)
-                    {
-                        UpdateMotionInput(_controllerConfig.Motion);
-                    }
-                }
-                else
+                if (_controllerConfig?.Motion == null)
                 {
                     _leftMotionInput = null;
+                    _rightMotionInput = null;
+                }
+                else if (NeedsMotionInputUpdate(oldControllerConfig, _controllerConfig))
+                {
+                    UpdateMotionInput(_controllerConfig.Motion);
                 }
 
-                _keyboardGamepad?.SetConfiguration(_keyboardConfig);
+                if (_keyboardConfig != null)
+                {
+                    _keyboardGamepad?.SetConfiguration(_keyboardConfig);
+                }
 
                 for (int i = 0; i < _assignedControllerGamepads.Count; i++)
                 {
@@ -353,7 +350,10 @@ namespace Ryujinx.Input.HLE
                         ? _assignedControllerConfigs[i]
                         : _controllerConfig;
 
-                    _assignedControllerGamepads[i].SetConfiguration(assignedControllerConfig);
+                    if (assignedControllerConfig != null)
+                    {
+                        _assignedControllerGamepads[i].SetConfiguration(assignedControllerConfig);
+                    }
                 }
 
                 UpdateActiveGamepad();
@@ -364,13 +364,12 @@ namespace Ryujinx.Input.HLE
 
             if (config is StandardControllerInputConfig controllerConfig)
             {
-                bool needsMotionInputUpdate = oldConfig is not StandardControllerInputConfig oldControllerConfig ||
-                    _leftMotionInput == null ||
-                    (controllerConfig.ControllerType == ConfigControllerType.JoyconPair && _rightMotionInput == null) ||
-                    oldControllerConfig.Motion.EnableMotion != controllerConfig.Motion.EnableMotion ||
-                    oldControllerConfig.Motion.MotionBackend != controllerConfig.Motion.MotionBackend;
-
-                if (needsMotionInputUpdate)
+                if (controllerConfig.Motion == null)
+                {
+                    _leftMotionInput = null;
+                    _rightMotionInput = null;
+                }
+                else if (NeedsMotionInputUpdate(oldConfig as StandardControllerInputConfig, controllerConfig))
                 {
                     UpdateMotionInput(controllerConfig.Motion);
                 }
@@ -389,6 +388,13 @@ namespace Ryujinx.Input.HLE
 
         private void UpdateMotionInput(MotionConfigController motionConfig)
         {
+            if (motionConfig == null)
+            {
+                _leftMotionInput = null;
+                _rightMotionInput = null;
+                return;
+            }
+
             if (motionConfig.MotionBackend != MotionInputBackendType.CemuHook)
             {
                 _leftMotionInput = new MotionInput();
@@ -399,6 +405,20 @@ namespace Ryujinx.Input.HLE
                 _leftMotionInput = null;
                 _rightMotionInput = null;
             }
+        }
+
+        private bool NeedsMotionInputUpdate(StandardControllerInputConfig oldConfig, StandardControllerInputConfig newConfig)
+        {
+            if (newConfig?.Motion == null)
+            {
+                return false;
+            }
+
+            return oldConfig?.Motion == null ||
+                _leftMotionInput == null ||
+                (newConfig.ControllerType == ConfigControllerType.JoyconPair && _rightMotionInput == null) ||
+                oldConfig.Motion.EnableMotion != newConfig.Motion.EnableMotion ||
+                oldConfig.Motion.MotionBackend != newConfig.Motion.MotionBackend;
         }
 
         public void Update()
@@ -587,9 +607,12 @@ namespace Ryujinx.Input.HLE
             return value;
         }
 
-        public static KeyboardInput GetHLEKeyboardInput(IGamepadDriver KeyboardDriver)
+        public static KeyboardInput GetHLEKeyboardInput(IGamepadDriver keyboardDriver)
         {
-            IKeyboard keyboard = KeyboardDriver.GetGamepad("0") as IKeyboard;
+            if (keyboardDriver.GetGamepad("0") is not IKeyboard keyboard)
+            {
+                return default;
+            }
 
             KeyboardStateSnapshot keyboardState = keyboard.GetKeyboardStateSnapshot();
 
@@ -635,11 +658,13 @@ namespace Ryujinx.Input.HLE
         {
             if (queue.TryDequeue(out (VibrationValue, VibrationValue) dualVibrationValue))
             {
-                if (_controllerConfig is StandardControllerInputConfig dynamicControllerConfig && _playerInputAssignment?.EnableDynamicInputSwap == true && dynamicControllerConfig.Rumble.EnableRumble)
+                if (_controllerConfig is StandardControllerInputConfig dynamicControllerConfig &&
+                    _playerInputAssignment?.EnableDynamicInputSwap == true &&
+                    dynamicControllerConfig.Rumble?.EnableRumble == true)
                 {
                     ApplyRumble(_controllerGamepad ?? _assignedControllerGamepads.FirstOrDefault(), dynamicControllerConfig, dualVibrationValue);
                 }
-                else if (_config is StandardControllerInputConfig controllerConfig && controllerConfig.Rumble.EnableRumble)
+                else if (_config is StandardControllerInputConfig controllerConfig && controllerConfig.Rumble?.EnableRumble == true)
                 {
                     ApplyRumble(_gamepad, controllerConfig, dualVibrationValue);
                 }
@@ -723,6 +748,11 @@ namespace Ryujinx.Input.HLE
 
         private IEnumerable<AssignedInputDevice> ResolveDynamicControllerAssignments(IGamepadDriver gamepadDriver, InputConfig config)
         {
+            if (gamepadDriver == null)
+            {
+                yield break;
+            }
+
             List<AssignedInputDevice> assignedControllers = _playerInputAssignment?.Devices
                 .Where(device => device.Type == AssignedInputDeviceType.Controller)
                 .ToList() ?? [];
@@ -848,11 +878,15 @@ namespace Ryujinx.Input.HLE
             if (baseConfig is StandardKeyboardInputConfig keyboardBaseConfig)
             {
                 StandardKeyboardInputConfig clonedConfig = CloneConfig(keyboardBaseConfig);
-                clonedConfig.Id = keyboardGamepad.Id;
-                clonedConfig.Name = keyboardGamepad.Name;
-                clonedConfig.PlayerIndex = baseConfig.PlayerIndex;
-                clonedConfig.EnableDynamicGamepadSwap = true;
-                return clonedConfig;
+
+                if (clonedConfig != null)
+                {
+                    clonedConfig.Id = keyboardGamepad.Id;
+                    clonedConfig.Name = keyboardGamepad.Name;
+                    clonedConfig.PlayerIndex = baseConfig.PlayerIndex;
+                    clonedConfig.EnableDynamicGamepadSwap = true;
+                    return clonedConfig;
+                }
             }
 
             StandardKeyboardInputConfig defaultConfig = InputConfigDefaults.CreateDefaultKeyboardConfiguration(
@@ -879,11 +913,15 @@ namespace Ryujinx.Input.HLE
             if (baseConfig is StandardControllerInputConfig controllerBaseConfig)
             {
                 StandardControllerInputConfig clonedConfig = CloneConfig(controllerBaseConfig);
-                clonedConfig.Id = controllerGamepad.Id;
-                clonedConfig.Name = controllerGamepad.Name;
-                clonedConfig.PlayerIndex = baseConfig.PlayerIndex;
-                clonedConfig.EnableDynamicGamepadSwap = true;
-                return clonedConfig;
+
+                if (clonedConfig != null)
+                {
+                    clonedConfig.Id = controllerGamepad.Id;
+                    clonedConfig.Name = controllerGamepad.Name;
+                    clonedConfig.PlayerIndex = baseConfig.PlayerIndex;
+                    clonedConfig.EnableDynamicGamepadSwap = true;
+                    return clonedConfig;
+                }
             }
 
             StandardControllerInputConfig defaultConfig = InputConfigDefaults.CreateDefaultControllerConfiguration(
@@ -891,7 +929,7 @@ namespace Ryujinx.Input.HLE
                 controllerGamepad.Name,
                 baseConfig.ControllerType,
                 baseConfig.PlayerIndex,
-                controllerGamepad.Name.Contains("Nintendo"));
+                controllerGamepad.Name?.Contains("Nintendo") == true);
             defaultConfig.EnableDynamicGamepadSwap = true;
             return defaultConfig;
         }
@@ -957,7 +995,8 @@ namespace Ryujinx.Input.HLE
             // and promote whichever one most recently produced a meaningful state change.
             for (int i = 0; i < _assignedControllerGamepads.Count; i++)
             {
-                GamepadStateSnapshot controllerState = _assignedControllerGamepads[i].GetMappedStateSnapshot();
+                IGamepad controllerGamepad = _assignedControllerGamepads[i];
+                GamepadStateSnapshot controllerState = controllerGamepad?.GetMappedStateSnapshot() ?? default;
 
                 if (HasNewInput(controllerState, _previousControllerStates[i]))
                 {
@@ -1060,7 +1099,7 @@ namespace Ryujinx.Input.HLE
 
         private void UpdateControllerMotion(IGamepad gamepad, StandardControllerInputConfig controllerConfig)
         {
-            if (controllerConfig?.Motion == null || !controllerConfig.Motion.EnableMotion)
+            if (gamepad == null || controllerConfig?.Motion == null || !controllerConfig.Motion.EnableMotion)
             {
                 _leftMotionInput = null;
                 _rightMotionInput = null;

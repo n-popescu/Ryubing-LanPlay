@@ -80,7 +80,11 @@ namespace Ryujinx.Input.HLE
 
         private void HandleOnGamepadDisconnected(string obj)
         {
-            // Force input reload
+            List<InputConfig> requestedInputConfig;
+            List<PlayerInputAssignment> playerInputAssignments;
+            bool enableKeyboard;
+            bool enableMouse;
+
             lock (_lock)
             {
                 // Forcibly disconnect any controllers with this ID.
@@ -93,8 +97,14 @@ namespace Ryujinx.Input.HLE
                     }
                 }
 
-                ReloadConfiguration(_requestedInputConfig, _playerInputAssignments, _enableKeyboard, _enableMouse);
+                requestedInputConfig = _requestedInputConfig;
+                playerInputAssignments = _playerInputAssignments;
+                enableKeyboard = _enableKeyboard;
+                enableMouse = _enableMouse;
             }
+
+            // Force input reload.
+            ReloadConfiguration(requestedInputConfig, playerInputAssignments, enableKeyboard, enableMouse);
         }
 
         private void HandleOnGamepadConnected(string _)
@@ -215,11 +225,12 @@ namespace Ryujinx.Input.HLE
                 EnableDynamicInputSwap = inputConfig.EnableDynamicGamepadSwap,
             };
 
-            playerInputAssignment.Devices.Add(new AssignedInputDevice
+            AssignedInputDevice primaryDevice = PlayerInputAssignmentHelper.CreatePrimaryDevice(inputConfig);
+
+            if (primaryDevice != null)
             {
-                Type = inputConfig is StandardKeyboardInputConfig ? AssignedInputDeviceType.Keyboard : AssignedInputDeviceType.Controller,
-                Id = inputConfig.Id,
-            });
+                playerInputAssignment.Devices.Add(primaryDevice);
+            }
 
             if (playerInputAssignment.EnableDynamicInputSwap && inputConfig is StandardControllerInputConfig)
             {
