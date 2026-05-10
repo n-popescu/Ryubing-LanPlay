@@ -214,10 +214,18 @@
                     InputGesture="{Binding ScreenshotKey}"
                     IsEnabled="{Binding IsGameRunning}" />
                 <MenuItem
-                    Command="{Binding HideUi}"
+                    Command="{Binding ToggleUi}"
                     Header="{ext:Locale MenuBarFileToolsHideUi}"
                     Icon="{ext:Icon fa-solid fa-eye-slash}"
                     InputGesture="{Binding ShowUiKey}"
+                    IsVisible="{Binding ShowMenuAndStatusBar}"
+                    IsEnabled="{Binding IsGameRunning}" />
+                <MenuItem
+                    Command="{Binding ToggleUi}"
+                    Header="{ext:Locale MenuBarFileToolsShowUi}"
+                    Icon="{ext:Icon fa-solid fa-eye}"
+                    InputGesture="{Binding ShowUiKey}"
+                    IsVisible="{Binding !ShowMenuAndStatusBar}"
                     IsEnabled="{Binding IsGameRunning}" />
                 <MenuItem
                     Name="CheatManagerMenuItem"

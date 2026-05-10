@@ -1412,6 +1412,8 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public void HideUi() => ShowMenuAndStatusBar = false;
 
+        public void ToggleUi() => ShowMenuAndStatusBar = !ShowMenuAndStatusBar;
+
         public void ToggleStartGamesInFullscreen() => StartGamesInFullscreen = !StartGamesInFullscreen;
 
         public void ToggleStartGamesWithoutUi() => StartGamesWithoutUi = !StartGamesWithoutUi;
