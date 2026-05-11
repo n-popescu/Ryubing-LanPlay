@@ -6,7 +6,7 @@ using System;
 
 namespace Ryujinx.HLE.HOS.Services.Notification
 {
-    class INotificationSystemEventAccessor : IpcService
+    partial class INotificationSystemEventAccessor : IpcService
     {
 
         private readonly KEvent _getNotificationSendingNotifierEvent;

@@ -1,7 +1,7 @@
 namespace Ryujinx.HLE.HOS.Services.Notification
 {
     [Service("notif:s")] // 9.0.0+
-    class INotificationServices : IpcService
+    partial class INotificationServices : IpcService
     {
         public INotificationServices(ServiceCtx context) { }
         

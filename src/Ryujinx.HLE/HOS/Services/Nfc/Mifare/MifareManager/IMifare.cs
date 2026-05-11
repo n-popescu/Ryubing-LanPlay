@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Ryujinx.HLE.HOS.Services.Nfc.Mifare.MifareManager
 {
-    class IMifare : IpcService
+    partial class IMifare : IpcService
     {
         private State _state;
 

@@ -5,7 +5,7 @@ using Ryujinx.HLE.HOS.Services.Caps.Types;
 namespace Ryujinx.HLE.HOS.Services.Caps
 {
     [Service("caps:su")] // 6.0.0+
-    internal class IScreenShotApplicationService : IpcService
+    internal partial class IScreenShotApplicationService : IpcService
     {
         private const ulong ScreenshotDataSize = 0x384000;
         private const ulong ApplicationDataSize = 0x404;
