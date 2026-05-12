@@ -3,6 +3,7 @@ using Ryujinx.Memory;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Threading;
+using Ryujinx.Common.Logging;
 
 namespace Ryujinx.Cpu.AppleHv
 {
@@ -149,13 +150,35 @@ namespace Ryujinx.Cpu.AppleHv
         {
             if (index == 31)
             {
-                HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.SP_EL0, out ulong value).ThrowOnError();
+                var result = HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.SP_EL0, out ulong value);
+                if (result != HvResult.Success)
+                {
+                    if (result == HvResult.BadArgument)
+                    {
+                        return 0;
+                    }
+                    result.ThrowOnError();
+                }
+                return value;
+            }
+            else if (index >= 0 && index <= 30)
+            {
+                var result = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.X0 + (uint)index, out ulong value);
+                if (result != HvResult.Success)
+                {
+                    if (result == HvResult.BadArgument)
+                    {
+                        Logger.Warning?.Print(LogClass.Cpu, $"HV_BAD_ARGUMENT on X{index}");
+                        return 0;
+                    }
+                    result.ThrowOnError();
+                }
                 return value;
             }
             else
             {
-                HvApi.hv_vcpu_get_reg(_vcpu, HvReg.X0 + (uint)index, out ulong value).ThrowOnError();
-                return value;
+                // Invalid index protection
+                return 0;
             }
         }
 
@@ -163,11 +186,15 @@ namespace Ryujinx.Cpu.AppleHv
         {
             if (index == 31)
             {
-                HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.SP_EL0, value).ThrowOnError();
+                var result = HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.SP_EL0, value);
+                if (result == HvResult.BadArgument) return;
+                result.ThrowOnError();
             }
-            else
+            else if (index >= 0 && index <= 30)
             {
-                HvApi.hv_vcpu_set_reg(_vcpu, HvReg.X0 + (uint)index, value).ThrowOnError();
+                var result = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.X0 + (uint)index, value);
+                if (result == HvResult.BadArgument) return;
+                result.ThrowOnError();
             }
         }
 
