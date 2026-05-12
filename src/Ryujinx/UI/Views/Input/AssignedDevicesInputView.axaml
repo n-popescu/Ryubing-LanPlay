@@ -33,25 +33,27 @@
                             PointerPressed="DeviceRow_OnPointerPressed"
                             Cursor="Hand"
                             IsEnabled="{Binding !IsDisabledByOtherPlayer}">
-                            <Grid ColumnDefinitions="Auto,*,Auto">
+                            <Grid ColumnDefinitions="*,Auto">
                                 <CheckBox
                                     Grid.Column="0"
                                     IsChecked="{Binding IsAssigned}"
                                     Checked="AssignedDeviceCheckBox_OnCheckedChanged"
                                     Unchecked="AssignedDeviceCheckBox_OnCheckedChanged"
                                     VerticalAlignment="Center"
+                                    HorizontalAlignment="Stretch"
                                     Margin="0"
-                                    Padding="2" />
-                                <StackPanel Grid.Column="1" Margin="4,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Name}" />
-                                    <TextBlock
-                                        Opacity="0.6"
-                                        FontSize="12"
-                                        Text="{Binding BoundProfileName}"
-                                        IsVisible="{Binding HasBoundProfileName}" />
-                                </StackPanel>
+                                    Padding="2">
+                                    <StackPanel Margin="4,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" />
+                                        <TextBlock
+                                            Opacity="0.6"
+                                            FontSize="12"
+                                            Text="{Binding BoundProfileName}"
+                                            IsVisible="{Binding HasBoundProfileName}" />
+                                    </StackPanel>
+                                </CheckBox>
                                 <TextBlock
-                                    Grid.Column="2"
+                                    Grid.Column="1"
                                     VerticalAlignment="Center"
                                     Margin="8,0,0,0"
                                     Opacity="0.6"

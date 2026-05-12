@@ -371,7 +371,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 return;
             }
 
-            LoadSelectedDeviceDefaults();
+            LoadCurrentDeviceDefaultProfile();
             RefreshModifiedState();
             FindPairedDeviceInConfigFile();
             NotifyChanges();
@@ -1122,6 +1122,18 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             LoadConfiguration(LoadPreferredConfigurationForCurrentDevice(), false);
             SetSelectedProfileSilently(GetBoundProfileNameForCurrentDevice());
+            RefreshProfileBindingState();
+        }
+
+        private void LoadCurrentDeviceDefaultProfile()
+        {
+            if (_device > 0 && _device < Devices.Count && Devices[_device].Type != DeviceType.None)
+            {
+                LoadControllers();
+            }
+
+            LoadConfiguration(LoadDefaultConfiguration(), false);
+            SetSelectedProfileSilently(GetCurrentProfileDefaultName());
             RefreshProfileBindingState();
         }
 
