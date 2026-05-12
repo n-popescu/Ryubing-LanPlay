@@ -151,34 +151,18 @@ namespace Ryujinx.Cpu.AppleHv
             if (index == 31)
             {
                 var result = HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.SP_EL0, out ulong value);
-                if (result != HvResult.Success)
-                {
-                    if (result == HvResult.BadArgument)
-                    {
-                        return 0;
-                    }
-                    result.ThrowOnError();
-                }
+                if (result == HvResult.BadArgument) return 0;
+                result.ThrowOnError();
                 return value;
             }
             else if (index >= 0 && index <= 30)
             {
                 var result = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.X0 + (uint)index, out ulong value);
-                if (result != HvResult.Success)
-                {
-                    if (result == HvResult.BadArgument)
-                    {
-                        Logger.Warning?.Print(LogClass.Cpu, $"HV_BAD_ARGUMENT on X{index}");
-                        return 0;
-                    }
-                    result.ThrowOnError();
-                }
+                if (result == HvResult.BadArgument) return 0;
+                result.ThrowOnError();
                 return value;
             }
-            else
-            {
-                return 0;
-            }
+            return 0;
         }
 
         public void SetX(int index, ulong value)
@@ -199,13 +183,40 @@ namespace Ryujinx.Cpu.AppleHv
 
         public V128 GetV(int index)
         {
-            HvApi.hv_vcpu_get_simd_fp_reg(_vcpu, HvSimdFPReg.Q0 + (uint)index, out HvSimdFPUchar16 value).ThrowOnError();
+            if (index < 0 || index > 31)
+            {
+                return V128.Zero;
+            }
+
+            var result = HvApi.hv_vcpu_get_simd_fp_reg(_vcpu, HvSimdFPReg.Q0 + (uint)index, out HvSimdFPUchar16 value);
+            if (result == HvResult.BadArgument)
+            {
+                return V128.Zero;
+            }
+            if (result != HvResult.Success)
+            {
+                result.ThrowOnError();
+            }
+
             return new V128(value.Low, value.High);
         }
 
         public void SetV(int index, V128 value)
         {
-            _setSimdFpReg(_vcpu, HvSimdFPReg.Q0 + (uint)index, value, _setSimdFpRegNativePtr).ThrowOnError();
+            if (index < 0 || index > 31)
+            {
+                return;
+            }
+
+            var result = _setSimdFpReg(_vcpu, HvSimdFPReg.Q0 + (uint)index, value, _setSimdFpRegNativePtr);
+            if (result == HvResult.BadArgument)
+            {
+                return;
+            }
+            if (result != HvResult.Success)
+            {
+                result.ThrowOnError();
+            }
         }
 
         public void RequestInterrupt()
