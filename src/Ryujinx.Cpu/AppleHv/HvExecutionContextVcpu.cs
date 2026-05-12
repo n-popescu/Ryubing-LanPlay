@@ -34,110 +34,6 @@ namespace Ryujinx.Cpu.AppleHv
             }
         }
 
-        public ulong Pc
-        {
-            get
-            {
-                HvApi.hv_vcpu_get_reg(_vcpu, HvReg.PC, out ulong pc).ThrowOnError();
-                return pc;
-            }
-            set
-            {
-                HvApi.hv_vcpu_set_reg(_vcpu, HvReg.PC, value).ThrowOnError();
-            }
-        }
-
-        public ulong ElrEl1
-        {
-            get
-            {
-                HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.ELR_EL1, out ulong elr).ThrowOnError();
-                return elr;
-            }
-            set
-            {
-                HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.ELR_EL1, value).ThrowOnError();
-            }
-        }
-
-        public ulong EsrEl1
-        {
-            get
-            {
-                HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.ESR_EL1, out ulong esr).ThrowOnError();
-                return esr;
-            }
-            set
-            {
-                HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.ESR_EL1, value).ThrowOnError();
-            }
-        }
-
-        public long TpidrEl0
-        {
-            get
-            {
-                HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.TPIDR_EL0, out ulong tpidrEl0).ThrowOnError();
-                return (long)tpidrEl0;
-            }
-            set
-            {
-                HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.TPIDR_EL0, (ulong)value).ThrowOnError();
-            }
-        }
-
-        public long TpidrroEl0
-        {
-            get
-            {
-                HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.TPIDRRO_EL0, out ulong tpidrroEl0).ThrowOnError();
-                return (long)tpidrroEl0;
-            }
-            set
-            {
-                HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.TPIDRRO_EL0, (ulong)value).ThrowOnError();
-            }
-        }
-
-        public uint Pstate
-        {
-            get
-            {
-                HvApi.hv_vcpu_get_reg(_vcpu, HvReg.CPSR, out ulong cpsr).ThrowOnError();
-                return (uint)cpsr;
-            }
-            set
-            {
-                HvApi.hv_vcpu_set_reg(_vcpu, HvReg.CPSR, (ulong)value).ThrowOnError();
-            }
-        }
-
-        public uint Fpcr
-        {
-            get
-            {
-                HvApi.hv_vcpu_get_reg(_vcpu, HvReg.FPCR, out ulong fpcr).ThrowOnError();
-                return (uint)fpcr;
-            }
-            set
-            {
-                HvApi.hv_vcpu_set_reg(_vcpu, HvReg.FPCR, (ulong)value).ThrowOnError();
-            }
-        }
-
-        public uint Fpsr
-        {
-            get
-            {
-                HvApi.hv_vcpu_get_reg(_vcpu, HvReg.FPSR, out ulong fpsr).ThrowOnError();
-                return (uint)fpsr;
-            }
-            set
-            {
-                HvApi.hv_vcpu_set_reg(_vcpu, HvReg.FPSR, (ulong)value).ThrowOnError();
-            }
-        }
-
         private readonly ulong _vcpu;
         private int _interruptRequested;
 
@@ -146,19 +42,163 @@ namespace Ryujinx.Cpu.AppleHv
             _vcpu = vcpu;
         }
 
+        public ulong Pc
+        {
+            get
+            {
+                var result = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.PC, out ulong pc);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on PC"); return 0; }
+                result.ThrowOnError();
+                return pc;
+            }
+            set
+            {
+                var result = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.PC, value);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on PC (set)"); return; }
+                result.ThrowOnError();
+            }
+        }
+
+        public ulong ElrEl1
+        {
+            get
+            {
+                var result = HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.ELR_EL1, out ulong elr);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on ELR_EL1"); return 0; }
+                result.ThrowOnError();
+                return elr;
+            }
+            set
+            {
+                var result = HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.ELR_EL1, value);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on ELR_EL1 (set)"); return; }
+                result.ThrowOnError();
+            }
+        }
+
+        public ulong EsrEl1
+        {
+            get
+            {
+                var result = HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.ESR_EL1, out ulong esr);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on ESR_EL1"); return 0; }
+                result.ThrowOnError();
+                return esr;
+            }
+            set
+            {
+                var result = HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.ESR_EL1, value);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on ESR_EL1 (set)"); return; }
+                result.ThrowOnError();
+            }
+        }
+
+        public long TpidrEl0
+        {
+            get
+            {
+                var result = HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.TPIDR_EL0, out ulong val);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on TPIDR_EL0"); return 0; }
+                result.ThrowOnError();
+                return (long)val;
+            }
+            set
+            {
+                var result = HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.TPIDR_EL0, (ulong)value);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on TPIDR_EL0 (set)"); return; }
+                result.ThrowOnError();
+            }
+        }
+
+        public long TpidrroEl0
+        {
+            get
+            {
+                var result = HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.TPIDRRO_EL0, out ulong val);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on TPIDRRO_EL0"); return 0; }
+                result.ThrowOnError();
+                return (long)val;
+            }
+            set
+            {
+                var result = HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.TPIDRRO_EL0, (ulong)value);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on TPIDRRO_EL0 (set)"); return; }
+                result.ThrowOnError();
+            }
+        }
+
+        public uint Pstate
+        {
+            get
+            {
+                var result = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.CPSR, out ulong cpsr);
+                if (result == HvResult.BadArgument)
+                {
+                    Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on CPSR (Pstate) - common during early GetThreadContext3");
+                    return 0;
+                }
+                result.ThrowOnError();
+                return (uint)cpsr;
+            }
+            set
+            {
+                var result = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.CPSR, (ulong)value);
+                if (result == HvResult.BadArgument)
+                {
+                    Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on CPSR (set)");
+                    return;
+                }
+                result.ThrowOnError();
+            }
+        }
+
+        public uint Fpcr
+        {
+            get
+            {
+                var result = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.FPCR, out ulong val);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on FPCR"); return 0; }
+                result.ThrowOnError();
+                return (uint)val;
+            }
+            set
+            {
+                var result = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.FPCR, (ulong)value);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on FPCR (set)"); return; }
+                result.ThrowOnError();
+            }
+        }
+
+        public uint Fpsr
+        {
+            get
+            {
+                var result = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.FPSR, out ulong val);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on FPSR"); return 0; }
+                result.ThrowOnError();
+                return (uint)val;
+            }
+            set
+            {
+                var result = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.FPSR, (ulong)value);
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on FPSR (set)"); return; }
+                result.ThrowOnError();
+            }
+        }
+
         public ulong GetX(int index)
         {
             if (index == 31)
             {
                 var result = HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.SP_EL0, out ulong value);
-                if (result == HvResult.BadArgument) return 0;
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on SP_EL0 (X31)"); return 0; }
                 result.ThrowOnError();
                 return value;
             }
             else if (index >= 0 && index <= 30)
             {
                 var result = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.X0 + (uint)index, out ulong value);
-                if (result == HvResult.BadArgument) return 0;
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, $"HV_BAD_ARGUMENT on X{index}"); return 0; }
                 result.ThrowOnError();
                 return value;
             }
@@ -170,13 +210,13 @@ namespace Ryujinx.Cpu.AppleHv
             if (index == 31)
             {
                 var result = HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.SP_EL0, value);
-                if (result == HvResult.BadArgument) return;
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, "HV_BAD_ARGUMENT on SP_EL0 (set)"); return; }
                 result.ThrowOnError();
             }
             else if (index >= 0 && index <= 30)
             {
                 var result = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.X0 + (uint)index, value);
-                if (result == HvResult.BadArgument) return;
+                if (result == HvResult.BadArgument) { Logger.Warning?.Print(LogClass.Cpu, $"HV_BAD_ARGUMENT on X{index} (set)"); return; }
                 result.ThrowOnError();
             }
         }
@@ -184,19 +224,16 @@ namespace Ryujinx.Cpu.AppleHv
         public V128 GetV(int index)
         {
             if (index < 0 || index > 31)
-            {
                 return V128.Zero;
-            }
 
             var result = HvApi.hv_vcpu_get_simd_fp_reg(_vcpu, HvSimdFPReg.Q0 + (uint)index, out HvSimdFPUchar16 value);
             if (result == HvResult.BadArgument)
             {
+                Logger.Warning?.Print(LogClass.Cpu, $"HV_BAD_ARGUMENT on V{index} (SIMD)");
                 return V128.Zero;
             }
             if (result != HvResult.Success)
-            {
                 result.ThrowOnError();
-            }
 
             return new V128(value.Low, value.High);
         }
@@ -204,19 +241,16 @@ namespace Ryujinx.Cpu.AppleHv
         public void SetV(int index, V128 value)
         {
             if (index < 0 || index > 31)
-            {
                 return;
-            }
 
             var result = _setSimdFpReg(_vcpu, HvSimdFPReg.Q0 + (uint)index, value, _setSimdFpRegNativePtr);
             if (result == HvResult.BadArgument)
             {
+                Logger.Warning?.Print(LogClass.Cpu, $"HV_BAD_ARGUMENT on V{index} (SIMD set)");
                 return;
             }
             if (result != HvResult.Success)
-            {
                 result.ThrowOnError();
-            }
         }
 
         public void RequestInterrupt()
