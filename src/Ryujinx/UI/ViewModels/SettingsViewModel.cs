@@ -274,6 +274,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         public bool EnableTrace { get; set; }
         public bool EnableGuest { get; set; }
         public bool EnableFsAccessLog { get; set; }
+        public bool EnableNetLog { get; set; }
         public bool EnableAvaloniaLog { get; set; }
         public bool EnableDebug { get; set; }
         public bool IsOpenAlEnabled { get; set; }
@@ -727,6 +728,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             EnableGuest = config.Logger.EnableGuest;
             EnableDebug = config.Logger.EnableDebug;
             EnableFsAccessLog = config.Logger.EnableFsAccessLog;
+            EnableNetLog = config.Logger.EnableNetLog;
             EnableAvaloniaLog = config.Logger.EnableAvaloniaLog;
             FsGlobalAccessLogMode = config.System.FsGlobalAccessLogMode;
             OpenglDebugLevel = (int)config.Logger.GraphicsDebugLevel.Value;
@@ -851,6 +853,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             config.Logger.EnableGuest.Value = EnableGuest;
             config.Logger.EnableDebug.Value = EnableDebug;
             config.Logger.EnableFsAccessLog.Value = EnableFsAccessLog;
+            config.Logger.EnableNetLog.Value = EnableNetLog;
             config.Logger.EnableAvaloniaLog.Value = EnableAvaloniaLog;
             config.System.FsGlobalAccessLogMode.Value = FsGlobalAccessLogMode;
             config.Logger.GraphicsDebugLevel.Value = (GraphicsDebugLevel)OpenglDebugLevel;
