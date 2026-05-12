@@ -2067,27 +2067,31 @@ namespace Ryujinx.Ava.UI.ViewModels
             nint hwnd = Window.TryGetPlatformHandle()?.Handle ?? nint.Zero;
             if (hwnd == nint.Zero) return;
 
+            PixelPoint windowCenter = new(
+                Window.Position.X + (int)(Window.Bounds.Width / 2),
+                Window.Position.Y + (int)(Window.Bounds.Height / 2));
+
+            var screen =
+                Window.Screens.ScreenFromVisual(Window) ??
+                Window.Screens.ScreenFromPoint(windowCenter) ??
+                Window.Screens.Primary;
+
+            if (screen == null)
+            {
+                return; // Can't determine screen size, don't attempt fullscreen
+            }
+
             // Save current style and placement
             _savedWindowStyle = Win32NativeInterop.GetWindowLongPtrW(hwnd, Win32NativeInterop.GWL_STYLE);
 
             // Remove window chrome: WS_OVERLAPPEDWINDOW -> WS_POPUP | WS_VISIBLE
             Win32NativeInterop.SetWindowLongPtrW(hwnd, Win32NativeInterop.GWL_STYLE,
                 unchecked((nint)(Win32NativeInterop.WS_POPUP | Win32NativeInterop.WS_VISIBLE)));
-            
-            // TODO: why is this nullable
-            Avalonia.Platform.Screen? screen = Window.Screens.ScreenFromVisual(Window);
-            if (screen == null)
-            {
-                screen = Window.Screens.Primary;
-            }
-            if (screen == null)
-            {
-                return; // Can't determine screen size, don't attempt fullscreen
-            }
+
             int w = screen.Bounds.Width;
             int h = screen.Bounds.Height;
 
-            Win32NativeInterop.SetWindowPos(hwnd, nint.Zero, 0, 0, w, h,
+            Win32NativeInterop.SetWindowPos(hwnd, nint.Zero, screen.Bounds.X, screen.Bounds.Y, w, h,
                 Win32NativeInterop.SWP_NOZORDER | Win32NativeInterop.SWP_NOACTIVATE | Win32NativeInterop.SWP_FRAMECHANGED);
 
             WindowState = WindowState.FullScreen;
