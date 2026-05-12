@@ -177,7 +177,6 @@ namespace Ryujinx.Cpu.AppleHv
             }
             else
             {
-                // Invalid index protection
                 return 0;
             }
         }
