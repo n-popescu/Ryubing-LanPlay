@@ -162,7 +162,7 @@ namespace Ryujinx.Graphics.Vulkan
 
                 _imageAuto = new Auto<DisposableImage>(new DisposableImage(_gd.Api, device, _image));
 
-                InitialTransition(ImageLayout.Preinitialized, ImageLayout.General);
+                InitialTransition(ImageLayout.Undefined, ImageLayout.General);
             }
 
             _slices = new TextureSliceInfo[levels * _depthOrLayers];
