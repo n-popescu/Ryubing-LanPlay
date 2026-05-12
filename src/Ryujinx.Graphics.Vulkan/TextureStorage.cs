@@ -67,6 +67,8 @@ namespace Ryujinx.Graphics.Vulkan
 
         public VkFormat VkFormat { get; }
 
+        public ImageUsageFlags UsageFlags { get; }
+
         public unsafe TextureStorage(
             VulkanRenderer gd,
             Device device,
@@ -94,6 +96,7 @@ namespace Ryujinx.Graphics.Vulkan
             SampleCountFlags sampleCountFlags = ConvertToSampleCountFlags(gd.Capabilities.SupportedSampleCounts, (uint)info.Samples);
 
             ImageUsageFlags usage = GetImageUsage(info.Format, gd.Capabilities, isMsImageStorageSupported);
+            UsageFlags = usage;
 
             ImageCreateFlags flags = ImageCreateFlags.CreateMutableFormatBit | ImageCreateFlags.CreateExtendedUsageBit;
 

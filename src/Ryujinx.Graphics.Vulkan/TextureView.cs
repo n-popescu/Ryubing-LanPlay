@@ -64,7 +64,7 @@ namespace Ryujinx.Graphics.Vulkan
             bool isMsImageStorageSupported = gd.Capabilities.SupportsShaderStorageImageMultisample || !info.Target.IsMultisample;
 
             VkFormat format = _gd.FormatCapabilities.ConvertToVkFormat(info.Format, isMsImageStorageSupported);
-            ImageUsageFlags usage = TextureStorage.GetImageUsage(info.Format, gd.Capabilities, isMsImageStorageSupported);
+            ImageUsageFlags usage = TextureStorage.GetImageUsage(info.Format, gd.Capabilities, isMsImageStorageSupported) & storage.UsageFlags;
 
             uint levels = (uint)info.Levels;
             uint layers = (uint)info.GetLayers();
@@ -132,6 +132,8 @@ namespace Ryujinx.Graphics.Vulkan
             {
                 shaderUsage |= ImageUsageFlags.StorageBit;
             }
+
+            shaderUsage &= storage.UsageFlags;
 
             _imageView = CreateImageView(componentMapping, subresourceRange, type, shaderUsage);
 
