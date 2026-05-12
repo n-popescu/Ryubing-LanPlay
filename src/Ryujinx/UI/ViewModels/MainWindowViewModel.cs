@@ -2076,8 +2076,16 @@ namespace Ryujinx.Ava.UI.ViewModels
             
             // TODO: why is this nullable
             Avalonia.Platform.Screen? screen = Window.Screens.ScreenFromVisual(Window);
-            int w = screen?.Bounds.Width ?? 0;
-            int h = screen?.Bounds.Height ?? 0;
+            if (screen == null)
+            {
+                screen = Window.Screens.Primary;
+            }
+            if (screen == null)
+            {
+                return; // Can't determine screen size, don't attempt fullscreen
+            }
+            int w = screen.Bounds.Width;
+            int h = screen.Bounds.Height;
 
             Win32NativeInterop.SetWindowPos(hwnd, nint.Zero, 0, 0, w, h,
                 Win32NativeInterop.SWP_NOZORDER | Win32NativeInterop.SWP_NOACTIVATE | Win32NativeInterop.SWP_FRAMECHANGED);
