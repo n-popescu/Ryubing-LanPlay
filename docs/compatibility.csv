@@ -1061,6 +1061,7 @@
 0100BCA016636000,"eBaseball Powerful Pro Yakyuu 2022",gpu;services-horizon;crash,nothing,2024-05-26 23:07:19
 01001F20100B8000,"Eclipse: Edge of Light",,playable,2020-08-11 23:06:29
 0100E0A0110F4000,"eCrossminton",,playable,2020-07-11 18:24:27
+010054601D54C000,"Emio – The Smiling Man: Famicom Detective Club (DEMO)",demo,playable,2026-05-13 18:32:12
 0100ABE00DB4E000,"Edna & Harvey: Harvey's New Eyes",nvdec,playable,2021-01-26 14:36:08
 01004F000B716000,"Edna & Harvey: The Breakout – Anniversary Edition",crash;nvdec,ingame,2022-08-01 16:59:56
 01002550129F0000,"Effie",,playable,2022-10-27 14:36:39
@@ -1204,7 +1205,7 @@
 01003B200E440000,"Five Nights at Freddy's: Sister Location",,playable,2023-10-06 09:00:58
 010038200E088000,"Flan",crash;regression,ingame,2021-11-17 07:39:28
 01000A0004C50000,"FLASHBACK™",nvdec,playable,2020-05-14 13:57:29
-0100C53004C52000,"Flat Heroes",gpu,ingame,2022-07-26 19:37:37
+0100C53004C52000,"Flat Heroes",,playable,2026-02-27 17:00:00
 0100B54012798000,"Flatland: Prologue",,playable,2020-12-11 20:41:12
 0100307004B4C000,"Flinthook",online,playable,2021-03-25 20:42:29
 010095A004040000,"Flip Wars",services;ldn-untested,ingame,2022-05-02 15:39:18
@@ -1394,6 +1395,7 @@
 0100c3c012718000,"Grand Theft Auto: III – The Definitive Edition",gpu;UE4,ingame,2022-10-31 20:13:52
 0100182014022000,"Grand Theft Auto: Vice City – The Definitive Edition",gpu;UE4,ingame,2022-10-31 20:13:52
 010065a014024000,"Grand Theft Auto: San Andreas – The Definitive Edition",gpu;UE4,ingame,2022-10-31 20:13:52
+0100EB500D92E000,"GROOVE COASTER WAI WAI PARTY!!!!",gpu,ingame,2026-05-13 18:32:12
 0100822012D76000,"HAAK",gpu,ingame,2023-02-19 14:31:05
 01007E100EFA8000,"Habroxia",,playable,2020-06-16 23:04:42
 0100535012974000,"Hades",vulkan,playable,2022-10-05 10:45:21
@@ -1832,6 +1834,7 @@
 010055200E87E000,"Metamorphosis",UE4;audout;gpu;nvdec,ingame,2021-06-16 16:18:11
 0100D4900E82C000,"Metro 2033 Redux",gpu,ingame,2022-11-09 10:53:13
 0100F0400E850000,"Metro: Last Light Redux",slow;nvdec;vulkan-backend-bug,ingame,2023-11-01 11:53:52
+010019A01E2F2000,"Metroid Prime 4: Beyond",,ingame,2026-05-13 18:32:12
 010012101468C000,"Metroid Prime™ Remastered",gpu;Needs Update;vulkan-backend-bug;opengl-backend-bug,ingame,2024-05-07 22:48:15
 010093801237C000,"Metroid™ Dread",,playable,2023-11-13 04:02:36
 0100A1200F20C000,"Midnight Evil",,playable,2022-10-18 22:55:19
@@ -1945,6 +1948,7 @@
 0100C3E00ACAA000,"Mutant Football League: Dynasty Edition",online-broken,playable,2022-08-05 17:01:51
 01004BE004A86000,"Mutant Mudds Collection",,playable,2022-08-05 17:11:38
 0100E6B00DEA4000,"Mutant Year Zero: Road to Eden - Deluxe Edition",nvdec;UE4,playable,2022-09-10 13:31:10
+010037501F864000,"Mute Crimson DX",,ingame,2026-05-13 18:32:12
 0100161009E5C000,"MX Nitro: Unleashed",,playable,2022-09-27 22:34:33
 0100218011E7E000,"MX vs ATV All Out",nvdec;UE4;vulkan-backend-bug,playable,2022-10-25 19:51:46
 0100D940063A0000,"MXGP3 - The Official Motocross Videogame",UE4;gpu;nvdec,ingame,2020-12-16 14:00:20
@@ -2268,6 +2272,7 @@
 010086F0064CE000,"Poi: Explorer Edition",nvdec,playable,2021-01-21 19:32:00
 0100EB6012FD2000,"Poison Control",,playable,2021-05-16 14:01:54
 010072400E04A000,"Pokémon Café ReMix",,playable,2021-08-17 20:00:04
+01005B7008C52800,"Pokémon Champions",Needs Update;services;online-broke,menus,2026-05-13 18:32:12
 010008c01e742000,"Pokémon Friends",crash;services,menus,2025-07-24 13:32:00
 01003D200BAA2000,"Pokémon Mystery Dungeon™: Rescue Team DX",mac-bug,playable,2024-01-21 00:16:32
 01008DB008C2C000,"Pokémon Shield + Pokémon Shield Expansion Pass",deadlock;crash;online-broken;ldn-works;LAN,ingame,2024-08-12 07:20:22
@@ -2275,6 +2280,8 @@
 01009AD008C4C000,"Pokémon: Let's Go, Pikachu! demo",slow;demo,playable,2023-11-26 11:23:20
 0100000011D90000,"Pokémon™ Brilliant Diamond",gpu;ldn-works,ingame,2024-08-28 13:26:35
 010018E011D92000,"Pokémon™ Shining Pearl",gpu;ldn-works,ingame,2024-08-28 13:26:35
+100554023408000,"Pokémon FireRed Version",crashes,nothing,2026-05-13 18:32:12
+010034D02340E000,"Pokémon LeafGreen Version",crashes,nothing,2026-05-13 18:32:12
 010015F008C54000,"Pokémon™ HOME",Needs Update;crash;services,menus,2020-12-06 06:01:51
 01001F5010DFA000,"Pokémon™ Legends: Arceus",gpu;Needs Update;ldn-works,ingame,2024-09-19 10:02:02
 0100F43008C44000,"Pokémon™ Legends: Z-A",gpu;crash;ldn-works,ingame,2025-11-16 00:30:00
@@ -2866,7 +2873,7 @@
 0100277011F1A000,"Super Mario Bros.™ 35",online-broken,menus,2022-08-07 16:27:25
 010015100B514000,"Super Mario Bros.™ Wonder",amd-vendor-bug,playable,2024-09-06 13:21:21
 01009B90006DC000,"Super Mario Maker™ 2",online-broken;ldn-broken,playable,2024-08-25 11:05:19
-0100000000010000,"Super Mario Odyssey™",nvdec;intel-vendor-bug;mac-bug,playable,2024-08-25 01:32:34
+0100000000010000,"Super Mario Odyssey™",nvdec;intel-vendor-bug;mac-bug;amd-vendor-bug,playable,2026-05-13 18:32:12
 010036B0034E4000,"Super Mario Party™",gpu;Needs Update;ldn-works,ingame,2024-06-21 05:10:16
 0100965017338000,"Super Mario Party Jamboree",mac-bug;gpu,ingame,2025-02-17 02:09:20
 0100BC0018138000,"Super Mario RPG™",gpu;audio;nvdec,ingame,2024-06-19 17:43:42
@@ -3163,6 +3170,8 @@
 0100E2E00CB14000,"Tokyo School Life",,playable,2022-09-16 20:25:54
 010024601BB16000,"Tomb Raider I-III Remastered Starring Lara Croft",gpu;opengl,ingame,2024-09-27 12:32:04
 0100D7F01E49C000,"Tomba! Special Edition",services-horizon,nothing,2024-09-15 21:59:54
+010051F0207B2000,"Tomodachi Life: Living the Dream",amd-vendor-bug;gpu;intel-vendor-bug;ldn-broken,ingame,2026-05-13 18:32:12
+0100CA502552A000,"Tomodachi Life: Living the Dream – Welcome Edtion",amd-vendor-bug;demo,playable,2026-05-13 18:32:12
 0100D400100F8000,"Tonight We Riot",,playable,2021-02-26 15:55:09
 0100CC00102B4000,"Tony Hawk's™ Pro Skater™ 1 + 2",gpu;Needs Update,ingame,2024-09-24 08:18:14
 010093F00E818000,"Tools Up!",crash,ingame,2020-07-21 12:58:17
