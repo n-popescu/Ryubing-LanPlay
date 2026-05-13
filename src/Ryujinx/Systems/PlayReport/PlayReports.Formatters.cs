@@ -137,6 +137,22 @@ namespace Ryujinx.Ava.Systems.PlayReport
         private static FormattedValue SuperMario3DWorldOrBowsersFury(SingleValue value)
             => value.Matched.BoxedValue is 0 ? "Playing Super Mario 3D World" : "Playing Bowser's Fury";
 
+        private static FormattedValue SuperMario3DAllStars(SingleValue value)
+        {
+            // TODO: Is this really necessary?
+            FormattedValue title = value.Matched.IntValue switch
+            {
+                1 => "Super Mario 64",
+                2 => "Super Mario Sunshine",
+                3 => "Super Mario Galaxy",
+                _ => FormattedValue.ForceReset
+            };
+            
+            return title.Reset 
+                ? FormattedValue.ForceReset 
+                : $"Playing {title}";
+        }
+
         private static FormattedValue SuperMarioWonder(SingleValue value)
         {
             // TODO: Needs updated for course names.

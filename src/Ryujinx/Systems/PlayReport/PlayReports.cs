@@ -49,9 +49,15 @@ namespace Ryujinx.Ava.Systems.PlayReport
                     .AddValueFormatter("mode", SuperMario3DWorldOrBowsersFury)
             )
             .AddSpec(
+                ["010049900f546000", "010049900f546001", "010049900f546002", "010049900F546003"],
+                spec => spec
+                .WithDescription("based on which game you've selected to play in the collection.")
+                .AddValueFormatter("program_id", SuperMario3DAllStars)
+            )
+            .AddSpec(
                 "010015100b514000", // Super Mario Bros. Wonder
                 spec => spec
-                .WithDescription("based on what coure you're in.")
+                .WithDescription("based on what world and course you're in.")
                 .AddValueFormatter("stage_info", SuperMarioWonder)
             )
             .AddSpec( // Global & China IDs
