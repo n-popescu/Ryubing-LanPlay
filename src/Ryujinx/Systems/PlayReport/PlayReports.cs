@@ -14,7 +14,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
 
         private static readonly Lazy<Analyzer> _analyzerLazy = new(() => new Analyzer()
             .AddSpec(
-                "01007ef00011e000",
+                "01007ef00011e000", // Breath of the Wild
                 spec => spec
                     .WithDescription("based on being in Master Mode.")
                     .AddValueFormatter("IsHardMode", BreathOfTheWild_MasterMode)
@@ -22,48 +22,53 @@ namespace Ryujinx.Ava.Systems.PlayReport
                     .AddValueFormatter("AoCVer", FormattedValue.SingleAlwaysResets)
             )
             .AddSpec(
-                "0100f2c0115b6000",
+                "0100f2c0115b6000", // Tears of the Kingdom
                 spec => spec
                     .WithDescription("based on where you are in Hyrule (Depths, Surface, Sky).")
                     .AddValueFormatter("PlayerPosY", TearsOfTheKingdom_CurrentField))
             .AddSpec(
-                "01002da013484000",
+                "01002da013484000", // Skyward Sword
                 spec => spec
                     .WithDescription("based on how many Rupees you have.")
                     .AddValueFormatter("rupees", SkywardSwordHD_Rupees))
             .AddSpec(
-                "0100000000010000",
+                "01008cf01baac000", // Echoes of Wisdom
                 spec => spec
-                    .WithDescription("based on if you're playing with Assist Mode.")
-                    .AddValueFormatter("is_kids_mode", SuperMarioOdyssey_AssistMode)
-            )
+                    .WithDescription("based on where you've warped.")
+                    .AddValueFormatter("dest_index", EchoesOfWisdom_Warp))
             .AddSpec(
-                "010075000ecbe000",
+                "0100000000010000", // Super Mario Odyssey
                 spec => spec
-                    .WithDescription("based on if you're playing with Assist Mode.")
-                    .AddValueFormatter("is_kids_mode", SuperMarioOdysseyChina_AssistMode)
-            )
+                    .WithDescription("based on what kingdom you're in.")
+                    .AddValueFormatter("stage_name", SuperMarioOdyssey)
+                )
             .AddSpec(
-                "010028600ebda000",
+                "010028600ebda000", // Super Mario 3D World + Bowser's Fury
                 spec => spec
                     .WithDescription("based on being in either Super Mario 3D World or Bowser's Fury.")
                     .AddValueFormatter("mode", SuperMario3DWorldOrBowsersFury)
             )
+            .AddSpec(
+                "010015100b514000", // Super Mario Bros. Wonder
+                spec => spec
+                .WithDescription("based on what coure you're in.")
+                .AddValueFormatter("stage_info", SuperMarioWonder)
+            )
             .AddSpec( // Global & China IDs
-                ["0100152000022000", "010075100e8ec000"],
+                ["0100152000022000", "010075100e8ec000"], // Mario Kart 8 Deluxe
                 spec => spec
                     .WithDescription(
                         "based on what modes you're selecting in the menu & whether or not you're in a race.")
                     .AddValueFormatter("To", MarioKart8Deluxe_Mode)
             )
             .AddSpec(
-                ["0100a3d008c5c000", "01008f6008c5e000"],
+                ["0100a3d008c5c000", "01008f6008c5e000"], // Pokemon Scarlet/Violet
                 spec => spec
                     .WithDescription("based on if you're playing alone or in a group and what area of Paldea you're exploring.")
                     .AddMultiValueFormatter(["team_circle", "area_no"], PokemonSV)
             )
             .AddSpec(
-                "01006a800016e000",
+                "01006a800016e000", // Super Smash Bros. Ultimate
                 spec => spec
                     .WithDescription("based on what mode you're playing, who won, and what characters were present.")
                     .AddSparseMultiValueFormatter(
@@ -84,7 +89,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
             .AddSpec(
                 [
                     "0100c9a00ece6000", "01008d300c50c000", "0100d870045b6000",
-                    "010012f017576000", "0100c62011050000", "0100b3c014bda000"
+                    "010012f017576000", "0100c62011050000", "0100b3c014bda000" // NES NSO
                 ],
                 spec => spec
                     .WithDescription(

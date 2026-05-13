@@ -1,5 +1,6 @@
 using Gommon;
 using Humanizer;
+using MsgPack;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -23,14 +24,155 @@ namespace Ryujinx.Ava.Systems.PlayReport
         private static FormattedValue SkywardSwordHD_Rupees(SingleValue value)
             => "rupee".ToQuantity(value.Matched.IntValue);
 
-        private static FormattedValue SuperMarioOdyssey_AssistMode(SingleValue value)
-            => value.Matched.BoxedValue is 1 ? "Playing in Assist Mode" : "Playing in Regular Mode";
+        private static FormattedValue EchoesOfWisdom_Warp(SingleValue value)
+        {
+            FormattedValue locations = value.Matched.IntValue switch
+            {
+                // Hyrule Field
+                23 => "Hyrule Field: Kakariko Village",
+                43 => "Hyrule Field: West of Hyrule Ranch",
+                45 => "Hyrule Field: North of Hyrule Ranch",
+                25 => "Hyrule Field: Hyrule Ranch",
+                26 => "Hyrule Field: West of Hyrule Castle",
+                48 => "Hyrule Field: Haunted Grove",
+                24 => "Hyrule Field: Hyrule Castle",
+                27 => "Hyrule Field: Northern Sanctuary",
+                28 => "Eastern Hyrule Field: Eastern Temple",
+                41 => "Eastern Hyrule Field: Dampé Studio",
+                22 => "Lake Hylia: Great Fairy Shrine",
+                // Eternal Forest
+                47 => "Eternal Forest: Entrance",
+                46 => "Eternal Forest: Great Deku Tree",
+                752 => "Eternal Forest: Stilled Ancient Ruins (Halfway Point)",
+                753 => "Eternal Forest: Stilled Ancient Ruins (Null)",
+                // Suthorn
+                33 => "Suthorn Prairie: Lueburry's House",
+                20 => "Suthorn Prairie: Suthorn Village",
+                21 => "Suthorn Forest: Suthorn Ruins",
+                // Faron Wetlands
+                13 => "Faron Wetlands: Entrance",
+                15 => "Faron Wetlands: Scrubton",
+                18 => "Faron Wetlands: Blossu's House",
+                17 => "Faron Wetlands: Heart Lake",
+                852 => "Faron Wetlands: Stilled Faron Wetlands",
+                601 => "Faron Wetlands: Faron Temple 3F",
+                602 => "Faron Wetlands: Faron Temple 2F (Underwater Entrance)",
+                603 => "Faron Wetlands: Faron Temple 2F (West Entrance)",
+                604 => "Faron Wetlands: Faron Temple 2F (Cliff Entrance)",
+                605 => "Faron Wetlands: Faron Temple 1F (Diababa)",
+                606 => "Faron Wetlands: Faron Temple 1F (Gohma)",
+                // Jabul Waters
+                11 => "Jabul Waters: River Zora Village",
+                9 => "Jabul Waters: Crossflows Plaza",
+                8 => "Jabul Waters: Seesyde Village",
+                12 => "Jabul Waters: Sea Zora Village",
+                10 => "Jabul Waters: Lord Jabu-Jabu's Den",
+                201 => "Jabul Waters: Jabul Ruins 1F (Entrance)",
+                202 => "Jabul Waters: Jabul Ruins 1F (Vocavor)",
+                // Gerudo Desert
+                40 => "Gerudo Desert: Entrance",
+                29 => "Gerudo Desert: Oasis",
+                32 => "Gerudo Desert: Ancestor's Cave Of Rest",
+                30 => "Gerudo Desert: Gerudo Town",
+                31 => "Gerudo Desert: Gerudo Sanctum",
+                351 => "Gerudo Desert: Stilled Gerudo Sanctum",
+                303 => "Gerudo Desert: Gerudo Sanctum 1F (West Entrance)",
+                304 => "Gerudo Desert: Gerudo Sanctum 1F (East Entrance)",
+                301 => "Gerudo Desert: Gerudo Sanctum 2F (The Key)",
+                302 => "Gerudo Desert: Gerudo Sanctum 2F (The Elephant Room)",
+                305 => "Gerudo Desert: Gerudo Sanctum 2F (Mogryph)",
+                // Eldin Volcano
+                4 => "Eldin Volcano: Eldin Volcano Trail",
+                44 => "Eldin Volcano: Lava Lake",
+                3 => "Eldin Volcano: Goron City",
+                5 => "Eldin Volcano: Rock Roast Volcano",
+                49 => "Eldin Volcano: Crater Shortcut",
+                552 => "Eldin Volcano: Stilled Eldin Volcano",
+                501 => "Eldin Volcano: Eldin Temple 1F",
+                503 => "Eldin Volcano: Eldin Temple 2F",
+                502 => "Eldin Volcano: Eldin Temple 3F",
+                // Hebra Mountain
+                34 => "Hebra Mountain: Hebra Mountain Passage (1)",
+                35 => "Hebra Mountain: Sheltered Hot Spring",
+                36 => "Hebra Mountain: Condé's House",
+                38 => "Hebra Mountain: Hebra Mountain Passage (2)",
+                37 => "Hebra Mountain: Hebra Mountain Passage (3)",
+                39 => "Hebra Mountain: Summit",
+                652 => "Hebra Mountain: Stilled Holy Mount Lanayru",
+                801 => "Hebra Mountain: Lanayru Temple 1F",
+                802 => "Hebra Mountain: Lanayru Temple B2",
+                803 => "Hebra Mountain: Lanayru Temple B4",
+                _ => FormattedValue.ForceReset
+            };
+            
+            return locations.Reset 
+                ? FormattedValue.ForceReset 
+                : $"Warped to {locations}";
+        }
 
-        private static FormattedValue SuperMarioOdysseyChina_AssistMode(SingleValue value)
-            => value.Matched.BoxedValue is 1 ? "Playing in 帮助模式" : "Playing in 普通模式";
+        private static FormattedValue SuperMarioOdyssey(SingleValue value)
+            => value.Matched.LongValue switch
+            {
+                // TODO: Needs updated for sub-areas.
+                2973331007 => "Cap Kingdom: Bonneton",
+                2661781375 => "Cascade Kingdom: Fossil Falls",
+                512560049 => "Sand Kingdom: Tostarena",
+                3079659402 => "Wooded Kingdom: Steam Gardens",
+                1941286268 => "Lake Kingdom: Lake Lamode",
+                3098209122 => "Cloud Kingdom: Nimbus Arena",
+                4088050842 => "Lost Kingdom: Forgotten Isle",
+                53003352 => "Metro Kingdom: New Donk City",
+                4265839612 => "Seaside Kingdom: Bubblaine",
+                3288863344 => "Snow Kingdom: Shiveria",
+                3180104973 => "Luncheon Kingdom: Mount Volbono",
+                2284558980 => "Ruined Kingdom: Crumbleden",
+                3024139598 => "Bowser's Kingdom: Bowser's Castle",
+                1351608174 => "Moon Kingdom: Honeylune Ridge",
+                1698750149 => "Dark Side: Rabbit Ridge",
+                3206301958 => "Darker Side: Culmina Crater",
+                3963002526 => "Mushroom Kingdom: Peach's Castle",
+                _ => FormattedValue.ForceReset
+            };              
 
         private static FormattedValue SuperMario3DWorldOrBowsersFury(SingleValue value)
             => value.Matched.BoxedValue is 0 ? "Playing Super Mario 3D World" : "Playing Bowser's Fury";
+
+        private static FormattedValue SuperMarioWonder(SingleValue value)
+        {
+            // TODO: Needs updated for course names.
+            MessagePackObject messagePackObject = value.Matched.PackedValue;
+            MessagePackObjectDictionary messagePackObjectDictionary = messagePackObject.AsDictionary();
+
+            int worldNumber = messagePackObjectDictionary["world_no"].AsInt32();
+            int courseNumber = 0;
+            
+            if (messagePackObjectDictionary.TryGetValue("course_no", out MessagePackObject courseNumberVariable))
+            {
+                courseNumber = courseNumberVariable.AsInt32();
+            }
+            
+            FormattedValue world = worldNumber switch
+            {
+                1 => "Pipe-Rock Plateau",
+                2 => "Petal Isles",
+                3 => "Fluff-Puff Peaks",
+                4 => "Shining Falls",
+                5 => "Sunbaked Desert",
+                6 => "Fungi Mines",
+                7 => "Deep Magma Bog",
+                9 => "Special World",
+                _ => FormattedValue.ForceReset
+            };
+
+            if (courseNumber == 0)
+            {
+                return FormattedValue.ForceReset;
+            }
+            
+            return world.Reset 
+                ? FormattedValue.ForceReset 
+                : $"{world}: {worldNumber}-{courseNumber}";
+        }
 
         private static FormattedValue MarioKart8Deluxe_Mode(SingleValue value)
             => value.Matched.StringValue switch
@@ -38,9 +180,9 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 // Single Player
                 "Single" => "Single Player",
                 // Multiplayer
-                "Multi-2players" => "Multiplayer 2 Players",
-                "Multi-3players" => "Multiplayer 3 Players",
-                "Multi-4players" => "Multiplayer 4 Players",
+                "Multi-2players" => "Multiplayer: 2 Players",
+                "Multi-3players" => "Multiplayer: 3 Players",
+                "Multi-4players" => "Multiplayer: 4 Players",
                 // Wireless/LAN Play
                 "Local-Single" => "Wireless/LAN Play",
                 "Local-2players" => "Wireless/LAN Play 2 Players",
@@ -62,8 +204,9 @@ namespace Ryujinx.Ava.Systems.PlayReport
 
         private static FormattedValue PokemonSV(MultiValue values)
         {
-
-            string playStatus = values.Matched[0].BoxedValue is 0 ? "Playing Alone" : "Playing in a group";
+            string region = PokemonSV_Region(values.Matched[1].ToString());
+            string union = values.Matched[0].BoxedValue is 0 ? "" : " with friends";
+            string academyName = PokemonSV_AcademyName(values.Application.Title);
 
             FormattedValue locations = values.Matched[1].ToString() switch
             {
@@ -89,18 +232,86 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 "a_w20" => "North Area Three",
                 "a_w21" => "North Area One",
                 "a_w22" => "North Area Two",
-                "a_w23" => "The Great Crater of Paldea",
+                "a_w23" => "Area Zero: The Great Crater of Paldea",
                 "a_w24" => "South Paldean Sea",
                 "a_w25" => "West Paldean Sea",
                 "a_w26" => "East Paldean Sea",
                 "a_w27" => "North Paldean Sea",
-                //TODO DLC Locations
+                // Naranja / Uva Academy
+                "a_sch_entrance01" => $"{academyName} Academy: Entrance",
+                "a_sch_cafe01" => $"{academyName} Academy: Cafeteria",
+                "a_sch_shop01" => $"{academyName} Academy: School Store",
+                "a_sch_room01" => $"{academyName} Academy: Home Ec Room",
+                "a_sch_room02" => $"{academyName} Academy: Art Room",
+                "a_sch_room03" => $"{academyName} Academy: Biology Lab",
+                "a_sch_room04" => $"{academyName} Academy: Staff Room",
+                "a_sch_office01" => $"{academyName} Academy: Director's Office",
+                "a_sch_office03" => $"{academyName} Academy: Nurse's Office",
+                "a_sch_ground01" => $"{academyName} Academy: School Yard",
+                "a_sch_class1a" => $"{academyName} Academy: Classroom 1-A",
+                "a_sch_class1d" => $"{academyName} Academy: Classroom 1-D",
+                "a_sch_class2g" => $"{academyName} Academy: Classroom 2-G",
+                "a_sch_dorm01" => $"{academyName} Academy: Dorm Room (Trainer)",
+                "a_sch_dorm02" => $"{academyName} Academy: Dorm Room (Nemona)",
+                "a_sch_dorm03" => $"{academyName} Academy: Dorm Room (Arven)",
+                "a_sch_dorm04" => $"{academyName} Academy: Dorm Room (Penny)",
+                // DLC
+                // Kitakami
+                "a_su0101" => "Mossui Town",
+                "a_su0102" => "Loyalty Plaza",
+                "a_su0103" => "Kitakami Hall",
+                "a_su0104" => "Oni Mountain",
+                "a_su0105" => "Infernal Pass",
+                "a_su0106" => "Crystal Pool",
+                "a_su0107" => "Wistful Fields",
+                "a_su0108" => "Mossfell Confluence",
+                "a_su0109" => "Fellhorn Gorge",
+                "a_su0110" => "Paradise Barrens",
+                "a_su0111" => "Timeless Woods",
+                // Blueberry Academy: School
+                "a_sch_2_entrance0" => "Blueberry Academy: Entrance",
+                "a_sch_2_clubroom" => "Blueberry Academy: League Clubroom",
+                "a_sch_2_class1" => "Blueberry Academy: Classroom 1-4",
+                "a_sch_2_class2" => "Blueberry Academy: Classroom 3-2",
+                "a_sch_2_shop01" => "Blueberry Academy: School Store",
+                "a_sch_2_cafe01" => "Blueberry Academy: Cafeteria",
+                "a_sch_2_dorm01" => "Blueberry Academy: Dorm Room (Trainer)",
+                "a_sch_2_dorm02" => "Blueberry Academy: Dorm Room (Carmine)",
+                // Blueberry Academy: Terrarium
+                "a_su0201" => "Savanna Biome",
+                "a_su0202" => "Coastal Biome",
+                "a_su0203" => "Canyon Biome",
+                "a_su0204" => "Polar Biome",
                 _ => FormattedValue.ForceReset
             };
             
             return locations.Reset 
                 ? FormattedValue.ForceReset 
-                : $"{playStatus} in {locations}";
+                : $"Exploring {region}{union} | {locations}";
+        }
+
+        private static string PokemonSV_Region(string location)
+        {
+            if (location.Contains("a_su02") || location.Contains("a_sch_2")) return "Unova";
+            if (location.Contains("a_su01")) return "Kitakami";
+            return "Paldea";
+        }
+
+        private static string PokemonSV_AcademyName(string title)
+        {
+            // TODO: Is this even necessary?
+            if (
+                title.Contains("Scarlet")
+                || title.Contains("Escarlata")
+                || title.Contains("Écarlate")
+                || title.Contains("Karmesin")
+                || title.Contains("Scarlatto")
+                || title.Contains("スカーレット")
+                || title.Contains("스칼렛")
+                || title.Contains("朱")
+                
+            ) { return "Naranja"; }
+            return "Uva";
         }
 
         private static FormattedValue SuperSmashBrosUltimate_Mode(SparseMultiValue values)
@@ -641,5 +852,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
 
             _ => FormattedValue.ForceReset
         };
+        
+        
     }
 }
