@@ -36,17 +36,15 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 "01008cf01baac000", // Echoes of Wisdom
                 spec => spec
                     .WithDescription("based on where you've warped.")
-                    .AddValueFormatter("dest_index", EchoesOfWisdom_Warp))
-
+                    .AddValueFormatter("dest_index", EchoesOfWisdom_Warp)
             )
 
             .AddSpec(
                 "010049900f546000", // Super Mario 3D All Stars
                 spec => spec
-                    .WithDescription("based on which game you've selected to play in the collection.")
+                    .WithDescription("based on what album and track you're listening to.")
                     .AddMultiValueFormatter(["app_id","song_id"], SuperMario3DAllStars_MainMenu)
             )
-
             .AddSpec(
                 ["010049900f546001", "010049900f546002", "010049900F546003"], // Super Mario 3D All Stars
                 spec => spec
