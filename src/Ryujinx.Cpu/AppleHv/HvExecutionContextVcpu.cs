@@ -31,7 +31,8 @@ namespace Ryujinx.Cpu.AppleHv
 
         private bool _cacheInitialized;
         private long _lastWarningTicks;
-        private const long WarningCooldownTicks = 500_000_000; // ~0.5s
+        private long _fallbackCount;
+        private const long WarningCooldownTicks = 1_000_000_000; // 1 second
 
         static HvExecutionContextVcpu()
         {
@@ -57,6 +58,13 @@ namespace Ryujinx.Cpu.AppleHv
             InitializeCacheDefaults();
         }
 
+        public void Reset()
+        {
+            InitializeCacheDefaults();
+            _fallbackCount = 0;
+            _lastWarningTicks = 0;
+        }
+
         private void InitializeCacheDefaults()
         {
             _pstate = 0x80000000;
@@ -68,7 +76,7 @@ namespace Ryujinx.Cpu.AppleHv
             var now = DateTime.UtcNow.Ticks;
             if (now - _lastWarningTicks > WarningCooldownTicks)
             {
-                Logger.Warning?.Print(LogClass.Cpu, message);
+                Logger.Warning?.Print(LogClass.Cpu, $"[AppleHv] {message} | Total fallbacks: {_fallbackCount}");
                 _lastWarningTicks = now;
             }
         }
@@ -108,7 +116,7 @@ namespace Ryujinx.Cpu.AppleHv
             get
             {
                 var resP = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.CPSR, out ulong valP);
-                if (resP == HvResult.BadArgument) return _pstate;
+                if (resP == HvResult.BadArgument) { _fallbackCount++; return _pstate; }
                 resP.ThrowOnError();
                 _pstate = (uint)valP;
                 return _pstate;
@@ -138,7 +146,7 @@ namespace Ryujinx.Cpu.AppleHv
             if (index == 31)
             {
                 var resSp = HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.SP_EL0, out ulong valSp);
-                if (resSp == HvResult.BadArgument) return _x[31];
+                if (resSp == HvResult.BadArgument) { _fallbackCount++; return _x[31]; }
                 resSp.ThrowOnError();
                 _x[31] = valSp;
                 return valSp;
@@ -147,7 +155,7 @@ namespace Ryujinx.Cpu.AppleHv
             if (index < 0 || index > 30) return 0;
 
             var resX = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.X0 + (uint)index, out ulong valX);
-            if (resX == HvResult.BadArgument) return _x[index];
+            if (resX == HvResult.BadArgument) { _fallbackCount++; return _x[index]; }
             resX.ThrowOnError();
             _x[index] = valX;
             return valX;
@@ -174,7 +182,7 @@ namespace Ryujinx.Cpu.AppleHv
             if (index < 0 || index > 31) return V128.Zero;
 
             var resV = HvApi.hv_vcpu_get_simd_fp_reg(_vcpu, HvSimdFPReg.Q0 + (uint)index, out HvSimdFPUchar16 simdVal);
-            if (resV == HvResult.BadArgument) return _v[index];
+            if (resV == HvResult.BadArgument) { _fallbackCount++; return _v[index]; }
             if (resV != HvResult.Success) resV.ThrowOnError();
 
             var vec = new V128(simdVal.Low, simdVal.High);
@@ -194,7 +202,7 @@ namespace Ryujinx.Cpu.AppleHv
         private ulong GetRegCached(HvReg reg, ref ulong cached)
         {
             var resG = HvApi.hv_vcpu_get_reg(_vcpu, reg, out ulong valG);
-            if (resG == HvResult.BadArgument) return cached;
+            if (resG == HvResult.BadArgument) { _fallbackCount++; return cached; }
             resG.ThrowOnError();
             cached = valG;
             return valG;
@@ -210,7 +218,7 @@ namespace Ryujinx.Cpu.AppleHv
         private ulong GetSysRegCached(HvSysReg reg, ref ulong cached)
         {
             var resSys = HvApi.hv_vcpu_get_sys_reg(_vcpu, reg, out ulong valSys);
-            if (resSys == HvResult.BadArgument) return cached;
+            if (resSys == HvResult.BadArgument) { _fallbackCount++; return cached; }
             resSys.ThrowOnError();
             cached = valSys;
             return valSys;
