@@ -59,6 +59,7 @@ namespace Ryujinx.Common
                           
                           //Mario Franchise
             "010021d00812a000", // Arcade Archives VS. SUPER MARIO BROS.
+            "01007fe0221d8000", // Hello, Mario!
             "01006d0017f7a000", // Mario & Luigi: Brothership
             "010003000e146000", // Mario & Sonic at the Olympic Games Tokyo 2020
             "010067300059a000", // Mario + Rabbids: Kingdom Battle
@@ -70,6 +71,9 @@ namespace Ryujinx.Common
             "0100bde00862a000", // Mario Tennis Aces
             "0100b99019412000", // Mario vs. Donkey Kong
             "010049900f546000", // Super Mario 3D All-Stars
+            "010049900f546001", // Super Mario 3D All-Stars | Super Mario 64
+            "010049900f546002", // Super Mario 3D All-Stars | Super Mario Sunshine
+            "010049900f546003", // Super Mario 3D All-Stars | Super Mario Galaxy
             "010028600ebda000", // Super Mario 3D World + Bowser's Fury
             "010049900F546001", // Super Mario 64
             "0100ea80032ea000", // Super Mario Bros. U Deluxe
@@ -107,6 +111,11 @@ namespace Ryujinx.Common
             "0100187003a36000", // Pokémon: Let's Go Eevee!
             "010003f003a34000", // Pokémon: Let's Go Pikachu!
             "0100f43008c44000", // Pokémon Legends: Z-A
+            "0100554023408000", // Pokémon FireRed Version (EN)
+            "01006fa0233f8000", // Pokémon FireRed Version (JP)
+            "0100fd6023430000", // Pokémon LeafGreen Version (DE)
+            "0100f1e0233fa000", // Pokémon LeafGreen Version (JP)
+            "01005b7008c52000", // Pokémon Champions
 
                           //Splatoon Franchise
             "0100f8f0000a2000", // Splatoon 2 (EU)
@@ -116,13 +125,14 @@ namespace Ryujinx.Common
             "0100ba0018500000", // Splatoon 3: Splatfest World Premiere
 
                           //NSO Membership games
+            "0100d870045b6000", // NES - Nintendo Switch Online
+            "01008d300c50c000", // SNES - Nintendo Switch Online
             "0100c62011050000", // GB - Nintendo Switch Online
             "010012f017576000", // GBA - Nintendo Switch Online
             "0100c9a00ece6000", // N64 - Nintendo Switch Online
             "0100e0601c632000", // N64 - Nintendo Switch Online 18+
-            "0100d870045b6000", // NES - Nintendo Switch Online
             "0100b3c014bda000", // SEGA Genesis - Nintendo Switch Online
-            "01008d300c50c000", // SNES - Nintendo Switch Online
+            "0100bfc01d976000", // Virtual Boy - Nintendo Switch Online
             "0100ccf019c8c000", // F-ZERO 99
             "0100ad9012510000", // PAC-MAN 99
             "010040600c5ce000", // Tetris 99
@@ -141,12 +151,17 @@ namespace Ryujinx.Common
             "0100704000B3A000", // Snipperclips
             "01006a800016e000", // Super Smash Bros. Ultimate
             "0100a9400c9c2000", // Tokyo Mirage Sessions #FE Encore
+            "0100ca502552a000", // Tomodachi Life: Living the Dream - Welcome Edition
+            "010051f0207b2000", // Tomodachi Life: Living the Dream
 
                           //Bayonetta Franchise
             "010076f0049a2000", // Bayonetta
             "01007960049a0000", // Bayonetta 2
             "01004a4010fea000", // Bayonetta 3
             "0100cf5010fec000", // Bayonetta Origins: Cereza and the Lost Demon
+                
+                          // Famicom Detective Club Franchise
+            "010054601d54c000", // Emio - The Smiling Man: Famicom Detective Series (DEMO)
 
                           //Persona Franchise
             "0100dcd01525a000", // Persona 3 Portable
@@ -171,7 +186,9 @@ namespace Ryujinx.Common
             "0100453019aa8000", // Xenoblade Chronicles: X Definitive Edition
 
                           //Misc Games
+            "01003670066de000", // 36 Fragments of Midnight
             "010056e00853a000", // A Hat in Time
+            "0100c9f00aaee000", // Ascendence
             "0100fd1014726000", // Baldurs Gate: Dark Alliance
             "01008c2019598000", // Bluey: The Video Game
             "010096f00ff22000", // Borderlands 2: Game of the Year Edition
@@ -185,8 +202,10 @@ namespace Ryujinx.Common
             "010027400cdc6000", // Divinity Original 2 - Definitive Edition
             "01008c8012920000", // Dying Light Platinum Edition
             "0100d11013e6a000", // Eschatos
+            "01000490067ae000", // Frederic 2: Evil Strikes Back
             "01001cc01b2d4000", // Goat Simulator 3
             "01003620068ea000", // Hand of Fate 2
+            "01007ac00e012000", // HEXAGRAVITY
             "0100f7e00c70e000", // Hogwarts Legacy
             "010013c00e930000", // Hollow Knight: Silksong
             "010085500130a000", // Lego City: Undercover
@@ -196,6 +215,7 @@ namespace Ryujinx.Common
             "0100853015e86000", // No Man's Sky
             "0100f85014ed0000", // No More Heroes
             "0100463014ed4000", // No More Heroes 2
+            "0100f7d00a1bc000", // NO THING
             "0100e570094e8000", // Owlboy
             "01007bb017812000", // Portal
             "0100abd01785c000", // Portal 2
@@ -204,11 +224,14 @@ namespace Ryujinx.Common
             "01008e200c5c2000", // Muse Dash
             "01005ff002e2a000", // Rayman Legends
             "01007820196a6000", // Red Dead Redemption
+            "01007a800d520000", // REFUNCT
             "0100e8300a67a000", // Risk
             "01002f7013224000", // Rune Factory 5
             "01008d100d43e000", // Saints Row IV
             "0100de600beee000", // Saints Row: The Third - The Full Package
             "01001180021fa000", // Shovel Knight: Specter of Torment
+            "010079f00671c000", // Sparkle 2: Evo
+            "010077b00e046000", // Spyro: Reignited Trilogy
             "0100e1D01eb2e000", // Squeakross: Home Squeak Home
             "0100e65002bb8000", // Stardew Valley
             "0100d7a01b7a2000", // Star Wars: Bounty Hunter
