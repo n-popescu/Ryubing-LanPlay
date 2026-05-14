@@ -1,10 +1,10 @@
 using ARMeilleure.State;
+using Ryujinx.Common.Logging;
 using Ryujinx.Memory;
+using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Threading;
-using Ryujinx.Common.Logging;
-
 namespace Ryujinx.Cpu.AppleHv
 {
     [SupportedOSPlatform("macos")]
@@ -29,6 +29,10 @@ namespace Ryujinx.Cpu.AppleHv
         private ulong _fpcr;
         private ulong _fpsr;
 
+        private bool _cacheInitialized;
+        private long _lastWarningTicks;
+        private const long WarningCooldownTicks = 500_000_000; // ~0.5s
+
         static HvExecutionContextVcpu()
         {
             _setSimdFpRegFuncMem = new MemoryBlock(MemoryBlock.GetPageSize());
@@ -50,6 +54,23 @@ namespace Ryujinx.Cpu.AppleHv
         public HvExecutionContextVcpu(ulong vcpu)
         {
             _vcpu = vcpu;
+            InitializeCacheDefaults();
+        }
+
+        private void InitializeCacheDefaults()
+        {
+            _pstate = 0x80000000;
+            _cacheInitialized = true;
+        }
+
+        private void LogHvWarning(string message)
+        {
+            var now = DateTime.UtcNow.Ticks;
+            if (now - _lastWarningTicks > WarningCooldownTicks)
+            {
+                Logger.Warning?.Print(LogClass.Cpu, message);
+                _lastWarningTicks = now;
+            }
         }
 
         public ulong Pc
@@ -58,17 +79,17 @@ namespace Ryujinx.Cpu.AppleHv
             set => SetRegCached(HvReg.PC, value, ref _pc);
         }
 
-public ulong ElrEl1
-{
-    get => GetSysRegCached(HvSysReg.ELR_EL1, ref _elrEl1);
-    set => SetSysRegCached(HvSysReg.ELR_EL1, value, ref _elrEl1);
-}
+        public ulong ElrEl1
+        {
+            get => GetSysRegCached(HvSysReg.ELR_EL1, ref _elrEl1);
+            set => SetSysRegCached(HvSysReg.ELR_EL1, value, ref _elrEl1);
+        }
 
-public ulong EsrEl1
-{
-    get => GetSysRegCached(HvSysReg.ESR_EL1, ref _esrEl1);
-    set => SetSysRegCached(HvSysReg.ESR_EL1, value, ref _esrEl1);
-}
+        public ulong EsrEl1
+        {
+            get => GetSysRegCached(HvSysReg.ESR_EL1, ref _esrEl1);
+            set => SetSysRegCached(HvSysReg.ESR_EL1, value, ref _esrEl1);
+        }
 
         public long TpidrEl0
         {
@@ -86,16 +107,16 @@ public ulong EsrEl1
         {
             get
             {
-                var resPstate = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.CPSR, out ulong valPstate);
-                if (resPstate == HvResult.BadArgument) return _pstate;
-                resPstate.ThrowOnError();
-                _pstate = (uint)valPstate;
+                var resP = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.CPSR, out ulong valP);
+                if (resP == HvResult.BadArgument) return _pstate;
+                resP.ThrowOnError();
+                _pstate = (uint)valP;
                 return _pstate;
             }
             set
             {
-                var resPstate = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.CPSR, value);
-                if (resPstate != HvResult.BadArgument) resPstate.ThrowOnError();
+                var resP = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.CPSR, value);
+                if (resP != HvResult.BadArgument) resP.ThrowOnError();
                 _pstate = value;
             }
         }
@@ -172,33 +193,33 @@ public ulong EsrEl1
 
         private ulong GetRegCached(HvReg reg, ref ulong cached)
         {
-            var res = HvApi.hv_vcpu_get_reg(_vcpu, reg, out ulong val);
-            if (res == HvResult.BadArgument) return cached;
-            res.ThrowOnError();
-            cached = val;
-            return val;
+            var resG = HvApi.hv_vcpu_get_reg(_vcpu, reg, out ulong valG);
+            if (resG == HvResult.BadArgument) return cached;
+            resG.ThrowOnError();
+            cached = valG;
+            return valG;
         }
 
         private void SetRegCached(HvReg reg, ulong value, ref ulong cached)
         {
-            var res = HvApi.hv_vcpu_set_reg(_vcpu, reg, value);
-            if (res != HvResult.BadArgument) res.ThrowOnError();
+            var resS = HvApi.hv_vcpu_set_reg(_vcpu, reg, value);
+            if (resS != HvResult.BadArgument) resS.ThrowOnError();
             cached = value;
         }
 
         private ulong GetSysRegCached(HvSysReg reg, ref ulong cached)
         {
-            var res = HvApi.hv_vcpu_get_sys_reg(_vcpu, reg, out ulong val);
-            if (res == HvResult.BadArgument) return cached;
-            res.ThrowOnError();
-            cached = val;
-            return val;
+            var resSys = HvApi.hv_vcpu_get_sys_reg(_vcpu, reg, out ulong valSys);
+            if (resSys == HvResult.BadArgument) return cached;
+            resSys.ThrowOnError();
+            cached = valSys;
+            return valSys;
         }
 
         private void SetSysRegCached(HvSysReg reg, ulong value, ref ulong cached)
         {
-            var res = HvApi.hv_vcpu_set_sys_reg(_vcpu, reg, value);
-            if (res != HvResult.BadArgument) res.ThrowOnError();
+            var resSys = HvApi.hv_vcpu_set_sys_reg(_vcpu, reg, value);
+            if (resSys != HvResult.BadArgument) resSys.ThrowOnError();
             cached = value;
         }
 
