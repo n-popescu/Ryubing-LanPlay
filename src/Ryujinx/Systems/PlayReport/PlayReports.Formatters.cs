@@ -104,10 +104,568 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 803 => "Hebra Mountain: Lanayru Temple B4",
                 _ => FormattedValue.ForceReset
             };
-            
-            return locations.Reset 
-                ? FormattedValue.ForceReset 
+
+            return locations.Reset
+                ? FormattedValue.ForceReset
                 : $"Warped to {locations}";
+        }
+
+        private static FormattedValue SuperMario3DAllStars_MainMenu(MultiValue value)
+        {
+            int app_id = value.Matched[0].IntValue;
+            int song_id = value.Matched[1].IntValue;
+            string playingSong = "";
+
+            string album = value.Matched[0].IntValue switch
+            {
+                1 => "Super Mario 64 OST",
+                2 => "Super Mario Sunshine OST",
+                3 => "Super Mario Galaxy OST",
+                _ => "Listening to Super Mario 3D All-Stars"
+            };
+
+            switch ((app_id, song_id))
+            {
+
+                // app_id:1 - SM64
+
+                case (1, 0):
+                    playingSong = $"{album} - It's a Me, Mario!";
+                    break;
+                case (1, 1):
+                    playingSong = $"{album} - Title Theme";
+                    break;
+                case (1, 2):
+                    playingSong = $"{album} - Peach's Message";
+                    break;
+                case (1, 3):
+                    playingSong = $"{album} - Opening";
+                    break;
+                case (1, 4):
+                    playingSong = $"{album} - Super Mario 64 Main Theme";
+                    break;
+                case (1, 5):
+                    playingSong = $"{album} - Slider";
+                    break;
+                case (1, 6):
+                    playingSong = $"{album} - Inside the Castle Walls";
+                    break;
+                case (1, 7):
+                    playingSong = $"{album} - Looping Steps";
+                    break;
+                case (1, 8):
+                    playingSong = $"{album} - Dire, Dire Docks";
+                    break;
+                case (1, 9):
+                    playingSong = $"{album} - Lethal Lava Land";
+                    break;
+                case (1, 10):
+                    playingSong = $"{album} - Snow Mountain";
+                    break;
+                case (1, 11):
+                    playingSong = $"{album} - Haunted House";
+                    break;
+                case (1, 12):
+                    playingSong = $"{album} - Merry-Go-Round";
+                    break;
+                case (1, 13):
+                    playingSong = $"{album} - Cave Dungeon";
+                    break;
+                case (1, 14):
+                    playingSong = $"{album} - Piranha Plant's Lullaby";
+                    break;
+                case (1, 15):
+                    playingSong = $"{album} - Powerful Mario";
+                    break;
+                case (1, 16):
+                    playingSong = $"{album} - Metallic Mario";
+                    break;
+                case (1, 17):
+                    playingSong = $"{album} - File Select";
+                    break;
+                case (1, 18):
+                    playingSong = $"{album} - Correct Solution";
+                    break;
+                case (1, 19):
+                    playingSong = $"{album} - Toad's Message";
+                    break;
+                case (1, 20):
+                    playingSong = $"{album} - Power Star";
+                    break;
+                case (1, 21):
+                    playingSong = $"{album} - Race Fanfare";
+                    break;
+                case (1, 22):
+                    playingSong = $"{album} - Star Catch Fanfare";
+                    break;
+                case (1, 23):
+                    playingSong = $"{album} - Game Start";
+                    break;
+                case (1, 24):
+                    playingSong = $"{album} - Course Clear";
+                    break;
+                case (1, 25):
+                    playingSong = $"{album} - Game Over";
+                    break;
+                case (1, 26):
+                    playingSong = $"{album} - Stage Boss";
+                    break;
+                case (1, 27):
+                    playingSong = $"{album} - Koopa's Message";
+                    break;
+                case (1, 28):
+                    playingSong = $"{album} - Koopa's Road";
+                    break;
+                case (1, 29):
+                    playingSong = $"{album} - Koopa's Theme";
+                    break;
+                case (1, 30):
+                    playingSong = $"{album} - Koopa Clear";
+                    break;
+                case (1, 31):
+                    playingSong = $"{album} - Ultimate Koopa";
+                    break;
+                case (1, 32):
+                    playingSong = $"{album} - Ultimate Koopa Clear";
+                    break;
+                case (1, 33):
+                    playingSong = $"{album} - Ending Demo";
+                    break;
+                case (1, 34):
+                    playingSong = $"{album} - Staff Roll";
+                    break;
+                case (1, 35):
+                    playingSong = $"{album} - Piranha Plant's Lullaby - Piano";
+                    break;
+
+                // app_id:2 - Sunshine
+
+                case (2, 0):
+                    playingSong = $"{album} - Isle Delfino";
+                    break;
+                case (2, 1):
+                    playingSong = $"{album} - Delfino Airstrip";
+                    break;
+                case (2, 2):
+                    playingSong = $"{album} - Bianco Hills";
+                    break;
+                case (2, 3):
+                    playingSong = $"{album} - Ricco Harbor";
+                    break;
+                case (2, 4):
+                    playingSong = $"{album} - Gelato Beach";
+                    break;
+                case (2, 5):
+                    playingSong = $"{album} - Pinna Beach";
+                    break;
+                case (2, 6):
+                    playingSong = $"{album} - Pinna Park";
+                    break;
+                case (2, 7):
+                    playingSong = $"{album} - Sirena Beach";
+                    break;
+                case (2, 8):
+                    playingSong = $"{album} - Hotel Delfino";
+                    break;
+                case (2, 9):
+                    playingSong = $"{album} - Casino";
+                    break;
+                case (2, 10):
+                    playingSong = $"{album} - Noki Bay";
+                    break;
+                case (2, 11):
+                    playingSong = $"{album} - Noki Depths";
+                    break;
+                case (2, 12):
+                    playingSong = $"{album} - Pianta Village";
+                    break;
+                case (2, 13):
+                    playingSong = $"{album} - Pianta Hot Spring";
+                    break;
+                case (2, 14):
+                    playingSong = $"{album} - Pianta Rescue";
+                    break;
+                case (2, 15):
+                    playingSong = $"{album} - Pianta Village - Fluff Festival";
+                    break;
+                case (2, 16):
+                    playingSong = $"{album} - Underground";
+                    break;
+                case (2, 17):
+                    playingSong = $"{album} - Secret Course";
+                    break;
+                case (2, 18):
+                    playingSong = $"{album} - Secret Course - Sky and Sea";
+                    break;
+                case (2, 19):
+                    playingSong = $"{album} - Corona Mountain";
+                    break;
+                case (2, 20):
+                    playingSong = $"{album} - Mid-Boss";
+                    break;
+                case (2, 21):
+                    playingSong = $"{album} - Proto Piranha";
+                    break;
+                case (2, 22):
+                    playingSong = $"{album} - Phantamanta";
+                    break;
+                case (2, 23):
+                    playingSong = $"{album} - Boss Battle";
+                    break;
+                case (2, 24):
+                    playingSong = $"{album} - Gooper Blooper Intro";
+                    break;
+                case (2, 25):
+                    playingSong = $"{album} - Wiggler Intro";
+                    break;
+                case (2, 26):
+                    playingSong = $"{album} - Mecha-Bowser";
+                    break;
+                case (2, 27):
+                    playingSong = $"{album} - Bowser";
+                    break;
+                case (2, 28):
+                    playingSong = $"{album} - Shadow Mario";
+                    break;
+                case (2, 29):
+                    playingSong = $"{album} - Racing Il Piantissimo";
+                    break;
+                case (2, 30):
+                    playingSong = $"{album} - Event";
+                    break;
+                case (2, 31):
+                    playingSong = $"{album} - Timed Event";
+                    break;
+                case (2, 32):
+                    playingSong = $"{album} - Yoshi-Go-Round";
+                    break;
+                case (2, 33):
+                    playingSong = $"{album} - Title Screen";
+                    break;
+                case (2, 34):
+                    playingSong = $"{album} - Opening Demo";
+                    break;
+                case (2, 35):
+                    playingSong = $"{album} - Select Data";
+                    break;
+                case (2, 36):
+                    playingSong = $"{album} - Select Scenario";
+                    break;
+                case (2, 37):
+                    playingSong = $"{album} - Course Intro";
+                    break;
+                case (2, 38):
+                    playingSong = $"{album} - Course Intro - Shadow Mario";
+                    break;
+                case (2, 39):
+                    playingSong = $"{album} - A Shine Sprite Appears";
+                    break;
+                case (2, 40):
+                    playingSong = $"{album} - Shine!";
+                    break;
+                case (2, 41):
+                    playingSong = $"{album} - Race Fanfare";
+                    break;
+                case (2, 42):
+                    playingSong = $"{album} - Casino Fanfare";
+                    break;
+                case (2, 43):
+                    playingSong = $"{album} - Too Bad!";
+                    break;
+                case (2, 44):
+                    playingSong = $"{album} - Game Over";
+                    break;
+                case (2, 45):
+                    playingSong = $"{album} - Welcome to Isle Delfino (Movie)";
+                    break;
+                case (2, 46):
+                    playingSong = $"{album} - Icky Goop (Movie)";
+                    break;
+                case (2, 47):
+                    playingSong = $"{album} - Mario on Trial (Movie)";
+                    break;
+                case (2, 48):
+                    playingSong = $"{album} - How to Use FLUDD (Movie)";
+                    break;
+                case (2, 49):
+                    playingSong = $"{album} - Shadow Mario Appears (Movie)";
+                    break;
+                case (2, 50):
+                    playingSong = $"{album} - The Kidnapping of Princess Peach (Movie)";
+                    break;
+                case (2, 51):
+                    playingSong = $"{album} - Mecha-Bowser Rises (Movie)";
+                    break;
+                case (2, 52):
+                    playingSong = $"{album} - Meet Bowser Jr. (Movie)";
+                    break;
+                case (2, 53):
+                    playingSong = $"{album} - FLUDD Theft (Movie)";
+                    break;
+                case (2, 54):
+                    playingSong = $"{album} - Hot Tub Intrusion (Movie)";
+                    break;
+                case (2, 55):
+                    playingSong = $"{album} - Epilogue (Movie)";
+                    break;
+                case (2, 56):
+                    playingSong = $"{album} - Staff Credits";
+                    break;
+                case (2, 57):
+                    playingSong = $"{album} - Have a Relaxing Vacation!";
+                    break;
+
+                // app_id:3 - Galaxy
+
+
+                case (3, 0):
+                    playingSong = $"{album} - Overture";
+                    break;
+                case (3, 1):
+                    playingSong = $"{album} - The Star Festival";
+                    break;
+                case (3, 2):
+                    playingSong = $"{album} - Attack of the Airships";
+                    break;
+                case (3, 3):
+                    playingSong = $"{album} - Catastrophe";
+                    break;
+                case (3, 4):
+                    playingSong = $"{album} - Peach's Castle Stolen";
+                    break;
+                case (3, 5):
+                    playingSong = $"{album} - Enter the Galaxy";
+                    break;
+                case (3, 6):
+                    playingSong = $"{album} - Egg Planet";
+                    break;
+                case (3, 7):
+                    playingSong = $"{album} - Rosaline in the Observatory 1";
+                    break;
+                case (3, 8):
+                    playingSong = $"{album} - The Honeyhive";
+                    break;
+                case (3, 9):
+                    playingSong = $"{album} - Space Junk Road";
+                    break;
+                case (3, 10):
+                    playingSong = $"{album} - Battlerock Galaxy";
+                    break;
+                case (3, 11):
+                    playingSong = $"{album} - Beach Bowl Galaxy";
+                    break;
+                case (3, 12):
+                    playingSong = $"{album} - Rosalina in the Observatory 2";
+                    break;
+                case (3, 13):
+                    playingSong = $"{album} - Enter Bowser Jr.!";
+                    break;
+                case (3, 14):
+                    playingSong = $"{album} - Waltz of the Boos";
+                    break;
+                case (3, 15):
+                    playingSong = $"{album} - Buoy Base Galaxy";
+                    break;
+                case (3, 16):
+                    playingSong = $"{album} - Gusty Garden Galaxy";
+                    break;
+                case (3, 17):
+                    playingSong = $"{album} - Rosaline in the Observatory 3";
+                    break;
+                case (3, 18):
+                    playingSong = $"{album} - King Bowser";
+                    break;
+                case (3, 19):
+                    playingSong = $"{album} - Melty Molten Galaxy";
+                    break;
+                case (3, 20):
+                    playingSong = $"{album} - The Galaxy Reactor";
+                    break;
+                case (3, 21):
+                    playingSong = $"{album} - Final Battle with Bowser";
+                    break;
+                case (3, 22):
+                    playingSong = $"{album} - Daybreak - A New Dawn";
+                    break;
+                case (3, 23):
+                    playingSong = $"{album} - Birth";
+                    break;
+                case (3, 24):
+                    playingSong = $"{album} - Super Mario Galaxy";
+                    break;
+                case (3, 25):
+                    playingSong = $"{album} - Purple Comet";
+                    break;
+                case (3, 26):
+                    playingSong = $"{album} - Blue Sky Athletic";
+                    break;
+                case (3, 27):
+                    playingSong = $"{album} - Super Mario 2007";
+                    break;
+                case (3, 28):
+                    playingSong = $"{album} - File Select";
+                    break;
+                case (3, 29):
+                    playingSong = $"{album} - Luma";
+                    break;
+                case (3, 30):
+                    playingSong = $"{album} - Gateway Galaxy";
+                    break;
+                case (3, 31):
+                    playingSong = $"{album} - Stolen Grand Star";
+                    break;
+                case (3, 32):
+                    playingSong = $"{album} - To the Observatory Grounds 1";
+                    break;
+                case (3, 33):
+                    playingSong = $"{album} - Observation Dome";
+                    break;
+                case (3, 34):
+                    playingSong = $"{album} - Course Select";
+                    break;
+                case (3, 35):
+                    playingSong = $"{album} - Dino Piranha";
+                    break;
+                case (3, 36):
+                    playingSong = $"{album} - A Chance to Grab a Star!";
+                    break;
+                case (3, 37):
+                    playingSong = $"{album} - A Tense Moment";
+                    break;
+                case (3, 38):
+                    playingSong = $"{album} - Big Bad Bugaboom";
+                    break;
+                case (3, 39):
+                    playingSong = $"{album} - King Kaliente";
+                    break;
+                case (3, 40):
+                    playingSong = $"{album} - The Toad Brigade";
+                    break;
+                case (3, 41):
+                    playingSong = $"{album} - Airship Armada";
+                    break;
+                case (3, 42):
+                    playingSong = $"{album} - Aquatic Race";
+                    break;
+                case (3, 43):
+                    playingSong = $"{album} - Space Fantasy";
+                    break;
+                case (3, 44):
+                    playingSong = $"{album} - Megaleg";
+                    break;
+                case (3, 45):
+                    playingSong = $"{album} - To The Observatory Grounds 2";
+                    break;
+                case (3, 46):
+                    playingSong = $"{album} - Space Athletic";
+                    break;
+                case (3, 47):
+                    playingSong = $"{album} - Speedy Comet";
+                    break;
+                case (3, 48):
+                    playingSong = $"{album} - Beach Bowl Galaxy - Undersea";
+                    break;
+                case (3, 49):
+                    playingSong = $"{album} - Interlude";
+                    break;
+                case (3, 50):
+                    playingSong = $"{album} - Bowser's Stronghold Appears";
+                    break;
+                case (3, 51):
+                    playingSong = $"{album} - The Fiery Stronghold";
+                    break;
+                case (3, 52):
+                    playingSong = $"{album} - The Big Staircase";
+                    break;
+                case (3, 53):
+                    playingSong = $"{album} - Bowser Appears";
+                    break;
+                case (3, 54):
+                    playingSong = $"{album} - Star Ball";
+                    break;
+                case (3, 55):
+                    playingSong = $"{album} - The Library";
+                    break;
+                case (3, 56):
+                    playingSong = $"{album} - Bouy Base Galaxy - Undersea";
+                    break;
+                case (3, 57):
+                    playingSong = $"{album} - Rainbow Mario";
+                    break;
+                case (3, 58):
+                    playingSong = $"{album} - Chase the Bunnies";
+                    break;
+                case (3, 59):
+                    playingSong = $"{album} - Help!";
+                    break;
+                case (3, 60):
+                    playingSong = $"{album} - Major Burrows";
+                    break;
+                case (3, 61):
+                    playingSong = $"{album} - Pipe Interior";
+                    break;
+                case (3, 62):
+                    playingSong = $"{album} - Cosmic Comet";
+                    break;
+                case (3, 63):
+                    playingSong = $"{album} - Drip Drop Galaxy";
+                    break;
+                case (3, 64):
+                    playingSong = $"{album} - Kingfin";
+                    break;
+                case (3, 65):
+                    playingSong = $"{album} - Boo Race";
+                    break;
+                case (3, 66):
+                    playingSong = $"{album} - Ice Mountain";
+                    break;
+                case (3, 67):
+                    playingSong = $"{album} - Ice Mario";
+                    break;
+                case (3, 68):
+                    playingSong = $"{album} - Lava Path";
+                    break;
+                case (3, 69):
+                    playingSong = $"{album} - Fire Mario";
+                    break;
+                case (3, 70):
+                    playingSong = $"{album} - Dusty Dune Galaxy";
+                    break;
+                case (3, 71):
+                    playingSong = $"{album} - Heavy Metal Mecha-Bowser";
+                    break;
+                case (3, 72):
+                    playingSong = $"{album} - A-wa-wa-wa!";
+                    break;
+                case (3, 73):
+                    playingSong = $"{album} - Deep Dark Galaxy";
+                    break;
+                case (3, 74):
+                    playingSong = $"{album} - Kamella";
+                    break;
+                case (3, 75):
+                    playingSong = $"{album} - Star Ball 2";
+                    break;
+                case (3, 76):
+                    playingSong = $"{album} - Sad Girl";
+                    break;
+                case (3, 77):
+                    playingSong = $"{album} - Flying Mario";
+                    break;
+                case (3, 78):
+                    playingSong = $"{album} - Star Child";
+                    break;
+                case (3, 79):
+                    playingSong = $"{album} - A Wish";
+                    break;
+                case (3, 80):
+                    playingSong = $"{album} - Family";
+                    break;
+
+            }
+
+            return string.IsNullOrEmpty(playingSong) ? FormattedValue.ForceReset : playingSong;
+
         }
 
         private static FormattedValue SuperMarioOdyssey(SingleValue value)
@@ -132,7 +690,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 3206301958 => "Darker Side: Culmina Crater",
                 3963002526 => "Mushroom Kingdom: Peach's Castle",
                 _ => FormattedValue.ForceReset
-            };              
+            };
 
         private static FormattedValue SuperMario3DWorldOrBowsersFury(SingleValue value)
             => value.Matched.BoxedValue is 0 ? "Playing Super Mario 3D World" : "Playing Bowser's Fury";
@@ -147,9 +705,9 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 3 => "Super Mario Galaxy",
                 _ => FormattedValue.ForceReset
             };
-            
-            return title.Reset 
-                ? FormattedValue.ForceReset 
+
+            return title.Reset
+                ? FormattedValue.ForceReset
                 : $"Playing {title}";
         }
 
@@ -161,12 +719,12 @@ namespace Ryujinx.Ava.Systems.PlayReport
 
             int worldNumber = messagePackObjectDictionary["world_no"].AsInt32();
             int courseNumber = 0;
-            
+
             if (messagePackObjectDictionary.TryGetValue("course_no", out MessagePackObject courseNumberVariable))
             {
                 courseNumber = courseNumberVariable.AsInt32();
             }
-            
+
             FormattedValue world = worldNumber switch
             {
                 1 => "Pipe-Rock Plateau",
@@ -184,9 +742,9 @@ namespace Ryujinx.Ava.Systems.PlayReport
             {
                 return FormattedValue.ForceReset;
             }
-            
-            return world.Reset 
-                ? FormattedValue.ForceReset 
+
+            return world.Reset
+                ? FormattedValue.ForceReset
                 : $"{world}: {worldNumber}-{courseNumber}";
         }
 
@@ -300,9 +858,9 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 "a_su0204" => "Polar Biome",
                 _ => FormattedValue.ForceReset
             };
-            
-            return locations.Reset 
-                ? FormattedValue.ForceReset 
+
+            return locations.Reset
+                ? FormattedValue.ForceReset
                 : $"Exploring {region}{union} | {locations}";
         }
 
@@ -325,7 +883,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 || title.Contains("スカーレット")
                 || title.Contains("스칼렛")
                 || title.Contains("朱")
-                
+
             ) { return "Naranja"; }
             return "Uva";
         }
@@ -868,7 +1426,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
 
             _ => FormattedValue.ForceReset
         };
-        
-        
+
+
     }
 }

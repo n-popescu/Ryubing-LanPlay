@@ -31,11 +31,28 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 spec => spec
                     .WithDescription("based on how many Rupees you have.")
                     .AddValueFormatter("rupees", SkywardSwordHD_Rupees))
+
             .AddSpec(
                 "01008cf01baac000", // Echoes of Wisdom
                 spec => spec
                     .WithDescription("based on where you've warped.")
                     .AddValueFormatter("dest_index", EchoesOfWisdom_Warp))
+
+            )
+
+            .AddSpec(
+                "010049900f546000", // Super Mario 3D All Stars
+                spec => spec
+                    .WithDescription("based on which game you've selected to play in the collection.")
+                    .AddMultiValueFormatter(["app_id","song_id"], SuperMario3DAllStars_MainMenu)
+            )
+
+            .AddSpec(
+                ["010049900f546001", "010049900f546002", "010049900F546003"], // Super Mario 3D All Stars
+                spec => spec
+                    .WithDescription("based on which game you've selected to play in the collection.")
+                    .AddValueFormatter("program_id", SuperMario3DAllStars)
+            )
             .AddSpec(
                 "0100000000010000", // Super Mario Odyssey
                 spec => spec
