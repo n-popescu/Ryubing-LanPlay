@@ -94,8 +94,10 @@ namespace Ryujinx.Ava.Systems.PlayReport
             )
             .AddSpec(
                 [
-                    "0100c9a00ece6000", "01008d300c50c000", "0100d870045b6000",
-                    "010012f017576000", "0100c62011050000", "0100b3c014bda000" // NES NSO
+                    "0100B4E00444C000", "0100d870045b6000", "01008d300c50c000", "0100c62011050000", "010012f017576000",
+                    /*Famicom*/         /*NES*/             /*SNES*/            /*GBC*/             /*GBA*/
+                    "0100b3c014bda000", "0100c9a00ece6000", "0100e0601c632000", "0100bfc01d976000"
+                    /*SEGA Genesis*/    /*N64*/             /*N64 MATURE*/      /*Virtual Boy*/
                 ],
                 spec => spec
                     .WithDescription(
