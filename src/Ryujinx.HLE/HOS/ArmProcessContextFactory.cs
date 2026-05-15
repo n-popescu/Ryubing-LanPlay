@@ -118,7 +118,13 @@ namespace Ryujinx.HLE.HOS
                 }
             }
 
-            DiskCacheLoadState = processContext.Initialize(_titleIdText, _displayVersion, _diskCacheEnabled, _codeAddress, _codeSize, _diskCacheSelector ?? "default");
+            string cacheSelector = _diskCacheSelector ?? "default";
+
+            Logger.Info?.Print(
+                LogClass.Ptc,
+                $"Initializing disk cache for pid {pid}, title {_titleIdText}, version '{_displayVersion}', selector '{cacheSelector}', enabled={_diskCacheEnabled}.");
+
+            DiskCacheLoadState = processContext.Initialize(_titleIdText, _displayVersion, _diskCacheEnabled, _codeAddress, _codeSize, cacheSelector);
 
             return processContext;
         }
