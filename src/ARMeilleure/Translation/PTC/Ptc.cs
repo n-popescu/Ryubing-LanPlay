@@ -110,7 +110,7 @@ namespace ARMeilleure.Translation.PTC
             Profiler.Wait();
             Profiler.ClearEntries();
 
-            Logger.Info?.Print(LogClass.Ptc, $"Initializing Profiled Persistent Translation Cache (enabled: {enabled}).");
+            Logger.Info?.Print(LogClass.Ptc, $"Initializing Profiled Persistent Translation Cache (title: {titleIdText}, version: '{displayVersion}', selector: '{cacheSelector}', enabled: {enabled}).");
 
             if (!enabled || string.IsNullOrEmpty(titleIdText) || titleIdText == TitleIdTextDefault)
             {
