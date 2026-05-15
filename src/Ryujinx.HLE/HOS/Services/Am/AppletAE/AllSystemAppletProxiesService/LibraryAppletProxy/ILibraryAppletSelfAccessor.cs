@@ -8,9 +8,9 @@ namespace Ryujinx.HLE.HOS.Services.Am.AppletAE.AllSystemAppletProxiesService.Lib
     {
         private readonly AppletStandalone _appletStandalone = new();
 
-        public ILibraryAppletSelfAccessor(ServiceCtx context)
+        public ILibraryAppletSelfAccessor(ServiceCtx context, ulong pid)
         {
-            ulong programId = context.Device.Processes.GetProcess(context.Process.Pid).ProgramId;
+            ulong programId = context.Device.Processes.GetProcess(pid).ProgramId;
 
             if (programId == 0x0100000000001009)
             {

@@ -48,7 +48,7 @@ namespace Ryujinx.HLE.HOS.Services.Pctl.ParentalControlServiceFactory
             {
                 if ((_permissionFlag & 0x40) == 0)
                 {
-                    ulong titleId = ApplicationLaunchProperty.GetByPid(context).TitleId;
+                    ulong titleId = ApplicationLaunchProperty.GetByPid(context, _pid).TitleId;
 
                     if (titleId != 0)
                     {

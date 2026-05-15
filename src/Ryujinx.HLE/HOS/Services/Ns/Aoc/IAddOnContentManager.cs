@@ -310,7 +310,7 @@ namespace Ryujinx.HLE.HOS.Services.Ns.Aoc
             // NOTE: Service calls arp:r GetApplicationControlProperty to get AddOnContentBaseId using TitleId,
             //       If the call fails, it returns ResultCode.InvalidPid.
 
-            _addOnContentBaseId = context.Device.Processes.GetProcess(context.Process.Pid).ApplicationControlProperties.AddOnContentBaseId;
+            _addOnContentBaseId = context.Device.Processes.GetProcess(context.ClientProcessId).ApplicationControlProperties.AddOnContentBaseId;
 
             if (_addOnContentBaseId == 0)
             {
