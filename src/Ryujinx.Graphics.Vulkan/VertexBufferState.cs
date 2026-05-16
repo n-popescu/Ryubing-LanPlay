@@ -68,9 +68,7 @@ namespace Ryujinx.Graphics.Vulkan
                         int stride = (_stride + (alignment - 1)) & -alignment;
                         int newSize = (_size / _stride) * stride;
 
-                        Buffer buffer = autoBuffer.Get(cbs, 0, newSize).Value;
-
-                        updater.BindVertexBuffer(cbs, binding, buffer, 0, (ulong)newSize, (ulong)stride);
+                        updater.BindVertexBuffer(cbs, binding, autoBuffer, 0, newSize, (ulong)stride);
 
                         _buffer = autoBuffer;
 
@@ -93,11 +91,7 @@ namespace Ryujinx.Graphics.Vulkan
 
             if (autoBuffer != null)
             {
-                int offset = _offset;
-                bool mirrorable = _size <= VertexBufferMaxMirrorable;
-                Buffer buffer = mirrorable ? autoBuffer.GetMirrorable(cbs, ref offset, _size, out _).Value : autoBuffer.Get(cbs, offset, _size).Value;
-
-                updater.BindVertexBuffer(cbs, binding, buffer, (ulong)offset, (ulong)_size, (ulong)_stride);
+                updater.BindVertexBuffer(cbs, binding, autoBuffer, _offset, _size, (ulong)_stride);
             }
         }
 
