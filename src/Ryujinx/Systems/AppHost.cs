@@ -580,6 +580,7 @@ namespace Ryujinx.Ava.Systems
         {
             _isActive = false;
             _playTimer.Stop();
+            GCSettings.LatencyMode = GCLatencyMode.Interactive;
         }
 
         private void Exit()
@@ -918,7 +919,7 @@ namespace Ryujinx.Ava.Systems
                 appMetadata => appMetadata.UpdatePreGame()
             );
             _playTimer.Start();
-            GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+            GCSettings.LatencyMode = GCLatencyMode.LowLatency;
         }
 
         internal void Resume()
@@ -929,7 +930,7 @@ namespace Ryujinx.Ava.Systems
             _playTimer.Start();
             _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device?.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI);
             Logger.Info?.Print(LogClass.Emulation, "Emulation was resumed.");
-            GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+            GCSettings.LatencyMode = GCLatencyMode.LowLatency;
         }
 
         internal void Pause()

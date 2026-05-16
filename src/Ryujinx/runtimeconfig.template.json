@@ -1,13 +1,11 @@
 {
   "configProperties": {
     "System.GC.Concurrent": true,
-    "System.GC.Server": true,
+    "System.GC.Server": false,
     "System.GC.RetainVM": true,
+    "System.GC.ConserveMemory": 9,
     "System.Runtime.TieredCompilation.QuickJit": false,
     "System.Runtime.TieredCompilation.QuickJitForLoops": false,
-    "System.GC.DynamicAdaptation": 0,
-    "System.GC.HeapCount": 4,
-    "System.GC.NoAffinitize": 0,
     "DOTNET_ReadyToRun": false,
     "DOTNET_TieredPGO": true
   }
