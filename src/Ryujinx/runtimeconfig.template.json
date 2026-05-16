@@ -3,7 +3,6 @@
     "System.GC.Concurrent": true,
     "System.GC.Server": false,
     "System.GC.RetainVM": true,
-    "System.GC.ConserveMemory": 9,
     "System.Runtime.TieredCompilation.QuickJit": false,
     "System.Runtime.TieredCompilation.QuickJitForLoops": false,
     "DOTNET_ReadyToRun": false,
