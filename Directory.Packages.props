@@ -8,7 +8,7 @@
     <PackageVersion Include="Avalonia.Desktop" Version="11.3.15" />
     <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.15" />
     <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="11.3.15" />
-    <PackageVersion Include="SharpCompress" Version="0.48.0" />
+    <PackageVersion Include="SharpCompress" Version="0.48.1" />
     <PackageVersion Include="Svg.Controls.Avalonia" Version="11.3.9.5" />
     <PackageVersion Include="Svg.Controls.Skia.Avalonia" Version="11.3.9.5" />
     <PackageVersion Include="Microsoft.Build.Framework" Version="17.11.4" />
@@ -51,7 +51,7 @@
     <PackageVersion Include="Ryujinx.Systems.Update.Common" Version="2.0.6" />
     <PackageVersion Include="Gommon" Version="2.8.1.2" />
     <PackageVersion Include="securifybv.ShellLink" Version="0.1.0" />
-    <PackageVersion Include="Sep" Version="0.13.0" />
+    <PackageVersion Include="Sep" Version="0.14.1" />
     <PackageVersion Include="shaderc.net" Version="0.1.0" />
     <PackageVersion Include="Silk.NET.Vulkan" Version="2.22.0" />
     <PackageVersion Include="Silk.NET.Vulkan.Extensions.EXT" Version="2.22.0" />
