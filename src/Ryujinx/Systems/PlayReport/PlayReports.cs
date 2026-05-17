@@ -124,7 +124,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 spec => spec
                     .WithDescription(
                         "based on your mii count, total money, and fountain level.")
-                    .AddMultiValueFormatter(["CountMii", "FountainLevel","Money"], TomodachiLifeLTD_Status)
+                    .AddMultiValueFormatter(["CountMii", "FountainLevel", "Money"], TomodachiLifeLTD_Status)
             )
         );
 
