@@ -1,6 +1,5 @@
 using Gommon;
 using Humanizer;
-using LibHac.Fs;
 using MsgPack;
 using System;
 using System.Buffers.Binary;
@@ -1077,7 +1076,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
             int fountainLevel = values.Matched[1].IntValue;
             int money = values.Matched[2].IntValue;
                 
-            return $"Looking after {"Mii".ToQuantity(miiCount)}, Fountain Lvl. {fountainLevel}, ${((float)money / 100):F2}";
+            return $"Looking after {"Mii".ToQuantity(miiCount)}, Fountain Lvl. {fountainLevel}, {((float)money / 100):C2}";
         }
     }
 }
