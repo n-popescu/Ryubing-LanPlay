@@ -201,6 +201,31 @@
       }
     },
     {
+      "ID": "XCITrimmerSortStatus",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Untrimmed/Trimmed",
+        "es_ES": "Ahorro de Espacio",
+        "fr_FR": "Économies de disque dur",
+        "he_IL": "",
+        "it_IT": "Spazio risparmiato",
+        "ja_JP": "",
+        "ko_KR": "공간 절약",
+        "no_NO": "Plassbesparelser",
+        "pl_PL": "",
+        "pt_BR": "Economia de Espaço",
+        "ru_RU": "Экономия места на диске",
+        "sv_SE": "Utrymmesbesparning",
+        "th_TH": "ลดการใช้พื้นที่",
+        "tr_TR": "",
+        "uk_UA": "Економія місця",
+        "zh_CN": "节省空间",
+        "zh_TW": "節省的儲存空間"
+      }
+    },
+    {
       "ID": "TrimmedLabel",
       "Translations": {
         "ar_SA": "",
