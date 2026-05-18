@@ -1,3 +1,4 @@
+using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Services.Hid;
 using SDL;
 using static SDL.SDL3;
@@ -28,7 +29,7 @@ namespace Ryujinx.Input.SDL3
             }
 
             ushort product = SDL_GetGamepadProduct(gamepadHandle);
-            if (product != 0x2006 && product != 0x2007 && product != 0x2009 && product != 0x200e)
+            if (Enum.IsDefined(typeof(HDRumbleSupported), product))
             {
                 return null;
             }
@@ -37,7 +38,7 @@ namespace Ryujinx.Input.SDL3
         }
 
         // Some of the code was translated from https://github.com/MIZUSHIKI/JoyShockLibrary-plus-HDRumble
-        private void WriteHdRumble(
+        private bool WriteHdRumble(
             int encLeftLowFreq, int encLeftLowAmp,
             int encLeftHighFreq, int encLeftHighAmp,
             int encRightLowFreq, int encRightLowAmp,
@@ -58,15 +59,22 @@ namespace Ryujinx.Input.SDL3
             buf[8] = (byte)(encRightLowFreq + ((encRightLowAmp >> 8) & 0xFF));
             buf[9] = (byte)(encRightLowAmp & 0xFF);
 
-            if (_globalCount > 0xF)
+            if (_globalCount > 0x5)
             {
                 _globalCount = 0x0;
             }
 
             fixed (byte* ptr = buf)
             {
-                SDL_hid_write(_hidHandle, ptr, (nuint)buf.Length);
+                if (SDL_hid_write(_hidHandle, ptr, (nuint)buf.Length) == -1)
+                {
+                    Logger.Error?.PrintMsg(LogClass.Hid, SDL_GetError());
+                    SDL_ClearError();
+                    return false;
+                }
             }
+            
+            return true;
         }
 
 
@@ -132,7 +140,7 @@ namespace Ryujinx.Input.SDL3
 
         public bool HdRumble(VibrationValue left, VibrationValue right)
         {
-            WriteHdRumble(EncodeLowFreq(left.FrequencyLow),
+            return WriteHdRumble(EncodeLowFreq(left.FrequencyLow),
                 EncodeLowAmp(left.AmplitudeLow),
                 EncodeHighFreq(left.FrequencyHigh),
                 EncodeHighAmp(left.AmplitudeHigh),
@@ -140,12 +148,25 @@ namespace Ryujinx.Input.SDL3
                 EncodeLowAmp(right.AmplitudeLow),
                 EncodeHighFreq(right.FrequencyHigh),
                 EncodeHighAmp(right.AmplitudeHigh));
-            return true;
         }
 
         public void Dispose()
         {
             SDL_hid_close(_hidHandle);
         }
+    }
+    
+    public enum HDRumbleSupported : ushort
+    {
+        JoyConLeft = 0x2006,
+        JoyConRight = 0x2007,
+        JoyconPair = 0x2008,
+        ProController = 0x2009,
+        JoyconGrip = 0x200e,
+        Joycon2Right = 0x2066,
+        Joycon2Left = 0x2067,
+        Joycon2Pair = 0x2068,
+        Switch2ProController = 0x2069,
+        GamecubeController = 0x2073
     }
 }
