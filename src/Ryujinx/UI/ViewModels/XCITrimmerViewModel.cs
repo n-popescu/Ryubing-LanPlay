@@ -95,7 +95,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         }
 
 public bool AnySelected =>
-    _displayedXCIFiles.Any(xci => _selectedXCIFiles.Contains(xci));
+    _selectedXCIFiles.Count > 0;
 
         private void SortingChanged()
         {
@@ -362,7 +362,7 @@ Dispatcher.UIThread.Post(() =>
 
         public void DeselectAll()
         {
-            SelectedXCIFiles.RemoveMany(DisplayedXCIFiles);
+            SelectedXCIFiles.Clear();
             SelectionChanged();
         }
 
