@@ -29,7 +29,7 @@
       "ID": "MenuBarActionsOpenMiiEditorToolTip",
       "Translations": {
         "ar_SA": "‫افتح تطبيق تحرير Mii في الوضع المستقل",
-        "de_DE": "Öffnet das Mii-Editor im Standalone-Modus",
+        "de_DE": "Öffnet den Mii-Editor im eigenständigen Modus",
         "el_GR": "Άνοιγμα του Mii Editor σε Αυτόνομη λειτουργία",
         "en_US": "Opens Mii Editor in Standalone mode",
         "es_ES": "Abre el Editor de Mii en modo Autónomo",
@@ -79,7 +79,7 @@
       "ID": "SettingsTabSystemMemoryManagerMode",
       "Translations": {
         "ar_SA": "وضع إدارة الذاكرة:",
-        "de_DE": "Speichermanagermodus:",
+        "de_DE": "Speicherverwaltungsmodus:",
         "el_GR": "Λειτουργία Διαχείρισης Μνήμης:",
         "en_US": "Memory Manager Mode:",
         "es_ES": "Modo del Administrador de Memoria:",
@@ -304,7 +304,7 @@
       "ID": "MenuBarFileLoadDlcFromFolder",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "DLC aus Ordner laden...",
+        "de_DE": "DLC laden...",
         "el_GR": "",
         "en_US": "Load DLC...",
         "es_ES": "Cargar DLC...",
@@ -329,7 +329,7 @@
       "ID": "MenuBarFileLoadTitleUpdatesFromFolder",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Titel-Updates aus Ordner laden...",
+        "de_DE": "Titel-Updates laden...",
         "el_GR": "",
         "en_US": "Load Title Updates...",
         "es_ES": "Cargar Actualizaciones de Títulos...",
@@ -404,7 +404,7 @@
       "ID": "MenuBarFileOpenLogsFolder",
       "Translations": {
         "ar_SA": "فتح مجلد السجلات",
-        "de_DE": "Logs-Ordner öffnen",
+        "de_DE": "Protokoll-Ordner öffnen",
         "el_GR": "Άνοιγμα Φακέλου Καταγραφής",
         "en_US": "Open Logs Folder",
         "es_ES": "Abrir Carpeta de Registros",
@@ -479,7 +479,7 @@
       "ID": "MenuBarOptionsToggleFullscreen",
       "Translations": {
         "ar_SA": "التبديل إلى وضع ملء الشاشة",
-        "de_DE": "Vollbild",
+        "de_DE": "Vollbild umschalten",
         "el_GR": "Λειτουργία Πλήρους Οθόνης",
         "en_US": "Toggle Fullscreen",
         "es_ES": "Cambiar a Pantalla Completa.",
@@ -854,7 +854,7 @@
       "ID": "MenuBarActionsInstallFirmwareFromDirectory",
       "Translations": {
         "ar_SA": "تثبيت البرنامج الثابت (مجلد)",
-        "de_DE": "Firmware (Verzeichnis) installieren",
+        "de_DE": "Firmware installieren (Ordner)",
         "el_GR": "Εγκατάσταση Firmware (φάκελος)",
         "en_US": "Install Firmware (Folder)",
         "es_ES": "Instalar Firmware (Carpeta)",
@@ -929,7 +929,7 @@
       "ID": "MenuBarFileActionsInstallKeysFromFolder",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Schlüssel (Verzeichnis) installieren",
+        "de_DE": "Schlüssel installieren (Ordner)",
         "el_GR": "",
         "en_US": "Install Keys (Folder)",
         "es_ES": "Instalar Claves (Carpeta)",
@@ -1254,7 +1254,7 @@
       "ID": "MenuBarHelpCheckForUpdates",
       "Translations": {
         "ar_SA": "تحقق من التحديثات",
-        "de_DE": "Nach Updates suchen",
+        "de_DE": "Nach Aktualisierungen suchen",
         "el_GR": "Έλεγχος για Ενημερώσεις",
         "en_US": "Check for Updates",
         "es_ES": "Buscar Actualizaciones",
@@ -1279,7 +1279,7 @@
       "ID": "MenuBarHelpFaqAndGuides",
       "Translations": {
         "ar_SA": "الأسئلة الشائعة & الدلائل",
-        "de_DE": "FAQ & Anleitungen",
+        "de_DE": "F&A & Anleitungen",
         "el_GR": "Συχνές Ερωτήσεις & Οδηγοί",
         "en_US": "FAQ & Guides",
         "es_ES": "FAQ & Guías",
@@ -1304,7 +1304,7 @@
       "ID": "MenuBarHelpFaq",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "FAQ & Fehlerbehebung",
+        "de_DE": "F&A & Fehlerbehebung",
         "el_GR": "",
         "en_US": "FAQ & Troubleshooting",
         "es_ES": "FAQ & Resolución de Problemas",
@@ -1329,7 +1329,7 @@
       "ID": "MenuBarHelpSetup",
       "Translations": {
         "ar_SA": "الإعداد والتكوين",
-        "de_DE": "Setup und Konfiguration",
+        "de_DE": "Einrichtung und Konfiguration",
         "el_GR": "Ρύθμιση και Διαμόρφωση",
         "en_US": "Setup & Configuration",
         "es_ES": "Instalación y Configuración",
@@ -1454,7 +1454,7 @@
       "ID": "GameListHeaderIcon",
       "Translations": {
         "ar_SA": "الأيقونة",
-        "de_DE": "",
+        "de_DE": "Symbol",
         "el_GR": "Εικονίδιο",
         "en_US": "Icon",
         "es_ES": "Icono",
@@ -1954,7 +1954,7 @@
       "ID": "GameListHeaderTitleId",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Titel ID:",
+        "de_DE": "Titel-ID:",
         "el_GR": "",
         "en_US": "Title ID:",
         "es_ES": "ID del Titulo:",
@@ -1979,7 +1979,7 @@
       "ID": "GameListHeaderHostedGames",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Gehostete Spiele: {0}",
         "el_GR": "",
         "en_US": "Hosted Games: {0}",
         "es_ES": "Juegos Alojados: {0}",
@@ -2004,7 +2004,7 @@
       "ID": "GameListHeaderPlayerCount",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Online-Spieler: {0}",
         "el_GR": "",
         "en_US": "Online Players: {0}",
         "es_ES": "Jugadores en Linea: {0}",
@@ -2079,7 +2079,7 @@
       "ID": "GameListContextMenuOpenDeviceSaveDirectory",
       "Translations": {
         "ar_SA": "فتح مجلد حفظ الجهاز",
-        "de_DE": "Benutzer-Geräte-Verzeichnis öffnen",
+        "de_DE": "Geräte-Speicherverzeichnis öffnen",
         "el_GR": "Άνοιγμα Τοποθεσίας Συσκευής Χρήστη",
         "en_US": "Open Device Save Directory",
         "es_ES": "Abrir Carpeta de Guardado del Sistema para el Usuario Actual",
@@ -2104,7 +2104,7 @@
       "ID": "GameListContextMenuOpenBcatSaveDirectory",
       "Translations": {
         "ar_SA": "‫فتح مجلد حفظ الـBCAT",
-        "de_DE": "Benutzer-BCAT-Vezeichnis öffnen",
+        "de_DE": "BCAT-Speicherverzeichnis öffnen",
         "el_GR": "Άνοιγμα Τοποθεσίας BCAT",
         "en_US": "Open BCAT Save Directory",
         "es_ES": "Abrir Carpeta de Guardado BCAT del Usuario",
@@ -2129,7 +2129,7 @@
       "ID": "GameListContextMenuManageTitleUpdates",
       "Translations": {
         "ar_SA": "إدارة تحديثات اللُعبة",
-        "de_DE": "Verwalte Spiel-Updates",
+        "de_DE": "Titel-Updates verwalten",
         "el_GR": "Διαχείριση Ενημερώσεων Παιχνιδιού",
         "en_US": "Manage Title Updates",
         "es_ES": "Gestionar Actualizaciones del Juego",
@@ -2154,7 +2154,7 @@
       "ID": "GameListContextMenuManageDlc",
       "Translations": {
         "ar_SA": "إدارة المحتوي الإضافي",
-        "de_DE": "Verwalten von DLC",
+        "de_DE": "DLC verwalten",
         "el_GR": "Διαχείριση DLC",
         "en_US": "Manage DLC",
         "es_ES": "Gestionar DLC",
@@ -2204,7 +2204,7 @@
       "ID": "GameListContextMenuCacheManagementPurgePptc",
       "Translations": {
         "ar_SA": "قائمة انتظار إعادة بناء الـ‫PPTC",
-        "de_DE": "PPTC als ungültig markieren",
+        "de_DE": "Warteschlange PPTC-Wiederaufbau",
         "el_GR": "Εκκαθάριση Προσωρινής Μνήμης PPTC",
         "en_US": "Queue PPTC Rebuild",
         "es_ES": "Reconstruir PPTC",
@@ -2229,7 +2229,7 @@
       "ID": "GameListContextMenuCacheManagementPurgePptcToolTip",
       "Translations": {
         "ar_SA": "تنشيط PPTC لإعادة البناء في وقت الإقلاع عند بدء تشغيل اللعبة التالي.",
-        "de_DE": "Markiert den PPTC als ungültig, sodass dieser beim nächsten Spielstart neu erstellt wird.",
+        "de_DE": "Löst beim nächsten Start des Spiels den Neuaufbau des PPTC-Caches aus.",
         "el_GR": "Διαγράφει την προσωρινή μνήμη PPTC της εφαρμογής.",
         "en_US": "Trigger PPTC to rebuild at boot time on the next game launch.",
         "es_ES": "Elimina la caché de PPTC de esta aplicación.",
@@ -2254,7 +2254,7 @@
       "ID": "GameListContextMenuCacheManagementNukePptc",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "PPTC Cache löschen",
+        "de_DE": "PPTC-Cache leeren",
         "el_GR": "",
         "en_US": "Purge PPTC Cache",
         "es_ES": "Purgar Caché PPTC",
@@ -2279,7 +2279,7 @@
       "ID": "GameListContextMenuCacheManagementPurgeShaderCache",
       "Translations": {
         "ar_SA": "تنظيف ذاكرة مرشحات الفيديو المؤقتة",
-        "de_DE": "Shader-Cache löschen",
+        "de_DE": "Shader-Cache leeren",
         "el_GR": "Εκκαθάριση Προσωρινής Μνήμης Shader",
         "en_US": "Purge Shader Cache",
         "es_ES": "Limpiar Caché de Sombreadores",
@@ -2329,7 +2329,7 @@
       "ID": "GameListContextMenuCacheManagementOpenShaderCacheDirectory",
       "Translations": {
         "ar_SA": "فتح مجلد الذاكرة المؤقتة لمرشحات الفيديو ",
-        "de_DE": "Shader-Cache-Verzeichnis öffnen",
+        "de_DE": "Schattierer-Cache-Verzeichnis öffnen",
         "el_GR": "Άνοιγμα τοποθεσίας προσωρινής μνήμης Shader",
         "en_US": "Open Shader Cache Directory",
         "es_ES": "Abrir Carpeta de Caché de Sombreadores",
@@ -2504,7 +2504,7 @@
       "ID": "GameListContextMenuExtractDataAocRomFSToolTip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Das RomFS aus einer ausgewählten DLC-Datei extrahieren.",
         "el_GR": "",
         "en_US": "Extract the RomFS from a selected DLC file.",
         "es_ES": "Extraer el RomFS desde un archivo DLC.",
@@ -2779,7 +2779,7 @@
       "ID": "EditCustomConfigurationToolTip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Bearbeitet deine benutzerdefinierte Konfiguration für das ausgewählte Spiel.",
+        "de_DE": "Bearbeite deine benutzerdefinierte Konfiguration für das ausgewählte Spiel.",
         "el_GR": "",
         "en_US": "Edit your existing independent configuration for the selected game",
         "es_ES": "Editar su configuración independiente existente para el juego seleccionado",
@@ -2879,7 +2879,7 @@
       "ID": "GameListContextMenuOpenSdModsDirectoryToolTip",
       "Translations": {
         "ar_SA": "يفتح مجلد أتموسفير لبطاقة SD البديلة الذي يحتوي على تعديلات التطبيق. مفيد للتعديلات التي تم تعبئتها للأجهزة الحقيقية.",
-        "de_DE": "Öffnet das alternative SD-Karten-Atmosphère-Verzeichnis, das die Mods der Anwendung enthält. Dieser Ordner ist nützlich für Mods, die für echte Hardware erstellt worden sind.",
+        "de_DE": "Öffnet das alternative SD-Karten-Atmosphère-Verzeichnis, das die Mods der Anwendung enthält. Nützlich für Mods, die für echte Hardware gepackt sind.",
         "el_GR": "",
         "en_US": "Opens the alternative SD card Atmosphère directory which contains Application's Mods. Useful for mods that are packaged for real hardware.",
         "es_ES": "Abre el directorio alternativo de la tarjeta SD de Atmosphère que contiene los Mods de la Aplicación. Útil para los mods que están empaquetados para el hardware real.",
@@ -2929,7 +2929,7 @@
       "ID": "GameListContextMenuTrimXCIToolTip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Trimmt und prüft die XCI-Datei um Speicherplatz zu sparen.",
+        "de_DE": "Trimmt und prüft die XCI-Datei, um Speicherplatz zu sparen.",
         "el_GR": "",
         "en_US": "Check and Trim XCI File to Save Disk Space",
         "es_ES": "Verificar y Recortar Archivo XCI para Ahorrar Espacio en Disco",
@@ -3004,7 +3004,7 @@
       "ID": "StatusBarXCIFileTrimming",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "XCI-Datei trimmen: '{0}'",
+        "de_DE": "XCI-Datei wird getrimmt: '{0}'",
         "el_GR": "",
         "en_US": "Trimming XCI File '{0}'",
         "es_ES": "Recortando el Siguiente Archivo XCI: '{0}'",
@@ -3054,7 +3054,7 @@
       "ID": "LinuxVmMaxMapCountDialogTextPrimary",
       "Translations": {
         "ar_SA": "هل ترغب في زيادة قيمة vm.max_map_count إلى {0}",
-        "de_DE": "Möchtest Du den Wert von vm.max_map_count auf {0} erhöhen",
+        "de_DE": "Möchtest du den Wert von vm.max_map_count auf {0} erhöhen",
         "el_GR": "Θα θέλατε να αυξήσετε την τιμή του vm.max_map_count σε {0}",
         "en_US": "Would you like to increase the value of vm.max_map_count to {0}",
         "es_ES": "¿Quieres aumentar el valor de vm.max_map_count a {0}?",
@@ -3079,7 +3079,7 @@
       "ID": "LinuxVmMaxMapCountDialogTextSecondary",
       "Translations": {
         "ar_SA": "قد تحاول بعض الألعاب إنشاء المزيد من تعيينات الذاكرة أكثر مما هو مسموح به حاليا. سيغلق ريوجينكس بمجرد تجاوز هذا الحد.",
-        "de_DE": "Einige Spiele könnten versuchen, mehr Speicherzuordnungen zu erstellen, als derzeit erlaubt. Ryujinx wird abstürzen, sobald dieses Limit überschritten wird.",
+        "de_DE": "Manche Spiele könnten versuchen, mehr Speicherzuordnungen zu erstellen, als derzeit erlaubt. Ryujinx wird abstürzen, sobald dieses Limit überschritten wird.",
         "el_GR": "Μερικά παιχνίδια μπορεί να προσπαθήσουν να δημιουργήσουν περισσότερες αντιστοιχίσεις μνήμης από αυτές που επιτρέπονται τώρα. Ο Ryujinx θα καταρρεύσει μόλις ξεπεραστεί αυτό το όριο.",
         "en_US": "Some games might try to create more memory mappings than currently allowed. Ryujinx will crash as soon as this limit gets exceeded.",
         "es_ES": "Algunos juegos podrían intentar crear más mapeos de memoria de los permitidos. Ryujinx se bloqueará tan pronto como se supere este límite.",
@@ -3179,7 +3179,7 @@
       "ID": "LinuxVmMaxMapCountWarningTextSecondary",
       "Translations": {
         "ar_SA": "القيمة الحالية لـ vm.max_map_count ({0}) أقل من {1}. قد تحاول بعض الألعاب إنشاء المزيد من تعيينات الذاكرة أكثر مما هو مسموح به حاليا. سيغلق ريوجينكس بمجرد تجاوز هذا الحد.\n\nقد ترغب إما في زيادة الحد يدويا أو تثبيت pkexec، مما يسمح لـ ريوجينكس بالمساعدة في ذلك.",
-        "de_DE": "Der aktuelle Wert von vm.max_map_count ({0}) ist kleiner als {1}. Einige Spiele könnten versuchen, mehr Speicherzuordnungen zu erstellen, als derzeit erlaubt. Ryujinx wird abstürzen, sobald dieses Limit überschritten wird.\n\nDu kannst das Limit entweder manuell erhöhen oder pkexec installieren, damit Ryujinx Dir dabei hilft.",
+        "de_DE": "Der aktuelle Wert von vm.max_map_count ({0}) ist kleiner als {1}. Einige Spiele könnten versuchen, mehr Speicherzuordnungen zu erstellen, als derzeit erlaubt. Ryujinx wird abstürzen, sobald dieses Limit überschritten wird.\n\nDu kannst das Limit entweder manuell erhöhen oder pkexec installieren, damit Ryujinx dir dabei hilft.",
         "el_GR": "Η τρέχουσα τιμή του vm.max_map_count ({0}) είναι χαμηλότερη από {1}. Ορισμένα παιχνίδια μπορεί να προσπαθήσουν να δημιουργήσουν περισσότερες αντιστοιχίσεις μνήμης από αυτές που επιτρέπονται τώρα. Ο Ryujinx θα συντριβεί μόλις ξεπεραστεί το όριο.\n\nΜπορεί να θέλετε είτε να αυξήσετε χειροκίνητα το όριο ή να εγκαταστήσετε το pkexec, το οποίο επιτρέπει Ryujinx να βοηθήσει με αυτό.",
         "en_US": "The current value of vm.max_map_count ({0}) is lower than {1}. Some games might try to create more memory mappings than currently allowed. Ryujinx will crash as soon as this limit gets exceeded.\n\nYou might want to either manually increase the limit or install pkexec, which allows Ryujinx to assist with that.",
         "es_ES": "El valor actual de vm.max_map_count ({0}) es menor que {1}. Algunos juegos podrían intentar crear más mapeos de memoria de los permitidos actualmente. Ryujinx se bloqueará tan pronto como se supere este límite.\n\nPuede que desee aumentar manualmente el límite o instalar pkexec, lo que permite a Ryujinx ayudar con eso.",
@@ -3304,7 +3304,7 @@
       "ID": "SettingsTabGeneralEnableDiscordRichPresence",
       "Translations": {
         "ar_SA": "تمكين وجود ديسكورد الغني",
-        "de_DE": "Aktiviere Discord Rich Presence",
+        "de_DE": "Discord-Reichhaltige-Präsenz aktivieren",
         "el_GR": "Ενεργοποίηση Discord Rich Presence",
         "en_US": "Enable Discord Rich Presence",
         "es_ES": "Habilitar Discord Rich Presence",
@@ -3329,7 +3329,7 @@
       "ID": "SettingsTabGeneralCheckUpdatesOnLaunch",
       "Translations": {
         "ar_SA": "تحقق من التحديثات:",
-        "de_DE": "Nach Updates suchen:",
+        "de_DE": "Nach Aktualisierungen suchen",
         "el_GR": "Έλεγχος για ενημερώσεις:",
         "en_US": "Check for Updates:",
         "es_ES": "Buscar Actualizaciones:",
@@ -3354,7 +3354,7 @@
       "ID": "SettingsTabGeneralCheckUpdatesOnLaunchPromptAtStartup",
       "Translations": {
         "ar_SA": "طلب",
-        "de_DE": "Abfrage",
+        "de_DE": "Eingabeaufforderung",
         "el_GR": "Ερώτημα",
         "en_US": "Prompt",
         "es_ES": "Al Inicio",
@@ -3379,7 +3379,7 @@
       "ID": "SettingsTabGeneralCheckUpdatesOnLaunchBackground",
       "Translations": {
         "ar_SA": "في الخلفية",
-        "de_DE": "Im Hintergrund",
+        "de_DE": "Hintergrund",
         "el_GR": "Στο παρασκήνιο",
         "en_US": "Background",
         "es_ES": "Cambiar Fondo",
@@ -3479,7 +3479,7 @@
       "ID": "SettingsTabGeneralFocusLossTypeMuteAudio",
       "Translations": {
         "ar_SA": "كتم الصوت",
-        "de_DE": "Lautstärke stumm",
+        "de_DE": "Ton stummschalten",
         "el_GR": "Σίγαση έντασης",
         "en_US": "Mute Volume",
         "es_ES": "Silenciar Volumen",
@@ -3504,7 +3504,7 @@
       "ID": "SettingsTabGeneralFocusLossTypeBlockInputAndMuteAudio",
       "Translations": {
         "ar_SA": "حظر الإدخال وكتم الصوت",
-        "de_DE": "Eingabe blockieren & Ton stumm",
+        "de_DE": "Eingabe blockieren & Ton stummschalten",
         "el_GR": "Αποκλεισμός εισόδου & σίγαση ήχου",
         "en_US": "Block Input & Mute Volume",
         "es_ES": "Bloquear Entrada y Silenciar el Volumen",
@@ -3554,7 +3554,7 @@
       "ID": "SettingsTabGeneralShowConfirmExitDialog",
       "Translations": {
         "ar_SA": "تأكيد إيقاف اللعبة",
-        "de_DE": "Bestätige Spiel Shutdown",
+        "de_DE": "Spielbeendigung bestätigen",
         "el_GR": "Επιβεβαίωση τερματισμού παιχνιδιού",
         "en_US": "Confirm Game Shutdown",
         "es_ES": "Confirmar Cierre del Juego",
@@ -3604,7 +3604,7 @@
       "ID": "SettingsTabGeneralDisableInputWhenOutOfFocus",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Eingabe deaktivieren wenn nicht fokussiert",
+        "de_DE": "Eingabe deaktivieren, wenn nicht fokussiert",
         "el_GR": "",
         "en_US": "Disable Input when Out of Focus",
         "es_ES": "Desactivar la Entrada al Perder el Foco",
@@ -3654,7 +3654,7 @@
       "ID": "SettingsTabGeneralShowOldUIToolTip",
       "Translations": {
         "ar_SA": "يعرض واجهة Ryujinx القديمة التي تذكر بإصدار Ryujinx 1.1.1403. هذا الخيار مفعل بشكل افتراضي على الأنظمة غير ويندوز.\n\nشريط العنوان الكلاسيكي عاد وتمت إعادة العروض الكبرى للتخطيط، مثل موضع التنقل في الإعدادات.",
-        "de_DE": "Zeigt die ältere Ryujinx-Benutzeroberfläche, die an Ryujinx 1.1.1403 erinnert. Diese Option ist standardmäßig auf Plattformen aktiviert, die nicht Windows sind.\n\nDie klassische Titelleiste ist zurück und wesentliche Layoutänderungen werden rückgängig gemacht, wie zum Beispiel die Platzierung der Einstellungen-Navigation.",
+        "de_DE": "Zeigt die ältere Ryujinx-Benutzeroberfläche, die an Ryujinx 1.1.1403 erinnert. Diese Option ist vorgabemäßig auf Plattformen aktiviert, die nicht Windows sind.\n\nDie klassische Titelleiste ist zurück, und wesentliche Layout-Überarbeitungen wurden rückgängig gemacht – wie etwa die Platzierung der Einstellungen-Navigation.",
         "el_GR": "Εμφανίζει την παλαιότερη διεπαφή χρήστη Ryujinx που θυμίζει το Ryujinx 1.1.1403. Αυτή η επιλογή είναι ενεργοποιημένη από προεπιλογή σε πλατφόρμες που δεν είναι Windows.\n\nΗ κλασική γραμμή τίτλου επιστρέφει και βασικές επεξεργασίες στη διάταξη αντιστρέφονται, όπως η θέση της πλοήγησης ρυθμίσεων.",
         "en_US": "Shows the older Ryujinx UI reminiscent of Ryujinx 1.1.1403. This option enabled by default on platforms that are not Windows.\n\nThe classic title bar is back and major layout reworkings are reversed, such as the settings navigation placement.",
         "es_ES": "Muestra la antigua interfaz Ryujinx que recuerda a Ryujinx 1.1.1403. Esta opción está activada por defecto en plataformas que no son Windows.\n\nLa barra de título clásica ha vuelto y los grandes cambios en el diseño se revierten, como la colocación de la navegación de ajustes.",
@@ -3779,7 +3779,7 @@
       "ID": "SettingsTabGeneralAutoloadDirectories",
       "Translations": {
         "ar_SA": "تحميل تلقائي للمجلدات DLC/التحديثات",
-        "de_DE": "Automatisches Laden DLC/Update-Ordner",
+        "de_DE": "DLC-/Update-Verzeichnisse automatisch laden",
         "el_GR": "Αυτόματο φόρτωμα φακέλων DLC/Ενημερώσεων",
         "en_US": "Autoload DLC/Updates Directories",
         "es_ES": "Carga automática Carpetas DLC/Actualizaciones",
@@ -3979,7 +3979,7 @@
       "ID": "SettingsTabSystemSystemRegionUSA",
       "Translations": {
         "ar_SA": "الولايات المتحدة الأمريكية",
-        "de_DE": "",
+        "de_DE": "VSA",
         "el_GR": "ΗΠΑ",
         "en_US": "USA",
         "es_ES": "EEUU",
@@ -4654,7 +4654,7 @@
       "ID": "SettingsTabSystemEnablePptc",
       "Translations": {
         "ar_SA": "PPTC (ذاكرة التخزين المؤقت للترجمة المستمرة)",
-        "de_DE": "",
+        "de_DE": "PPTC (Profilierter persistenter Übersetzungs-Cache)",
         "el_GR": "Ενεργοποίηση PPTC (Profiled Persistent Translation Cache)",
         "en_US": "PPTC (Profiled Persistent Translation Cache)",
         "es_ES": "PPTC (Cache de Traducción de Perfil Persistente)",
@@ -4704,7 +4704,7 @@
       "ID": "SettingsTabSystemTurboMultiplier",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Turbo-Modus Multiplikator:",
+        "de_DE": "Turbomodus-Multiplikator:",
         "el_GR": "",
         "en_US": "Turbo Mode Multiplier:",
         "es_ES": "Multiplicator del Modo Turbo:",
@@ -4729,7 +4729,7 @@
       "ID": "SettingsTabSystemTurboMultiplierValueToolTip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Der Zielwert für den Multiplikator im Turbo-Modus.\n\nBei Unsicherheit auf 200 belassen",
         "el_GR": "",
         "en_US": "The Turbo mode multiplier target value.\n\nLeave at 200 if unsure.",
         "es_ES": "Valor objetivo del multiplicador del modo turbo.\n\nDéjar en 200 si no está seguro.",
@@ -4754,7 +4754,7 @@
       "ID": "SettingsTabSystemTurboMultiplierToolTip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Der Turbo-Modus ist eine Emulatorfunktion, die bei Spielen, bei denen die Bildrate keine große Rolle spielt, eine Beschleunigung oder Verlangsamung bewirkt.\nDu kannst diese Funktion im Spiel über einen Tastenkürzel aktivieren oder deaktivieren, der in den Ryujinx-Einstellungen unter „Tastatur-Tastenkürzel“ konfiguriert werden kann.\n\nBei Unsicherheit auf 200 belassen",
         "el_GR": "",
         "en_US": "Turbo Mode is an emulator feature which effectively causes speed up or slow down when a game is not frame-rate sensitive.\nYou can toggle this feature in-game with a hotkey, configurable in Ryujinx Keyboard Hotkeys settings.\n\nLeave at 200 if unsure.",
         "es_ES": "El modo turbo es una función del emulador que permite acelerar o ralentizar el juego cuando no depende de la tasa de frames.\nPuedes activar o desactivar esta función durante el juego usando una tecla rápida, configurable en los ajustes de Teclas rápidas de Ryujinx.\n\nDéjar en 200 si no está seguro.",
@@ -4779,7 +4779,7 @@
       "ID": "SettingsTabSystemEnableFsIntegrityChecks",
       "Translations": {
         "ar_SA": "التحقق من سلامة نظام الملفات",
-        "de_DE": "FS Integritätsprüfung",
+        "de_DE": "FS-Integritätsprüfung",
         "el_GR": "Ενεργοποίηση Ελέγχων Ακεραιότητας FS",
         "en_US": "FS Integrity Checks",
         "es_ES": "Comprobar Integridad de los Archivos (FS)",
@@ -4829,7 +4829,7 @@
       "ID": "SettingsTabSystemAudioBackendDummy",
       "Translations": {
         "ar_SA": "زائف",
-        "de_DE": "Ohne Funktion",
+        "de_DE": "Attrappe",
         "el_GR": "Απενεργοποιημένο",
         "en_US": "Dummy",
         "es_ES": "Vacío",
@@ -4979,7 +4979,7 @@
       "ID": "SettingsTabSystemHacksNote",
       "Translations": {
         "ar_SA": "قد يتسبب في عدم الاستقرار",
-        "de_DE": "Kann Fehler verursachen",
+        "de_DE": "Kann Instabilität verursachen",
         "el_GR": "Μπορεί να προκαλέσουν αστάθεια",
         "en_US": "May Cause Instability",
         "es_ES": "Pueden Causar Inestabilidad",
@@ -5004,7 +5004,7 @@
       "ID": "SettingsTabSystemDramSize",
       "Translations": {
         "ar_SA": "استخدام تخطيط الذاكرة البديل (المطورين)",
-        "de_DE": "DRAM Größe:",
+        "de_DE": "DRAM-Größe:",
         "el_GR": "Μέγεθος DRAM:",
         "en_US": "DRAM Size:",
         "es_ES": "Tamaño DRAM:",
@@ -5129,7 +5129,7 @@
       "ID": "SettingsTabSystemIgnoreMissingServices",
       "Translations": {
         "ar_SA": "تجاهل الخدمات المفقودة",
-        "de_DE": "Ignoriere fehlende Dienste",
+        "de_DE": "Fehlende Dienste ignorieren",
         "el_GR": "Αγνόηση υπηρεσιών που λείπουν",
         "en_US": "Ignore Missing Services",
         "es_ES": "Ignorar Servicios no Implementados",
@@ -5179,7 +5179,7 @@
       "ID": "SettingsTabSystemSkipUserProfilesManager",
       "Translations": {
         "ar_SA": "تخطي مربع حوار 'إدارة الملفات الشخصية للمستخدم'",
-        "de_DE": "Überspringen des Dialogs 'Benutzerprofile verwalten'",
+        "de_DE": "Dialog „Benutzerprofile verwalten“ überspringen",
         "el_GR": "Παράκαμψη διαλόγου 'Διαχείριση Προφίλ _Χρηστών'",
         "en_US": "Skip Dialog 'Manage User Profiles'",
         "es_ES": "Omitir el Diálogo 'Gestionar Perfiles de Usuario'",
@@ -5254,7 +5254,7 @@
       "ID": "SettingsTabGraphicsEnableShaderCache",
       "Translations": {
         "ar_SA": "تفعيل ذاكرة المظللات المؤقتة",
-        "de_DE": "Shader-Cache aktivieren",
+        "de_DE": "Schattierer-Cache aktivieren",
         "el_GR": "Ενεργοποίηση Προσωρινής Μνήμης Shader",
         "en_US": "Enable Shader Cache",
         "es_ES": "Habilitar Caché de Sombreadores",
@@ -5304,7 +5304,7 @@
       "ID": "SettingsTabGraphicsAnisotropicFilteringAuto",
       "Translations": {
         "ar_SA": "تلقائي",
-        "de_DE": "",
+        "de_DE": "Automatisch",
         "el_GR": "Αυτόματο",
         "en_US": "Auto",
         "es_ES": "Automático",
@@ -5579,7 +5579,7 @@
       "ID": "SettingsTabGraphicsAspectRatio",
       "Translations": {
         "ar_SA": "نسبة الارتفاع إلى العرض:",
-        "de_DE": "Bildseitenverhältnis:",
+        "de_DE": "Seitenverhältnis:",
         "el_GR": "Αναλογία Απεικόνισης:",
         "en_US": "Aspect Ratio:",
         "es_ES": "Relación de Aspecto:",
@@ -5729,7 +5729,7 @@
       "ID": "SettingsTabGraphicsAspectRatioStretch",
       "Translations": {
         "ar_SA": "تمديد لتناسب النافذة",
-        "de_DE": "An Fenster anpassen",
+        "de_DE": "An Fenstergröße anpassen",
         "el_GR": "Έκταση σε όλο το παράθυρο",
         "en_US": "Stretch to Fit Window",
         "es_ES": "Estirar a la Ventana",
@@ -5754,7 +5754,7 @@
       "ID": "SettingsTabGraphicsDeveloperOptions",
       "Translations": {
         "ar_SA": "خيارات المطور",
-        "de_DE": "Optionen für Entwickler",
+        "de_DE": "Entwickleroptionen",
         "el_GR": "Επιλογές Προγραμματιστή",
         "en_US": "Developer Options",
         "es_ES": "Opciones de Desarrollador",
@@ -5779,7 +5779,7 @@
       "ID": "SettingsTabGraphicsShaderDumpPath",
       "Translations": {
         "ar_SA": "مسار تفريغ المظللات:",
-        "de_DE": "Grafik-Shader-Dump-Pfad:",
+        "de_DE": "Grafik-Schattierer-Dump-Pfad:",
         "el_GR": "Τοποθεσία Shaders Γραφικών:",
         "en_US": "Graphics Shader Dump Path:",
         "es_ES": "Directorio de Volcado de Sombreadores:",
@@ -5804,7 +5804,7 @@
       "ID": "SettingsTabLogging",
       "Translations": {
         "ar_SA": "تسجيل",
-        "de_DE": "Logs",
+        "de_DE": "Protokollierung",
         "el_GR": "Καταγραφή",
         "en_US": "Logging",
         "es_ES": "Registros",
@@ -5829,7 +5829,7 @@
       "ID": "SettingsTabLoggingLogging",
       "Translations": {
         "ar_SA": "تسجيل",
-        "de_DE": "Logs",
+        "de_DE": "Protokollierung",
         "el_GR": "Καταγραφή",
         "en_US": "Logging",
         "es_ES": "Registros",
@@ -5879,7 +5879,7 @@
       "ID": "SettingsTabLoggingEnableStubLogs",
       "Translations": {
         "ar_SA": "تفعيل سجلات الـStub",
-        "de_DE": "Aktiviere Stub-Logs",
+        "de_DE": "Stub-Protokolle aktivieren",
         "el_GR": "Ενεργοποίηση Καταγραφής Stub",
         "en_US": "Enable Stub Logs",
         "es_ES": "Habilitar Registros de Stub",
@@ -5904,7 +5904,7 @@
       "ID": "SettingsTabLoggingEnableInfoLogs",
       "Translations": {
         "ar_SA": "تفعيل سجلات المعلومات",
-        "de_DE": "Aktiviere Info-Logs",
+        "de_DE": "Info-Protokolle aktivieren",
         "el_GR": "Ενεργοποίηση Καταγραφής Πληροφοριών",
         "en_US": "Enable Info Logs",
         "es_ES": "Habilitar Registros de Info",
@@ -5929,7 +5929,7 @@
       "ID": "SettingsTabLoggingEnableWarningLogs",
       "Translations": {
         "ar_SA": "تفعيل سجلات التحذير",
-        "de_DE": "Aktiviere Warn-Logs",
+        "de_DE": "Warnungsprotokolle aktivieren",
         "el_GR": "Ενεργοποίηση Καταγραφής Προειδοποίησης",
         "en_US": "Enable Warning Logs",
         "es_ES": "Habilitar Registros de Advertencia",
@@ -5954,7 +5954,7 @@
       "ID": "SettingsTabLoggingEnableErrorLogs",
       "Translations": {
         "ar_SA": "تفعيل سجلات الأخطاء",
-        "de_DE": "Aktiviere Fehler-Logs",
+        "de_DE": "Fehlerprotokolle aktivieren",
         "el_GR": "Ενεργοποίηση Καταγραφής Σφαλμάτων",
         "en_US": "Enable Error Logs",
         "es_ES": "Habilitar Registros de Error",
@@ -5979,7 +5979,7 @@
       "ID": "SettingsTabLoggingEnableTraceLogs",
       "Translations": {
         "ar_SA": "تفعيل سجلات التتبع",
-        "de_DE": "Aktiviere Trace-Logs",
+        "de_DE": "Spur-Protokolle aktivieren",
         "el_GR": "Ενεργοποίηση Καταγραφής Ιχνών",
         "en_US": "Enable Trace Logs",
         "es_ES": "Habilitar Registros de Rastro",
@@ -6004,7 +6004,7 @@
       "ID": "SettingsTabLoggingEnableGuestLogs",
       "Translations": {
         "ar_SA": "تفعيل سجلات الضيوف",
-        "de_DE": "Aktiviere Gast-Logs",
+        "de_DE": "Gastprotokolle aktivieren",
         "el_GR": "Ενεργοποίηση Καταγραφής Επισκεπτών",
         "en_US": "Enable Guest Logs",
         "es_ES": "Habilitar Registros de Guest",
@@ -6029,7 +6029,7 @@
       "ID": "SettingsTabLoggingEnableAvaloniaLogs",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "BO-Protokolle aktivieren",
         "el_GR": "",
         "en_US": "Enable UI Logs",
         "es_ES": "Habilitar Registros UI",
@@ -6054,7 +6054,7 @@
       "ID": "SettingsTabLoggingEnableFsAccessLogs",
       "Translations": {
         "ar_SA": "تمكين سجلات الوصول إلى نظام الملفات",
-        "de_DE": "Aktiviere Fs Zugriff-Logs",
+        "de_DE": "FS-Zugriffsprotokolle aktivieren",
         "el_GR": "Ενεργοποίηση Καταγραφής Πρόσβασης FS",
         "en_US": "Enable Fs Access Logs",
         "es_ES": "Habilitar Registros de FS Access",
@@ -6079,7 +6079,7 @@
       "ID": "SettingsTabLoggingFsGlobalAccessLogMode",
       "Translations": {
         "ar_SA": "وضع سجل الوصول العالمي لنظام الملفات:",
-        "de_DE": "Fs Globaler Zugriff-Log-Modus:",
+        "de_DE": "Fs Globaler Zugriffsprotokollmodus:",
         "el_GR": "Λειτουργία Καταγραφής Καθολικής Πρόσβασης FS:",
         "en_US": "Fs Global Access Log Mode:",
         "es_ES": "Modo de Registros Fs Global Access:",
@@ -6104,11 +6104,11 @@
       "ID": "SettingsTabLoggingEnableNetLogs",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Netzwerkprotokolle aktivieren",
         "el_GR": "",
         "en_US": "Enable Net Logs",
-        "es_ES": "Habilitar Registros de Red.",
-        "fr_FR": "Activer les Journaux Réseau.",
+        "es_ES": "Habilitar registros de red.",
+        "fr_FR": "",
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
@@ -6304,7 +6304,7 @@
       "ID": "SettingsTabLoggingEnableDebugLogs",
       "Translations": {
         "ar_SA": "تمكين سجلات التصحيح",
-        "de_DE": "Aktiviere Debug-Log",
+        "de_DE": "Fehlerbehebungs-Protokolle aktivieren",
         "el_GR": "Ενεργοποίηση Αρχείων Καταγραφής Εντοπισμού Σφαλμάτων",
         "en_US": "Enable Debug Logs",
         "es_ES": "Habilitar Registros de Debug",
@@ -6879,7 +6879,7 @@
       "ID": "ControllerSettingsWaitingConnectDevice",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Konfiguration gefunden:\n\nName:\t{0}\nGUID:\t{1}\n\n Warten auf Verbindung zum Controller...",
         "el_GR": "",
         "en_US": "Configuration found:\n\nName:\t{0}\nGUID:\t{1}\n\n Waiting for controller connection...",
         "es_ES": "Configuración encontrada:\n\nNombre:\t{0}\nGUID:\t{1}\n\nEsperando la conexión del controlador...",
@@ -7129,7 +7129,7 @@
       "ID": "ControllerSettingsProfileDefault",
       "Translations": {
         "ar_SA": "افتراضي",
-        "de_DE": "Standard",
+        "de_DE": "Vorgabe",
         "el_GR": "Προκαθορισμένο",
         "en_US": "Default",
         "es_ES": "Predeterminado",
@@ -7204,7 +7204,7 @@
       "ID": "ControllerSettingsModifiedNotification",
       "Translations": {
         "ar_SA": "(تم التعديل!)",
-        "de_DE": "(modifiziert!)",
+        "de_DE": "(Modifiziert!)",
         "el_GR": "(τροποποιημένο!)",
         "en_US": "(Modified!)",
         "es_ES": "(Modificado!)",
@@ -7229,7 +7229,7 @@
       "ID": "ControllerSettingsDisableDeviceForSaving",
       "Translations": {
         "ar_SA": "تم إعداد التحكم.\n\nفي انتظار اتصال وحدة التحكم...",
-        "de_DE": "Steuerung konfiguriert.\n\nWarten auf die Verbindung des Controllers...",
+        "de_DE": "Steuerung konfiguriert.\n\nWarten auf Verbindung zum Controller...",
         "el_GR": "Η διαχείριση έχει ρυθμιστεί.\n\nΑναμένεται σύνδεση του χειριστηρίου...",
         "en_US": "Control configured.\n\nWaiting for controller connection...",
         "es_ES": "Control configurado.\n\nEsperando la conexión del controlador...",
@@ -7304,7 +7304,7 @@
       "ID": "ControllerSettingsButtons",
       "Translations": {
         "ar_SA": "الأزرار",
-        "de_DE": "Aktionstasten",
+        "de_DE": "Tasten",
         "el_GR": "Κουμπιά",
         "en_US": "Buttons",
         "es_ES": "Botones",
@@ -7604,7 +7604,7 @@
       "ID": "ControllerSettingsStickButton",
       "Translations": {
         "ar_SA": "زر",
-        "de_DE": "",
+        "de_DE": "Taste",
         "el_GR": "Κουμπί",
         "en_US": "Button",
         "es_ES": "Botón",
@@ -7804,7 +7804,7 @@
       "ID": "ControllerSettingsStickDeadzone",
       "Translations": {
         "ar_SA": "المنطقة الميتة",
-        "de_DE": "",
+        "de_DE": "Totzone",
         "el_GR": "Νεκρή Ζώνη",
         "en_US": "Deadzone",
         "es_ES": "Zona muerta",
@@ -7829,7 +7829,7 @@
       "ID": "ControllerSettingsLStick",
       "Translations": {
         "ar_SA": "العصا اليسرى",
-        "de_DE": "Linker Analogstick",
+        "de_DE": "Linker Analog-Stick",
         "el_GR": "Αριστερός Μοχλός",
         "en_US": "Left Stick",
         "es_ES": "Palanca Izquierda",
@@ -7854,7 +7854,7 @@
       "ID": "ControllerSettingsRStick",
       "Translations": {
         "ar_SA": "العصا اليمنى",
-        "de_DE": "Rechter Analogstick",
+        "de_DE": "Rechter Analog-Stick",
         "el_GR": "Δεξιός Μοχλός",
         "en_US": "Right Stick",
         "es_ES": "Palanca Derecha",
@@ -7879,7 +7879,7 @@
       "ID": "ControllerSettingsTriggersLeft",
       "Translations": {
         "ar_SA": "الأزندة اليسرى",
-        "de_DE": "Linker Trigger",
+        "de_DE": "Linke Schultertaste unten",
         "el_GR": "Αριστερή Σκανδάλη",
         "en_US": "Triggers Left",
         "es_ES": "Gatillos Izquierdos",
@@ -7904,7 +7904,7 @@
       "ID": "ControllerSettingsTriggersRight",
       "Translations": {
         "ar_SA": "الأزندة اليمني",
-        "de_DE": "Rechter Trigger",
+        "de_DE": "Rechte Schultertaste unten",
         "el_GR": "Δεξιά Σκανδάλη",
         "en_US": "Triggers Right",
         "es_ES": "Gatillos Derechos",
@@ -7929,7 +7929,7 @@
       "ID": "ControllerSettingsTriggersButtonsLeft",
       "Translations": {
         "ar_SA": "أزرار الزناد اليسرى",
-        "de_DE": "Linke Schultertaste",
+        "de_DE": "Linke Schultertaste oben",
         "el_GR": "Αριστερά Κουμπιά Σκανδάλης",
         "en_US": "Trigger Buttons Left",
         "es_ES": "Botones de Gatillo Izquierdos",
@@ -7954,7 +7954,7 @@
       "ID": "ControllerSettingsTriggersButtonsRight",
       "Translations": {
         "ar_SA": "أزرار الزناد اليمنى",
-        "de_DE": "Rechte Schultertaste",
+        "de_DE": "Rechte Schultertaste oben",
         "el_GR": "Δεξιά Κουμπιά Σκανδάλης",
         "en_US": "Trigger Buttons Right",
         "es_ES": "Botones de Gatillo Derechos",
@@ -7979,7 +7979,7 @@
       "ID": "ControllerSettingsTriggers",
       "Translations": {
         "ar_SA": "أزندة",
-        "de_DE": "Trigger",
+        "de_DE": "Schultertasten",
         "el_GR": "Σκανδάλες",
         "en_US": "Triggers",
         "es_ES": "Gatillos",
@@ -8204,7 +8204,7 @@
       "ID": "ControllerSettingsExtraButtonsLeft",
       "Translations": {
         "ar_SA": "الأزرار اليسار",
-        "de_DE": "Linke Aktionstasten",
+        "de_DE": "Linke Tasten",
         "el_GR": "Αριστερά Κουμπιά",
         "en_US": "Buttons Left",
         "es_ES": "Botones Izquierdos",
@@ -8229,7 +8229,7 @@
       "ID": "ControllerSettingsExtraButtonsRight",
       "Translations": {
         "ar_SA": "الأزرار اليمين",
-        "de_DE": "Rechte Aktionstasten",
+        "de_DE": "Rechte Tasten",
         "el_GR": "Δεξιά Κουμπιά",
         "en_US": "Buttons Right",
         "es_ES": "Botones Derechos",
@@ -8279,7 +8279,7 @@
       "ID": "ControllerSettingsTriggerThreshold",
       "Translations": {
         "ar_SA": "قوة التحفيز",
-        "de_DE": "Empfindlichkeit",
+        "de_DE": "Auslöseschwelle",
         "el_GR": "Κατώφλι Σκανδάλης",
         "en_US": "Trigger Threshold",
         "es_ES": "Límite de gatillos",
@@ -8329,7 +8329,7 @@
       "ID": "ControllerSettingsMotionUseCemuhookCompatibleMotion",
       "Translations": {
         "ar_SA": "استخدام الحركة المتوافقة مع CemuHook",
-        "de_DE": "CemuHook kompatible Bewegungssteuerung",
+        "de_DE": "CemuHook kompatible Bewegung verwenden",
         "el_GR": "Κίνηση συμβατή με CemuHook",
         "en_US": "Use CemuHook Compatible Motion",
         "es_ES": "Usar Movimiento Compatible con CemuHook",
@@ -8429,7 +8429,7 @@
       "ID": "ControllerSettingsMotionServerHost",
       "Translations": {
         "ar_SA": "مضيف الخادم:",
-        "de_DE": "",
+        "de_DE": "Server-Host",
         "el_GR": "Κεντρικός Υπολογιστής Διακομιστή:",
         "en_US": "Server Host:",
         "es_ES": "Host del Servidor:",
@@ -8479,7 +8479,7 @@
       "ID": "ControllerSettingsMotionGyroDeadzone",
       "Translations": {
         "ar_SA": "منطقة مستشعر الحركة الميتة:",
-        "de_DE": "Gyro-Deadzone:",
+        "de_DE": "Gyro-Totzone:",
         "el_GR": "Νεκρή Ζώνη Γυροσκοπίου:",
         "en_US": "Gyro Deadzone:",
         "es_ES": "Zona Muerta de Gyro:",
@@ -8529,7 +8529,7 @@
       "ID": "ControllerSettingsLedColorDisable",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Deaktivieren",
         "el_GR": "",
         "en_US": "Disable",
         "es_ES": "Desactivar",
@@ -8554,7 +8554,7 @@
       "ID": "ControllerSettingsLedColorRainbow",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Regenbogen",
         "el_GR": "",
         "en_US": "Rainbow",
         "es_ES": "Arcoíris",
@@ -8579,7 +8579,7 @@
       "ID": "ControllerSettingsLedColorRainbowSpeed",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Regenbogen-Geschwindigkeit",
         "el_GR": "",
         "en_US": "Rainbow Speed:",
         "es_ES": "Velocidad del arcoíris:",
@@ -8604,7 +8604,7 @@
       "ID": "ControllerSettingsLedColor",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Farbe",
         "el_GR": "",
         "en_US": "Color",
         "es_ES": null,
@@ -8704,7 +8704,7 @@
       "ID": "KeyShiftLeft",
       "Translations": {
         "ar_SA": "زر ‫Shift الأيسر",
-        "de_DE": "",
+        "de_DE": "Linke Umschalttaste",
         "el_GR": "",
         "en_US": "Shift Left",
         "es_ES": "Mayús Izquierda",
@@ -8729,7 +8729,7 @@
       "ID": "KeyShiftRight",
       "Translations": {
         "ar_SA": "زر ‫Shift الأيمن",
-        "de_DE": "",
+        "de_DE": "Rechte Umschalttaste",
         "el_GR": "",
         "en_US": "Shift Right",
         "es_ES": "Mayús Derecha",
@@ -8754,7 +8754,7 @@
       "ID": "KeyControlLeft",
       "Translations": {
         "ar_SA": "زر ‫Ctrl الأيسر",
-        "de_DE": "",
+        "de_DE": "Strg Links",
         "el_GR": "",
         "en_US": "Ctrl Left",
         "es_ES": "Alt Gr",
@@ -8779,7 +8779,7 @@
       "ID": "KeyMacControlLeft",
       "Translations": {
         "ar_SA": "زر ⌃ الأيسر",
-        "de_DE": "",
+        "de_DE": "^ Links",
         "el_GR": "",
         "en_US": "⌃ Left",
         "es_ES": "⌃ Izquierdo",
@@ -8804,7 +8804,7 @@
       "ID": "KeyControlRight",
       "Translations": {
         "ar_SA": "زر ‫Ctrl الأيمن",
-        "de_DE": "",
+        "de_DE": "Strg Rechts",
         "el_GR": "",
         "en_US": "Ctrl Right",
         "es_ES": "Ctrl Derecho",
@@ -8829,7 +8829,7 @@
       "ID": "KeyMacControlRight",
       "Translations": {
         "ar_SA": "زر ⌃ الأيمن",
-        "de_DE": "",
+        "de_DE": "^ Rechts",
         "el_GR": "",
         "en_US": "⌃ Right",
         "es_ES": "⌃ Derecho",
@@ -8854,7 +8854,7 @@
       "ID": "KeyAltLeft",
       "Translations": {
         "ar_SA": "زر ‫Alt الأيسر",
-        "de_DE": "",
+        "de_DE": "Alt Links",
         "el_GR": "",
         "en_US": "Alt Left",
         "es_ES": "Alt Izquierdo",
@@ -8879,7 +8879,7 @@
       "ID": "KeyMacAltLeft",
       "Translations": {
         "ar_SA": "زر ⌥ الأيسر",
-        "de_DE": "",
+        "de_DE": "⌥ Links",
         "el_GR": "",
         "en_US": "⌥ Left",
         "es_ES": "⌥ Izquierdo",
@@ -8904,7 +8904,7 @@
       "ID": "KeyAltRight",
       "Translations": {
         "ar_SA": "زر ‫Alt الأيمن",
-        "de_DE": "",
+        "de_DE": "Alt Rechts",
         "el_GR": "",
         "en_US": "Alt Right",
         "es_ES": "Alt Derecho",
@@ -8929,7 +8929,7 @@
       "ID": "KeyMacAltRight",
       "Translations": {
         "ar_SA": "زر ⌥ الأيمن",
-        "de_DE": "",
+        "de_DE": "⌥ Rechts",
         "el_GR": "",
         "en_US": "⌥ Right",
         "es_ES": "⌥ Derecho",
@@ -8954,7 +8954,7 @@
       "ID": "KeyWinLeft",
       "Translations": {
         "ar_SA": "زر ⊞ الأيسر",
-        "de_DE": "",
+        "de_DE": "⊞ Links",
         "el_GR": "",
         "en_US": "⊞ Left",
         "es_ES": "⊞ Izquierdo",
@@ -8979,7 +8979,7 @@
       "ID": "KeyMacWinLeft",
       "Translations": {
         "ar_SA": "زر ⌘ الأيسر",
-        "de_DE": "",
+        "de_DE": "⌘ Links",
         "el_GR": "",
         "en_US": "⌘ Left",
         "es_ES": "⌘ Izqierdo",
@@ -9004,7 +9004,7 @@
       "ID": "KeyWinRight",
       "Translations": {
         "ar_SA": "زر ⊞ الأيمن",
-        "de_DE": "",
+        "de_DE": "⊞ Rechts",
         "el_GR": "",
         "en_US": "⊞ Right",
         "es_ES": "⊞ Derecho",
@@ -9029,7 +9029,7 @@
       "ID": "KeyMacWinRight",
       "Translations": {
         "ar_SA": "زر ⌘ الأيمن",
-        "de_DE": "",
+        "de_DE": "⌘ Rechts",
         "el_GR": "",
         "en_US": "⌘ Right",
         "es_ES": "⌘ Derecho",
@@ -9054,7 +9054,7 @@
       "ID": "KeyMenu",
       "Translations": {
         "ar_SA": "زر القائمة",
-        "de_DE": "",
+        "de_DE": "Menü",
         "el_GR": "",
         "en_US": "Menu",
         "es_ES": null,
@@ -9079,7 +9079,7 @@
       "ID": "KeyUp",
       "Translations": {
         "ar_SA": "فوق",
-        "de_DE": "",
+        "de_DE": "Hoch",
         "el_GR": "",
         "en_US": "Up",
         "es_ES": "Arriba",
@@ -9104,7 +9104,7 @@
       "ID": "KeyDown",
       "Translations": {
         "ar_SA": "اسفل",
-        "de_DE": "",
+        "de_DE": "Runter",
         "el_GR": "",
         "en_US": "Down",
         "es_ES": "Abajo",
@@ -9129,7 +9129,7 @@
       "ID": "KeyLeft",
       "Translations": {
         "ar_SA": "يسار",
-        "de_DE": "",
+        "de_DE": "Links",
         "el_GR": "",
         "en_US": "Left",
         "es_ES": "Izquierda",
@@ -9154,7 +9154,7 @@
       "ID": "KeyRight",
       "Translations": {
         "ar_SA": "يمين",
-        "de_DE": "",
+        "de_DE": "Rechts",
         "el_GR": "",
         "en_US": "Right",
         "es_ES": "Derecha",
@@ -9179,7 +9179,7 @@
       "ID": "KeyEnter",
       "Translations": {
         "ar_SA": "مفتاح الإدخال",
-        "de_DE": "",
+        "de_DE": "Eingabe",
         "el_GR": "",
         "en_US": "Enter",
         "es_ES": "Intro",
@@ -9204,7 +9204,7 @@
       "ID": "KeyEscape",
       "Translations": {
         "ar_SA": "زر ‫Escape",
-        "de_DE": "",
+        "de_DE": "Esc",
         "el_GR": "",
         "en_US": "Escape",
         "es_ES": "Esc",
@@ -9229,7 +9229,7 @@
       "ID": "KeySpace",
       "Translations": {
         "ar_SA": "مسافة",
-        "de_DE": "",
+        "de_DE": "Leertaste",
         "el_GR": "",
         "en_US": "Space",
         "es_ES": "Espacio",
@@ -9254,7 +9254,7 @@
       "ID": "KeyTab",
       "Translations": {
         "ar_SA": "زر ‫Tab",
-        "de_DE": "",
+        "de_DE": "Tab",
         "el_GR": "",
         "en_US": "Tab",
         "es_ES": null,
@@ -9279,7 +9279,7 @@
       "ID": "KeyBackSpace",
       "Translations": {
         "ar_SA": "زر المسح للخلف",
-        "de_DE": "",
+        "de_DE": "Rücktaste",
         "el_GR": "",
         "en_US": "Backspace",
         "es_ES": "Retroceso",
@@ -9304,7 +9304,7 @@
       "ID": "KeyInsert",
       "Translations": {
         "ar_SA": "زر Insert",
-        "de_DE": "",
+        "de_DE": "Einfügen",
         "el_GR": "",
         "en_US": "Insert",
         "es_ES": null,
@@ -9329,7 +9329,7 @@
       "ID": "KeyDelete",
       "Translations": {
         "ar_SA": "زر الحذف",
-        "de_DE": "",
+        "de_DE": "Entfernen",
         "el_GR": "",
         "en_US": "Delete",
         "es_ES": "Supr",
@@ -9354,7 +9354,7 @@
       "ID": "KeyPageUp",
       "Translations": {
         "ar_SA": "زر ‫Page Up",
-        "de_DE": "",
+        "de_DE": "Bild Hoch",
         "el_GR": "",
         "en_US": "Page Up",
         "es_ES": "Re Pág",
@@ -9379,7 +9379,7 @@
       "ID": "KeyPageDown",
       "Translations": {
         "ar_SA": "زر ‫Page Down",
-        "de_DE": "",
+        "de_DE": "Bild Runter",
         "el_GR": "",
         "en_US": "Page Down",
         "es_ES": "Av Pág",
@@ -9404,7 +9404,7 @@
       "ID": "KeyHome",
       "Translations": {
         "ar_SA": "زر ‫Home",
-        "de_DE": "",
+        "de_DE": "Pos1",
         "el_GR": "",
         "en_US": "Home",
         "es_ES": "Inicio",
@@ -9429,7 +9429,7 @@
       "ID": "KeyEnd",
       "Translations": {
         "ar_SA": "زر ‫End",
-        "de_DE": "",
+        "de_DE": "Ende",
         "el_GR": "",
         "en_US": "End",
         "es_ES": "Fin",
@@ -9454,7 +9454,7 @@
       "ID": "KeyCapsLock",
       "Translations": {
         "ar_SA": "زر الحروف الكبيرة",
-        "de_DE": "",
+        "de_DE": "Feststelltaste",
         "el_GR": "",
         "en_US": "Caps Lock",
         "es_ES": "Bloq Mayús",
@@ -9479,7 +9479,7 @@
       "ID": "KeyScrollLock",
       "Translations": {
         "ar_SA": "زر ‫Scroll Lock",
-        "de_DE": "",
+        "de_DE": "Rollen",
         "el_GR": "",
         "en_US": "Scroll Lock",
         "es_ES": "Bloq Despl",
@@ -9504,7 +9504,7 @@
       "ID": "KeyPrintScreen",
       "Translations": {
         "ar_SA": "زر ‫Print Screen",
-        "de_DE": "",
+        "de_DE": "Druck",
         "el_GR": "",
         "en_US": "Print Screen",
         "es_ES": "Impr Pant",
@@ -9554,7 +9554,7 @@
       "ID": "KeyNumLock",
       "Translations": {
         "ar_SA": "زر Num Lock",
-        "de_DE": "",
+        "de_DE": "Num-Sperre",
         "el_GR": "",
         "en_US": "Num Lock",
         "es_ES": "Bloq Num",
@@ -9579,7 +9579,7 @@
       "ID": "KeyClear",
       "Translations": {
         "ar_SA": "زر Clear",
-        "de_DE": "",
+        "de_DE": "Löschen",
         "el_GR": "",
         "en_US": "Clear",
         "es_ES": "Borrar",
@@ -9604,7 +9604,7 @@
       "ID": "KeyKeypad0",
       "Translations": {
         "ar_SA": "لوحة الأرقام 0",
-        "de_DE": "",
+        "de_DE": "Ziffernblock 0",
         "el_GR": "",
         "en_US": "Keypad 0",
         "es_ES": "Num. 0",
@@ -9629,7 +9629,7 @@
       "ID": "KeyKeypad1",
       "Translations": {
         "ar_SA": "لوحة الأرقام 1",
-        "de_DE": "",
+        "de_DE": "Ziffernblock 1",
         "el_GR": "",
         "en_US": "Keypad 1",
         "es_ES": "Num. 1",
@@ -9654,7 +9654,7 @@
       "ID": "KeyKeypad2",
       "Translations": {
         "ar_SA": "لوحة الأرقام 2",
-        "de_DE": "",
+        "de_DE": "Ziffernblock 2",
         "el_GR": "",
         "en_US": "Keypad 2",
         "es_ES": "Num. 2",
@@ -9679,7 +9679,7 @@
       "ID": "KeyKeypad3",
       "Translations": {
         "ar_SA": "لوحة الأرقام 3",
-        "de_DE": "",
+        "de_DE": "Ziffernblock 3",
         "el_GR": "",
         "en_US": "Keypad 3",
         "es_ES": "Num. 3",
@@ -9704,7 +9704,7 @@
       "ID": "KeyKeypad4",
       "Translations": {
         "ar_SA": "لوحة الأرقام 4",
-        "de_DE": "",
+        "de_DE": "Ziffernblock 4",
         "el_GR": "",
         "en_US": "Keypad 4",
         "es_ES": "Num. 4",
@@ -9729,7 +9729,7 @@
       "ID": "KeyKeypad5",
       "Translations": {
         "ar_SA": "لوحة الأرقام 5",
-        "de_DE": "",
+        "de_DE": "Ziffernblock 5",
         "el_GR": "",
         "en_US": "Keypad 5",
         "es_ES": "Num. 5",
@@ -9754,7 +9754,7 @@
       "ID": "KeyKeypad6",
       "Translations": {
         "ar_SA": "لوحة الأرقام 6",
-        "de_DE": "",
+        "de_DE": "Ziffernblock 6",
         "el_GR": "",
         "en_US": "Keypad 6",
         "es_ES": "Num. 6",
@@ -9779,7 +9779,7 @@
       "ID": "KeyKeypad7",
       "Translations": {
         "ar_SA": "لوحة الأرقام 7",
-        "de_DE": "",
+        "de_DE": "Ziffernblock 7",
         "el_GR": "",
         "en_US": "Keypad 7",
         "es_ES": "Num. 7",
@@ -9804,7 +9804,7 @@
       "ID": "KeyKeypad8",
       "Translations": {
         "ar_SA": "لوحة الأرقام 8",
-        "de_DE": "",
+        "de_DE": "Ziffernblock 8",
         "el_GR": "",
         "en_US": "Keypad 8",
         "es_ES": "Num. 8",
@@ -9829,7 +9829,7 @@
       "ID": "KeyKeypad9",
       "Translations": {
         "ar_SA": "لوحة الأرقام 9",
-        "de_DE": "",
+        "de_DE": "Ziffernblock 9",
         "el_GR": "",
         "en_US": "Keypad 9",
         "es_ES": "Num. 9",
@@ -9854,7 +9854,7 @@
       "ID": "KeyKeypadDivide",
       "Translations": {
         "ar_SA": "لوحة الأرقام علامة القسمة",
-        "de_DE": "",
+        "de_DE": "Ziffernblock Teilen",
         "el_GR": "",
         "en_US": "Keypad Divide",
         "es_ES": "Num. /",
@@ -9879,7 +9879,7 @@
       "ID": "KeyKeypadMultiply",
       "Translations": {
         "ar_SA": "لوحة الأرقام علامة الضرب",
-        "de_DE": "",
+        "de_DE": "Ziffernblock Multiplizieren",
         "el_GR": "",
         "en_US": "Keypad Multiply",
         "es_ES": "Num. *",
@@ -9904,7 +9904,7 @@
       "ID": "KeyKeypadSubtract",
       "Translations": {
         "ar_SA": "لوحة الأرقام علامة الطرح\n",
-        "de_DE": "",
+        "de_DE": "Ziffernblock Subtrahieren",
         "el_GR": "",
         "en_US": "Keypad Subtract",
         "es_ES": "Num. -",
@@ -9929,7 +9929,7 @@
       "ID": "KeyKeypadAdd",
       "Translations": {
         "ar_SA": "لوحة الأرقام علامة الزائد",
-        "de_DE": "",
+        "de_DE": "Ziffernblock Addition",
         "el_GR": "",
         "en_US": "Keypad Add",
         "es_ES": "Num. +",
@@ -9954,7 +9954,7 @@
       "ID": "KeyKeypadDecimal",
       "Translations": {
         "ar_SA": "لوحة الأرقام الفاصلة العشرية",
-        "de_DE": "",
+        "de_DE": "Ziffernblock Dezimal",
         "el_GR": "",
         "en_US": "Keypad Decimal",
         "es_ES": "Num. .",
@@ -9979,7 +9979,7 @@
       "ID": "KeyKeypadEnter",
       "Translations": {
         "ar_SA": "لوحة الأرقام زر الإدخال",
-        "de_DE": "",
+        "de_DE": "Ziffernblock Eingabe",
         "el_GR": "",
         "en_US": "Keypad Enter",
         "es_ES": "Num. Intro",
@@ -10554,7 +10554,7 @@
       "ID": "KeyUnbound",
       "Translations": {
         "ar_SA": "غير مرتبط",
-        "de_DE": "",
+        "de_DE": "Ungebunden",
         "el_GR": "",
         "en_US": "Unbound",
         "es_ES": "Sin Asignar",
@@ -10579,7 +10579,7 @@
       "ID": "GamepadLeftStick",
       "Translations": {
         "ar_SA": "زر عصا التحكم اليسرى",
-        "de_DE": "",
+        "de_DE": "L-Stick-Taste",
         "el_GR": "",
         "en_US": "L Stick Button",
         "es_ES": "Botón Joystick Izq.",
@@ -10604,7 +10604,7 @@
       "ID": "GamepadRightStick",
       "Translations": {
         "ar_SA": "زر عصا التحكم اليمنى",
-        "de_DE": "",
+        "de_DE": "R-Stick-Taste",
         "el_GR": "",
         "en_US": "R Stick Button",
         "es_ES": "Botón Joystick Derecho",
@@ -10629,7 +10629,7 @@
       "ID": "GamepadLeftShoulder",
       "Translations": {
         "ar_SA": "زر الكتف الأيسر‫ L",
-        "de_DE": "",
+        "de_DE": "Linke Schultertaste oben",
         "el_GR": "",
         "en_US": "Left Shoulder",
         "es_ES": "Botón Superior Izq.",
@@ -10654,7 +10654,7 @@
       "ID": "GamepadRightShoulder",
       "Translations": {
         "ar_SA": "زر الكتف الأيمن‫ R",
-        "de_DE": "",
+        "de_DE": "Rechte Schultertaste oben",
         "el_GR": "",
         "en_US": "Right Shoulder",
         "es_ES": "Botón Superior Derecho",
@@ -10679,7 +10679,7 @@
       "ID": "GamepadLeftTrigger",
       "Translations": {
         "ar_SA": "زر الزناد الأيسر‫ (ZL)",
-        "de_DE": "",
+        "de_DE": "Linke Schultertaste unten",
         "el_GR": "",
         "en_US": "Left Trigger",
         "es_ES": "Gatillo Izquierdo",
@@ -10704,7 +10704,7 @@
       "ID": "GamepadRightTrigger",
       "Translations": {
         "ar_SA": "زر الزناد الأيمن‫ (ZR)",
-        "de_DE": "",
+        "de_DE": "Rechte Schultertaste oben",
         "el_GR": "",
         "en_US": "Right Trigger",
         "es_ES": "Gatillo Derecho",
@@ -10729,7 +10729,7 @@
       "ID": "GamepadDpadUp",
       "Translations": {
         "ar_SA": "فوق",
-        "de_DE": "",
+        "de_DE": "Hoch",
         "el_GR": "",
         "en_US": "Up",
         "es_ES": "Arriba",
@@ -10754,7 +10754,7 @@
       "ID": "GamepadDpadDown",
       "Translations": {
         "ar_SA": "اسفل",
-        "de_DE": "",
+        "de_DE": "Runter",
         "el_GR": "",
         "en_US": "Down",
         "es_ES": "Abajo",
@@ -10779,7 +10779,7 @@
       "ID": "GamepadDpadLeft",
       "Translations": {
         "ar_SA": "يسار",
-        "de_DE": "",
+        "de_DE": "Links",
         "el_GR": "",
         "en_US": "Left",
         "es_ES": "Izquierda",
@@ -10804,7 +10804,7 @@
       "ID": "GamepadDpadRight",
       "Translations": {
         "ar_SA": "يمين",
-        "de_DE": "",
+        "de_DE": "Rechts",
         "el_GR": "",
         "en_US": "Right",
         "es_ES": "Derecha",
@@ -10879,7 +10879,7 @@
       "ID": "GamepadGuide",
       "Translations": {
         "ar_SA": "دليل",
-        "de_DE": "",
+        "de_DE": "Leitfaden",
         "el_GR": "",
         "en_US": "Guide",
         "es_ES": "Guía",
@@ -10904,7 +10904,7 @@
       "ID": "GamepadMisc1",
       "Translations": {
         "ar_SA": "متنوع",
-        "de_DE": "",
+        "de_DE": "Versch.",
         "el_GR": "",
         "en_US": "Misc",
         "es_ES": "Otros",
@@ -10929,7 +10929,7 @@
       "ID": "GamepadPaddle1",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Rücktaste 1",
         "el_GR": "",
         "en_US": "Paddle 1",
         "es_ES": "Paleta 1",
@@ -10954,7 +10954,7 @@
       "ID": "GamepadPaddle2",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Rücktaste 2",
         "el_GR": "",
         "en_US": "Paddle 2",
         "es_ES": "Paleta 2",
@@ -10979,7 +10979,7 @@
       "ID": "GamepadPaddle3",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Rücktaste 3",
         "el_GR": "",
         "en_US": "Paddle 3",
         "es_ES": "Paleta 3",
@@ -11004,7 +11004,7 @@
       "ID": "GamepadPaddle4",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Rücktaste 4",
         "el_GR": "",
         "en_US": "Paddle 4",
         "es_ES": "Paleta 4",
@@ -11029,7 +11029,7 @@
       "ID": "GamepadTouchpad",
       "Translations": {
         "ar_SA": "لوحة اللمس",
-        "de_DE": "",
+        "de_DE": "Berührungsfeld",
         "el_GR": "",
         "en_US": "Touchpad",
         "es_ES": "Panel táctil",
@@ -11054,7 +11054,7 @@
       "ID": "GamepadSingleLeftTrigger0",
       "Translations": {
         "ar_SA": "زر الزناد الأيسر 0",
-        "de_DE": "",
+        "de_DE": "Linke Schultertaste 0",
         "el_GR": "",
         "en_US": "Left Trigger 0",
         "es_ES": "Gatillo Izquierdo 0",
@@ -11079,7 +11079,7 @@
       "ID": "GamepadSingleRightTrigger0",
       "Translations": {
         "ar_SA": "زر الزناد الأيمن 0",
-        "de_DE": "",
+        "de_DE": "Rechte Schultertaste unten 0",
         "el_GR": "",
         "en_US": "Right Trigger 0",
         "es_ES": "Gatillo Derecho 0",
@@ -11104,7 +11104,7 @@
       "ID": "GamepadSingleLeftTrigger1",
       "Translations": {
         "ar_SA": "زر الزناد الأيسر 1",
-        "de_DE": "",
+        "de_DE": "Linke Schultertaste unten 1",
         "el_GR": "",
         "en_US": "Left Trigger 1",
         "es_ES": "Gatillo Izquierdo 1",
@@ -11129,7 +11129,7 @@
       "ID": "GamepadSingleRightTrigger1",
       "Translations": {
         "ar_SA": "زر الزناد الأيمن 1",
-        "de_DE": "",
+        "de_DE": "Rechte Schultertaste unten 1",
         "el_GR": "",
         "en_US": "Right Trigger 1",
         "es_ES": "Gatillo Derecho 1",
@@ -11154,7 +11154,7 @@
       "ID": "StickLeft",
       "Translations": {
         "ar_SA": "عصا التحكم اليسرى",
-        "de_DE": "",
+        "de_DE": "Linker Stick",
         "el_GR": "",
         "en_US": "Left Stick",
         "es_ES": "Joystick Izquierdo",
@@ -11179,7 +11179,7 @@
       "ID": "StickRight",
       "Translations": {
         "ar_SA": "عصا التحكم اليمنى",
-        "de_DE": "",
+        "de_DE": "Rechter Stick",
         "el_GR": "",
         "en_US": "Right Stick",
         "es_ES": "Joystick Derecho",
@@ -11279,7 +11279,7 @@
       "ID": "UserProfilesAvailableUserProfiles",
       "Translations": {
         "ar_SA": "الملفات الشخصية للمستخدم المتاحة:",
-        "de_DE": "Verfügbare Profile:",
+        "de_DE": "Verfügbare Nutzerprofile:",
         "el_GR": "Διαθέσιμα Προφίλ Χρηστών:",
         "en_US": "Available User Profiles:",
         "es_ES": "Perfiles de Usuario Disponibles:",
@@ -11304,7 +11304,7 @@
       "ID": "UserProfilesAddNewProfile",
       "Translations": {
         "ar_SA": "إنشاء ملف الشخصي",
-        "de_DE": "Neues Profil",
+        "de_DE": "Profil erstellen",
         "el_GR": "Προσθήκη Νέου Προφίλ",
         "en_US": "Create Profile",
         "es_ES": "Añadir Nuevo Perfil",
@@ -11629,7 +11629,7 @@
       "ID": "InputDialogCancelling",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Wird abgebrochen",
         "el_GR": "",
         "en_US": "Cancelling",
         "es_ES": "Anulación en Curso",
@@ -11654,7 +11654,7 @@
       "ID": "InputDialogClose",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Schließen",
         "el_GR": "",
         "en_US": "Close",
         "es_ES": "Cerrar",
@@ -11679,7 +11679,7 @@
       "ID": "InputDialogAddNewProfileTitle",
       "Translations": {
         "ar_SA": "اختر اسم الملف الشخصي",
-        "de_DE": "Wähle den Profilnamen",
+        "de_DE": "Wähle einen Profilnamen",
         "el_GR": "Επιλογή Ονόματος Προφίλ",
         "en_US": "Choose a Profile Name",
         "es_ES": "Introducir Nombre de Perfil",
@@ -11704,7 +11704,7 @@
       "ID": "InputDialogAddNewProfileHeader",
       "Translations": {
         "ar_SA": "الرجاء إدخال اسم الملف الشخصي",
-        "de_DE": "Bitte gebe einen Profilnamen ein",
+        "de_DE": "Bitte gib einen Profilnamen ein",
         "el_GR": "Εισαγωγή Ονόματος Προφίλ",
         "en_US": "Please Enter a Profile Name",
         "es_ES": "Por Favor Elige un Nombre de Usuario",
@@ -11754,7 +11754,7 @@
       "ID": "AvatarChoose",
       "Translations": {
         "ar_SA": "اختر الصورة الرمزية",
-        "de_DE": "Bestätigen",
+        "de_DE": "Avatar wählen",
         "el_GR": "Επιλογή",
         "en_US": "Choose Avatar",
         "es_ES": "Escoger",
@@ -11779,7 +11779,7 @@
       "ID": "AvatarSetBackgroundColor",
       "Translations": {
         "ar_SA": "تعيين لون الخلفية",
-        "de_DE": "Hintergrundfarbe auswählen",
+        "de_DE": "Hintergrundfarbe festlegen",
         "el_GR": "Ορισμός Χρώματος Φόντου",
         "en_US": "Set Background Color",
         "es_ES": "Establecer Color de Fondo",
@@ -11854,7 +11854,7 @@
       "ID": "ControllerSettingsViewProfileToolTip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Profil anzeigen",
         "el_GR": "",
         "en_US": "View Profile",
         "es_ES": "Ver Perfil",
@@ -11979,7 +11979,7 @@
       "ID": "MenuBarFileToolsTakeScreenshot",
       "Translations": {
         "ar_SA": "أخذ لقطة للشاشة",
-        "de_DE": "Screenshot aufnehmen",
+        "de_DE": "Bildschirmfoto aufnehmen",
         "el_GR": "Λήψη Στιγμιότυπου",
         "en_US": "Take Screenshot",
         "es_ES": "Captura de Pantalla",
@@ -12054,7 +12054,7 @@
       "ID": "GameListContextMenuToggleFavorite",
       "Translations": {
         "ar_SA": "تعيين كمفضل",
-        "de_DE": "Als Favoriten hinzufügen/entfernen",
+        "de_DE": "Favorit umschalten",
         "el_GR": "Εναλλαγή Αγαπημένου",
         "en_US": "Toggle Favorite",
         "es_ES": "Marcar Favorito",
@@ -12079,7 +12079,7 @@
       "ID": "SettingsTabGeneralTheme",
       "Translations": {
         "ar_SA": "السمة:",
-        "de_DE": "Design:",
+        "de_DE": "Thema:",
         "el_GR": "Θέμα:",
         "en_US": "Theme:",
         "es_ES": "Tema:",
@@ -12329,7 +12329,7 @@
       "ID": "DialogUpdaterTitle",
       "Translations": {
         "ar_SA": "{0} - المحدث",
-        "de_DE": "",
+        "de_DE": "{0} - Aktualisierer",
         "el_GR": "{0} - Ενημερωτής",
         "en_US": "{0} - Updater",
         "es_ES": "{0} - Actualizador",
@@ -12429,7 +12429,7 @@
       "ID": "DialogErrorMessage",
       "Translations": {
         "ar_SA": "واجه ريوجينكس خطأ",
-        "de_DE": "Ein Fehler ist aufgetreten",
+        "de_DE": "Bei Ryujinx ist ein Fehler aufgetreten",
         "el_GR": "Το Ryujinx αντιμετώπισε σφάλμα",
         "en_US": "Ryujinx has encountered an error",
         "es_ES": "Ryujinx encontró un error",
@@ -12479,7 +12479,7 @@
       "ID": "DialogExitSubMessage",
       "Translations": {
         "ar_SA": "سيتم فقدان كافة البيانات غير المحفوظة!",
-        "de_DE": "Alle nicht gespeicherten Daten gehen verloren!",
+        "de_DE": "Alle ungespeicherten Daten gehen verloren!",
         "el_GR": "Όλα τα μη αποθηκευμένα δεδομένα θα χαθούν!",
         "en_US": "All unsaved data will be lost!",
         "es_ES": "¡Se perderán los datos no guardados!",
@@ -12554,7 +12554,7 @@
       "ID": "FolderDialogExtractTitle",
       "Translations": {
         "ar_SA": "اختر المجلد الذي تريد الاستخراج إليه",
-        "de_DE": "Wähle den Ordner, in welchen die Dateien entpackt werden sollen",
+        "de_DE": "Wähle den Ordner, in welchen die Dateien extrahiert werden sollen",
         "el_GR": "Επιλέξτε τον φάκελο στον οποίο θέλετε να εξαγάγετε",
         "en_US": "Choose the folder to extract into",
         "es_ES": "Elige la carpeta en la que deseas extraer",
@@ -12579,7 +12579,7 @@
       "ID": "DialogNcaExtractionMessage",
       "Translations": {
         "ar_SA": "استخراج قسم {0} من {1}...",
-        "de_DE": "Extrahiert {0} abschnitt von {1}...",
+        "de_DE": "Abschnitt {0} aus {1} wird extrahiert...",
         "el_GR": "Εξαγωγή ενότητας {0} από {1}...",
         "en_US": "Extracting {0} section from {1}...",
         "es_ES": "Extrayendo {0} sección de {1}...",
@@ -12629,7 +12629,7 @@
       "ID": "DialogNcaExtractionMainNcaNotFoundErrorMessage",
       "Translations": {
         "ar_SA": "فشل الاستخراج. لم يكن NCA الرئيسي موجودا في الملف المحدد.",
-        "de_DE": "Extraktion fehlgeschlagen. Der Hauptheader der NCA war in der ausgewählten Datei nicht vorhanden.",
+        "de_DE": "Extraktionsfehler. Das Haupt-NCA war in der ausgewählten Datei nicht vorhanden.",
         "el_GR": "Αποτυχία εξαγωγής. Η κύρια NCA δεν υπήρχε στο επιλεγμένο αρχείο.",
         "en_US": "Extraction failure. The main NCA was not present in the selected file.",
         "es_ES": "Fallo de extracción. El NCA principal no estaba presente en el archivo seleccionado.",
@@ -12654,7 +12654,7 @@
       "ID": "DialogNcaExtractionCheckLogErrorMessage",
       "Translations": {
         "ar_SA": "فشل الاستخراج. اقرأ ملف التسجيل لمزيد من المعلومات.",
-        "de_DE": "Extraktion fehlgeschlagen. Überprüfe die Logs für weitere Informationen.",
+        "de_DE": "Extraktion fehlgeschlagen. Bitte überprüfe die Protokolle für weitere Informationen.",
         "el_GR": "Αποτυχία εξαγωγής. Διαβάστε το αρχείο καταγραφής για περισσότερες πληροφορίες.",
         "en_US": "Extraction failed. Please check the log file for more details.",
         "es_ES": "Fallo de extracción. Lee el registro para más información.",
@@ -12729,7 +12729,7 @@
       "ID": "DialogUpdaterCancelUpdateMessage",
       "Translations": {
         "ar_SA": "إلغاء التحديث",
-        "de_DE": "Update wird abgebrochen!",
+        "de_DE": "Aktualisierung abgebrochen!",
         "el_GR": "Ακύρωση Ενημέρωσης!",
         "en_US": "Update canceled!",
         "es_ES": "¡Cancelando actualización!",
@@ -12754,7 +12754,7 @@
       "ID": "DialogUpdaterAlreadyOnLatestVersionMessage",
       "Translations": {
         "ar_SA": "أنت تستخدم بالفعل أحدث إصدار من ريوجينكس!",
-        "de_DE": "Es wird bereits die aktuellste Version von Ryujinx benutzt",
+        "de_DE": "Du benutzt bereits die aktuellste Version von Ryujinx!",
         "el_GR": "Χρησιμοποιείτε ήδη την πιο ενημερωμένη έκδοση του Ryujinx!",
         "en_US": "You are already using the latest version of Ryujinx!",
         "es_ES": "¡Ya Tienes la Versión más Reciente de Ryujinx!",
@@ -12779,7 +12779,7 @@
       "ID": "DialogUpdaterConvertFailedServerMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Die vom Aktualisierungs-Server empfangene Ryujinx-Version konnte nicht konvertiert werden.",
         "el_GR": "",
         "en_US": "Failed to convert the Ryujinx version received from the update server.",
         "es_ES": "Error al convertir la versión de Ryujinx recibida del servidor de actualizaciones.",
@@ -12804,7 +12804,7 @@
       "ID": "DialogUpdaterDownloadingMessage",
       "Translations": {
         "ar_SA": "جاري تنزيل التحديث...",
-        "de_DE": "Update wird heruntergeladen...",
+        "de_DE": "Aktualisierung wird heruntergeladen...",
         "el_GR": "Λήψη Ενημέρωσης...",
         "en_US": "Downloading Update...",
         "es_ES": "Descargando Actualización...",
@@ -12854,7 +12854,7 @@
       "ID": "DialogUpdaterExtractionMessage",
       "Translations": {
         "ar_SA": "جاري استخراج التحديث...",
-        "de_DE": "Update wird entpackt...",
+        "de_DE": "Aktualisierung wird extrahiert...",
         "el_GR": "Εξαγωγή Ενημέρωσης...",
         "en_US": "Extracting Update...",
         "es_ES": "Extrayendo Actualización...",
@@ -12879,7 +12879,7 @@
       "ID": "DialogUpdaterRenamingMessage",
       "Translations": {
         "ar_SA": "إعادة تسمية التحديث...",
-        "de_DE": "Update wird umbenannt...",
+        "de_DE": "Aktualisierung wird umbenannt...",
         "el_GR": "Μετονομασία Ενημέρωσης...",
         "en_US": "Renaming Update...",
         "es_ES": "Renombrando Actualización...",
@@ -12904,7 +12904,7 @@
       "ID": "DialogUpdaterAddingFilesMessage",
       "Translations": {
         "ar_SA": "إضافة تحديث جديد...",
-        "de_DE": "Update wird hinzugefügt...",
+        "de_DE": "Neue Aktualisierung wird hinzugefügt...",
         "el_GR": "Προσθήκη Νέας Ενημέρωσης...",
         "en_US": "Adding New Update...",
         "es_ES": "Aplicando Actualización...",
@@ -12929,7 +12929,7 @@
       "ID": "DialogUpdaterShowChangelogMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Änderungsprotokoll anzeigen",
         "el_GR": "",
         "en_US": "Show Changelog",
         "es_ES": "Mostrar Changelog",
@@ -12954,7 +12954,7 @@
       "ID": "DialogUpdaterCompleteMessage",
       "Translations": {
         "ar_SA": "اكتمل التحديث",
-        "de_DE": "Update abgeschlossen!",
+        "de_DE": "Aktualisierung abgeschlossen!",
         "el_GR": "Η Ενημέρωση Ολοκληρώθηκε!",
         "en_US": "Update Complete!",
         "es_ES": "¡Actualización Completa!",
@@ -13029,7 +13029,7 @@
       "ID": "DialogUpdaterNoInternetSubMessage",
       "Translations": {
         "ar_SA": "يرجى التحقق من أن لديك اتصال إنترنت فعال!",
-        "de_DE": "Bitte vergewissern, dass eine funktionierende Internetverbindung existiert!",
+        "de_DE": "Bitte überprüfe, ob du über eine funktionierende Internetverbindung verfügst!",
         "el_GR": "Επαληθεύστε ότι έχετε σύνδεση στο Διαδίκτυο που λειτουργεί!",
         "en_US": "Please verify that you have a working Internet connection!",
         "es_ES": "¡Por favor, verifica que tu conexión a Internet funciona!",
@@ -13054,7 +13054,7 @@
       "ID": "DialogUpdaterDirtyBuildMessage",
       "Translations": {
         "ar_SA": "لا يمكنك تحديث نسخة القذرة من ريوجينكس!",
-        "de_DE": "Inoffizielle Versionen von Ryujinx können nicht aktualisiert werden",
+        "de_DE": "Inoffizielle Versionen von Ryujinx können nicht aktualisiert werden!",
         "el_GR": "Δεν μπορείτε να ενημερώσετε μία Πρόχειρη Έκδοση του Ryujinx!",
         "en_US": "You cannot update a Dirty build of Ryujinx!",
         "es_ES": "¡No puedes actualizar una versión \"dirty\" de Ryujinx!",
@@ -13129,7 +13129,7 @@
       "ID": "DialogThemeRestartMessage",
       "Translations": {
         "ar_SA": "تم حفظ السمة. إعادة التشغيل مطلوبة لتطبيق السمة.",
-        "de_DE": "Das Design wurde gespeichert. Ein Neustart ist erforderlich, um das Design anzuwenden.",
+        "de_DE": "Das Thema wurde gespeichert. Ein Neustart ist erforderlich, um das Thema anzuwenden.",
         "el_GR": "Το θέμα έχει αποθηκευτεί. Απαιτείται επανεκκίνηση για την εφαρμογή του θέματος.",
         "en_US": "Theme has been saved. A restart is needed to apply the theme.",
         "es_ES": "Tema guardado. Se necesita reiniciar para aplicar el tema.",
@@ -13404,7 +13404,7 @@
       "ID": "DialogOpenXCITrimmerWindowLabel",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "XCI-Trimmer-Fenster",
         "el_GR": "",
         "en_US": "XCI Trimmer Window",
         "es_ES": "Ventana Recortador XCI",
@@ -13454,7 +13454,7 @@
       "ID": "DialogMessageDialogErrorExceptionMessage",
       "Translations": {
         "ar_SA": "خطأ في عرض مربع حوار الرسالة: {0}",
-        "de_DE": "Fehler bei der Anzeige des Meldungs-Dialogs: {0}",
+        "de_DE": "Fehler bei der Anzeige des Meldungsdialogs: {0}",
         "el_GR": "Σφάλμα εμφάνισης του διαλόγου Μηνυμάτων: {0}",
         "en_US": "Error displaying Message Dialog: {0}",
         "es_ES": "Error al mostrar cuadro de diálogo: {0}",
@@ -13554,7 +13554,7 @@
       "ID": "DialogUserErrorDialogInfoMessage",
       "Translations": {
         "ar_SA": "لمزيد من المعلومات حول كيفية إصلاح هذا الخطأ، اتبع دليل الإعداد الخاص بنا.",
-        "de_DE": "\nWeitere Informationen zur Behebung dieses Fehlers können in unserem Setup-Guide gefunden werden.",
+        "de_DE": "\nFür weitere Informationen zur Behebung dieses Fehlers folge bitte unserem Einrichtungsleitfaden.",
         "el_GR": "\nΓια πληροφορίες σχετικά με τον τρόπο διόρθωσης του σφάλματος, ακολουθήστε τον Οδηγό Εγκατάστασης.",
         "en_US": "\nFor more information on how to fix this error, follow our Setup Guide.",
         "es_ES": "\nPara más información sobre cómo arreglar este error, sigue nuestra Guía de Instalación.",
@@ -13579,7 +13579,7 @@
       "ID": "DialogUserErrorDialogTitle",
       "Translations": {
         "ar_SA": "خطأ ريوجينكس ({0})",
-        "de_DE": "Ryujinx Fehler ({0})",
+        "de_DE": "Ryujinx-Fehler ({0})",
         "el_GR": "Σφάλμα Ryujinx ({0})",
         "en_US": "Ryujinx Error ({0})",
         "es_ES": "Error Ryujinx ({0})",
@@ -13654,7 +13654,7 @@
       "ID": "DialogAmiiboApiConnectErrorMessage",
       "Translations": {
         "ar_SA": "غير قادر على الاتصال بخادم API أميبو. قد تكون الخدمة معطلة أو قد تحتاج إلى التحقق من اتصالك بالإنترنت.",
-        "de_DE": "Verbindung zum Amiibo API Server kann nicht hergestellt werden. Der Dienst ist möglicherweise nicht verfügbar oder es existiert keine Internetverbindung.",
+        "de_DE": "Verbindung zum Amiibo-API-Server kann nicht hergestellt werden. Der Dienst ist möglicherweise nicht verfügbar oder es existiert keine Internetverbindung.",
         "el_GR": "Δεν είναι δυνατή η σύνδεση με τον διακομιστή Amiibo API. Η υπηρεσία μπορεί να είναι εκτός λειτουργίας ή μπορεί να χρειαστεί να επαληθεύσετε ότι έχετε ενεργή σύνδεσή στο Διαδίκτυο.",
         "en_US": "Unable to connect to Amiibo API server. The service may be down or you may need to verify your internet connection is online.",
         "es_ES": "No se pudo conectar al servidor de la API Amiibo. El servicio puede estar caído o tu conexión a internet puede haberse desconectado.",
@@ -13704,7 +13704,7 @@
       "ID": "DialogProfileDefaultProfileOverwriteErrorMessage",
       "Translations": {
         "ar_SA": "لا يمكن الكتابة فوق الملف الشخصي الافتراضي",
-        "de_DE": "Das Standardprofil kann nicht überschrieben werden",
+        "de_DE": "Das Vorgabeprofil kann nicht überschrieben werden",
         "el_GR": "Το προεπιλεγμένο προφίλ δεν μπορεί να αντικατασταθεί",
         "en_US": "Default Profile can not be overwritten",
         "es_ES": "El perfil predeterminado no se puede sobreescribir",
@@ -13804,7 +13804,7 @@
       "ID": "DialogPPTCDeletionMessage",
       "Translations": {
         "ar_SA": "أنت على وشك الإنتظار لإعادة بناء ذاكرة التخزين المؤقت للترجمة المستمرة (PPTC) عند الإقلاع التالي لـ:\n\n{0}\n\nأمتأكد من رغبتك في المتابعة؟",
-        "de_DE": "Du bist dabei den PPTC für das folgende Spiel als ungültig zu markieren:\n\n{0}\n\nWirklich fortfahren?",
+        "de_DE": "Du bist dabei, einen PPTC-Neuaufbau für den nächsten Systemstart von Folgendem in die Warteschlange zu stellen: \n\n{0}\n\nWirklich fortfahren?",
         "el_GR": "Πρόκειται να διαγράψετε την προσωρινή μνήμη PPTC για :\n\n{0}\n\nΕίστε βέβαιοι ότι θέλετε να συνεχίσετε;",
         "en_US": "You are about to queue a PPTC rebuild on the next boot of:\n\n{0}\n\nAre you sure you want to proceed?",
         "es_ES": "Vas a borrar la caché de PPTC para:\n\n{0}\n\n¿Estás seguro de querer continuar?",
@@ -13829,7 +13829,7 @@
       "ID": "DialogPPTCDeletionErrorMessage",
       "Translations": {
         "ar_SA": "خطأ خلال تنظيف ذاكرة التخزين المؤقت للترجمة المستمرة (PPTC) في {0}: {1}",
-        "de_DE": "Fehler bei der Löschung des PPTC Caches bei {0}: {1}",
+        "de_DE": "Fehler bei der Löschung des PPTC-Caches bei {0}: {1}",
         "el_GR": "Σφάλμα κατά την εκκαθάριση προσωρινής μνήμης PPTC στο {0}: {1}",
         "en_US": "Error purging PPTC cache at {0}: {1}",
         "es_ES": "Error purgando la caché de PPTC en {0}: {1}",
@@ -13854,7 +13854,7 @@
       "ID": "DialogPPTCNukeMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Du bist dabei, alle PPTC-Daten aus folgendem Verzeichnis zu löschen:\n\n{0}\n\nWirklich fortfahren?",
         "el_GR": "",
         "en_US": "You are about to purge all PPTC data from:\n\n{0}\n\nAre you sure you want to proceed?",
         "es_ES": "Está a punto de eliminar todos los datos PPTC de:\n\n{0}\n\n¿Está seguro de que desea continuar?",
@@ -13879,7 +13879,7 @@
       "ID": "DialogShaderDeletionMessage",
       "Translations": {
         "ar_SA": "أنت على وشك حذف ذاكرة المظللات المؤقتة ل:\n\n{0}\n\nهل انت متأكد انك تريد المتابعة؟",
-        "de_DE": "Du bist dabei, den Shader Cache zu löschen für :\n\n{0}\n\nWirklich fortfahren?",
+        "de_DE": "Du bist dabei, den Schattierer-Cache zu löschen für :\n\n{0}\n\nWirklich fortfahren?",
         "el_GR": "Πρόκειται να διαγράψετε την προσωρινή μνήμη Shader για :\n\n{0}\n\nΕίστε βέβαιοι ότι θέλετε να συνεχίσετε;",
         "en_US": "You are about to delete the Shader cache for :\n\n{0}\n\nAre you sure you want to proceed?",
         "es_ES": "Vas a borrar la caché de sombreadores para:\n\n{0}\n\n¿Estás seguro de querer continuar?",
@@ -13904,7 +13904,7 @@
       "ID": "DialogShaderDeletionErrorMessage",
       "Translations": {
         "ar_SA": "حدث خطأ أثناء تنظيف ذاكرة المظللات المؤقتة في {0}: {1}",
-        "de_DE": "Es ist ein Fehler bei der Löschung des Shader Caches bei {0}: {1} aufgetreten",
+        "de_DE": "Fehler bei der Löschung des Schattierer-Caches bei {0}: {1}",
         "el_GR": "Σφάλμα κατά την εκκαθάριση προσωρινής μνήμης Shader στο {0}: {1}",
         "en_US": "Error purging Shader cache at {0}: {1}",
         "es_ES": "Error purgando la caché de sombreadores en {0}: {1}",
@@ -13929,7 +13929,7 @@
       "ID": "DialogRyujinxErrorMessage",
       "Translations": {
         "ar_SA": "واجه ريوجينكس خطأ",
-        "de_DE": "Ein Fehler ist aufgetreten",
+        "de_DE": "Bei Ryujinx ist ein Fehler aufgetreten",
         "el_GR": "Το Ryujinx αντιμετώπισε σφάλμα",
         "en_US": "Ryujinx has encountered an error",
         "es_ES": "Ryujinx ha encontrado un error",
@@ -13954,7 +13954,7 @@
       "ID": "DialogInvalidTitleIdErrorMessage",
       "Translations": {
         "ar_SA": "خطأ في واجهة المستخدم: اللعبة المحددة لم يكن لديها معرف عنوان صالح",
-        "de_DE": "UI Fehler: Das ausgewählte Spiel hat keine gültige Titel-ID",
+        "de_DE": "BO-Fehler: Das ausgewählte Spiel hat keine gültige Titel-ID",
         "el_GR": "Σφάλμα UI: Το επιλεγμένο παιχνίδι δεν έχει έγκυρο αναγνωριστικό τίτλου",
         "en_US": "UI error: The selected game did not have a valid title ID",
         "es_ES": "Error de interfaz: El juego seleccionado no tiene una ID válida",
@@ -14154,7 +14154,7 @@
       "ID": "DialogKeysInstallerKeysNotFoundErrorMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "In {0} wurde eine ungültige Schlüsseldatei gefunden",
         "el_GR": "",
         "en_US": "An invalid Keys file was found in {0}",
         "es_ES": "Se halló un archivo Keys inválido en {0}",
@@ -14179,7 +14179,7 @@
       "ID": "DialogKeysInstallerKeysInstallTitle",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Schlüssel installieren",
         "el_GR": "",
         "en_US": "Install Keys",
         "es_ES": "Instalar Claves",
@@ -14204,7 +14204,7 @@
       "ID": "DialogKeysInstallerKeysInstallMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Neue Schlüsseldatei wird installiert.",
         "el_GR": "",
         "en_US": "New Keys file will be installed.",
         "es_ES": "Un nuevo archivo de Claves será instalado.",
@@ -14229,7 +14229,7 @@
       "ID": "DialogKeysInstallerKeysInstallSubMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "\n\nDies könnte einige der derzeit installierten Schlüssel ersetzen.",
         "el_GR": "",
         "en_US": "\n\nThis may replace some of the current installed Keys.",
         "es_ES": "\n\nEsto puede reemplazar algunas de las Keys actualmente instaladas.",
@@ -14254,7 +14254,7 @@
       "ID": "DialogKeysInstallerKeysInstallConfirmMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Möchtest du fortfahren?",
         "el_GR": "",
         "en_US": "\n\nDo you want to continue?",
         "es_ES": "\n\nDeseas continuar?",
@@ -14279,7 +14279,7 @@
       "ID": "DialogKeysInstallerKeysInstallWaitMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Schlüssel werden installiert...",
         "el_GR": "",
         "en_US": "Installing Keys...",
         "es_ES": "Instalando Claves...",
@@ -14304,7 +14304,7 @@
       "ID": "DialogKeysInstallerKeysInstallSuccessMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Neue Schlüsseldatei erfolgreich installiert.",
         "el_GR": "",
         "en_US": "New Keys file successfully installed.",
         "es_ES": "Nuevo archivo Keys instalado con éxito.",
@@ -14329,7 +14329,7 @@
       "ID": "DialogUserProfileDeletionWarningMessage",
       "Translations": {
         "ar_SA": "لن تكون هناك ملفات الشخصية أخرى لفتحها إذا تم حذف الملف الشخصي المحدد",
-        "de_DE": "Es können keine anderen Profile geöffnet werden, wenn das ausgewählte Profil gelöscht wird.",
+        "de_DE": "Wenn das ausgewählte Profil gelöscht wird, gibt es keine weiteren Profile mehr, die geöffnet werden könnten.",
         "el_GR": "Δεν θα υπάρχουν άλλα προφίλ εάν διαγραφεί το επιλεγμένο",
         "en_US": "There would be no other profiles to be opened if selected profile is deleted",
         "es_ES": "Si eliminas el perfil seleccionado no quedará ningún otro perfil",
@@ -14379,7 +14379,7 @@
       "ID": "DialogUserProfileUnsavedChangesTitle",
       "Translations": {
         "ar_SA": "تحذير - التغييرات غير محفوظة",
-        "de_DE": "Warnung - Nicht gespeicherte Änderungen",
+        "de_DE": "Warnung – Ungespeicherte Änderungen",
         "el_GR": "Προσοχή - Μην Αποθηκευμένες Αλλαγές.",
         "en_US": "Warning - Unsaved Changes",
         "es_ES": "Advertencia - Cambios Sin Guardar",
@@ -14629,7 +14629,7 @@
       "ID": "DialogPerformanceCheckLoggingEnabledMessage",
       "Translations": {
         "ar_SA": "لقد تم تمكين تسجيل التتبع، والذي تم تصميمه ليتم استخدامه من قبل المطورين فقط.",
-        "de_DE": "Es wurde die Debug Protokollierung aktiviert",
+        "de_DE": "Du hast die Trace-Protokollierung aktiviert, die ausschließlich für Entwickler bestimmt ist",
         "el_GR": "Έχετε ενεργοποιημένη την καταγραφή εντοπισμού σφαλμάτων, η οποία έχει σχεδιαστεί για χρήση μόνο από προγραμματιστές.",
         "en_US": "You have trace logging enabled, which is designed to be used by developers only.",
         "es_ES": "Has habilitado los registros debug, diseñados solo para uso de los desarrolladores.",
@@ -14654,7 +14654,7 @@
       "ID": "DialogPerformanceCheckLoggingEnabledConfirmMessage",
       "Translations": {
         "ar_SA": "للحصول على الأداء الأمثل، يوصى بتعطيل تسجيل التتبع. هل ترغب في تعطيل تسجيل التتبع الآن؟",
-        "de_DE": "Um eine optimale Leistung zu erzielen, wird empfohlen, die Debug Protokollierung zu deaktivieren. Debug Protokollierung jetzt deaktivieren?",
+        "de_DE": "Für eine optimale Leistung wird empfohlen, die Trace-Protokollierung zu deaktivieren. Möchtest du die Trace-Protokollierung jetzt deaktivieren?",
         "el_GR": "Για βέλτιστη απόδοση, συνιστάται η απενεργοποίηση καταγραφής εντοπισμού σφαλμάτων. Θέλετε να απενεργοποιήσετε την καταγραφή τώρα;",
         "en_US": "For optimal performance, it's recommended to disable trace logging. Would you like to disable trace logging now?",
         "es_ES": "Para un rendimiento óptimo, se recomienda deshabilitar los registros debug. ¿Quieres deshabilitarlos ahora?",
@@ -14679,7 +14679,7 @@
       "ID": "DialogPerformanceCheckShaderDumpEnabledMessage",
       "Translations": {
         "ar_SA": "لقد قمت بتمكين تفريغ المظللات، والذي تم تصميمه ليستخدمه المطورون فقط.",
-        "de_DE": "Es wurde das Shader Dumping aktiviert, das nur von Entwicklern verwendet werden soll.",
+        "de_DE": "Du hast Schattierer-Dumping aktiviert, das ausschließlich für Entwickler bestimmt ist.",
         "el_GR": "Έχετε ενεργοποιήσει το Shader Dumping, το οποίο έχει σχεδιαστεί για χρήση μόνο από προγραμματιστές.",
         "en_US": "You have shader dumping enabled, which is designed to be used by developers only.",
         "es_ES": "Has habilitado el volcado de sombreadores, diseñado solo para uso de los desarrolladores.",
@@ -14704,7 +14704,7 @@
       "ID": "DialogPerformanceCheckShaderDumpEnabledConfirmMessage",
       "Translations": {
         "ar_SA": "للحصول على الأداء الأمثل، يوصى بتعطيل تفريغ المظللات. هل ترغب في تعطيل تفريغ المظللات الآن؟",
-        "de_DE": "Für eine optimale Leistung wird empfohlen, das Shader Dumping zu deaktivieren. Shader Dumping jetzt deaktivieren?",
+        "de_DE": "Für eine optimale Leistung wird empfohlen, das Schattierer-Dumping zu deaktivieren. Schattierer-Dumping jetzt deaktivieren?",
         "el_GR": "Για βέλτιστη απόδοση, συνιστάται να απενεργοποιήσετε το Shader Dumping. Θέλετε να απενεργοποιήσετε τώρα το Shader Dumping;",
         "en_US": "For optimal performance, it's recommended to disable shader dumping. Would you like to disable shader dumping now?",
         "es_ES": "Para un rendimiento óptimo, se recomienda deshabilitar el volcado de sombreadores. ¿Quieres deshabilitarlo ahora?",
@@ -14729,7 +14729,7 @@
       "ID": "NotificationLaunchCheckDramSizeTitle",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "{0} DRAM aktiviert",
         "el_GR": "",
         "en_US": "{0} DRAM Enabled",
         "es_ES": "{0} DRAM Habilitada",
@@ -14754,7 +14754,7 @@
       "ID": "NotificationLaunchCheckDramSizeMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Die Verwendung von mehr als 4 GiB DRAM kann bei einigen Anwendungen zu Abstürzen führen",
         "el_GR": "",
         "en_US": "Using above 4GiB DRAM may cause crashes in some applications.",
         "es_ES": "Usar más de 4 GiB de DRAM puede causar fallos en algunas aplicaciones.",
@@ -14779,7 +14779,7 @@
       "ID": "NotificationLaunchCheckGdbStubTitle",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Fehlerbehebung: GDB-Stub aktiviert (Port: {0})",
         "el_GR": "",
         "en_US": "Debug: GDB Stub Enabled (Port: {0})",
         "es_ES": "Debug: GDB Stub Habilitado (Puerto: {0})",
@@ -14804,7 +14804,7 @@
       "ID": "NotificationLaunchCheckGdbStubMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Dies wird sich auf die Leistung auswirken.",
         "el_GR": "",
         "en_US": "This will affect performance.",
         "es_ES": "Esto afectará el rendimiento.",
@@ -14829,7 +14829,7 @@
       "ID": "NotificationLaunchCheckSuspendOnStartTitle",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Fehlerbehebung: Anhalten beim Start aktiviert",
         "el_GR": "",
         "en_US": "Debug: Suspend on Start Enabled",
         "es_ES": "Debug: Suspender al Inicio Habilitado",
@@ -14854,7 +14854,7 @@
       "ID": "NotificationLaunchCheckSuspendOnStartMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Die Anwendung wurde angehalten. Hänge einen Fehlerbeheber an, um fortzufahren.",
         "el_GR": "",
         "en_US": "Application has been suspended. Attach a debugger to continue.",
         "es_ES": "La aplicación ha sido suspendida. Adjunte un depurador para continuar.",
@@ -14904,7 +14904,7 @@
       "ID": "DialogLoadAppGameAlreadyLoadedSubMessage",
       "Translations": {
         "ar_SA": "الرجاء إيقاف المحاكاة أو إغلاق المحاكي قبل بدء لعبة أخرى.",
-        "de_DE": "Bitte beende die Emulation oder schließe den Emulator, vor dem Starten eines neuen Spiels",
+        "de_DE": "Bitte beende die Emulation oder schließe den Emulator, bevor du ein anderes Spiel startest.",
         "el_GR": "Σταματήστε την εξομοίωση ή κλείστε τον εξομοιωτή πριν ξεκινήσετε ένα άλλο παιχνίδι.",
         "en_US": "Please stop emulation or close the emulator before launching another game.",
         "es_ES": "Por favor, detén la emulación o cierra el emulador antes de iniciar otro juego.",
@@ -14929,7 +14929,7 @@
       "ID": "DialogUpdateAddUpdateErrorMessage",
       "Translations": {
         "ar_SA": "الملف المحدد لا يحتوي على تحديث للعنوان المحدد!",
-        "de_DE": "Die angegebene Datei enthält keine Updates für den ausgewählten Titel!",
+        "de_DE": "Die angegebene Datei enthält keine Aktualisierungen für den ausgewählten Titel!",
         "el_GR": "Το αρχείο δεν περιέχει ενημέρωση για τον επιλεγμένο τίτλο!",
         "en_US": "The specified file does not contain an update for the selected title!",
         "es_ES": "¡Ese archivo no contiene una actualización para el título seleccionado!",
@@ -14954,7 +14954,7 @@
       "ID": "DialogSettingsBackendThreadingWarningTitle",
       "Translations": {
         "ar_SA": "تحذير - خلفية متعددة المسارات",
-        "de_DE": "Warnung - Render Threading",
+        "de_DE": "Warnung - Backend-Threading",
         "el_GR": "Προειδοποίηση - Backend Threading",
         "en_US": "Warning - Backend Threading",
         "es_ES": "Advertencia - Multihilado de Gráficos",
@@ -14979,7 +14979,7 @@
       "ID": "DialogSettingsBackendThreadingWarningMessage",
       "Translations": {
         "ar_SA": "يجب إعادة تشغيل ريوجينكس بعد تغيير هذا الخيار حتى يتم تطبيقه بالكامل. اعتمادا على النظام الأساسي الخاص بك، قد تحتاج إلى تعطيل تعدد المسارات الخاص ببرنامج الرسومات التشغيل الخاص بك يدويًا عند استخدام الخاص بريوجينكس.",
-        "de_DE": "Ryujinx muss muss neu gestartet werden, damit die Änderungen wirksam werden. Abhängig von dem Betriebssystem muss möglicherweise das Multithreading des Treibers manuell deaktiviert werden, wenn Ryujinx verwendet wird.",
+        "de_DE": "Ryujinx muss muss neu gestartet werden, damit die Änderungen wirksam werden. Abhängig vom Betriebssystem muss möglicherweise das Multithreading des Treibers manuell deaktiviert werden, wenn Ryujinx's verwendet wird.",
         "el_GR": "Το Ryujinx πρέπει να επανεκκινηθεί αφού αλλάξει αυτή η επιλογή για να εφαρμοστεί πλήρως. Ανάλογα με την πλατφόρμα σας, μπορεί να χρειαστεί να απενεργοποιήσετε με μη αυτόματο τρόπο το multithreading του ίδιου του προγράμματος οδήγησης όταν χρησιμοποιείτε το Ryujinx.",
         "en_US": "Ryujinx must be restarted after changing this option for it to apply fully. Depending on your platform, you may need to manually disable your driver's own multithreading when using Ryujinx's.",
         "es_ES": "Ryujinx debe reiniciarse para aplicar este cambio. Dependiendo de tu plataforma, puede que tengas que desactivar manualmente la optimización enlazada de tus controladores gráficos para usar el multihilo de Ryujinx.",
@@ -15004,7 +15004,7 @@
       "ID": "DialogModManagerDeletionWarningMessage",
       "Translations": {
         "ar_SA": "أنت على وشك حذف التعديل: {0}\n\nهل انت متأكد انك تريد المتابعة؟",
-        "de_DE": "Du bist dabei, diesen Mod zu lösche. {0}\n\nMöchtest du wirklich fortfahren?",
+        "de_DE": "Du bist dabei, diesen Mod zu löschen. {0}\n\nMöchtest du wirklich fortfahren?",
         "el_GR": "",
         "en_US": "You are about to delete the mod: {0}\n\nAre you sure you want to proceed?",
         "es_ES": "Estás a punto de eliminar el mod: {0}\n\n¿Estás seguro de que quieres continuar?",
@@ -15079,7 +15079,7 @@
       "ID": "SettingsTabGraphicsBackendMultithreading",
       "Translations": {
         "ar_SA": "تعدد المسارات لخلفية الرسومات:",
-        "de_DE": "Grafik-Backend Multithreading:",
+        "de_DE": "Grafik-Backend-Multithreading:",
         "el_GR": "Πολυνηματική Επεξεργασία Γραφικών:",
         "en_US": "Graphics Backend Multithreading:",
         "es_ES": "Multihilado del Motor Gráfico:",
@@ -15304,7 +15304,7 @@
       "ID": "AboutUrlTooltipMessage",
       "Translations": {
         "ar_SA": "انقر لفتح موقع ريوجينكس في متصفحك الافتراضي.",
-        "de_DE": "Klicke hier, um die Ryujinx Website im Standardbrowser zu öffnen.",
+        "de_DE": "Klicke hier, um die Ryujinx-Webseite in deinem Standard-Browser zu öffnen.",
         "el_GR": "Κάντε κλικ για να ανοίξετε τον ιστότοπο Ryujinx στο προεπιλεγμένο πρόγραμμα περιήγησης.",
         "en_US": "Click to open the Ryujinx website in your default browser.",
         "es_ES": "Haz clic para abrir el sitio web de Ryujinx en tu navegador predeterminado.",
@@ -15379,7 +15379,7 @@
       "ID": "AboutForgejoUrlTooltipMessage",
       "Translations": {
         "ar_SA": "انقر لفتح صفحة ريوجينكس في غيت هاب في متصفحك الافتراضي.",
-        "de_DE": "Klicke hier, um die Ryujinx Forgejo Seite im Standardbrowser zu öffnen.",
+        "de_DE": "Klicke hier, um die Ryujinx-Forgejo-Seite in deinem Standard-Browser zu öffnen.",
         "el_GR": "Κάντε κλικ για να ανοίξετε τη σελίδα Ryujinx Forgejo στο προεπιλεγμένο πρόγραμμα περιήγησης.",
         "en_US": "Click to open the Ryujinx Forgejo page in your default browser.",
         "es_ES": "Haz clic para abrir el Forgejo de Ryujinx en tu navegador predeterminado.",
@@ -15404,7 +15404,7 @@
       "ID": "AboutDiscordUrlTooltipMessage",
       "Translations": {
         "ar_SA": "انقر لفتح دعوة إلى خادم ريوجينكس في ديكسورد في متصفحك الافتراضي.",
-        "de_DE": "Klicke hier, um eine Einladung zum Ryujinx Discord Server im Standardbrowser zu öffnen.",
+        "de_DE": "Klicke hier, um eine Einladung zum Ryujinx-Discord-Server in deinem Standard-Browser zu öffnen.",
         "el_GR": "Κάντε κλικ για να ανοίξετε μία πρόσκληση στον διακομιστή Ryujinx Discord στο προεπιλεγμένο πρόγραμμα περιήγησης.",
         "en_US": "Click to open an invite to the Ryujinx Discord server in your default browser.",
         "es_ES": "Haz clic para recibir una invitación al Discord de Ryujinx en tu navegador predeterminado.",
@@ -15454,7 +15454,7 @@
       "ID": "AboutRyujinxAboutContent",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Ryujinx ist ein Emulator für die Nintendo Switch™ 1.\nDie neuesten Nachrichten findest du auf unserem Discord.\nEntwickler, die mitarbeiten möchten, finden weitere Informationen auf Forgejo oder Discord",
         "el_GR": "",
         "en_US": "Ryujinx is an emulator for the Nintendo Switch™ 1.\nGet all the latest news in our Discord.\nDevelopers interested in contributing can find out more on our Forgejo or Discord.",
         "es_ES": "Ryujinx es un emulador para Nintendo Switch™ 1.\nObtén todas las novedades en nuestro Discord.\nLos desarrolladores interesados en contribuir pueden obtener más información en nuestro Forgejo o Discord.",
@@ -15479,7 +15479,7 @@
       "ID": "AboutRyujinxMaintainersTitle",
       "Translations": {
         "ar_SA": "تتم صيانته بواسطة:",
-        "de_DE": "Entwickelt von:",
+        "de_DE": "Betreut von:",
         "el_GR": "Συντηρείται από:",
         "en_US": "Maintained By:",
         "es_ES": "Mantenido por:",
@@ -15504,7 +15504,7 @@
       "ID": "AboutRyujinxFormerMaintainersTitle",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Ehemals betreut von:",
         "el_GR": "",
         "en_US": "Formerly Maintained By:",
         "es_ES": "Anteriormente Mantenido por:",
@@ -15529,7 +15529,7 @@
       "ID": "AboutRyujinxMaintainersContentTooltipMessage",
       "Translations": {
         "ar_SA": "انقر لفتح صفحة المساهمين في متصفحك الافتراضي.",
-        "de_DE": "Klicke hier, um die Liste der Mitwirkenden im Standardbrowser zu öffnen.",
+        "de_DE": "Klicke hier, um die Mitwirkendenliste in deinem Standard-Browser zu öffnen.",
         "el_GR": "Κάντε κλικ για να ανοίξετε τη σελίδα Συνεισφέροντες στο προεπιλεγμένο πρόγραμμα περιήγησης.",
         "en_US": "Click to open the Contributors page in your default browser.",
         "es_ES": "Haz clic para abrir la página de contribuidores en tu navegador predeterminado.",
@@ -15604,7 +15604,7 @@
       "ID": "AmiiboScanButtonLabel",
       "Translations": {
         "ar_SA": "فحصه",
-        "de_DE": "Einscannen",
+        "de_DE": "Scannen",
         "el_GR": "Σαρώστε το",
         "en_US": "Scan It",
         "es_ES": "Escanear",
@@ -15629,7 +15629,7 @@
       "ID": "AmiiboOptionsShowAllLabel",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Inkompatible Amiibo für dieses Spiel anzeigen",
         "el_GR": "",
         "en_US": "Show incompatible Amiibo for this game",
         "es_ES": "Mostrar Amiibo incompatibles con este juego",
@@ -15654,7 +15654,7 @@
       "ID": "AmiiboOptionsUsRandomTagLabel",
       "Translations": {
         "ar_SA": "هاك: استخدم علامة Uuid عشوائية ",
-        "de_DE": "Hack: Benutze zufällige Tag-UUID",
+        "de_DE": "Hack: Zufällige Etikett-UUID benutzen",
         "el_GR": "Hack: Χρησιμοποιήστε τυχαίο αναγνωριστικό UUID",
         "en_US": "Hack: Use Random tag Uuid",
         "es_ES": "Hack: Usar Etiqueta Aleatoria Uuid",
@@ -15704,7 +15704,7 @@
       "ID": "DlcManagerTableHeadingTitleIdLabel",
       "Translations": {
         "ar_SA": "معرف العنوان",
-        "de_DE": "Title-ID",
+        "de_DE": "Titel-ID",
         "el_GR": "Αναγνωριστικό τίτλου",
         "en_US": "Title ID",
         "es_ES": "ID de Título",
@@ -15729,7 +15729,7 @@
       "ID": "DlcManagerTableHeadingContainerPathLabel",
       "Translations": {
         "ar_SA": "مسار الحاوية",
-        "de_DE": "Container-Pfad",
+        "de_DE": "Behälterpfad",
         "el_GR": "Τοποθεσία DLC",
         "en_US": "Container Path",
         "es_ES": "Directorio del Contenedor",
@@ -15754,7 +15754,7 @@
       "ID": "DlcManagerTableHeadingFullPathLabel",
       "Translations": {
         "ar_SA": "المسار كاملا",
-        "de_DE": "Vollständiger-Pfad",
+        "de_DE": "Vollständiger Pfad",
         "el_GR": "Πλήρης τοποθεσία",
         "en_US": "Full Path",
         "es_ES": "Directorio Completo",
@@ -15779,7 +15779,7 @@
       "ID": "DlcManagerRemoveAllButton",
       "Translations": {
         "ar_SA": "حذف الكل",
-        "de_DE": "Entferne alle",
+        "de_DE": "Alle entfernen",
         "el_GR": "Αφαίρεση όλων",
         "en_US": "Remove All",
         "es_ES": "Quitar Todo",
@@ -15954,7 +15954,7 @@
       "ID": "CommonShowNames",
       "Translations": {
         "ar_SA": "عرض الأسماء",
-        "de_DE": "Spiel-Namen anzeigen",
+        "de_DE": "Namen anzeigen",
         "el_GR": "Εμφάνιση ονομάτων",
         "en_US": "Show Names",
         "es_ES": "Mostrar Nombres",
@@ -15979,7 +15979,7 @@
       "ID": "CommonFavorite",
       "Translations": {
         "ar_SA": "المفضلة",
-        "de_DE": "Favoriten",
+        "de_DE": "Favorit",
         "el_GR": "Αγαπημένα",
         "en_US": "Favorite",
         "es_ES": "Favorito",
@@ -16054,7 +16054,7 @@
       "ID": "SettingsTabGraphicsFeatures",
       "Translations": {
         "ar_SA": "الميزات والتحسينات",
-        "de_DE": "Erweiterungen",
+        "de_DE": "Funktionen & Verbesserungen",
         "el_GR": "Χαρακτηριστικά & Βελτιώσεις",
         "en_US": "Features & Enhancements",
         "es_ES": "Funcionalidades Y Mejoras",
@@ -16079,7 +16079,7 @@
       "ID": "ErrorWindowTitle",
       "Translations": {
         "ar_SA": "نافذة الخطأ",
-        "de_DE": "Fehler-Fenster",
+        "de_DE": "Fehlerfenster",
         "el_GR": "Παράθυρο σφάλματος",
         "en_US": "Error Window",
         "es_ES": "Ventana de Error",
@@ -16129,7 +16129,7 @@
       "ID": "AddGameDirBoxTooltip",
       "Translations": {
         "ar_SA": "أدخل مسار الدليل أو استخدم زر \"إضافة\"...",
-        "de_DE": "Gebe einen Pfad ein oder nutze \"Hinzufügen\"...",
+        "de_DE": "Gib einen Pfad ein oder nutze die \"Hinzufügen\"-Schaltfläche...",
         "el_GR": "Εισαγάγετε διαδρομή ή χρησιμοποιήστε το \"Προσθήκη\"...",
         "en_US": "Enter a directory path or use the \"Add\" button...",
         "es_ES": "Escriba una ruta o use el botón \"Agregar\"...",
@@ -16154,7 +16154,7 @@
       "ID": "CustomThemeCheckTooltip",
       "Translations": {
         "ar_SA": "استخدم سمة أفالونيا المخصصة لواجهة المستخدم الرسومية لتغيير مظهر قوائم المحاكي",
-        "de_DE": "Verwende ein eigenes Design für die Emulator-Benutzeroberfläche",
+        "de_DE": "Verwende ein eigenes Avalonia-Thema für die Emulator-Benutzeroberfläche",
         "el_GR": "Ενεργοποίηση ή απενεργοποίηση προσαρμοσμένων θεμάτων στο GUI",
         "en_US": "Use a custom Avalonia theme for the GUI to change the appearance of the emulator menus",
         "es_ES": "Activa o desactiva los temas personalizados para la interfaz",
@@ -16179,7 +16179,7 @@
       "ID": "CustomThemePathTooltip",
       "Translations": {
         "ar_SA": "مسار سمة واجهة المستخدم المخصصة",
-        "de_DE": "Gibt den Pfad zum Design für die Emulator-Benutzeroberfläche an",
+        "de_DE": "Gibt den Pfad zum Thema für die Emulator-Benutzeroberfläche an",
         "el_GR": "Διαδρομή προς το προσαρμοσμένο θέμα GUI",
         "en_US": "Path to custom GUI theme",
         "es_ES": "Carpeta que contiene los temas personalizados para la interfaz",
@@ -16204,7 +16204,7 @@
       "ID": "CustomThemeBrowseTooltip",
       "Translations": {
         "ar_SA": "تصفح للحصول على سمة واجهة المستخدم المخصصة",
-        "de_DE": "Ermöglicht die Suche nach einem benutzerdefinierten Design für die Emulator-Benutzeroberfläche",
+        "de_DE": "Ermöglicht die Suche nach einem benutzerdefinierten Thema für die Emulator-Benutzeroberfläche",
         "el_GR": "Αναζητήστε ένα προσαρμοσμένο θέμα GUI",
         "en_US": "Browse for a custom GUI theme",
         "es_ES": "Busca un tema personalizado para la interfaz",
@@ -16229,7 +16229,7 @@
       "ID": "UseGlobalInputTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Wenn diese Option in den benutzerdefinierten Einstellungen aktiviert ist, wird die globale Eingabekonfiguration verwendet. \n\nIn den globalen Einstellungen kannst du diese Option nach Bedarf aktivieren oder deaktivieren; diese Einstellung wird von allen neu erstellten benutzerdefinierten Konfigurationen übernommen.",
         "el_GR": "",
         "en_US": "If this option is enabled in custom settings, the global input configuration will be used.\n\nIn the global settings: you can enable or disable it as needed; this setting will be inherited by any new custom configurations created.",
         "es_ES": "Si esta opción está activada en los ajustes personalizados, se utilizará la configuración de entrada global.\n\nEn los ajustes globales: puedes activarla o desactivarla según sea necesario; esta configuración se aplicará a cualquier nueva configuración personalizada que se cree.",
@@ -16254,7 +16254,7 @@
       "ID": "DockModeToggleTooltip",
       "Translations": {
         "ar_SA": "يجعل وضع تركيب بالمنصة النظام الذي تمت محاكاته بمثابة جهاز نينتندو سويتش الذي تم تركيبه بالمنصة. يؤدي هذا إلى تحسين الدقة الرسومية في معظم الألعاب. على العكس من ذلك، سيؤدي تعطيل هذا إلى جعل النظام الذي تمت محاكاته يعمل كجهاز نينتندو سويتش محمول، مما يقلل من جودة الرسومات.\n\nقم بتكوين عناصر تحكم اللاعب 1 إذا كنت تخطط لاستخدام وضع تركيب بالمنصة؛ قم بتكوين عناصر التحكم المحمولة إذا كنت تخطط لاستخدام الوضع المحمول.\n\nاتركه مشغل إذا لم تكن متأكدا.",
-        "de_DE": "Im gedockten Modus verhält sich das emulierte System wie eine Nintendo Switch im TV Modus. Dies verbessert die grafische Qualität der meisten Spiele. Umgekehrt führt die Deaktivierung dazu, dass sich das emulierte System wie eine Nintendo Switch im Handheld Modus verhält, was die Grafikqualität beeinträchtigt.\n\nKonfiguriere das Eingabegerät für Spieler 1, um im Docked Modus zu spielen; konfiguriere das Controllerprofil via der Handheld Option, wenn geplant wird den Handheld Modus zu nutzen.\n\nIm Zweifelsfall AN lassen.",
+        "de_DE": "Im gedockten Modus verhält sich das emulierte System wie eine Nintendo Switch im TV-Modus. Dies verbessert die grafische Qualität der meisten Spiele. Umgekehrt führt die Deaktivierung dazu, dass sich das emulierte System wie eine Nintendo Switch im Handheld-Modus verhält, was die Grafikqualität beeinträchtigt.\n\nKonfiguriere das Eingabegerät für Spieler 1, um im gedockten Modus zu spielen; konfiguriere das Controller-Profil via der Handheld-Option, wenn geplant wird, den Handheld-Modus zu nutzen.\n\nIm Zweifelsfall AN lassen.",
         "el_GR": "Ενεργοποιήστε ή απενεργοποιήστε τη λειτουργία σύνδεσης",
         "en_US": "Docked mode makes the emulated system behave as a docked Nintendo Switch. This improves graphical fidelity in most games. Conversely, disabling this will make the emulated system behave as a handheld Nintendo Switch, reducing graphics quality.\n\nConfigure Player 1 controls if planning to use docked mode; configure handheld controls if planning to use handheld mode.\n\nLeave ON if unsure.",
         "es_ES": "El modo dock o modo TV hace que la consola emulada se comporte como una Nintendo Switch en su dock. Esto mejora la calidad gráfica en la mayoría de los juegos. Del mismo modo, si lo desactivas, el sistema emulado se comportará como una Nintendo Switch en modo portátil, reduciendo la cálidad de los gráficos.\n\nConfigura los controles de \"Jugador\" 1 si planeas jugar en modo dock/TV; configura los controles de \"Portátil\" si planeas jugar en modo portátil.\n\nActívalo si no sabes qué hacer.",
@@ -16279,7 +16279,7 @@
       "ID": "DirectKeyboardTooltip",
       "Translations": {
         "ar_SA": "دعم الوصول المباشر للوحة المفاتيح (HID). يوفر وصول الألعاب إلى لوحة المفاتيح الخاصة بك كجهاز لإدخال النص.\n\nيعمل فقط مع الألعاب التي تدعم استخدام لوحة المفاتيح في الأصل على أجهزة سويتش.\n\nاتركه معطلا إذا كنت غير متأكد.",
-        "de_DE": "Direkter Zugriff auf die Tastatur (HID). Bietet Spielen Zugriff auf Ihre Tastatur als Texteingabegerät.\n\nFunktioniert nur mit Spielen, die die Tastaturnutzung auf Switch-Hardware nativ unterstützen.\n\nAus lassen, wenn unsicher.",
+        "de_DE": "Direkter Zugriff auf die Tastatur (HID). Bietet Spielen Zugriff auf deine Tastatur als Texteingabegerät.\n\nFunktioniert nur mit Spielen, die die Tastaturnutzung auf Switch-Hardware nativ unterstützen.\n\nIm Zweifelsfall AUS lassen.",
         "el_GR": "",
         "en_US": "Direct keyboard access (HID) support. Provides games access to your keyboard as a text entry device.\n\nOnly works with games that natively support keyboard usage on Switch hardware.\n\nLeave OFF if unsure.",
         "es_ES": "Soporte de acceso directo al teclado (HID). Proporciona a los juegos acceso a su teclado como dispositivo de entrada de texto.\n\nSolo funciona con juegos que permiten de forma nativa el uso del teclado en el hardware de Switch.\n\nDesactívalo si no sabes qué hacer.",
@@ -16304,7 +16304,7 @@
       "ID": "DirectMouseTooltip",
       "Translations": {
         "ar_SA": "دعم الوصول المباشر للوحة المفاتيح (HID). يوفر وصول الألعاب إلى لوحة المفاتيح الخاصة بك كجهاز لإدخال النص.\n\nيعمل فقط مع الألعاب التي تدعم استخدام لوحة المفاتيح في الأصل على أجهزة سويتش.\n\nاتركه معطلا إذا كنت غير متأكد.",
-        "de_DE": "Unterstützt den direkten Mauszugriff (HID). Bietet Spielen Zugriff auf Ihre Maus als Zeigegerät.\n\nFunktioniert nur mit Spielen, die nativ die Steuerung mit der Maus auf Switch-Hardware unterstützen (nur sehr wenige).\n\nTouchscreen-Funktionalität ist möglicherweise eingeschränkt, wenn dies aktiviert ist.\n\n Aus lassen, wenn unsicher.",
+        "de_DE": "Unterstützt den direkten Mauszugriff (HID). Bietet Spielen Zugriff auf Ihre Maus als Zeigegerät.\n\nFunktioniert nur mit Spielen, die nativ die Steuerung mit der Maus auf Switch-Hardware unterstützen (nur sehr wenige).\n\nBerührungsbildschirm-Funktionalität ist möglicherweise eingeschränkt, wenn dies aktiviert ist.\n\nIm Zweifelsfall AUS lassen.",
         "el_GR": "",
         "en_US": "Direct mouse access (HID) support. Provides games access to your mouse as a pointing device.\n\nOnly works with games that natively support mouse controls on Switch hardware, which are few and far between.\n\nWhen enabled, touch screen functionality may not work.\n\nLeave OFF if unsure.",
         "es_ES": "Soporte de acceso directo al mouse (HID). Proporciona a los juegos acceso a su mouse como puntero.\n\nSolo funciona con juegos que permiten de forma nativa el uso de controles con mouse en el hardware de switch, lo cual son pocos.\n\nCuando esté activado, la funcionalidad de pantalla táctil puede no funcionar.\n\nDesactívalo si no sabes qué hacer.",
@@ -16329,7 +16329,7 @@
       "ID": "MatchTimeTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Synchronisiert die Systemzeit mit dem aktuellen Datum und der aktuellen Uhrzeit deines PCs.",
         "el_GR": "",
         "en_US": "Sync System Time to match your PC's current date & time.",
         "es_ES": "Sincronizar la hora del sistema con la fecha y hora actual de tu PC.",
@@ -16354,7 +16354,7 @@
       "ID": "VSyncToggleTooltip",
       "Translations": {
         "ar_SA": "محاكاة المزامنة العمودية للجهاز. في الأساس محدد الإطار لغالبية الألعاب؛ قد يؤدي تعطيله إلى تشغيل الألعاب بسرعة أعلى أو جعل شاشات التحميل تستغرق وقتا أطول أو تتعطل.\n\nيمكن تبديله داخل اللعبة باستخدام مفتاح التشغيل السريع الذي تفضله (F1 افتراضيا). نوصي بالقيام بذلك إذا كنت تخطط لتعطيله.\n\nاتركه ممكنا إذا لم تكن متأكدا.",
-        "de_DE": "Vertikale Synchronisierung der emulierten Konsole. Diese Option ist quasi ein Frame-Limiter für die meisten Spiele; die Deaktivierung kann dazu führen, dass Spiele mit höherer Geschwindigkeit laufen oder Ladebildschirme länger benötigen/hängen bleiben.\n\nKann beim Spielen mit einem frei wählbaren Hotkey ein- und ausgeschaltet werden (standardmäßig F1). \n\nIm Zweifelsfall AN lassen.",
+        "de_DE": "Vertikale Synchronisierung der emulierten Konsole. Diese Option ist quasi ein Bildraten-Begrenzer für die meisten Spiele; die Deaktivierung kann dazu führen, dass Spiele mit höherer Geschwindigkeit laufen oder Ladebildschirme länger benötigen/hängen bleiben.\n\nKann beim Spielen mit einem frei wählbaren Tastenkürzel umgeschalten werden (vorgabemäßig F1). \n\nIm Zweifelsfall AN lassen.",
         "el_GR": "",
         "en_US": "Emulated console's Vertical Sync. Essentially a frame-limiter for the majority of games; disabling it may cause games to run at higher speed or make loading screens take longer or get stuck.\n\nCan be toggled in-game with a hotkey of your preference (F1 by default). We recommend doing this if you plan on disabling it.\n\nLeave ON if unsure.",
         "es_ES": "Sincronización vertical de la consola emulada. En práctica un limitador del framerate para la mayoría de los juegos; desactivando puede causar que juegos corran a mayor velocidad o que las pantallas de carga tarden más o queden atascados.\n\nSe puede alternar en juego utilizando una tecla de acceso rápido configurable (F1 by default). Recomendamos hacer esto en caso de querer desactivar sincroniziación vertical.\n\nDesactívalo si no sabes qué hacer.",
@@ -16429,7 +16429,7 @@
       "ID": "FsIntegrityToggleTooltip",
       "Translations": {
         "ar_SA": "يتحقق من وجود ملفات تالفة عند تشغيل لعبة ما، وإذا تم اكتشاف ملفات تالفة، فسيتم عرض خطأ تجزئة في السجل.\n\nليس له أي تأثير على الأداء ويهدف إلى المساعدة في استكشاف الأخطاء وإصلاحها.\n\nاتركه مفعلا إذا كنت غير متأكد.",
-        "de_DE": "Prüft beim Startvorgang auf beschädigte Dateien und zeigt bei beschädigten Dateien einen Hash-Fehler (Hash Error) im Log an.\n\nDiese Einstellung hat keinen Einfluss auf die Leistung und hilft bei der Fehlersuche.\n\nIm Zweifelsfall AN lassen.",
+        "de_DE": "Prüft beim Startvorgang auf beschädigte Dateien und zeigt bei beschädigten Dateien einen Hash-Fehler im Protokoll an.\n\nDiese Einstellung hat keinen Einfluss auf die Leistung und hilft bei der Fehlersuche.\n\nIm Zweifelsfall AN lassen.",
         "el_GR": "Ενεργοποιεί τους ελέγχους ακεραιότητας σε αρχεία περιεχομένου παιχνιδιού",
         "en_US": "Checks for corrupt files when booting a game, and if corrupt files are detected, displays a hash error in the log.\n\nHas no impact on performance and is meant to help troubleshooting.\n\nLeave ON if unsure.",
         "es_ES": "Comprueba si hay archivos corruptos en los juegos que ejecutes al abrirlos, y si detecta archivos corruptos, muestra un error de Hash en los registros.\n\nEsto no tiene impacto alguno en el rendimiento y está pensado para ayudar a resolver problemas.\n\nActívalo si no sabes qué hacer.",
@@ -16454,7 +16454,7 @@
       "ID": "AudioBackendTooltip",
       "Translations": {
         "ar_SA": "يغير الواجهة الخلفية المستخدمة لتقديم الصوت.\n\nSDL3 هو الخيار المفضل، بينما يتم استخدام OpenAL وSoundIO كبديلين. زائف لن يكون لها صوت.\n\nاضبط على SDL3 إذا لم تكن متأكدا.",
-        "de_DE": "Ändert das Backend, das zum Rendern von Audio verwendet wird.\n\nSDL3 ist das bevorzugte Audio-Backend, OpenAL und SoundIO sind als Alternativen vorhanden. Dummy wird keinen Audio-Output haben.\n\nIm Zweifelsfall SDL3 auswählen.",
+        "de_DE": "Ändert das Backend, das zum Rendern von Audio verwendet wird.\n\nSDL3 ist das bevorzugte Audio-Backend, OpenAL und SoundIO sind als Alternativen vorhanden. Attrappe wird keinen Audio-Output haben.\n\nIm Zweifelsfall SDL3 auswählen.",
         "el_GR": "Αλλαγή ήχου υποστήριξης",
         "en_US": "Changes the backend used to render audio.\n\nSDL3 is the preferred one, while OpenAL and SoundIO are used as fallbacks. Dummy will have no sound.\n\nSet to SDL3 if unsure.",
         "es_ES": "Cambia el motor usado para renderizar audio.\n\nSDL3 es el preferido, mientras que OpenAL y SoundIO se usan si hay problemas con este. Dummy no produce audio.\n\nSelecciona SDL3 si no sabes qué hacer.",
@@ -16479,7 +16479,7 @@
       "ID": "MemoryManagerTooltip",
       "Translations": {
         "ar_SA": "تغيير كيفية تعيين ذاكرة الضيف والوصول إليها. يؤثر بشكل كبير على أداء وحدة المعالجة المركزية التي تمت محاكاتها.\n\nاضبط على المضيف غير محدد إذا لم تكن متأكدا.",
-        "de_DE": "Ändert wie der Gastspeicher abgebildet wird und wie auf ihn zugegriffen wird. Beinflusst die Leistung der emulierten CPU erheblich.\n\nIm Zweifelsfall Host ungeprüft auswählen.",
+        "de_DE": "Ändert, wie der Gastspeicher abgebildet wird und wie auf ihn zugegriffen wird. Beinflusst die Leistung der emulierten CPU erheblich.\n\nIm Zweifelsfall Host ungeprüft auswählen.",
         "el_GR": "Αλλάξτε τον τρόπο αντιστοίχισης και πρόσβασης στη μνήμη επισκέπτη. Επηρεάζει σε μεγάλο βαθμό την απόδοση της προσομοίωσης της CPU.",
         "en_US": "Change how guest memory is mapped and accessed. Greatly affects emulated CPU performance.\n\nSet to HOST UNCHECKED if unsure.",
         "es_ES": "Cambia la forma de mapear y acceder a la memoria del guest. Afecta en gran medida al rendimiento de la CPU emulada.\n\nSelecciona \"Host sin verificación\" si no sabes qué hacer.",
@@ -16554,7 +16554,7 @@
       "ID": "MemoryManagerUnsafeTooltip",
       "Translations": {
         "ar_SA": "تعيين الذاكرة مباشرة، ولكن لا تخفي العنوان داخل مساحة عنوان الضيف قبل الوصول. أسرع، ولكن على حساب السلامة. يمكن لتطبيق الضيف الوصول إلى الذاكرة من أي مكان في ريوجينكس، لذا قم بتشغيل البرامج التي تثق بها فقط مع هذا الوضع.",
-        "de_DE": "Direkte Zuordnung des Speichers, aber keine Maskierung der Adresse innerhalb des Gastadressraums vor dem Zugriff. Schneller, aber auf Kosten der Sicherheit. Die Gastanwendung kann von überall in Ryujinx auf den Speicher zugreifen, daher sollte in diesem Modus nur Programme ausgeführt werden denen vertraut wird.",
+        "de_DE": "Direkte Zuordnung des Speichers, aber keine Maskierung der Adresse innerhalb des Gastadressraums vor dem Zugriff. Schneller, aber auf Kosten der Sicherheit. Die Gastanwendung kann von überall in Ryujinx auf den Speicher zugreifen, daher sollten in diesem Modus nur Programme ausgeführt werden, denen vertraut wird.",
         "el_GR": "Απευθείας χαρτογράφηση της μνήμης, αλλά μην καλύπτετε τη διεύθυνση εντός του χώρου διευθύνσεων επισκέπτη πριν από την πρόσβαση. Πιο γρήγορα, αλλά με κόστος ασφάλειας. Η εφαρμογή μπορεί να έχει πρόσβαση στη μνήμη από οπουδήποτε στο Ryujinx, επομένως εκτελείτε μόνο προγράμματα που εμπιστεύεστε με αυτήν τη λειτουργία.",
         "en_US": "Directly map memory, but do not mask the address within the guest address space before access. Faster, but at the cost of safety. The guest application can access memory from anywhere in Ryujinx, so only run programs you trust with this mode.",
         "es_ES": "Mapea la memoria directamente, pero no enmascara la dirección dentro del espacio de dirección del guest antes del acceso. El modo más rápido, pero a costa de seguridad. La aplicación guest puede acceder a la memoria desde cualquier parte en Ryujinx, así que ejecuta solo programas en los que confíes cuando uses este modo.",
@@ -16629,7 +16629,7 @@
       "ID": "IgnoreMissingServicesTooltip",
       "Translations": {
         "ar_SA": "يتجاهل خدمات نظام هوريزون غير المنفذة. قد يساعد هذا في تجاوز الأعطال عند تشغيل ألعاب معينة.\n\nاتركه معطلا إذا كنت غير متأكد.",
-        "de_DE": "Durch diese Option werden nicht implementierte Dienste der Switch-Firmware ignoriert. Dies kann dabei helfen, Abstürze beim Starten bestimmter Spiele zu umgehen.\n\nIm Zweifelsfall AUS lassen.",
+        "de_DE": "Ignoriert nicht-implementierte Horizon-OS-Dienste. Dies kann helfen, Abstürze beim Starten bestimmter Spiele zu umgehen.\n\nLasse die Option deaktiviert, falls du dir unsicher bist.",
         "el_GR": "Ενεργοποίηση ή απενεργοποίηση της αγνοώησης για υπηρεσίες που λείπουν",
         "en_US": "Ignores unimplemented Horizon OS services. This may help in bypassing crashes when booting certain games.\n\nLeave OFF if unsure.",
         "es_ES": "Hack para ignorar servicios no implementados del Horizon OS. Esto puede ayudar a sobrepasar crasheos cuando inicies ciertos juegos.\n\nDesactívalo si no sabes qué hacer.",
@@ -16654,7 +16654,7 @@
       "ID": "IgnoreControllerAppletTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Das Dialogfeld „Controller-Applet“ wird nicht angezeigt, wenn das Gamepad während der Ausführung einer Anwendung getrennt wird.\n\nLasse die Option auf „Aus“, wenn du dir unsicher bist.",
         "el_GR": "",
         "en_US": "The Controller Applet dialog will not appear if the gamepad is disconnected while an application is running.\n\nLeave OFF if unsure.",
         "es_ES": "El cuadro de diálogo del Applet de controladores no aparecerá si el gamepad se desconecta mientras una aplicación está en ejecución.\n\nDéjar DESACTIVADO si no está seguro.",
@@ -16679,7 +16679,7 @@
       "ID": "SkipUserProfilesTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Diese Option überspringt den Dialog 'Benutzerprofile verwalten' während des Spiels und verwendet ein voreingestelltes Profil.\n\nDie Profilumschaltung findest du unter 'Einstellungen' - 'Benutzerprofile verwalten'. Wähle das gewünschte Profil aus, bevor du das Spiel lädst.",
+        "de_DE": "Diese Option überspringt den Dialog 'Benutzerprofile verwalten' während des Spiels und verwendet ein vorausgewähltes Profil.\n\nDie Profilumschaltung findest du unter 'Einstellungen' - 'Benutzerprofile verwalten'. Wähle das gewünschte Profil aus, bevor du das Spiel lädst.",
         "el_GR": "Αυτή η επιλογή παρακάμπτει το παράθυρο διαλόγου 'Διαχειριστής Προφίλ Χρήστη' κατά τη διάρκεια του παιχνιδιού, χρησιμοποιώντας ένα προεπιλεγμένο προφίλ.\n\nΗ εναλλαγή προφίλ βρίσκεται στις 'Ρυθμίσεις' - 'Διαχειριστής Προφίλ Χρήστη'. Επιλέξτε το επιθυμητό προφίλ πριν φορτώσετε το παιχνίδι.",
         "en_US": "This option skips the 'Manage User Profiles' dialog during gameplay, using a pre-selected profile.\n\nProfile switching is found in 'Options' - 'User Profiles'. Select the desired profile before loading the game.",
         "es_ES": "Esta opción omite el diálogo de 'Gestionar perfiles de usuario' durante el juego, utilizando un perfil preseleccionado.\n\nEl cambio de perfil se encuentra en 'Opciones' - 'Perfiles de Usuario'. Seleccione el perfil deseado antes de cargar el juego.",
@@ -16704,7 +16704,7 @@
       "ID": "GraphicsBackendThreadingTooltip",
       "Translations": {
         "ar_SA": "ينفذ أوامر الواجهة الخلفية للرسومات على مسار ثاني.\n\nيعمل على تسريع عملية تجميع المظللات وتقليل التقطيع وتحسين الأداء على برامج تشغيل وحدة الرسوميات دون دعم المسارات المتعددة الخاصة بهم. أداء أفضل قليلا على برامج التشغيل ذات المسارات المتعددة.\n\nاضبط على تلقائي إذا لم تكن متأكدا.",
-        "de_DE": "Führt Grafik-Backend Befehle auf einem zweiten Thread aus.\n\nDies beschleunigt die Shader-Kompilierung, reduziert Stottern und verbessert die Leistung auf GPU-Treibern ohne eigene Multithreading-Unterstützung. Geringfügig bessere Leistung bei Treibern mit Multithreading.\n\nIm Zweifelsfall auf AUTO stellen.",
+        "de_DE": "Führt Grafik-Backend-Befehle auf einem zweiten Thread aus.\n\nDies beschleunigt die Schattierer-Kompilierung, reduziert Stottern und verbessert die Leistung auf GPU-Treibern ohne eigene Multithreading-Unterstützung. Geringfügig bessere Leistung bei Treibern mit Multithreading.\n\nIm Zweifelsfall auf AUTOM. stellen.",
         "el_GR": "Ενεργοποίηση Πολυνηματικής Επεξεργασίας Γραφικών",
         "en_US": "Executes graphics backend commands on a second thread.\n\nSpeeds up shader compilation, reduces stuttering, and improves performance on GPU drivers without multithreading support of their own. Slightly better performance on drivers with multithreading.\n\nSet to AUTO if unsure.",
         "es_ES": "Ejecuta los comandos del motor gráfico en un segundo hilo. Acelera la compilación de sombreadores, reduce los tirones, y mejora el rendimiento en controladores gráficos que no realicen su propio procesamiento con múltiples hilos. Rendimiento ligeramente superior en controladores gráficos que soporten múltiples hilos.\n\nSelecciona \"Auto\" si no sabes qué hacer.",
@@ -16729,7 +16729,7 @@
       "ID": "GalThreadingTooltip",
       "Translations": {
         "ar_SA": "ينفذ أوامر الواجهة الخلفية للرسومات على مسار ثاني.\n\nيعمل على تسريع عملية تجميع المظللات وتقليل التقطيع وتحسين الأداء على برامج تشغيل وحدة الرسوميات دون دعم المسارات المتعددة الخاصة بهم. أداء أفضل قليلا على برامج التشغيل ذات المسارات المتعددة.\n\nاضبط على تلقائي إذا لم تكن متأكدا.",
-        "de_DE": "Führt Grafik-Backend Befehle auf einem zweiten Thread aus.\n\nDies Beschleunigt die Shader-Kompilierung, reduziert Stottern und verbessert die Leistung auf GPU-Treibern ohne eigene Multithreading-Unterstützung. Geringfügig bessere Leistung bei Treibern mit Multithreading.\n\nIm Zweifelsfall auf auf AUTO stellen.",
+        "de_DE": "Führt Grafik-Backend-Befehle auf einem zweiten Thread aus.\n\nDies Beschleunigt die Schattierer-Kompilierung, reduziert Stottern und verbessert die Leistung auf GPU-Treibern ohne eigene Multithreading-Unterstützung. Geringfügig bessere Leistung bei Treibern mit Multithreading.\n\nIm Zweifelsfall auf AUTOM. stellen.",
         "el_GR": "Εκτελεί εντολές γραφικών σε ένα δεύτερο νήμα. Επιτρέπει την πολυνηματική μεταγλώττιση Shader σε χρόνο εκτέλεσης, μειώνει το τρεμόπαιγμα και βελτιώνει την απόδοση των προγραμμάτων οδήγησης χωρίς τη δική τους υποστήριξη πολλαπλών νημάτων. Ποικίλες κορυφαίες επιδόσεις σε προγράμματα οδήγησης με multithreading. Μπορεί να χρειαστεί επανεκκίνηση του Ryujinx για να απενεργοποιήσετε σωστά την ενσωματωμένη λειτουργία πολλαπλών νημάτων του προγράμματος οδήγησης ή ίσως χρειαστεί να το κάνετε χειροκίνητα για να έχετε την καλύτερη απόδοση.",
         "en_US": "Executes graphics backend commands on a second thread.\n\nSpeeds up shader compilation, reduces stuttering, and improves performance on GPU drivers without multithreading support of their own. Slightly better performance on drivers with multithreading.\n\nSet to AUTO if unsure.",
         "es_ES": "Ejecuta los comandos del motor gráfico en un segundo hilo. Acelera la compilación de sombreadores, reduce los tirones, y mejora el rendimiento en controladores gráficos que no realicen su propio procesamiento con múltiples hilos. Rendimiento ligeramente superior en controladores gráficos que soporten múltiples hilos.\n\nSelecciona \"Auto\" si no sabes qué hacer.",
@@ -16754,7 +16754,7 @@
       "ID": "ShaderCacheToggleTooltip",
       "Translations": {
         "ar_SA": "يحفظ ذاكرة المظللات المؤقتة على القرص مما يقلل من التقطيع في عمليات التشغيل اللاحقة.\n\nاتركه مفعلا إذا لم تكن متأكدا.",
-        "de_DE": "Speichert einen persistenten Shader Cache, der das Stottern bei nachfolgenden Durchläufen reduziert.\n\nIm Zweifelsfall AN lassen.",
+        "de_DE": "Speichert einen persistenten Schattierer-Cache, der das Stottern bei nachfolgenden Durchläufen reduziert.\n\nIm Zweifelsfall AN lassen.",
         "el_GR": "Ενεργοποιεί ή απενεργοποιεί την Προσωρινή Μνήμη Shader",
         "en_US": "Saves a disk shader cache which reduces stuttering in subsequent runs.\n\nLeave ON if unsure.",
         "es_ES": "Guarda una caché de sombreadores en disco, la cual reduce los tirones a medida que vas jugando.\n\nActívalo si no sabes qué hacer.",
@@ -16779,7 +16779,7 @@
       "ID": "ResolutionScaleTooltip",
       "Translations": {
         "ar_SA": "يضاعف دقة عرض اللعبة.\n\nقد لا تعمل بعض الألعاب مع هذا وتبدو منقطة حتى عند زيادة الدقة؛ بالنسبة لهذه الألعاب، قد تحتاج إلى العثور على تعديلات تزيل تنعيم الحواف أو تزيد من دقة العرض الداخلي. لاستخدام الأخير، من المحتمل أن ترغب في تحديد أصلي.\n\nيمكن تغيير هذا الخيار أثناء تشغيل اللعبة بالنقر فوق \"تطبيق\" أدناه؛ يمكنك ببساطة تحريك نافذة الإعدادات جانبًا والتجربة حتى تجد المظهر المفضل للعبة.\n\nضع في اعتبارك أن 4x مبالغة في أي إعداد تقريبًا.",
-        "de_DE": "Multipliziert die Rendering-Auflösung des Spiels.\n\nEinige wenige Spiele funktionieren damit nicht und sehen auch bei höherer Auflösung pixelig aus; für diese Spiele musst du möglicherweise Mods finden, die Anti-Aliasing entfernen oder die interne Rendering-Auflösung erhöhen. Für die Verwendung von Letzterem solltest du Native wählen.\n\nDu kannst diese Option ändern, während ein Spiel läuft, indem du unten auf \"Übernehmen\" klickst; Du kannst das Einstellungsfenster einfach zur Seite schieben und experimentieren, bis das bevorzugte Aussehen für ein Spiel gefunden wurde.\n\nDenk daran, dass 4x für praktisch jedes Setup Overkill ist.",
+        "de_DE": "Multipliziert die Rendering-Auflösung des Spiels.\n\nEinige wenige Spiele funktionieren damit nicht und sehen auch bei höherer Auflösung pixelig aus; für diese Spiele musst du möglicherweise Mods finden, die Anti-Aliasing entfernen oder die interne Rendering-Auflösung erhöhen. Für die Verwendung von Letzterem solltest du Nativ wählen.\n\nDu kannst diese Option ändern, während ein Spiel läuft, indem du unten auf \"Übernehmen\" klickst; Du kannst das Einstellungsfenster einfach zur Seite schieben und experimentieren, bis das bevorzugte Aussehen für ein Spiel gefunden wurde.\n\nDenk daran, dass 4x für praktisch jede Konfiguration übertrieben ist.",
         "el_GR": "",
         "en_US": "Multiplies the game's rendering resolution.\n\nA few games may not work with this and look pixelated even when the resolution is increased; for those games, you may need to find mods that remove anti-aliasing or that increase their internal rendering resolution. For using the latter, you'll likely want to select Native.\n\nThis option can be changed while a game is running by clicking \"Apply\" below; you can simply move the settings window aside and experiment until you find your preferred look for a game.\n\nKeep in mind 4x is overkill for virtually any setup.",
         "es_ES": "Multiplica la resolución de rendereo del juego.\n\nAlgunos juegos podrían no funcionar con esto y verse pixelado al aumentar la resolución; en esos casos, quizás sería necesario buscar mods que de anti-aliasing o que aumenten la resolución interna. Para usar este último, probablemente necesitarás seleccionar Nativa.\n\nEsta opción puede ser modificada mientras que un juego este corriendo haciendo click en \"Aplicar\" más abajo; simplemente puedes mover la ventana de configuración a un lado y experimentar hasta que encuentres tu estilo preferido para un juego.\n\nTener en cuenta que 4x es excesivo para prácticamente cualquier configuración.",
@@ -16804,7 +16804,7 @@
       "ID": "ResolutionScaleEntryTooltip",
       "Translations": {
         "ar_SA": "مقياس دقة النقطة العائمة، مثل 1.5. من المرجح أن تتسبب المقاييس غير المتكاملة في حدوث مشكلات أو تعطل.",
-        "de_DE": "Fließkomma Auflösungsskalierung, wie 1,5.\n Bei nicht ganzzahligen Werten ist die Wahrscheinlichkeit größer, dass Probleme entstehen, die auch zum Absturz führen können.",
+        "de_DE": "Fließkomma-Auflösungsskalierung, wie 1,5.\n Bei nicht ganzzahligen Werten ist die Wahrscheinlichkeit größer, dass Probleme entstehen, die auch zum Absturz führen können.",
         "el_GR": "Κλίμακα ανάλυσης κινητής υποδιαστολής, όπως 1,5. Οι μη αναπόσπαστες τιμές είναι πιθανό να προκαλέσουν προβλήματα ή σφάλματα.",
         "en_US": "Floating point resolution scale, such as 1.5. Non-integral scales are more likely to cause issues or crash.",
         "es_ES": "Escalado de resolución de coma flotante, como por ejemplo 1,5. Los valores no íntegros pueden causar errores gráficos o crashes.",
@@ -16829,7 +16829,7 @@
       "ID": "AnisotropyTooltip",
       "Translations": {
         "ar_SA": "مستوى تصفية. اضبط على تلقائي لاستخدام القيمة التي تطلبها اللعبة.",
-        "de_DE": "Stufe der Anisotropen Filterung. Auf Auto setzen, um den vom Spiel geforderten Wert zu verwenden.",
+        "de_DE": "Stufe der Anisotropen Filterung. Auf Autom. setzen, um den vom Spiel geforderten Wert zu verwenden.",
         "el_GR": "",
         "en_US": "Level of Anisotropic Filtering. Set to Auto to use the value requested by the game.",
         "es_ES": "Nivel de filtrado anisotrópico. Setear en Auto para utilizar el valor solicitado por el juego.",
@@ -16854,7 +16854,7 @@
       "ID": "AspectRatioTooltip",
       "Translations": {
         "ar_SA": "يتم تطبيق نسبة العرض إلى الارتفاع على نافذة العارض.\n\nقم بتغيير هذا فقط إذا كنت تستخدم تعديل نسبة العرض إلى الارتفاع للعبتك، وإلا سيتم تمديد الرسومات.\n\nاتركه16:9 إذا لم تكن متأكدا.",
-        "de_DE": "Seitenverhältnis, das auf das Renderer-Fenster angewendet wird.\n\nÄnder dies nur, wenn ein Seitenverhältnis-Mod für das Spiel verwendet wird, da sonst die Grafik gestreckt wird.\n\nLass es auf 16:9, wenn du unsicher bist.",
+        "de_DE": "Seitenverhältnis, das auf das Renderer-Fenster angewendet wird.\n\nÄndere dies nur, wenn ein Seitenverhältnis-Mod für das Spiel verwendet wird, da sonst die Grafik gestreckt wird.\n\nLasse es auf 16:9, wenn du unsicher bist.",
         "el_GR": "",
         "en_US": "Aspect Ratio applied to the renderer window.\n\nOnly change this if you're using an aspect ratio mod for your game, otherwise the graphics will be stretched.\n\nLeave on 16:9 if unsure.",
         "es_ES": "Relación de aspecto aplicada a la ventana del renderizador.\n\nSolamente modificar esto si estás utilizando un mod de relación de aspecto para su juego, en cualquier otro caso los gráficos se estirarán.\n\nDejar en 16:9 si no sabe que hacer.",
@@ -16879,7 +16879,7 @@
       "ID": "FileLogTooltip",
       "Translations": {
         "ar_SA": "حفظ تسجيل وحدة التحكم إلى ملف سجل على القرص. لا يؤثر على الأداء.",
-        "de_DE": "Speichert die Konsolenausgabe in einer Log-Datei auf der Festplatte. Hat keinen Einfluss auf die Leistung.",
+        "de_DE": "Speichert die Konsolenprotokollierung in einer Protokolldatei auf der Festplatte. Hat keinen Einfluss auf die Leistung.",
         "el_GR": "Ενεργοποιεί ή απενεργοποιεί την καταγραφή σε ένα αρχείο στο δίσκο",
         "en_US": "Saves console logging to a log file on disk. Does not affect performance.",
         "es_ES": "Guarda los registros de la consola en archivos en disco. No afectan al rendimiento.",
@@ -16904,7 +16904,7 @@
       "ID": "StubLogTooltip",
       "Translations": {
         "ar_SA": "طباعة رسائل سجل stub في وحدة التحكم. لا يؤثر على الأداء.",
-        "de_DE": "Ausgabe von Stub-Logs in der Konsole. Hat keinen Einfluss auf die Leistung.",
+        "de_DE": "Ausgabe von Stub-Protokollnachrichten in der Konsole. Hat keinen Einfluss auf die Leistung.",
         "el_GR": "Ενεργοποιεί την εκτύπωση μηνυμάτων καταγραφής ατελειών",
         "en_US": "Prints stub log messages in the console. Does not affect performance.",
         "es_ES": "Escribe mensajes de Stub en la consola. No afectan al rendimiento.",
@@ -16929,7 +16929,7 @@
       "ID": "InfoLogTooltip",
       "Translations": {
         "ar_SA": "طباعة رسائل سجل المعلومات في وحدة التحكم. لا يؤثر على الأداء.",
-        "de_DE": "Ausgabe von Info-Logs in der Konsole. Hat keinen Einfluss auf die Leistung.",
+        "de_DE": "Ausgabe von Info-Protokollnachrichten in der Konsole. Hat keinen Einfluss auf die Leistung.",
         "el_GR": "Ενεργοποιεί την εκτύπωση μηνυμάτων αρχείου καταγραφής πληροφοριών",
         "en_US": "Prints info log messages in the console. Does not affect performance.",
         "es_ES": "Escribe mensajes de Info en la consola. No afectan al rendimiento.",
@@ -16954,7 +16954,7 @@
       "ID": "WarnLogTooltip",
       "Translations": {
         "ar_SA": "طباعة رسائل سجل التحذير في وحدة التحكم. لا يؤثر على الأداء.",
-        "de_DE": "Ausgabe von Warn-Logs in der Konsole. Hat keinen Einfluss auf die Leistung.",
+        "de_DE": "Ausgabe von Warnungs-Protokollnachrichten in der Konsole. Hat keinen Einfluss auf die Leistung.",
         "el_GR": "Ενεργοποιεί την εκτύπωση μηνυμάτων καταγραφής προειδοποιήσεων",
         "en_US": "Prints warning log messages in the console. Does not affect performance.",
         "es_ES": "Escribe mensajes de Advertencia en la consola. No afectan al rendimiento.",
@@ -16979,7 +16979,7 @@
       "ID": "ErrorLogTooltip",
       "Translations": {
         "ar_SA": "طباعة رسائل سجل الأخطاء في وحدة التحكم. لا يؤثر على الأداء.",
-        "de_DE": "Ausgabe von Fehler-Logs in der Konsole. Hat keinen Einfluss auf die Leistung.",
+        "de_DE": "Ausgabe von Fehler-Protokollnachrichten in der Konsole. Hat keinen Einfluss auf die Leistung.",
         "el_GR": "Ενεργοποιεί την εκτύπωση μηνυμάτων αρχείου καταγραφής σφαλμάτων",
         "en_US": "Prints error log messages in the console. Does not affect performance.",
         "es_ES": "Escribe mensajes de Error en la consola. No afectan al rendimiento.",
@@ -17004,7 +17004,7 @@
       "ID": "TraceLogTooltip",
       "Translations": {
         "ar_SA": "طباعة رسائل سجل التتبع في وحدة التحكم. لا يؤثر على الأداء.",
-        "de_DE": "Ausgabe von Trace-Log in der Konsole. Hat keinen Einfluss auf die Leistung.",
+        "de_DE": "Ausgabe von Trace-Protkollnachrichten in der Konsole. Hat keinen Einfluss auf die Leistung.",
         "el_GR": "Ενεργοποιεί την εκτύπωση μηνυμάτων αρχείου καταγραφής ιχνών",
         "en_US": "Prints trace log messages in the console. Does not affect performance.",
         "es_ES": "Escribe mensajes de Rastro en la consola. No afectan al rendimiento.",
@@ -17029,7 +17029,7 @@
       "ID": "GuestLogTooltip",
       "Translations": {
         "ar_SA": "طباعة رسائل سجل الضيف في وحدة التحكم. لا يؤثر على الأداء.",
-        "de_DE": "Ausgabe von Gast-Logs in der Konsole. Hat keinen Einfluss auf die Leistung.",
+        "de_DE": "Ausgabe von Gast-Protokollnachrichten in der Konsole. Hat keinen Einfluss auf die Leistung.",
         "el_GR": "Ενεργοποιεί την εκτύπωση μηνυμάτων καταγραφής επισκεπτών",
         "en_US": "Prints guest log messages in the console. Does not affect performance.",
         "es_ES": "Escribe mensajes de Guest en la consola. No afectan al rendimiento.",
@@ -17054,7 +17054,7 @@
       "ID": "FileAccessLogTooltip",
       "Translations": {
         "ar_SA": "طباعة رسائل سجل الوصول إلى الملفات في وحدة التحكم.",
-        "de_DE": "Ausgabe von FS-Zugriff-Logs in der Konsole.",
+        "de_DE": "Ausgabe von Dateizugriff-Protokollnachrichten in der Konsole.",
         "el_GR": "Ενεργοποιεί την εκτύπωση μηνυμάτων αρχείου καταγραφής πρόσβασης",
         "en_US": "Prints file access log messages in the console.",
         "es_ES": "Activa mensajes de acceso a archivo en la consola",
@@ -17079,7 +17079,7 @@
       "ID": "FSAccessLogModeTooltip",
       "Translations": {
         "ar_SA": "تمكين إخراج سجل الوصول إلى نظام الملفات إلى وحدة التحكم. الأوضاع الممكنة هي 0-3.",
-        "de_DE": "Aktiviert die Ausgabe des FS-Zugriff-Logs in der Konsole. Mögliche Modi sind 0-3.",
+        "de_DE": "Aktiviert die Ausgabe des FS-Zugriffprotokolls in der Konsole. Mögliche Modi sind 0-3.",
         "el_GR": "Ενεργοποιεί την έξοδο καταγραφής πρόσβασης FS στην κονσόλα. Οι πιθανοί τρόποι λειτουργίας είναι 0-3.",
         "en_US": "Enables FS access log output to the console. Possible modes are 0-3.",
         "es_ES": "Activa registros FS Access en la consola. Los modos posibles son entre 0 y 3.",
@@ -17104,11 +17104,11 @@
       "ID": "NetLogTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Gibt Netzwerkprotokollmeldungen in der Konsole aus",
         "el_GR": "",
         "en_US": "Prints network log messages in the console.",
         "es_ES": "Imprimir registros de red en la consola.",
-        "fr_FR": "Affiche les journaux réseau dans la console.",
+        "fr_FR": "",
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
@@ -17154,7 +17154,7 @@
       "ID": "AvaloniaLogTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Gibt Avalonia (BO)-Protokollmeldungen in der Konsole aus",
         "el_GR": "",
         "en_US": "Prints Avalonia (UI) log messages in the console.",
         "es_ES": "Muestra los mensajes del registro de Avalonia (UI) en la consola.",
@@ -17179,7 +17179,7 @@
       "ID": "OpenGlLogLevel",
       "Translations": {
         "ar_SA": "يتطلب تمكين مستويات السجل المناسبة.",
-        "de_DE": "Erfordert die Aktivierung der entsprechenden Log-Level.",
+        "de_DE": "Erfordert die Aktivierung der entsprechenden Protokollstufe.",
         "el_GR": "Απαιτεί τα κατάλληλα επίπεδα καταγραφής ενεργοποιημένα.",
         "en_US": "Requires appropriate log levels enabled.",
         "es_ES": "Requiere activar los niveles de registro apropiados.",
@@ -17204,7 +17204,7 @@
       "ID": "DebugLogTooltip",
       "Translations": {
         "ar_SA": "طباعة رسائل سجل التصحيح في وحدة التحكم.\n\nاستخدم هذا فقط إذا طلب منك أحد الموظفين تحديدًا ذلك، لأنه سيجعل من الصعب قراءة السجلات وسيؤدي إلى تدهور أداء المحاكي.",
-        "de_DE": "Ausgabe von Debug-Logs in der Konsole.\n\nVerwende diese Option nur auf ausdrückliche Anweisung von Ryujinx Entwicklern, da sie das Lesen der Protokolle erschwert und die Leistung des Emulators verschlechtert.",
+        "de_DE": "Ausgabe von Fehlerbehebungsprotokolle in der Konsole.\n\nVerwende diese Option nur auf ausdrückliche Anweisung von Ryujinx-Entwicklern, da sie das Lesen der Protokolle erschwert und die Leistung des Emulators verschlechtert.",
         "el_GR": "Ενεργοποιεί την εκτύπωση μηνυμάτων αρχείου καταγραφής εντοπισμού σφαλμάτων",
         "en_US": "Prints debug log messages in the console.\n\nOnly use this if specifically instructed by a staff member, as it will make logs difficult to read and worsen emulator performance.",
         "es_ES": "Escribe mensajes de debug en la consola\n\nActiva esto solo si un miembro del equipo te lo pide expresamente, pues hará que el registro sea difícil de leer y empeorará el rendimiento del emulador.",
@@ -20254,7 +20254,7 @@
       "ID": "UpdateWindowTitle",
       "Translations": {
         "ar_SA": "مدير تحديث العنوان",
-        "de_DE": "Spiel-Updates verwalten",
+        "de_DE": "Titelaktualisierungs-Verwalter",
         "el_GR": "Διαχειριστής Ενημερώσεων Τίτλου",
         "en_US": "Title Update Manager",
         "es_ES": "Administrar Actualizaciones",
@@ -20279,7 +20279,7 @@
       "ID": "XCITrimmerWindowTitle",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "XCI-Datei-Trimmer",
         "el_GR": "",
         "en_US": "XCI File Trimmer",
         "es_ES": "Recortador de Archivos XCI",
@@ -20304,7 +20304,7 @@
       "ID": "XCITrimmerTitleStatusCount",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "{0} von {1} Titel(n) ausgewählt",
         "el_GR": "",
         "en_US": "{0} of {1} Title(s) Selected",
         "es_ES": "{0} de {1} Título(s) Seleccionado(s)",
@@ -20329,7 +20329,7 @@
       "ID": "XCITrimmerTitleStatusCountWithFilter",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "{0} von {1} Titel(n) ausgewählt ({2} angezeigt)",
         "el_GR": "",
         "en_US": "{0} of {1} Title(s) Selected ({2} displayed)",
         "es_ES": "{0} de {1} Título(s) Seleccionado(s) ({2} Mostrado(s))",
@@ -20354,7 +20354,7 @@
       "ID": "XCITrimmerTitleStatusTrimming",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "{0} Titel werden getrimmt",
         "el_GR": "",
         "en_US": "Trimming {0} Title(s)...",
         "es_ES": "Recortando {0} Título(s)...",
@@ -20379,7 +20379,7 @@
       "ID": "XCITrimmerTitleStatusUntrimming",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "{0} Titel werden ungetrimmt...",
         "el_GR": "",
         "en_US": "Untrimming {0} Title(s)...",
         "es_ES": "Deshaciendo Recorte de {0} Título(s)...",
@@ -20404,7 +20404,7 @@
       "ID": "XCITrimmerTitleStatusFailed",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Fehlgeschlagen",
         "el_GR": "",
         "en_US": "Failed",
         "es_ES": "Fallido",
@@ -20429,7 +20429,7 @@
       "ID": "XCITrimmerPotentialSavings",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Potenzielle Einsparungen",
         "el_GR": "",
         "en_US": "Potential Savings",
         "es_ES": "Ahorro Potencial",
@@ -20454,7 +20454,7 @@
       "ID": "XCITrimmerActualSavings",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Tatsächliche Einsparungen",
         "el_GR": "",
         "en_US": "Actual Savings",
         "es_ES": "Ahorro Real",
@@ -20504,7 +20504,7 @@
       "ID": "XCITrimmerSelectDisplayed",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Angezeigte auswählen",
         "el_GR": "",
         "en_US": "Select Shown",
         "es_ES": "Seleccionar Mostrado(s)",
@@ -20529,7 +20529,7 @@
       "ID": "XCITrimmerDeselectDisplayed",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Angezeigte abwählen",
         "el_GR": "",
         "en_US": "Deselect Shown",
         "es_ES": "Deseleccionar Mostrado(s)",
@@ -20554,7 +20554,7 @@
       "ID": "XCITrimmerSortName",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Titel",
         "el_GR": "",
         "en_US": "Title",
         "es_ES": "Título",
@@ -20579,7 +20579,7 @@
       "ID": "XCITrimmerSortSaved",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Platzersparnis",
         "el_GR": "",
         "en_US": "Space Savings",
         "es_ES": "Ahorro de Espacio",
@@ -20604,7 +20604,7 @@
       "ID": "XCITrimmerTrim",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Trimmen",
         "el_GR": "",
         "en_US": "Trim",
         "es_ES": "Recortar",
@@ -20629,7 +20629,7 @@
       "ID": "XCITrimmerUntrim",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Trimmen rückgängig machen",
         "el_GR": "",
         "en_US": "Untrim",
         "es_ES": "Deshacer Recorte",
@@ -20654,7 +20654,7 @@
       "ID": "UpdateWindowUpdateAddedMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "{0} neue Aktualisierung(en) hinzugefügt",
         "el_GR": "",
         "en_US": "{0} new update(s) added",
         "es_ES": "{0} nueva(s) actualización(es) agregada(s)",
@@ -20679,7 +20679,7 @@
       "ID": "UpdateWindowBundledContentNotice",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Gebündelte Aktualisierungen können nicht entfernt, sondern nur deaktiviert werden.",
         "el_GR": "",
         "en_US": "Bundled updates cannot be removed, only disabled.",
         "es_ES": "Las actualizaciones agrupadas no pueden ser eliminadas, solamente deshabilitadas.",
@@ -20754,7 +20754,7 @@
       "ID": "DlcWindowBundledContentNotice",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Gebündelte DLCs können nicht entfernt, sondern nur deaktiviert werden.",
         "el_GR": "",
         "en_US": "Bundled DLC cannot be removed, only disabled.",
         "es_ES": "El DLC incluido no se puede eliminar, solo desactivar.",
@@ -20779,7 +20779,7 @@
       "ID": "DlcWindowHeading",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "{0} DLC(s) verfügbar",
         "el_GR": "",
         "en_US": "{0} DLC(s) Available",
         "es_ES": "{0} DLC(s) disponible(s)",
@@ -20804,7 +20804,7 @@
       "ID": "DlcWindowDlcAddedMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "{0} neue herunterladbare Inhalt(e) hinzugefügt",
         "el_GR": "",
         "en_US": "{0} New Downloadable Content(s) Added",
         "es_ES": "Se agregó/aron {0} nuevo(s) contenido(s) descargable(s)",
@@ -20829,7 +20829,7 @@
       "ID": "AutoloadDlcAddedMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "{0} neue herunterladbare Inhalt(e) hinzugefügt",
         "el_GR": "",
         "en_US": "{0} New Downloadable Content(s) Added",
         "es_ES": "Se agregó/aron {0} nuevo(s) contenido(s) descargable(s)",
@@ -20854,7 +20854,7 @@
       "ID": "AutoloadDlcRemovedMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "{0} fehlende herunterladbare Inhalt(e) wurden entfernt",
         "el_GR": "",
         "en_US": "{0} Missing Downloadable Content(s) Removed",
         "es_ES": "Se eliminó/aron {0} contenido(s) descargable(s) faltante(s)",
@@ -20879,7 +20879,7 @@
       "ID": "AutoloadUpdateAddedMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "{0} neue Aktualisierung(en) hinzugefügt",
         "el_GR": "",
         "en_US": "{0} New Update(s) Added",
         "es_ES": "Se agregó/aron {0} nueva(s) actualización(es)",
@@ -20904,7 +20904,7 @@
       "ID": "AutoloadUpdateRemovedMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "{0} fehlende Aktualisierung(en) wurden entfernt",
         "el_GR": "",
         "en_US": "{0} Missing Update(s) Removed",
         "es_ES": "Se eliminó/aron {0} actualización(es) faltante(s)",
@@ -20954,7 +20954,7 @@
       "ID": "UserProfilesEditProfile",
       "Translations": {
         "ar_SA": "تعديل المحدد",
-        "de_DE": "Profil bearbeiten",
+        "de_DE": "Ausgewählte bearbeiten",
         "el_GR": "Επεξεργασία Επιλεγμένων",
         "en_US": "Edit Selected",
         "es_ES": "Editar Selección",
@@ -20979,7 +20979,7 @@
       "ID": "Continue",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Fortsetzen",
         "el_GR": "",
         "en_US": "Continue",
         "es_ES": "Continuar",
@@ -21104,7 +21104,7 @@
       "ID": "UserProfilesSetProfileImage",
       "Translations": {
         "ar_SA": "تعيين صورة الملف الشخصي",
-        "de_DE": "Profilbild einrichten",
+        "de_DE": "Profilbild festlegen",
         "el_GR": "Ορισμός Εικόνας Προφίλ",
         "en_US": "Set Profile Image",
         "es_ES": "Elegir Imagen de Perfil ",
@@ -21179,7 +21179,7 @@
       "ID": "GameUpdateWindowHeading",
       "Translations": {
         "ar_SA": "إدارة التحديثات لـ {0} ({1})",
-        "de_DE": "Update verfügbar für {0} [{1}]",
+        "de_DE": "Aktualisierung verfügbar für {0} [{1}]",
         "el_GR": "{0} Update(s) available for {1} ({2})",
         "en_US": "Manage Updates for {0} ({1})",
         "es_ES": "Actualizaciones Disponibles para {0} [{1}]",
@@ -21329,7 +21329,7 @@
       "ID": "SettingsTabGraphicsBackendTooltip",
       "Translations": {
         "ar_SA": "حدد الواجهة الخلفية للرسومات التي سيتم استخدامها في المحاكي.\n\nيعد برنامج فولكان أفضل بشكل عام لجميع بطاقات الرسومات الحديثة، طالما أن برامج التشغيل الخاصة بها محدثة. يتميز فولكان أيضا بتجميع مظللات أسرع (أقل تقطيعا) على جميع بائعي وحدات معالجة الرسومات.\n\nقد يحقق أوبن جي أل نتائج أفضل على وحدات معالجة الرسومات إنفيديا القديمة، أو على وحدات معالجة الرسومات إي إم دي القديمة على لينكس، أو على وحدات معالجة الرسومات ذات ذاكرة الوصول العشوائي للفيديوالأقل، على الرغم من أن تعثرات تجميع المظللات ستكون أكبر.\n\nاضبط على فولكان إذا لم تكن متأكدا. اضبط على أوبن جي أل إذا كانت وحدة معالجة الرسومات الخاصة بك لا تدعم فولكان حتى مع أحدث برامج تشغيل الرسومات.",
-        "de_DE": "Wähle das Grafik-Backend, das im Emulator verwendet werden soll.\n\nVulkan ist insgesamt besser für alle modernen Grafikkarten geeignet, sofern deren Treiber auf dem neuesten Stand sind. Vulkan bietet auch eine schnellere Shader-Kompilierung (weniger Stottern) auf allen GPU-Anbietern.\n\nOpenGL kann auf alten Nvidia-GPUs, alten AMD-GPUs unter Linux oder auf GPUs mit geringerem VRAM bessere Ergebnisse erzielen, obwohl die Shader-Kompilierung stärker stottert.\n\nSetze auf Vulkan, wenn du unsicher bist. Stelle auf OpenGL ein, wenn der Grafikprozessor selbst mit den neuesten Grafiktreibern Vulkan nicht unterstützt.",
+        "de_DE": "Wähle das Grafik-Backend aus, das im Emulator verwendet werden soll.\n\nVulkan ist insgesamt besser für alle modernen Grafikkarten geeignet, sofern deren Treiber auf dem neuesten Stand sind. Vulkan bietet auch eine schnellere Schattierer-Kompilierung (weniger Stottern) auf allen GPU-Anbietern.\n\nOpenGL kann auf alten Nvidia-GPUs, alten AMD-GPUs unter Linux oder auf GPUs mit geringerem VRAM bessere Ergebnisse erzielen, obwohl die Schattierer-Kompilierung stärker stottert.\n\nStelle auf Vulkan ein, wenn du dir unsicher bist. Stelle auf OpenGL ein, wenn der Grafikprozessor selbst mit den neuesten Grafiktreibern Vulkan nicht unterstützt.",
         "el_GR": "",
         "en_US": "Select the graphics backend that will be used in the emulator.\n\nVulkan is overall better for all modern graphics cards, as long as their drivers are up to date. Vulkan also features faster shader compilation (less stuttering) on all GPU vendors.\n\nOpenGL may achieve better results on old Nvidia GPUs, on old AMD GPUs on Linux, or on GPUs with lower VRAM, though shader compilation stutters will be greater.\n\nSet to Vulkan if unsure. Set to OpenGL if your GPU does not support Vulkan even with the latest graphics drivers.",
         "es_ES": "Seleccione el backend gráfico que utilizará el emulador.\n\nVulkan, en general, es mejor para todas las tarjetas gráficas modernas, mientras que sus controladores estén actualizados. Vulkan también cuenta con complicación más rápida de sombreadores (menos tirones) en todos los proveredores de GPU.\n\nOpenGL puede lograr mejores resultados en GPU Nvidia antiguas, GPU AMD antiguas en Linux o en GPUs con menor VRAM, aunque tirones de compilación de sombreadores serán mayores.\n\nSetear en Vulkan si no sabe que hacer. Setear en OpenGL si su GPU no tiene soporte para Vulkan aún con los últimos controladores gráficos.",
@@ -21354,7 +21354,7 @@
       "ID": "SettingsEnableTextureRecompression",
       "Translations": {
         "ar_SA": "تمكين إعادة ضغط التكستر",
-        "de_DE": "Textur-Rekompression",
+        "de_DE": "Textur-Rekompression aktivieren",
         "el_GR": "Ενεργοποίηση Επανασυμπίεσης Των Texture",
         "en_US": "Enable Texture Recompression",
         "es_ES": "Activar Recompresión de Texturas",
@@ -21379,7 +21379,7 @@
       "ID": "SettingsEnableTextureRecompressionTooltip",
       "Translations": {
         "ar_SA": "يضغط  تكستر ASTC من أجل تقليل استخدام ذاكرة الوصول العشوائي للفيديو.\n\nتتضمن الألعاب التي تستخدم تنسيق النسيج هذا Astral Chain وBayonetta 3 وFire Emblem Engage وMetroid Prime Remastered وSuper Mario Bros. Wonder وThe Legend of Zelda: Tears of the Kingdom.\n\nمن المحتمل أن تتعطل بطاقات الرسومات التي تحتوي على 4 جيجا بايت من ذاكرة الوصول العشوائي للفيديو أو أقل في مرحلة ما أثناء تشغيل هذه الألعاب.\n\nقم بالتمكين فقط في حالة نفاد ذاكرة الوصول العشوائي للفيديو في الألعاب المذكورة أعلاه. اتركه معطلا إذا لم تكن متأكدا.",
-        "de_DE": "Komprimiert ASTC-Texturen, um die VRAM-Nutzung zu reduzieren.\n\nZu den Spielen, die dieses Texturformat verwenden, gehören Astral Chain, Bayonetta 3, Fire Emblem Engage, Metroid Prime Remastered, Super Mario Bros. Wonder und The Legend of Zelda: Tears of the Kingdom.\n\nGrafikkarten mit 4GiB VRAM oder weniger werden beim Ausführen dieser Spiele wahrscheinlich irgendwann abstürzen.\n\nAktiviere diese Option nur, wenn Ihnen bei den oben genannten Spielen der VRAM ausgeht. Lass es aus, wenn du unsicher bist.",
+        "de_DE": "Komprimiert ASTC-Texturen, um die VRAM-Nutzung zu reduzieren.\n\nZu den Spielen, die dieses Texturformat verwenden, gehören Astral Chain, Bayonetta 3, Fire Emblem Engage, Metroid Prime Remastered, Super Mario Bros. Wonder und The Legend of Zelda: Tears of the Kingdom.\n\nGrafikkarten mit 4GiB VRAM oder weniger werden beim Ausführen dieser Spiele wahrscheinlich irgendwann abstürzen.\n\nAktiviere diese Option nur, wenn dir bei den oben genannten Spielen der VRAM ausgeht. Lasse es aus, wenn du dir unsicher bist.",
         "el_GR": "",
         "en_US": "Compresses ASTC textures in order to reduce VRAM usage.\n\nGames using this texture format include Astral Chain, Bayonetta 3, Fire Emblem Engage, Metroid Prime Remastered, Super Mario Bros. Wonder and The Legend of Zelda: Tears of the Kingdom.\n\nGraphics cards with 4GiB VRAM or less will likely crash at some point while running these games.\n\nEnable only if you're running out of VRAM on the aforementioned games. Leave OFF if unsure.",
         "es_ES": "Comprimir texturas ASTC para reducir uso de VRAM.\n\nJuegos que utilizan este formato de textura incluyen Astral Chain, Bayonetta 3, Fire Emblem Engage, Metroid Prime Remastered, Super Mario Bros. Wonder y The Legend of Zelda: Tears of the Kingdom.\n\nTarjetas gráficas con 4GiB de VRAM o menos probalemente se caeran en algún momento mientras que estén corriendo estos juegos.\n\nActivar solo si está quedan sin VRAM en los juegos antes mencionados. Desactívalo si no sabes qué hacer.",
@@ -21479,7 +21479,7 @@
       "ID": "SettingsShowConsoleRestartMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Die Konsole wird beim nächsten Start von Ryujinx verfügbar sein.",
         "el_GR": "",
         "en_US": "The console will be available the next time Ryujinx starts.",
         "es_ES": "La consola estará disponible la próxima vez que se inicie Ryujinx.",
@@ -21504,7 +21504,7 @@
       "ID": "SettingsGpuBackendRestartMessage",
       "Translations": {
         "ar_SA": "تم تعديل إعدادات الواجهة الخلفية للرسومات أو وحدة معالجة الرسومات. سيتطلب هذا إعادة التشغيل ليتم تطبيقه",
-        "de_DE": "Das Grafik-Backend oder die Grafikkarteneinstellungen wurden geändert. Ein Neustart ist erforderlich um diese Einstellungen anzuwenden.",
+        "de_DE": "Das Grafik-Backend oder die Grafikkarten-Einstellungen wurden geändert. Ein Neustart ist erforderlich, um diese Einstellungen anzuwenden.",
         "el_GR": "Οι ρυθμίσεις GPU έχουν αλλαχτεί. Θα χρειαστεί επανεκκίνηση του Ryujinx για να τεθούν σε ισχύ.",
         "en_US": "Graphics Backend or GPU settings have been modified. This will require a restart to be applied",
         "es_ES": "La configuración de la GPU o del back-end de los gráficos fue modificada. Es necesario reiniciar para que se aplique.",
@@ -21629,7 +21629,7 @@
       "ID": "SettingsEnableMacroHLE",
       "Translations": {
         "ar_SA": "تمكين Maro HLE",
-        "de_DE": "HLE Makros aktivieren",
+        "de_DE": "HLE-Makros aktivieren",
         "el_GR": "Ενεργοποίηση του Macro HLE",
         "en_US": "Enable Macro HLE",
         "es_ES": "Activar Macros HLE",
@@ -21654,7 +21654,7 @@
       "ID": "SettingsEnableMacroHLETooltip",
       "Translations": {
         "ar_SA": "محاكاة عالية المستوى لكود مايكرو وحدة معالجة الرسوميات.\n\nيعمل على تحسين الأداء، ولكنه قد يسبب خللا رسوميا في بعض الألعاب.\n\nاتركه مفعلا إذا لم تكن متأكدا.",
-        "de_DE": "High-Level-Emulation von GPU-Makrocode.\n\nVerbessert die Leistung, kann aber in einigen Spielen zu Grafikfehlern führen.\n\nBei Unsicherheit AKTIVIEREN.",
+        "de_DE": "Hochstufige Emulation von GPU-Makro-Code.\n\nVerbessert die Leistung, kann aber in einigen Spielen zu Grafikfehlern führen.\n\nBei Unsicherheit auf AKTIVIERT lassen.",
         "el_GR": "Προσομοίωση του κώδικα GPU Macro .\n\nΒελτιώνει την απόδοση, αλλά μπορεί να προκαλέσει γραφικά προβλήματα σε μερικά παιχνίδια.\n\nΑφήστε ΕΝΕΡΓΟ αν δεν είστε σίγουροι.",
         "en_US": "High-level emulation of GPU Macro code.\n\nImproves performance, but may cause graphical glitches in some games.\n\nLeave ON if unsure.",
         "es_ES": "Emulación alto-nivel del código de Macros de GPU\n\nIncrementa el rendimiento, pero puede causar errores gráficos en algunos juegos.\n\nDeja esta opción activada si no estás seguro.",
@@ -21679,7 +21679,7 @@
       "ID": "SettingsEnableColorSpacePassthrough",
       "Translations": {
         "ar_SA": "عبور مساحة اللون",
-        "de_DE": "Farbraum Passthrough",
+        "de_DE": "Farbraumdurchleitung",
         "el_GR": "Διέλευση Χρωματικού Χώρου",
         "en_US": "Color Space Passthrough",
         "es_ES": "Paso de Espacio de Color",
@@ -21704,7 +21704,7 @@
       "ID": "SettingsEnableColorSpacePassthroughTooltip",
       "Translations": {
         "ar_SA": "يوجه واجهة فولكان الخلفية لتمرير معلومات الألوان دون تحديد مساحة اللون. بالنسبة للمستخدمين الذين لديهم شاشات ذات نطاق واسع، قد يؤدي ذلك إلى الحصول على ألوان أكثر حيوية، على حساب صحة الألوان.",
-        "de_DE": "Weist das Vulkan-Backend an, Farbinformationen ohne Angabe eines Farbraums weiterzuleiten. Für Benutzer mit Wide-Gamut-Displays kann dies zu lebendigeren Farben führen, allerdings auf Kosten der Farbkorrektheit.",
+        "de_DE": "Weist das Vulkan-Backend an, Farbinformationen ohne Angabe eines Farbraums weiterzuleiten. Bei Nutzern mit Displays mit großem Farbraum kann dies zu lebendigeren Farben führen, allerdings auf Kosten der Farbkorrektheit.",
         "el_GR": "Σκηνοθετεί το σύστημα υποστήριξης του Vulkan για να περάσει από πληροφορίες χρώματος χωρίς να καθορίσει έναν χρωματικό χώρο. Για χρήστες με ευρείες οθόνες γκάμας, αυτό μπορεί να οδηγήσει σε πιο ζωηρά χρώματα, με κόστος την ορθότητα του χρώματος.",
         "en_US": "Directs the Vulkan backend to pass through color information without specifying a color space. For users with wide gamut displays, this may result in more vibrant colors, at the cost of color correctness.",
         "es_ES": "Dirige el backend de Vulkan a pasar a través de la información del color sin especificar un espacio de color. Para los usuarios con pantallas de gran gama, esto puede resultar en colores más vibrantes, a costa de la corrección del color.",
@@ -21779,7 +21779,7 @@
       "ID": "DeleteUserSave",
       "Translations": {
         "ar_SA": "هل تريد حذف حفظ المستخدم لهذه اللعبة؟",
-        "de_DE": "Möchtest du den Spielerstand für dieses Spiel löschen?",
+        "de_DE": "Möchtest du den Spielstand für dieses Spiel löschen?",
         "el_GR": "Επιθυμείτε να διαγράψετε το save χρήστη για το συγκεκριμένο παιχνίδι;",
         "en_US": "Do you want to delete user save for this game?",
         "es_ES": "¿Quieres borrar los datos de usuario de este juego?",
@@ -21854,7 +21854,7 @@
       "ID": "SaveManagerTitle",
       "Translations": {
         "ar_SA": "مدير الحفظ",
-        "de_DE": "Speicherdaten Manager",
+        "de_DE": "Speicherdaten-Verwalter",
         "el_GR": "Διαχειριστής Save",
         "en_US": "Save Manager",
         "es_ES": "Administrador de Datos de Guardado.",
@@ -22054,7 +22054,7 @@
       "ID": "GraphicsAATooltip",
       "Translations": {
         "ar_SA": "يتم تطبيق تنعيم الحواف على عرض اللعبة.\n\nسوف يقوم FXAA بتعتيم معظم الصورة، بينما سيحاول SMAA العثور على حواف خشنة وتنعيمها.\n\nلا ينصح باستخدامه مع فلتر FSR لتكبير.\n\nيمكن تغيير هذا الخيار أثناء تشغيل اللعبة بالنقر فوق \"تطبيق\" أدناه؛ يمكنك ببساطة تحريك نافذة الإعدادات جانبا والتجربة حتى تجد المظهر المفضل للعبة.\n\nاتركه على لا شيء إذا لم تكن متأكدا.",
-        "de_DE": "Wendet Anti-Aliasing auf das Rendering des Spiels an.\n\nFXAA verwischt den größten Teil des Bildes, während SMAA versucht, gezackte Kanten zu finden und sie zu glätten.\n\nEs wird nicht empfohlen, diese Option in Verbindung mit dem FSR-Skalierungsfilter zu verwenden.\n\nDiese Option kann geändert werden, während ein Spiel läuft, indem du unten auf \"Anwenden\" klickst; Du können das Einstellungsfenster einfach zur Seite schieben und experimentieren, bis das bevorzugte Aussehen für ein Spiel gefunden wurde.\n\nLass die Option auf NONE, wenn du unsicher bist.",
+        "de_DE": "Wendet Anti-Aliasing auf das Rendering des Spiels an.\n\nFXAA verwischt den größten Teil des Bildes, während SMAA versucht, gezackte Kanten zu finden und sie zu glätten.\n\nEs wird nicht empfohlen, diese Option in Verbindung mit dem FSR-Skalierungsfilter zu verwenden.\n\nDiese Option kann geändert werden, während ein Spiel läuft, indem du unten auf \"Anwenden\" klickst; Du kannst das Einstellungsfenster einfach zur Seite schieben und experimentieren, bis das bevorzugte Aussehen für ein Spiel gefunden wurde.\n\nLasse die Option auf KEINE, wenn du unsicher bist.",
         "el_GR": "",
         "en_US": "Applies anti-aliasing to the game render.\n\nFXAA will blur most of the image, while SMAA will attempt to find jagged edges and smooth them out.\n\nNot recommended to use in conjunction with the FSR scaling filter.\n\nThis option can be changed while a game is running by clicking \"Apply\" below; you can simply move the settings window aside and experiment until you find your preferred look for a game.\n\nLeave on NONE if unsure.",
         "es_ES": "Aplica antia-aliasing al rendereo del juego.\n\nFXAA desenfocará la mayor parte del la iamgen, mientras que SMAA intentará encontrar bordes irregulares y suavizarlos.\n\nNo se recomienda usar en conjunto con filtro de escala FSR.\n\nEsta opción puede ser modificada mientras que esté corriendo el juego haciendo click en \"Aplicar\" más abajo; simplemente puedes mover la ventana de configuración a un lado y experimentar hasta que encuentres tu estilo preferido para un juego.\n\nDejar en NADA si no está seguro.",
@@ -22129,7 +22129,7 @@
       "ID": "GraphicsScalingFilterTooltip",
       "Translations": {
         "ar_SA": "اختر فلتر التكبير الذي سيتم تطبيقه عند استخدام مقياس الدقة.\n\nيعمل Bilinear بشكل جيد مع الألعاب ثلاثية الأبعاد وهو خيار افتراضي آمن.\n\nيوصى باستخدام Nearest لألعاب البكسل الفنية.\n\nFSR 1.0 هو مجرد مرشح توضيحي، ولا ينصح باستخدامه مع FXAA أو SMAA.\n\nيمكن تغيير هذا الخيار أثناء تشغيل اللعبة بالنقر فوق \"تطبيق\" أدناه؛ يمكنك ببساطة تحريك نافذة الإعدادات جانبا والتجربة حتى تجد المظهر المفضل للعبة.\n\nاتركه على Bilinear إذا لم تكن متأكدا.",
-        "de_DE": "Wähle den Skalierungsfilter, der bei der Auflösungsskalierung angewendet werden soll.\n\nBilinear eignet sich gut für 3D-Spiele und ist eine sichere Standardoption.\n\nNearest wird für Pixel-Art-Spiele empfohlen.\n\nFSR 1.0 ist lediglich ein Schärfungsfilter und wird nicht für die Verwendung mit FXAA oder SMAA empfohlen.\n\nDiese Option kann geändert werden, während ein Spiel läuft, indem du unten auf \"Anwenden\" klicken; Du kannst das Einstellungsfenster einfach zur Seite schieben und experimentieren, bis das bevorzugtes Aussehen für ein Spiel gefunden wurde.\n\nBleibe auf BILINEAR, wenn du unsicher bist.",
+        "de_DE": "Wähle den Skalierungsfilter, der bei der Auflösungsskalierung angewendet werden soll.\n\nBilinear eignet sich gut für 3D-Spiele und ist eine sichere Standardoption.\n\nNächstgelegen wird für Pixel-Art-Spiele empfohlen.\n\nFSR 1.0 ist lediglich ein Schärfungsfilter und wird nicht für die Verwendung mit FXAA oder SMAA empfohlen.\n\nDiese Option kann geändert werden, während ein Spiel läuft, indem du unten auf \"Anwenden\" klickst; Du kannst das Einstellungsfenster einfach zur Seite schieben und experimentieren, bis das bevorzugtes Aussehen für ein Spiel gefunden wurde.\n\nBleibe auf BILINEAR, wenn du unsicher bist.",
         "el_GR": "",
         "en_US": "Choose the scaling filter that will be applied when using resolution scale.\n\nBilinear works well for 3D games and is a safe default option.\n\nNearest is recommended for pixel art games.\n\nFSR 1.0 is merely a sharpening filter, not recommended for use with FXAA or SMAA.\n\nArea scaling is recommended when downscaling resolutions that are larger than the output window. It can be used to achieve a supersampled anti-aliasing effect when downscaling by more than 2x.\n\nThis option can be changed while a game is running by clicking \"Apply\" below; you can simply move the settings window aside and experiment until you find your preferred look for a game.\n\nLeave on BILINEAR if unsure.",
         "es_ES": "Elija el filtro de escala que se aplicará al utilizar la escala de resolución.\n\nBilinear funciona bien para juegos 3D y es una opción predeterminada segura.\n\nSe recomienda el bilinear para juegos de pixel art.\n\nFSR 1.0 es simplemente un filtro de afilado, no se recomienda su uso con FXAA o SMAA.\n\nEsta opción se puede cambiar mientras se ejecuta un juego haciendo clic en \"Aplicar\" a continuación; simplemente puedes mover la ventana de configuración a un lado y experimentar hasta que encuentres tu estilo preferido para un juego.\n\nDéjelo en BILINEAR si no está seguro.",
@@ -22179,7 +22179,7 @@
       "ID": "GraphicsScalingFilterNearest",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Nächstes",
+        "de_DE": "Nächstgelegen",
         "el_GR": "",
         "en_US": "Nearest",
         "es_ES": "Cercano",
@@ -22229,7 +22229,7 @@
       "ID": "GraphicsScalingFilterArea",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Bereich",
         "el_GR": "",
         "en_US": "Area",
         "es_ES": "Área",
@@ -22279,7 +22279,7 @@
       "ID": "GraphicsScalingFilterLevelTooltip",
       "Translations": {
         "ar_SA": "اضبط مستوى وضوح FSR 1.0. الأعلى هو أكثر وضوحا.",
-        "de_DE": "FSR 1.0 Schärfelevel festlegen. Höher ist schärfer.",
+        "de_DE": "FSR 1.0 Schärfestufe festlegen. Höher ist schärfer.",
         "el_GR": "",
         "en_US": "Set FSR 1.0 sharpening level. Higher is sharper.",
         "es_ES": "Ajuste el nivel de nitidez FSR 1.0. Mayor es más nítido.",
@@ -22479,7 +22479,7 @@
       "ID": "NetworkInterfaceTooltip",
       "Translations": {
         "ar_SA": "واجهة الشبكة مستخدمة لميزات LAN/LDN.\n\nبالاشتراك مع VPN أو XLink Kai ولعبة تدعم LAN، يمكن استخدامها لتزييف اتصال الشبكة نفسها عبر الإنترنت.\n\nاتركه على الافتراضي إذا لم تكن متأكدا.",
-        "de_DE": "Die für LAN/LDN-Funktionen verwendete Netzwerkschnittstelle.\n\nIn Verbindung mit einem VPN oder XLink Kai und einem Spiel mit LAN-Unterstützung kann eine Verbindung mit demselben Netzwerk über das Internet vorgetäuscht werden.\n\nIm Zweifelsfall auf DEFAULT belassen.",
+        "de_DE": "Die für LAN/LDN-Funktionen verwendete Netzwerkschnittstelle.\n\nIn Verbindung mit einem VPN oder XLink Kai und einem Spiel mit LAN-Unterstützung kann eine Verbindung mit demselben Netzwerk über das Internet vorgetäuscht werden.\n\nIm Zweifelsfall auf VORGABE belassen.",
         "el_GR": "",
         "en_US": "The network interface used for LAN/LDN features.\n\nIn conjunction with a VPN or XLink Kai and a game with LAN support, can be used to spoof a same-network connection over the Internet.\n\nLeave on DEFAULT if unsure.",
         "es_ES": "Interfaz de red usada para características LAN/LDN.\n\njunto con una VPN o XLink Kai y un juego con soporte LAN, puede usarse para suplantar una conexión de la misma red a través de Internet.\n\nDeje en DEFAULT si no está seguro.",
@@ -22504,7 +22504,7 @@
       "ID": "NetworkInterfaceDefault",
       "Translations": {
         "ar_SA": "افتراضي",
-        "de_DE": "Standard",
+        "de_DE": "Vorgabe",
         "el_GR": "Προεπιλογή",
         "en_US": "Default",
         "es_ES": "Predeterminado",
@@ -22529,7 +22529,7 @@
       "ID": "PackagingShaders",
       "Translations": {
         "ar_SA": "تعبئة المظللات",
-        "de_DE": "Verpackt Shader",
+        "de_DE": "Schattierer werden verpackt",
         "el_GR": "Shaders Συσκευασίας",
         "en_US": "Packaging Shaders",
         "es_ES": "Empaquetando Sombreadores",
@@ -22554,7 +22554,7 @@
       "ID": "AboutChangelogButton",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Änderungsprotokoll anzeigen",
         "el_GR": "",
         "en_US": "View Changelog",
         "es_ES": "Ver el Changelog",
@@ -22579,7 +22579,7 @@
       "ID": "AboutChangelogButtonTooltipMessage",
       "Translations": {
         "ar_SA": "انقر لفتح سجل التغيير لهذا الإصدار في متصفحك الافتراضي.",
-        "de_DE": "Klicke hier, um das Changelog für diese Version in Ihrem Standardbrowser zu öffnen.",
+        "de_DE": "Klicke hier, um das Änderungsprotokoll für diese Version in deinem Standard-Browser zu öffnen.",
         "el_GR": "Κάντε κλικ για να ανοίξετε το αρχείο αλλαγών για αυτήν την έκδοση στο προεπιλεγμένο πρόγραμμα περιήγησης σας.",
         "en_US": "Click to open the changelog for this version in your default browser.",
         "es_ES": "Haga clic para abrir el registro de cambios para esta versión en su navegador predeterminado.",
@@ -22654,7 +22654,7 @@
       "ID": "MultiplayerModeTooltip",
       "Translations": {
         "ar_SA": "تغيير وضع LDN متعدد اللاعبين.\n\nسوف يقوم ldn_mitm بتعديل وظيفة اللعب المحلية/اللاسلكية المحلية في الألعاب لتعمل كما لو كانت شبكة LAN، مما يسمح باتصالات الشبكة المحلية نفسها مع محاكيات ريوجينكس الأخرى وأجهزة نينتندو سويتش المخترقة التي تم تثبيت وحدة ldn_mitm عليها.\n\nيتطلب وضع اللاعبين المتعددين أن يكون جميع اللاعبين على نفس إصدار اللعبة (على سبيل المثال، يتعذر على الإصدار 13.0.1 من سوبر سماش برذرز ألتميت الاتصال بالإصدار 13.0.0).\n\nاتركه معطلا إذا لم تكن متأكدا.",
-        "de_DE": "Ändert den LDN-Mehrspielermodus.\n\nldn_mitm ändert die lokale drahtlose/lokale Spielfunktionalität in Spielen so, dass sie wie ein LAN funktioniert und lokale, netzwerkgleiche Verbindungen mit anderen Ryujinx-Instanzen und gehackten Nintendo Switch-Konsolen ermöglicht, auf denen das ldn_mitm-Modul installiert ist.\n\nMultiplayer erfordert, dass alle Spieler die gleiche Spielversion verwenden (d.h. Super Smash Bros. Ultimate v13.0.1 kann sich nicht mit v13.0.0 verbinden).\n\nIm Zweifelsfall auf DISABLED lassen.",
+        "de_DE": "Ändert den LDN-Mehrspielermodus.\n\nldn_mitm ändert die lokale drahtlose/lokale Spielfunktionalität in Spielen so, dass sie wie ein LAN funktioniert und lokale, netzwerkgleiche Verbindungen mit anderen Ryujinx-Instanzen und gehackten Nintendo Switch-Konsolen ermöglicht, auf denen das ldn_mitm-Modul installiert ist.\n\nMehrspieler erfordert, dass alle Spieler die gleiche Spielversion verwenden (d.h. Super Smash Bros. Ultimate v13.0.1 kann sich nicht mit v13.0.0 verbinden).\n\nIm Zweifelsfall auf DEAKTIVIERT lassen.",
         "el_GR": "",
         "en_US": "Change LDN multiplayer mode.\n\nldn_mitm will modify local wireless/local play functionality in games to function as if it were LAN, allowing for local, same-network connections with other Ryujinx instances and hacked Nintendo Switch consoles that have the ldn_mitm module installed.\n\nMultiplayer requires all players to be on the same game version (i.e. Super Smash Bros. Ultimate v13.0.1 can't connect to v13.0.0).\n\nLeave DISABLED if unsure.",
         "es_ES": "Cambiar modo LDN multijugador.\n\nldn_mitm modificará la funcionalidad local de juego inalámbrico para funcionar como si fuera LAN, permitiendo locales conexiones de la misma red con otras instancias de Ryujinx y consolas hackeadas de Nintendo Switch que tienen instalado el módulo ldn_mitm.\n\nMultijugador requiere que todos los jugadores estén en la misma versión del juego (por ejemplo, Super Smash Bros. Ultimate v13.0.1 no se puede conectar a v13.0.0).\n\nDejar DESACTIVADO si no está seguro.",
@@ -22779,7 +22779,7 @@
       "ID": "MultiplayerDisableP2PTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Deaktiviert das P2P-Netzwerk-Hosting. Andere Teilnehmer werden über den Master-Server geleitet, anstatt eine direkte Verbindung zu dir herzustellen.",
+        "de_DE": "Deaktiviert das P2P-Netzwerk-Hosting. Andere Teilnehmer werden über den Meister-Server geleitet, anstatt eine direkte Verbindung zu dir herzustellen.",
         "el_GR": "",
         "en_US": "Disable P2P network hosting, peers will proxy through the master server instead of connecting to you directly.",
         "es_ES": "Desactivar el hosteo de red P2P, pares se conectarán a través del servidor maestro en lugar de conectarse directamente contigo.",
@@ -22804,7 +22804,7 @@
       "ID": "LdnPassphrase",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Netzwerk-Passphrase",
+        "de_DE": "Netzwerkkennwort",
         "el_GR": "",
         "en_US": "Network Passphrase:",
         "es_ES": "Frase de Contraseña de la Red:",
@@ -22829,7 +22829,7 @@
       "ID": "LdnPassphraseTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Du wirst nur gehostete Spiele sehen können, die dieselbe Passphrase wie du verwenden.",
+        "de_DE": "Du wirst nur gehostete Spiele sehen können, die dasselbe Kennwort wie du verwenden.",
         "el_GR": "",
         "en_US": "You will only be able to see hosted games with the same passphrase as you.",
         "es_ES": "Solo podrás ver los juegos hosteados con la misma frase de contraseña que tú.",
@@ -22854,7 +22854,7 @@
       "ID": "LdnPassphraseInputTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Gib eine Passphrase im Format Ryujinx-<8 Hex-Zeichen> ein. Du wirst nur gehostete Spiele sehen können, die dieselbe Passphrase wie du verwenden.",
+        "de_DE": "Gib ein Kennwort im Format Ryujinx-<8 Hex-Zeichen> ein. Du wirst nur gehostete Spiele sehen können, die dasselbe Kennwort wie du verwenden.",
         "el_GR": "",
         "en_US": "Enter a passphrase in the format Ryujinx-<8 hex chars>. You will only be able to see hosted games with the same passphrase as you.",
         "es_ES": "Ingresar una frase de contraseña en formato Ryujinx-<8 caracteres hexadecimales>. Solamente podrás ver juegos hosteados con la misma frase de contraseña que tú.",
@@ -22929,7 +22929,7 @@
       "ID": "GenLdnPassTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Generiert eine neue Passphrase, welche mit anderen Spielern geteilt werden kann.",
+        "de_DE": "Generiert ein neues Kennwort, welches mit anderen Spielern geteilt werden kann.",
         "el_GR": "",
         "en_US": "Generates a new passphrase, which can be shared with other players.",
         "es_ES": "Genera una nueva frase de contraseña, que puede ser compartida con otros jugadores.",
@@ -22979,7 +22979,7 @@
       "ID": "ClearLdnPassTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Löscht die jetzige Passphrase.",
+        "de_DE": "Löscht das aktuelle Kennwort und kehrt zum öffentlichen Netzwerk zurück.",
         "el_GR": "",
         "en_US": "Clears the current passphrase, returning to the public network.",
         "es_ES": "Borra la frase de contraseña actual, regresando a la red pública.",
@@ -23004,7 +23004,7 @@
       "ID": "InvalidLdnPassphrase",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Ungültige Passphrase! Muss im Format \"Ryujinx-<8 Hex Zeichen>\" sein",
+        "de_DE": "Ungültiges Kennwort! Muss im Format \"Ryujinx-<8 Hex Zeichen>\" sein",
         "el_GR": "",
         "en_US": "Invalid Passphrase! Must be in the format \"Ryujinx-<8 hex chars>\"",
         "es_ES": "Frase de Contraseña Inválida! Debe ser en formato \"Ryujinx-<8 caracteres hexadecimales>\"",
@@ -23129,7 +23129,7 @@
       "ID": "SettingsTabSystemVSyncModeCustom",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Benutzerdefinierte Bildwiederholrate",
         "el_GR": "",
         "en_US": "Custom Refresh Rate",
         "es_ES": "Frecuencia de Actualización Personalizada",
@@ -23154,7 +23154,7 @@
       "ID": "SettingsTabSystemVSyncModeTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Emulierte vertikale Synchronisation. \"Switch\" emuliert die 60Hz-Bildwiederholfrequenz der Switch. \"Unbounded\" ist eine unbegrenzte Bildwiederholfrequenz.",
+        "de_DE": "Emulierte vertikale Synchronisation. \"Switch\" emuliert die 60Hz-Bildwiederholrate der Switch. \"Unbegrenzt\" ist eine unbegrenzte Bildwiederholrate.",
         "el_GR": "",
         "en_US": "Emulated Vertical Sync. 'Switch' emulates the Switch's refresh rate of 60Hz. 'Unbounded' is an unbounded refresh rate.",
         "es_ES": "Sincronización vertical emulada. ‘Switch’ emula la frecuencia de actualización de la Switch de 60\u202FHz. ‘Sin límite’ es una frecuencia de actualización sin límite.",
@@ -23179,7 +23179,7 @@
       "ID": "SettingsTabSystemVSyncModeTooltipCustom",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Emulierte vertikale Synchronisation. \"Switch\" emuliert die 60Hz-Bildwiederholfrequenz der Switch. „Unbounded“ ist eine unbegrenzte Bildwiederholfrequenz. „Benutzerdefinierte Bildwiederholfrequenz“ emuliert die angegebene benutzerdefinierte Bildwiederholfrequenz.",
+        "de_DE": "Emulierte vertikale Synchronisation. \"Switch\" emuliert die 60Hz-Bildwiederholrate der Switch. „Unbegrenzt“ ist eine unbegrenzte Bildwiederholrate. „Benutzerdefinierte Bildwiederholrate emuliert die angegebene benutzerdefinierte Bildwiederholrate.",
         "el_GR": "",
         "en_US": "Emulated Vertical Sync. 'Switch' emulates the Switch's refresh rate of 60Hz. 'Unbounded' is an unbounded refresh rate. 'Custom Refresh Rate' emulates the specified custom refresh rate.",
         "es_ES": "Sincronización Vertical Emulada. ‘Switch’ emula la frecuencia de actualización de la Switch de 60\u202FHz. ‘Sin límite’ es una frecuencia de actualización sin límite. ‘Frecuencia de actualización personalizada’ emula la frecuencia de actualización personalizada especificada.",
@@ -23204,7 +23204,7 @@
       "ID": "SettingsTabSystemEnableCustomVSyncIntervalTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Ermöglicht es dem Benutzer, eine emulierte Bildwiederholfrequenz festzulegen. In einigen Titeln kann dies die Geschwindigkeit der Spiel-Logik erhöhen oder verringern. In anderen Titeln kann dies dazu führen, dass die FPS auf ein Vielfaches der Bildwiederholfrequenz begrenzt werden oder zu unvorhersehbarem Verhalten führen. Dies ist eine experimentelle Funktion, ohne Garantien dafür, wie sich das Gameplay auswirkt. \n\nLass diese Option deaktiviert, wenn du dir nicht sicher bist.",
+        "de_DE": "Ermöglicht es dem Benutzer, eine emulierte Bildwiederholrate festzulegen. In einigen Titeln kann dies die Geschwindigkeit der Spiellogik erhöhen oder verringern. In anderen Titeln kann dies dazu führen, dass die BpS auf ein Vielfaches der Bildwiederholrate begrenzt werden oder zu unvorhersehbarem Verhalten führen. Dies ist eine experimentelle Funktion, für die es keine Garantien hinsichtlich der Auswirkungen auf das Spielverhalten gibt. \n\nLasse diese Option deaktiviert, wenn du dir nicht sicher bist.",
         "el_GR": "",
         "en_US": "Allows the user to specify an emulated refresh rate. In some titles, this may speed up or slow down the rate of gameplay logic. In other titles, it may allow for capping FPS at some multiple of the refresh rate, or lead to unpredictable behavior. This is an experimental feature, with no guarantees for how gameplay will be affected. \n\nLeave OFF if unsure.",
         "es_ES": "Permite al usuario especificar una frecuencia de actualización emulada. En algunos títulos, esto puede acelerar o ralentizar la lógica del juego. En otros títulos, puede permitir limitar los FPS a algún múltiplo de la frecuencia de actualización, o provocar un comportamiento impredecible. Esta es una función experimental, sin garantías sobre cómo se verá afectada la jugabilidad.\n\nDéjalo DESACTIVADO si no estás seguro.",
@@ -23229,7 +23229,7 @@
       "ID": "SettingsTabSystemCustomVSyncIntervalValueTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Der Zielwert für die benutzerdefinierte Bildwiederholfrequenz.",
+        "de_DE": "Der Zielwert für die benutzerdefinierte Bildwiederholrate.",
         "el_GR": "",
         "en_US": "The custom refresh rate target value.",
         "es_ES": "El valor objetivo de la frecuencia de actualización personalizada.",
@@ -23254,7 +23254,7 @@
       "ID": "SettingsTabSystemCustomVSyncIntervalSliderTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Die benutzerdefinierte Bildwiederholfrequenz als Prozentsatz der normalen Switch-Bildwiederholfrequenz.",
+        "de_DE": "Die benutzerdefinierte Bildwiederholrate als Prozentsatz der normalen Switch-Bildwiederholrate.",
         "el_GR": "",
         "en_US": "The custom refresh rate, as a percentage of the normal Switch refresh rate.",
         "es_ES": "La frecuencia de actualización personalizada, expresada como un porcentaje de la frecuencia de actualización normal de la Switch.",
@@ -23279,7 +23279,7 @@
       "ID": "SettingsTabSystemCustomVSyncIntervalPercentage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Benutzerdefinierte Bildwiederholfrequenz %:",
+        "de_DE": "Benutzerdefinierte Bildwiederholrate %:",
         "el_GR": "",
         "en_US": "Custom Refresh Rate %:",
         "es_ES": "Frecuencia de Actualización Personalizada (%):",
@@ -23304,7 +23304,7 @@
       "ID": "SettingsTabSystemCustomVSyncIntervalValue",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Wert für benutzerdefinierte Bildwiederholfrequenz:",
+        "de_DE": "Wert für benutzerdefinierte Bildwiederholrate:",
         "el_GR": "",
         "en_US": "Custom Refresh Rate Value:",
         "es_ES": "Valor de la Frecuencia de Actualización Personalizada:",
@@ -23329,7 +23329,7 @@
       "ID": "SettingsTabSystemCustomVSyncInterval",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Intervall",
         "el_GR": "",
         "en_US": "Interval",
         "es_ES": "Intervalo",
@@ -23379,7 +23379,7 @@
       "ID": "SettingsTabHotkeysIncrementCustomVSyncIntervalHotkey",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Benutzerdefinierte Bildwiederholfrequenz erhöhen:",
+        "de_DE": "Benutzerdefinierte Bildwiederholrate erhöhen:",
         "el_GR": "",
         "en_US": "Raise Custom Refresh Rate:",
         "es_ES": "Aumentar la Frecuencia de Actualización Personalizada",
@@ -23404,7 +23404,7 @@
       "ID": "SettingsTabHotkeysDecrementCustomVSyncIntervalHotkey",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Benutzerdefinierte Bildwiederholfrequenz senken:",
+        "de_DE": "Benutzerdefinierte Bildwiederholrate verringern:",
         "el_GR": "",
         "en_US": "Lower Custom Refresh Rate:",
         "es_ES": "Disminuir la Frecuencia de Actualización Personalizada",
@@ -23429,7 +23429,7 @@
       "ID": "SettingsTabHotkeysTurboMode",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Turbomodus",
         "el_GR": "",
         "en_US": "Turbo Mode:",
         "es_ES": "Modo Turbo:",
@@ -23454,7 +23454,7 @@
       "ID": "SettingsTabHotkeysTurboModeToolTip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Die Tastenkombination für den Turbo-Modus.\nKonfiguriere das Verhalten des Turbo-Modus in den Ryujinx-CPU-Einstellungen.\n\nLasse die Einstellung auf unzugewiesen, wenn du dir nicht sicher bist",
         "el_GR": "",
         "en_US": "The Turbo mode hotkey.\nConfigure the behavior of Turbo mode in Ryujinx CPU settings.\n\nLeave Unbound if unsure.",
         "es_ES": "La tecla de acceso rápido del modo Turbo.\nConfigura el comportamiento del modo Turbo en los ajustes de CPU de Ryujinx.\n\nDejar sin asignar si no está seguro.",
@@ -23479,7 +23479,7 @@
       "ID": "SettingsTabHotkeysOnlyWhilePressed",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Nur bei gedrückter Taste",
         "el_GR": "",
         "en_US": "Only While Pressed",
         "es_ES": "Solo Mientras se Mantiene Pulsado",
@@ -23529,7 +23529,7 @@
       "ID": "CompatibilityListTitle",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Kompatibilitätsliste – {0} Einträge",
         "el_GR": "",
         "en_US": "Compatibility List - {0} entries",
         "es_ES": "Lista de Compatibilidad - {0} entradas",
@@ -23554,7 +23554,7 @@
       "ID": "CompatibilityListWarning",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Diese Kompatibilitätsliste könnte veraltete Einträge enthalten. Teste dennoch Spiele im \"Ingame\"-Status.",
+        "de_DE": "Diese Kompatibilitätsliste könnte veraltete Einträge enthalten. Teste dennoch Spiele im \"Im Spiel\"-Status.",
         "el_GR": "",
         "en_US": "This compatibility list might contain out of date entries.\nDo not be opposed to testing games in the \"Ingame\" status.",
         "es_ES": "Esta lista de compatibilidad podría contener entradas desactualizadas.\nNo dudes en probar los juegos en estado \"En el juego\".",
@@ -23579,7 +23579,7 @@
       "ID": "CompatibilityListSearchBoxWatermark",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Kompatibilitätseinträge durchsuchen...",
+        "de_DE": "Kompatibilitätseinträge suchen...",
         "el_GR": "",
         "en_US": "Search compatibility entries...",
         "es_ES": "Buscar entradas de compatibilidad…",
@@ -23604,7 +23604,7 @@
       "ID": "CompatibilityListSearchBoxWatermarkWithCount",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "{0} Kompatibilitätseinträge suchen...",
         "el_GR": "",
         "en_US": "Search {0} compatibility entries...",
         "es_ES": "Buscar {0} entradas de compatibilidad…",
@@ -23629,7 +23629,7 @@
       "ID": "CompatibilityListOpen",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Kompatibilitätsliste",
         "el_GR": "",
         "en_US": "Compatibility List",
         "es_ES": "Lista de Compatibilidad",
@@ -23729,7 +23729,7 @@
       "ID": "CompatibilityListStats",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Statistiken",
         "el_GR": "",
         "en_US": "Stats",
         "es_ES": null,
@@ -23829,7 +23829,7 @@
       "ID": "CompatibilityListMenus",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Menüs",
         "el_GR": "",
         "en_US": "Menus",
         "es_ES": "Menu",
@@ -23854,7 +23854,7 @@
       "ID": "CompatibilityListBoots",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Startet",
         "el_GR": "",
         "en_US": "Boots",
         "es_ES": "Inicia",
@@ -23879,7 +23879,7 @@
       "ID": "CompatibilityListNothing",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Nichts",
         "el_GR": "",
         "en_US": "Nothing",
         "es_ES": "Nada",
@@ -23904,7 +23904,7 @@
       "ID": "CompatibilityListPlayableTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Startet und läuft ohne jegliche Abstürze oder GPU-Fehler, und zwar mit einer Geschwindigkeit, die auf einem durchschnittlichen PC ein durchaus angenehmes Spielerlebnis ermöglicht.",
         "el_GR": "",
         "en_US": "Boots and plays without any crashes or GPU bugs of any kind, and at a speed fast enough to reasonably enjoy on an average PC.",
         "es_ES": "Se inicia y funciona sin ningún fallo ni error de GPU, y a una velocidad lo suficientemente rápida como para disfrutarlo razonablemente en un PC promedio",
@@ -23929,7 +23929,7 @@
       "ID": "CompatibilityListIngameTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Startet und gelangt ins Spielgeschehen, leidet jedoch unter einem oder mehreren der folgenden Probleme: Abstürze, Verklemmungenen, GPU-Fehler, störend schlechte Audioqualität oder eine schlichtweg zu geringe Geschwindigkeit. Das Spiel lässt sich unter Umständen dennoch vollständig durchspielen – allerdings nicht in der Art und Weise, wie es vom Entwickler vorgesehen war.",
         "el_GR": "",
         "en_US": "Boots and goes in-game but suffers from one or more of the following: crashes, deadlocks, GPU bugs, distractingly bad audio, or is simply too slow. Game still might able to be played all the way through, but not as the game is intended to play.",
         "es_ES": "Se inicia y llega al juego, pero presenta uno o más de los siguientes problemas: cierres inesperados, bloqueos, errores de GPU, audio molesto o deficiente, o simplemente es demasiado lento. El juego aún podría jugarse hasta el final, pero no como fue pensado originalmente.",
@@ -23954,7 +23954,7 @@
       "ID": "CompatibilityListMenusTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Startet und gelangt über den Titelbildschirm hinaus, erreicht jedoch nicht den eigentlichen Spielverlauf.",
         "el_GR": "",
         "en_US": "Boots and goes past the title screen but does not make it into main gameplay.",
         "es_ES": "Se inicia y pasa de la pantalla de título, pero no llega al juego principal.",
@@ -24104,7 +24104,7 @@
       "ID": "GameInfoRpcImage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Reichhaltiges Präsenzbild",
         "el_GR": "",
         "en_US": "Rich Presence Image",
         "es_ES": "Imagen Rich Presence",
@@ -24129,7 +24129,7 @@
       "ID": "GameInfoRpcDynamic",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Dynamische reichhaltige Präsenz",
         "el_GR": "",
         "en_US": "Dynamic Rich Presence",
         "es_ES": "Rich Presence Dinámico",
@@ -24154,7 +24154,7 @@
       "ID": "SettingsTabDebug",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Fehlerbehebung",
         "el_GR": "",
         "en_US": "Debug",
         "es_ES": null,
@@ -24179,7 +24179,7 @@
       "ID": "SettingsTabDebugTitle",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Fehlerbehebung",
         "el_GR": "",
         "en_US": "Debug",
         "es_ES": null,
@@ -24204,7 +24204,7 @@
       "ID": "SettingsTabDebugNote",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "WARNUNG: Nur für Entwickler; verringert die Leistung.",
         "el_GR": "",
         "en_US": "WARNING: For developer use only, will reduce performance",
         "es_ES": "ADVERTENCIA: Solo para uso de desarrolladores, reducirá el rendimiento",
@@ -24229,7 +24229,7 @@
       "ID": "SettingsTabDebugEnableGDBStub",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "GDB Stub aktivieren",
+        "de_DE": "GDB-Stub aktivieren",
         "el_GR": "",
         "en_US": "Enable GDB Stub",
         "es_ES": "Activar Stub GDB",
@@ -24254,7 +24254,7 @@
       "ID": "SettingsTabDebugGDBStubToggleTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Aktiviert den GDB Stub, welcher debugging an der Anwendung ermöglicht. Nur für Entwicklerzwecke!",
+        "de_DE": "Aktiviert den GDB-Stub, welcher Fehlerbehebung an der Anwendung ermöglicht. Nur für Entwicklerzwecke!",
         "el_GR": "",
         "en_US": "Enables the GDB stub which makes it possible to debug the running application. For development use only!",
         "es_ES": "Activa el stub GDB, lo que permite depurar la aplicación en ejecución. ¡Solo para uso de desarrollo!",
@@ -24329,7 +24329,7 @@
       "ID": "SettingsTabDebugSuspendOnStartTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Hält die Anwendung vor der Ausführung des ersten Befehls an, um Debugging vom frühestmöglichen Zeitpunkt an zu ermöglichen.",
+        "de_DE": "Hält die Anwendung vor der Ausführung des ersten Befehls an, um Fehlerbehebung vom frühestmöglichen Zeitpunkt an zu ermöglichen.",
         "el_GR": "",
         "en_US": "Suspends the application before executing the first instruction, allowing for debugging from the earliest point.",
         "es_ES": "Suspende la aplicación antes de ejecutar la primera instrucción, permitiendo depurar desde el punto más temprano.",
@@ -24354,7 +24354,7 @@
       "ID": "LdnGameListOpen",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "LDN Spiele-Liste",
+        "de_DE": "LDN-Spieleliste",
         "el_GR": "",
         "en_US": "LDN Game List",
         "es_ES": "Lista de Juegos LDN",
@@ -24404,7 +24404,7 @@
       "ID": "LdnGameListSearchBoxWatermark",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Suche {0} LDN Spiele...",
+        "de_DE": "Suche {0} LDN-Spiele...",
         "el_GR": "",
         "en_US": "Search {0} LDN games...",
         "es_ES": "Buscar {0} Juegos LDN...",
@@ -24629,7 +24629,7 @@
       "ID": "LdnGameListConnectionTypeMasterServerProxy",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Meister-Server-Proxy",
         "el_GR": "",
         "en_US": "Master Server Proxy",
         "es_ES": "Proxy del Servidor Maestro",
@@ -24804,7 +24804,7 @@
       "ID": "LdnGameListJoinableToolTip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Spiel ist beitrittbar, wenn es öffentlich ist, oder du die Passphrase kennst.",
+        "de_DE": "Spiel ist beitretbar, wenn es öffentlich ist, oder du das Kennwort kennst.",
         "el_GR": "",
         "en_US": "Game is joinable if it is public or if you know the passphrase.",
         "es_ES": "El juego es unible si es público o si conoces la frase de contraseña.",
@@ -24954,7 +24954,7 @@
       "ID": "LdnGameListPrivateToolTip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Du kannst dieses Spiel nur beitreten, wenn du die selbe LDN-Passphrase eingestellt hast.",
+        "de_DE": "Du kannst dieses Spiel nur beitreten, wenn du das selbe LDN-Kennwort eingestellt hast.",
         "el_GR": "",
         "en_US": "You can only join this game if you also have the same LDN Passphrase in your settings.",
         "es_ES": "Solo puedes unirte a este juego si también tienes la misma frase de contraseña LDN en tus ajustes.",
