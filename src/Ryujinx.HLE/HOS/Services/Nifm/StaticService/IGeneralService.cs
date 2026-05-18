@@ -129,6 +129,17 @@ namespace Ryujinx.HLE.HOS.Services.Nifm.StaticService
             return ResultCode.Success;
         }
 
+        [CommandCmif(17)]
+        // IsWirelessCommunicationEnabled() -> bool
+        public ResultCode IsWirelessCommunicationEnabled(ServiceCtx context)
+        {
+            context.ResponseData.Write(true);
+
+            Logger.Stub?.PrintStub(LogClass.ServiceNifm);
+
+            return ResultCode.Success;
+        }
+
         [CommandCmif(18)]
         // GetInternetConnectionStatus() -> nn::nifm::detail::sf::InternetConnectionStatus
         public ResultCode GetInternetConnectionStatus(ServiceCtx context)
@@ -162,6 +173,17 @@ namespace Ryujinx.HLE.HOS.Services.Nifm.StaticService
             int clientId = context.Memory.Read<int>(position);
 
             context.ResponseData.Write(GeneralServiceManager.Get(clientId).IsAnyInternetRequestAccepted);
+
+            return ResultCode.Success;
+        }
+
+        [CommandCmif(22)]
+        // IsAnyForegroundRequestAccepted() -> bool
+        public ResultCode IsAnyForegroundRequestAccepted(ServiceCtx context)
+        {
+            context.ResponseData.Write(false);
+
+            Logger.Stub?.PrintStub(LogClass.ServiceNifm);
 
             return ResultCode.Success;
         }
