@@ -29,7 +29,8 @@ namespace Ryujinx.Ava.UI.ViewModels
         public enum SortField
         {
             Name,
-            Saved
+            Saved,
+            Status
         }
 
         private const string _FileExtXCI = "XCI";
@@ -101,6 +102,7 @@ public bool AnySelected =>
             OnPropertiesChanged(
                 nameof(IsSortedByName),
                 nameof(IsSortedBySaved),
+                nameof(IsSortedByStatus),
                 nameof(SortingAscending),
                 nameof(SortingField),
                 nameof(SortingFieldName));
@@ -308,6 +310,10 @@ Dispatcher.UIThread.Post(() =>
                     case SortField.Saved:
                         result = x.PotentialSavingsB.CompareTo(y.PotentialSavingsB);
                         break;
+                            case SortField.Status:
+            // Trimmed first (CurrentSavingsB > 0)
+            result = x.CurrentSavingsB.CompareTo(y.CurrentSavingsB);
+            break;
                 }
 
                 if (!_viewModel.SortingAscending)
@@ -511,6 +517,7 @@ ProcessingMode.Untrimming => string.Format(
                 {
                     SortField.Name => LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerSortName],
                     SortField.Saved => LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerSortSaved],
+                    SortField.Status => "Status", // or localized string
                     _ => string.Empty,
                 };
             }
@@ -535,6 +542,10 @@ ProcessingMode.Untrimming => string.Format(
         {
             get => _sortField == SortField.Saved;
         }
+
+public bool IsSortedByStatus => _sortField == SortField.Status;
+
+
 
         public AvaloniaList<XCITrimmerFileModel> SelectedXCIFiles
         {

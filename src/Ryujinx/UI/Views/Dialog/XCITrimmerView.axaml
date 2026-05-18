@@ -25,12 +25,12 @@
                 Orientation="Horizontal"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center">
-<Button
-    MinWidth="120"
-    Margin="0,0,10,0"
-    Click="ToggleSelect">
-    <TextBlock Text="{Binding SelectToggleText}" />
-</Button>
+                <Button
+                    Margin="0,0,10,0"
+                    MinWidth="90"
+                    Click="ToggleSelect">
+                    <TextBlock Text="{Binding SelectToggleText}" />
+                </Button>
             </StackPanel>
             <StackPanel
                 Orientation="Horizontal"
@@ -60,6 +60,12 @@
                                         GroupName="Sort"
                                         IsChecked="{Binding IsSortedBySaved, Mode=OneTime}"
                                         Tag="Saved" />
+                                    <RadioButton
+                                        Checked="Sort_Checked"
+                                        Content="{ext:Locale XCITrimmer_XCITrimmerSortStatus}"
+                                        GroupName="Sort"
+                                        IsChecked="{Binding IsSortedByStatus, Mode=OneTime}"
+                                        Tag="Status" />
                                 </StackPanel>
                                 <Border
                                     Width="60"
