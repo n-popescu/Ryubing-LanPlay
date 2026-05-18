@@ -517,7 +517,7 @@ ProcessingMode.Untrimming => string.Format(
                 {
                     SortField.Name => LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerSortName],
                     SortField.Saved => LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerSortSaved],
-                    SortField.Status => "Status", // or localized string
+                    SortField.Status => LocaleManager.Instance[LocaleKeys.XCITrimmer_XCITrimmerSortStatus],
                     _ => string.Empty,
                 };
             }
