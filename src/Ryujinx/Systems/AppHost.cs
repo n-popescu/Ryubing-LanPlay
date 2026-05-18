@@ -770,7 +770,7 @@ namespace Ryujinx.Ava.Systems
 
                             await ContentDialogHelper.CreateInfoDialog(
                                 LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Dialog_Firmware_InstallerInstalledMessage, firmwareVersion.VersionString),
-                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Dialog_Firmware_InstallerEmbeddedMessageSuccess, firmwareVersion.VersionString),
+                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Dialog_Firmware_InstallerEmbeddedSuccessMessage, firmwareVersion.VersionString),
                                 LocaleManager.Instance[LocaleKeys.InputDialogOk],
                                 string.Empty,
                                 LocaleManager.Instance[LocaleKeys.RyujinxInfo]);

@@ -1135,7 +1135,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                                 if (ex is FormatException)
                                 {
                                     message = LocaleManager.Instance.UpdateAndGetDynamicValue(
-                                        LocaleKeys.Dialog_Keys_InstallerKeysNotFound, filename);
+                                        LocaleKeys.Dialog_Keys_InstallerInvalidKeysFoundMessage, filename);
                                 }
 
                                 await ContentDialogHelper.CreateErrorDialog(message);
@@ -1424,7 +1424,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(new FilePickerOpenOptions
             {
-                Title = LocaleManager.Instance[LocaleKeys.Dialog_Firmware_InstallFromFileDialogTitle],
+                Title = LocaleManager.Instance[LocaleKeys.Dialog_Firmware_InstallFromFileFilePickerTitle],
                 FileTypeFilter = new List<FilePickerFileType>
                 {
                     new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
@@ -1458,7 +1458,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             Optional<IStorageFolder> result = await StorageProvider.OpenSingleFolderPickerAsync(new FolderPickerOpenOptions
             {
-                Title = LocaleManager.Instance[LocaleKeys.Dialog_Firmware_InstallFromFolderDialogTitle]
+                Title = LocaleManager.Instance[LocaleKeys.Dialog_Firmware_InstallFromFolderFilePickerTitle]
             });
 
             if (result.HasValue)
@@ -1471,7 +1471,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(new FilePickerOpenOptions
             {
-                Title = LocaleManager.Instance[LocaleKeys.Dialog_Keys_InstallFromFileDialogTitle],
+                Title = LocaleManager.Instance[LocaleKeys.Dialog_Keys_InstallFromFileFilePickerTitle],
                 FileTypeFilter = new List<FilePickerFileType>
                 {
                     new("KEYS")
@@ -1493,7 +1493,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             Optional<IStorageFolder> result = await StorageProvider.OpenSingleFolderPickerAsync(new FolderPickerOpenOptions
             {
-                Title = LocaleManager.Instance[LocaleKeys.Dialog_Keys_InstallFromFolderDialogTitle]
+                Title = LocaleManager.Instance[LocaleKeys.Dialog_Keys_InstallFromFolderFilePickerTitle]
             });
 
             if (result.HasValue)

@@ -1,32 +1,32 @@
 {
   "Locales": [
     {
-      "ID": "InstallFromFileDialogTitle",
+      "ID": "InstallFromFileFilePickerTitle",
       "Translations": {
-        "ar_SA": "حدد ملف KEYS",
-        "de_DE": "Wählen Sie eine KEYS-Datei aus",
-        "el_GR": "Επιλέξτε ένα αρχείο KEYS",
-        "en_US": "Select a KEYS file",
-        "es_ES": "Selecciona un archivo KEYS",
-        "fr_FR": "Sélectionnez un fichier KEYS",
-        "he_IL": "בחר קובץ KEYS",
-        "it_IT": "Seleziona un file KEYS",
-        "ja_JP": "KEYS ファイルを選択してください",
-        "ko_KR": "KEYS 파일을 선택하세요",
-        "no_NO": "Velg en KEYS-fil",
-        "pl_PL": "Wybierz plik KEYS",
-        "pt_BR": "Selecione um arquivo KEYS",
-        "ru_RU": "Выберите файл KEYS",
-        "sv_SE": "Välj en KEYS-fil",
-        "th_TH": "เลือกไฟล์ KEYS",
-        "tr_TR": "Bir KEYS dosyasını seçin",
-        "uk_UA": "Виберіть файл KEYS",
-        "zh_CN": "选择一个 KEYS 文件",
-        "zh_TW": "選擇一個 KEYS 檔案"
+        "ar_SA": "حدد ملف KEYS لتثبيت المفاتيح منه",
+        "de_DE": "Wählen Sie eine KEYS-Datei zur Schlüsselinstallation aus",
+        "el_GR": "Επιλέξτε ένα αρχείο KEYS για εγκατάσταση κλειδιών",
+        "en_US": "Select a KEYS file to install keys from",
+        "es_ES": "Selecciona un archivo KEYS para instalar las claves",
+        "fr_FR": "Sélectionnez un fichier KEYS pour installer les clés",
+        "he_IL": "בחר קובץ KEYS להתקנת מפתחות",
+        "it_IT": "Seleziona un file KEYS da cui installare le chiavi",
+        "ja_JP": "キーをインストールする KEYS ファイルを選択してください",
+        "ko_KR": "키를 설치할 KEYS 파일을 선택하세요",
+        "no_NO": "Velg en KEYS-fil for å installere nøkler fra",
+        "pl_PL": "Wybierz plik KEYS, z którego chcesz zainstalować klucze",
+        "pt_BR": "Selecione um arquivo KEYS para instalar as chaves",
+        "ru_RU": "Выберите KEYS файл для установки ключей",
+        "sv_SE": "Välj en KEYS-fil för att installera nycklar från",
+        "th_TH": "เลือกไฟล์ KEYS เพื่อติดตั้งคีย์",
+        "tr_TR": "Anahtarları yüklemek için bir KEYS dosyası seçin",
+        "uk_UA": "Виберіть KEYS файл для встановлення ключів",
+        "zh_CN": "选择一个用于安装密钥的 KEYS 文件",
+        "zh_TW": "選擇一個用於安裝金鑰的 KEYS 檔案"
       }
     },
     {
-      "ID": "InstallFromFolderDialogTitle",
+      "ID": "InstallFromFolderFilePickerTitle",
       "Translations": {
         "ar_SA": "حدد مجلدًا لتثبيت المفاتيح منه",
         "de_DE": "Wählen Sie einen Ordner aus, um die Schlüssel zu installieren",
@@ -48,56 +48,6 @@
         "uk_UA": "Виберіть папку, з якої встановити ключі",
         "zh_CN": "选择一个文件夹以安装密钥",
         "zh_TW": "選擇一個資料夾以安裝密鑰"
-      }
-    },
-    {
-      "ID": "InstallerConfirmInstall",
-      "Translations": {
-        "ar_SA": "\nهل تريد المتابعة؟",
-        "de_DE": "\n\nMöchtest du fortfahren?",
-        "el_GR": "\n\nΘέλετε να συνεχίσετε;",
-        "en_US": "\n\nDo you want to continue?",
-        "es_ES": "\n\n¿Continuar?",
-        "fr_FR": "\n\nVoulez-vous continuer ?",
-        "he_IL": "\n\nהאם ברצונך להמשיך?",
-        "it_IT": "\n\nVuoi continuare?",
-        "ja_JP": "\n\n続けてよろしいですか?",
-        "ko_KR": "\n\n계속하시겠습니까?",
-        "no_NO": "\n\nVil du fortsette?",
-        "pl_PL": "\n\nCzy chcesz kontynuować?",
-        "pt_BR": "\n\nDeseja continuar?",
-        "ru_RU": "\n\nПродолжить?",
-        "sv_SE": "\n\nVill du fortsätta?",
-        "th_TH": "\n\nคุณต้องการดำเนินการต่อหรือไม่?",
-        "tr_TR": "\n\nDevam etmek istiyor musunuz?",
-        "uk_UA": "\n\nВи хочете продовжити?",
-        "zh_CN": "\n\n是否继续？",
-        "zh_TW": "\n\n您確定要繼續嗎?"
-      }
-    },
-    {
-      "ID": "InstallerKeysNotFound",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "An invalid Keys file was found in {0}.",
-        "es_ES": "Se halló un archivo Keys inválido en {0}.",
-        "fr_FR": "Un fichier de Clés invalide a été trouvé dans {0}.",
-        "he_IL": "",
-        "it_IT": "È stato trovato un file di chiavi non valido in {0}.",
-        "ja_JP": "",
-        "ko_KR": "{0}에서 잘못된 키 파일이 발견.",
-        "no_NO": "En ugyldig Keys-fil ble funnet i {0}.",
-        "pl_PL": "",
-        "pt_BR": "Um arquivo Chaves inválido foi encontrado em {0}.",
-        "ru_RU": "В {0} найден некорректный файл ключей.",
-        "sv_SE": "En ogiltig nyckelfil hittades i {0}.",
-        "th_TH": "พบไฟล์ Keys ที่ไม่ถูกต้องใน {0}.",
-        "tr_TR": "",
-        "uk_UA": "Виявлено неправильний файл ключів у теці {0}.",
-        "zh_CN": "在 {0} 发现了一个无效的密匙文件。",
-        "zh_TW": "找到無效的金鑰檔案 {0}。"
       }
     },
     {
@@ -151,6 +101,31 @@
       }
     },
     {
+      "ID": "InstallerConfirmInstall",
+      "Translations": {
+        "ar_SA": "\nهل تريد المتابعة؟",
+        "de_DE": "\n\nMöchtest du fortfahren?",
+        "el_GR": "\n\nΘέλετε να συνεχίσετε;",
+        "en_US": "\n\nDo you want to continue?",
+        "es_ES": "\n\n¿Continuar?",
+        "fr_FR": "\n\nVoulez-vous continuer ?",
+        "he_IL": "\n\nהאם ברצונך להמשיך?",
+        "it_IT": "\n\nVuoi continuare?",
+        "ja_JP": "\n\n続けてよろしいですか?",
+        "ko_KR": "\n\n계속하시겠습니까?",
+        "no_NO": "\n\nVil du fortsette?",
+        "pl_PL": "\n\nCzy chcesz kontynuować?",
+        "pt_BR": "\n\nDeseja continuar?",
+        "ru_RU": "\n\nПродолжить?",
+        "sv_SE": "\n\nVill du fortsätta?",
+        "th_TH": "\n\nคุณต้องการดำเนินการต่อหรือไม่?",
+        "tr_TR": "\n\nDevam etmek istiyor musunuz?",
+        "uk_UA": "\n\nВи хочете продовжити?",
+        "zh_CN": "\n\n是否继续？",
+        "zh_TW": "\n\n您確定要繼續嗎?"
+      }
+    },
+    {
       "ID": "InstallerWaitMessage",
       "Translations": {
         "ar_SA": "جارٍ تثبيت المفاتيح...",
@@ -198,6 +173,31 @@
         "uk_UA": "Нові ключі встановлено.",
         "zh_CN": "已成功安装新密匙文件。",
         "zh_TW": "成功安裝新增的金鑰檔案。"
+      }
+    },
+    {
+      "ID": "InstallerInvalidKeysFoundMessage",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "An invalid Keys file was found in {0}.",
+        "es_ES": "Se halló un archivo Keys inválido en {0}.",
+        "fr_FR": "Un fichier de Clés invalide a été trouvé dans {0}.",
+        "he_IL": "",
+        "it_IT": "È stato trovato un file di chiavi non valido in {0}.",
+        "ja_JP": "",
+        "ko_KR": "{0}에서 잘못된 키 파일이 발견.",
+        "no_NO": "En ugyldig Keys-fil ble funnet i {0}.",
+        "pl_PL": "",
+        "pt_BR": "Um arquivo Chaves inválido foi encontrado em {0}.",
+        "ru_RU": "В {0} найден некорректный файл ключей.",
+        "sv_SE": "En ogiltig nyckelfil hittades i {0}.",
+        "th_TH": "พบไฟล์ Keys ที่ไม่ถูกต้องใน {0}.",
+        "tr_TR": "",
+        "uk_UA": "Виявлено неправильний файл ключів у теці {0}.",
+        "zh_CN": "在 {0} 发现了一个无效的密匙文件。",
+        "zh_TW": "找到無效的金鑰檔案 {0}。"
       }
     }
   ]
