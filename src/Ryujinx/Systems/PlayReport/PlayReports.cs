@@ -123,8 +123,8 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 [ "010051f0207b2000", "0100ca502552a000" ], // Tomodachi Life: Living the Dream + Demo
                 spec => spec
                     .WithDescription(
-                        "based on your mii count, total money, and fountain level.")
-                    .AddMultiValueFormatter(["CountMii", "FountainLevel", "Money"], TomodachiLifeLTD_Status)
+                        "based on your total Mii count and island level.")
+                    .AddValueFormatter("Common", TomodachiLifeLTD_Status)
             )
         );
 

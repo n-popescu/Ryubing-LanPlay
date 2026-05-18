@@ -1070,13 +1070,15 @@ namespace Ryujinx.Ava.Systems.PlayReport
             _ => FormattedValue.ForceReset
         };
 
-        private static FormattedValue TomodachiLifeLTD_Status(MultiValue values)
+        private static FormattedValue TomodachiLifeLTD_Status(SingleValue value)
         {
-            int miiCount = values.Matched[0].IntValue;
-            int fountainLevel = values.Matched[1].IntValue;
-            int money = values.Matched[2].IntValue;
-                
-            return $"Looking after {"Mii".ToQuantity(miiCount)}, Fountain Lvl. {fountainLevel}, {((float)money / 100):C2}";
+            MessagePackObject messagePackObject = value.Matched.PackedValue;
+            MessagePackObjectDictionary messagePackObjectDictionary = messagePackObject.AsDictionary();
+            
+            int miiCount = messagePackObjectDictionary["MiiNum"].AsInt32();
+            int fountainLevel = messagePackObjectDictionary["FountainLevel"].AsInt32();
+            
+            return $"Looking after {"Mii".ToQuantity(miiCount)}, with an island level of {fountainLevel}";
         }
     }
 }
