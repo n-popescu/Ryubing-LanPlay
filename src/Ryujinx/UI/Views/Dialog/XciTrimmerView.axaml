@@ -221,14 +221,14 @@
                         MinWidth="90"
                         Click="Trim"
                         IsEnabled="{Binding CanTrim}">
-                        <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerTrim}" />
+                        <TextBlock Text="{ext:Locale XCITrimmer_TrimButton}" />
                     </Button>
                     <Button
                         Name="UntrimButton"
                         MinWidth="90"
                         Click="Untrim"
                         IsEnabled="{Binding CanUntrim}">
-                        <TextBlock Text="{ext:Locale XCITrimmer_XCITrimmerUntrim}" />
+                        <TextBlock Text="{ext:Locale XCITrimmer_UntrimButton}" />
                     </Button>
                 </StackPanel>
                 <StackPanel

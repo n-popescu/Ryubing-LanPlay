@@ -451,7 +451,7 @@
       }
     },
     {
-      "ID": "XCITrimmerTrim",
+      "ID": "TrimButton",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -476,7 +476,7 @@
       }
     },
     {
-      "ID": "XCITrimmerUntrim",
+      "ID": "UntrimButton",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
