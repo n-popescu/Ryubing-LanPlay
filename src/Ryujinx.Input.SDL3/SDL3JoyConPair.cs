@@ -1,4 +1,5 @@
 using Ryujinx.Common.Configuration.Hid;
+using Ryujinx.HLE.HOS.Services.Hid;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -59,6 +60,13 @@ namespace Ryujinx.Input.SDL3
         public bool IsPressed(GamepadButtonInputId inputId)
         {
             return left.IsPressed(inputId) || right.IsPressed(inputId);
+        }
+
+        public bool HDRumble(VibrationValue left, VibrationValue right)
+        {
+            // return _hdRumble?.HdRumble(left, right) ?? false;
+            // TODO: Track rumble and motion on both controllers
+            return false;
         }
 
         public void Rumble(float lowFrequency, float highFrequency, uint durationMs)

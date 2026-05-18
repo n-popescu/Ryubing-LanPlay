@@ -80,10 +80,7 @@ namespace Ryujinx.Input
         /// </summary>
         /// <param name="left">The vibration data for the left side</param>
         /// <param name="right">The vibration data for the right side</param>
-        bool HDRumble(VibrationValue left, VibrationValue right)
-        {
-            return false;
-        }
+        bool HDRumble(VibrationValue left, VibrationValue right);
 
         /// <summary>
         /// Starts a rumble effect on the gamepad.

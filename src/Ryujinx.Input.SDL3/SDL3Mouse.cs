@@ -1,5 +1,6 @@
 using Ryujinx.Common.Configuration.Hid;
 using Ryujinx.Common.Logging;
+using Ryujinx.HLE.HOS.Services.Hid;
 using System;
 using System.Drawing;
 using System.Numerics;
@@ -63,6 +64,11 @@ namespace Ryujinx.Input.SDL3
         }
 
         public bool IsPressed(GamepadButtonInputId inputId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HDRumble(VibrationValue left, VibrationValue right)
         {
             throw new NotImplementedException();
         }
