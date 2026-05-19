@@ -1283,7 +1283,6 @@ namespace Ryujinx.Ava.UI.ViewModels
                         throw new ArgumentException($"Unknown Progress Handler type {typeof(T)}");
                 }
             });
-            SplashTextHelper.RefreshSplash();
         }
 
         private void PrepareLoadScreen()

@@ -25,11 +25,6 @@ namespace Ryujinx.Common
 
         private static string _Final_Splash = "";
 
-        public static void RefreshSplash()
-        {
-            _Final_Splash = _Get_Lang_Json();
-        }
-
         public static string GetSplash()
         {
             if (string.IsNullOrEmpty(_Final_Splash))
