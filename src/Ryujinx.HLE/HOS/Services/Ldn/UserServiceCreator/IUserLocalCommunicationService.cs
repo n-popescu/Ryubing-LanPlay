@@ -459,7 +459,6 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
             }
             
             Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, $"ScanImpl: resultCode = {resultCode}");
-            Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"ScanImpl: resultCode={resultCode}, state={_state}, private={isPrivate}");
             return resultCode;
         }
 
@@ -485,7 +484,6 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
             }
 
             Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, $"ScanInternal: availableGames = {availableGames}");
-            Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"ScanInternal: availableGames={availableGames.Length}, channel={channel}");
             return ResultCode.Success;
         }
 
@@ -538,14 +536,12 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
             if (_nifmResultCode != ResultCode.Success)
             {
                 Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, $"OpenAccessPoint: _nifmResultCode = {_nifmResultCode}");
-                Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"OpenAccessPoint: nifmResultCode={_nifmResultCode}, state={_state}");
                 return _nifmResultCode;
             }
 
             if (_state != NetworkState.Initialized)
             {
                 Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, "OpenAccessPoint: Invalid state!");
-                Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"OpenAccessPoint: invalid state={_state}");
                 return ResultCode.InvalidState;
             }
 
@@ -557,7 +553,6 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
 
             // NOTE: Calls nifm service and return related result codes.
             //       Since we use our own implementation we can return ResultCode.Success.
-            Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"OpenAccessPoint: state={_state}");
 
             return ResultCode.Success;
         }
@@ -635,7 +630,6 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
             if (_nifmResultCode != ResultCode.Success)
             {
                 Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, $"CreateNetworkImpl: _nifmResultCode = {_nifmResultCode}");
-                Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"CreateNetworkImpl: nifmResultCode={_nifmResultCode}, state={_state}, private={isPrivate}");
                 return _nifmResultCode;
             }
 
@@ -680,7 +674,6 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
                             else
                             {
                                 Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, "CreateNetworkImpl: Invalid state!");
-                                Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"CreateNetworkImpl: invalid state={_state}, private={isPrivate}");
                                 return ResultCode.InvalidState;
                             }
                         }
@@ -688,7 +681,6 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
                 }
             }
 
-            Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"CreateNetworkImpl: invalid argument, state={_state}, private={isPrivate}");
             return ResultCode.InvalidArgument;
         }
 
@@ -855,14 +847,12 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
             if (_nifmResultCode != ResultCode.Success)
             {
                 Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, $"OpenStation: _nifmResultCode = {_nifmResultCode}");
-                Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"OpenStation: nifmResultCode={_nifmResultCode}, state={_state}");
                 return _nifmResultCode;
             }
 
             if (_state != NetworkState.Initialized)
             {
                 Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, "OpenStation: Invalid state!");
-                Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"OpenStation: invalid state={_state}");
                 return ResultCode.InvalidState;
             }
 
@@ -877,7 +867,6 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
             //       Since we use our own implementation we can return ResultCode.Success.
             
             Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, $"OpenStation: _station = {_station}");
-            Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"OpenStation: state={_state}");
 
             return ResultCode.Success;
         }
@@ -976,7 +965,6 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
             if (_nifmResultCode != ResultCode.Success)
             {
                 Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, $"ConnectImpl: _nifmResultCode = {_nifmResultCode}");
-                Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"ConnectImpl: nifmResultCode={_nifmResultCode}, state={_state}, private={isPrivate}");
                 return _nifmResultCode;
             }
 
@@ -1022,7 +1010,6 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
             }
 
             Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, $"ConnectImpl: resultCode = {resultCode}");
-            Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"ConnectImpl: resultCode={resultCode}, state={_state}, private={isPrivate}");
 
             return resultCode;
         }
@@ -1240,7 +1227,6 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
             }
 
             Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, $"InitializeImpl: resultCode = {resultCode}");
-            Logger.Info?.PrintMsg(LogClass.ServiceLdn, $"InitializeImpl: resultCode={resultCode}, state={_state}, nifmRequestId={nifmRequestId}");
             return resultCode;
         }
 
