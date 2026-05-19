@@ -169,17 +169,37 @@ namespace Ryujinx.Input.SDL3
             }
             
             bool match = true;
+            int total = 0;
             
-            for (int i = 0; i < (int) length; i++)
+            for (int i = 2; i < (int) length; i++)
             {
                 if (dataArray[i] != _lastRumbleData[i])
                 {
                     match = false;
-                    break;
+                }
+
+                if (dataArray[i] == 0)
+                {
+                    total += dataArray[i];
                 }
             }
             
-            if (!match)
+            // Mario Kart 8 Deluxe sends rumble packets where the amplitude is zero, but the frequency isn't.
+            // It's likely that the hardware accounts for this, but on the off-chance it doesn't, we did.
+            byte* head = data;
+            if ((dataArray[2] == 0 && dataArray[4] == 0 && dataArray[6] == 0 && dataArray[8] == 0)     // frequency
+                || (dataArray[3] == 0 && dataArray[5] == 0 && dataArray[7] == 0 && dataArray[9] == 0)) // amplitude
+            {
+                for (int i = 2; i < (int)length; i++)
+                {
+                    *data = 0;
+                    data++;
+                }
+                total = 0;
+            }
+            data = head;
+            
+            if (!match || total == 0)
             {
                 result = SDL_hid_write(_hidHandle, data, length);
                 Buffer.BlockCopy(dataArray, 0, _lastRumbleData, 0, (int) length);
