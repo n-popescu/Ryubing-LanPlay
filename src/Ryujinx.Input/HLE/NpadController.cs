@@ -5,7 +5,6 @@ using Ryujinx.Common.Configuration.Hid.Controller.Motion;
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Services.Hid;
 using System;
-using System.Buffers;
 using System.Collections.Concurrent;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -555,34 +554,36 @@ namespace Ryujinx.Input.HLE
         {
             if (queue.TryDequeue(out (VibrationValue, VibrationValue) dualVibrationValue))
             {
-                if (_config is StandardControllerInputConfig controllerConfig && controllerConfig.Rumble.EnableRumble)
+                if (_config is not StandardControllerInputConfig controllerConfig ||
+                    !controllerConfig.Rumble.EnableRumble)
                 {
-                    VibrationValue leftVibrationValue = dualVibrationValue.Item1;
-                    VibrationValue rightVibrationValue = dualVibrationValue.Item2;
+                    return;
+                }
+                
+                VibrationValue leftVibrationValue = dualVibrationValue.Item1;
+                VibrationValue rightVibrationValue = dualVibrationValue.Item2;
                     
+                leftVibrationValue.AmplitudeLow *= controllerConfig.Rumble.WeakRumble;
+                leftVibrationValue.AmplitudeHigh *= controllerConfig.Rumble.StrongRumble;
+                rightVibrationValue.AmplitudeLow *= controllerConfig.Rumble.WeakRumble;
+                rightVibrationValue.AmplitudeHigh *= controllerConfig.Rumble.StrongRumble;
+                
+                if (_gamepad?.HDRumble(leftVibrationValue, rightVibrationValue) == false)
+                {
                     float low = Math.Min(1f, (float)((rightVibrationValue.AmplitudeLow * 0.85 + rightVibrationValue.AmplitudeHigh * 0.15) * controllerConfig.Rumble.StrongRumble));
                     float high = Math.Min(1f, (float)((leftVibrationValue.AmplitudeLow * 0.15 + leftVibrationValue.AmplitudeHigh * 0.85) * controllerConfig.Rumble.WeakRumble));
-                    
-                    leftVibrationValue.AmplitudeLow *= controllerConfig.Rumble.WeakRumble;
-                    leftVibrationValue.AmplitudeHigh *= controllerConfig.Rumble.StrongRumble;
-                    rightVibrationValue.AmplitudeLow *= controllerConfig.Rumble.WeakRumble;
-                    rightVibrationValue.AmplitudeHigh *= controllerConfig.Rumble.StrongRumble;
-
-                    if (_gamepad?.HDRumble(leftVibrationValue, rightVibrationValue) == false)
-                    {
-                        _gamepad?.Rumble(low, high, uint.MaxValue);
-                    }
-
-                    Logger.Debug?.Print(LogClass.Hid, $"Effect for {controllerConfig.PlayerIndex} " +
-                        $"L.low.amp={leftVibrationValue.AmplitudeLow}, " +
-                        $"L.high.amp={leftVibrationValue.AmplitudeHigh}, " +
-                        $"L.low.freq={leftVibrationValue.FrequencyLow}, " +
-                        $"L.high.freq={leftVibrationValue.FrequencyHigh}, " +
-                        $"R.low.amp={rightVibrationValue.AmplitudeLow}, " +
-                        $"R.high.amp={rightVibrationValue.AmplitudeHigh} " +
-                        $"R.low.freq={rightVibrationValue.FrequencyLow}, " +
-                        $"R.high.freq={rightVibrationValue.FrequencyHigh}");
+                    _gamepad?.Rumble(low, high, 0xFFFFFFFF);
                 }
+                
+                Logger.Debug?.Print(LogClass.Hid, $"Effect for {controllerConfig.PlayerIndex} " +
+                                                  $"L.low.amp={leftVibrationValue.AmplitudeLow}, " +
+                                                  $"L.high.amp={leftVibrationValue.AmplitudeHigh}, " +
+                                                  $"L.low.freq={leftVibrationValue.FrequencyLow}, " +
+                                                  $"L.high.freq={leftVibrationValue.FrequencyHigh}, " +
+                                                  $"R.low.amp={rightVibrationValue.AmplitudeLow}, " +
+                                                  $"R.high.amp={rightVibrationValue.AmplitudeHigh} " +
+                                                  $"R.low.freq={rightVibrationValue.FrequencyLow}, " +
+                                                  $"R.high.freq={rightVibrationValue.FrequencyHigh}");
             }
         }
     }

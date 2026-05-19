@@ -1,4 +1,6 @@
+using Gommon;
 using Ryujinx.Common.Configuration.Hid;
+using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Services.Hid;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,7 +71,7 @@ namespace Ryujinx.Input.SDL3
             return false;
         }
 
-        public void Rumble(float lowFrequency, float highFrequency, uint durationMs)
+        public bool Rumble(float lowFrequency, float highFrequency, uint durationMs)
         {
             if (lowFrequency != 0)
             {
@@ -86,6 +88,15 @@ namespace Ryujinx.Input.SDL3
                 left.Rumble(0, 0, durationMs);
                 right.Rumble(0, 0, durationMs);
             }
+
+            if (!SDL_GetError().IsNullOrEmpty())
+            {
+                Logger.Error?.PrintMsg(LogClass.Hid, SDL_GetError());
+                SDL_ClearError();
+                return false;
+            }
+
+            return true;
         }
 
         public void SetConfiguration(InputConfig configuration)

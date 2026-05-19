@@ -73,7 +73,7 @@ namespace Ryujinx.Input.SDL3
             throw new NotImplementedException();
         }
 
-        public void Rumble(float lowFrequency, float highFrequency, uint durationMs)
+        public bool Rumble(float lowFrequency, float highFrequency, uint durationMs)
         {
             throw new NotImplementedException();
         }

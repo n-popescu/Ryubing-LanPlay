@@ -402,9 +402,9 @@ namespace Ryujinx.Input.SDL3
             return false;
         }
         
-        public void Rumble(float lowFrequency, float highFrequency, uint durationMs)
+        public bool Rumble(float lowFrequency, float highFrequency, uint durationMs)
         {
-            // No operations
+            return false;
         }
 
         public Vector3 GetMotionData(MotionInputId inputId)
