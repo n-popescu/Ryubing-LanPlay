@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Ryujinx.Common.Logging;
 using Gommon;
 using Ryujinx.Ava.Systems.Configuration;
+using System;
 using System.Text.Json;
 
 namespace Ryujinx.Common
@@ -41,6 +42,16 @@ namespace Ryujinx.Common
             }
 
             return $"{_Final_Splash}";
+        }
+
+        public static string GetTitleSplash()
+        {
+            if (OperatingSystem.IsMacOS())
+            {
+                return "";
+            }
+
+            return $" - {GetSplash()}";
         }
         
         private static _Splash_Locales _Splash_Json;
