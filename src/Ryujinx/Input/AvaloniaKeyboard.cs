@@ -152,7 +152,7 @@ namespace Ryujinx.Ava.Input
 
         public void SetTriggerThreshold(float triggerThreshold)
         {
-            // No operations.
+            // No operations
         }
 
         public bool HDRumble(VibrationValue left, VibrationValue right)
@@ -160,9 +160,9 @@ namespace Ryujinx.Ava.Input
             return false;
         }
 
-        public void Rumble(float lowFrequency, float highFrequency, uint durationMs)
+        public bool Rumble(float lowFrequency, float highFrequency, uint durationMs)
         {
-            // No operations.
+            return false;
         }
 
         public Vector3 GetMotionData(MotionInputId inputId) => Vector3.Zero;

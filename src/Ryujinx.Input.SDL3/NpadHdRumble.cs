@@ -3,6 +3,7 @@ using Ryujinx.HLE.HOS.Services.Hid;
 using SDL;
 using static SDL.SDL3;
 using System;
+using System.Runtime.InteropServices;
 
 namespace Ryujinx.Input.SDL3
 {
@@ -14,6 +15,8 @@ namespace Ryujinx.Input.SDL3
         private readonly SDL_hid_device* _hidHandle;
 
         private int _globalCount;
+        private readonly byte[] _lastRumbleData = new byte[10];
+        private ulong _lastWriteTicks;
 
         private NpadHdRumble(SDL_hid_device* hidHandle)
         {
@@ -29,7 +32,7 @@ namespace Ryujinx.Input.SDL3
             }
 
             ushort product = SDL_GetGamepadProduct(gamepadHandle);
-            if (Enum.IsDefined(typeof(HDRumbleSupported), product))
+            if (!Enum.IsDefined(typeof(HDRumbleSupported), product))
             {
                 return null;
             }
@@ -59,24 +62,26 @@ namespace Ryujinx.Input.SDL3
             buf[8] = (byte)(encRightLowFreq + ((encRightLowAmp >> 8) & 0xFF));
             buf[9] = (byte)(encRightLowAmp & 0xFF);
 
-            if (_globalCount > 0x5)
+            if (_globalCount > 0xF)
             {
                 _globalCount = 0x0;
             }
 
             fixed (byte* ptr = buf)
             {
-                if (SDL_hid_write(_hidHandle, ptr, (nuint)buf.Length) == -1)
+                if (SendHDRumble(ptr, (nuint)buf.Length) < 0)
                 {
-                    Logger.Error?.PrintMsg(LogClass.Hid, SDL_GetError());
-                    SDL_ClearError();
+                    if (!String.IsNullOrEmpty(SDL_GetError()))
+                    {
+                        Logger.Error?.PrintMsg(LogClass.Hid, SDL_GetError());
+                        SDL_ClearError();
+                    }
                     return false;
                 }
             }
             
             return true;
         }
-
 
         private static int EncodeLowFreq(float lowFreq)
         {
@@ -149,7 +154,41 @@ namespace Ryujinx.Input.SDL3
                 EncodeHighFreq(right.FrequencyHigh),
                 EncodeHighAmp(right.AmplitudeHigh));
         }
-
+        
+        public int SendHDRumble(byte* data, nuint length)
+        {
+            byte[] dataArray = new ReadOnlySpan<byte>(data, (int) length).ToArray();
+            int result = 0;
+            ulong currentTicks = SDL_GetTicks();
+            
+            // Ditch rumble if we haven't hit the poll-rate yet.
+            if ((currentTicks - _lastWriteTicks) < 8) // https://docs.handheldlegend.com/s/progcc-3/doc/lag-comparison-aAR1mV3JLX
+            {
+                result = 1;
+                return result;
+            }
+            
+            bool match = true;
+            
+            for (int i = 0; i < (int) length; i++)
+            {
+                if (dataArray[i] != _lastRumbleData[i])
+                {
+                    match = false;
+                    break;
+                }
+            }
+            
+            if (!match)
+            {
+                result = SDL_hid_write(_hidHandle, data, length);
+                Buffer.BlockCopy(dataArray, 0, _lastRumbleData, 0, (int) length);
+                _lastWriteTicks = currentTicks;
+            }
+            
+            return result;
+        }
+        
         public void Dispose()
         {
             SDL_hid_close(_hidHandle);
