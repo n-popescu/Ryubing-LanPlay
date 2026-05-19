@@ -79,7 +79,7 @@ namespace Ryujinx.Input.SDL3
                     return false;
                 }
             }
-            
+
             return true;
         }
 
@@ -154,24 +154,24 @@ namespace Ryujinx.Input.SDL3
                 EncodeHighFreq(right.FrequencyHigh),
                 EncodeHighAmp(right.AmplitudeHigh));
         }
-        
+
         public int SendHDRumble(byte* data, nuint length)
         {
             int result = 0;
             ulong currentTicks = SDL_GetTicks();
-            
+
             // Ditch rumble if we haven't hit the poll-rate yet.
             if ((currentTicks - _lastWriteTicks) < 8) // https://docs.handheldlegend.com/s/progcc-3/doc/lag-comparison-aAR1mV3JLX
             {
                 result = 1;
                 return result;
             }
-            
+
             bool match = true;
             int total = 0;
             int totalFreq = 0;
             int totalAmp = 0;
-            
+
             byte* head = data;
             for (int i = 2; i < (int) length; i++)
             {
@@ -186,7 +186,7 @@ namespace Ryujinx.Input.SDL3
                     data++;
                     continue;
                 }
-                
+
                 total += *data;
 
                 // Mario Kart 8 Deluxe sends rumble packets where the amplitude is zero, but the frequency isn't.
@@ -194,7 +194,7 @@ namespace Ryujinx.Input.SDL3
                 if (i == 2 || i == 4 || i == 6 || i == 8) // frequency
                 {
                     totalFreq += *data;
-                } 
+                }
                 else if (i == 3 || i == 5 || i == 7 || i == 9) // amplitude
                 {
                     totalAmp += *data;
@@ -204,22 +204,22 @@ namespace Ryujinx.Input.SDL3
                 data++;
             }
             data = head;
-            
+
             if (!match || (total == 0 || totalFreq == 0 || totalAmp == 0))
             {
                 result = SDL_hid_write(_hidHandle, data, length);
                 _lastWriteTicks = currentTicks;
             }
-            
+
             return result;
         }
-        
+
         public void Dispose()
         {
             SDL_hid_close(_hidHandle);
         }
     }
-    
+
     public enum HDRumbleSupported : ushort
     {
         JoyConLeft = 0x2006,
