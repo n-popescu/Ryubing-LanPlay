@@ -168,10 +168,9 @@ namespace Ryujinx.Input.SDL3
             }
 
             bool match = true;
-            int total = 0;
             int totalFreq = 0;
             int totalAmp = 0;
-
+            
             byte* head = data;
             for (int i = 2; i < (int) length; i++)
             {
@@ -186,8 +185,6 @@ namespace Ryujinx.Input.SDL3
                     data++;
                     continue;
                 }
-
-                total += *data;
 
                 // Mario Kart 8 Deluxe sends rumble packets where the amplitude is zero, but the frequency isn't.
                 // It's likely that the hardware accounts for this, but on the off-chance it doesn't, we did.
@@ -205,7 +202,7 @@ namespace Ryujinx.Input.SDL3
             }
             data = head;
 
-            if (!match || (total == 0 || totalFreq == 0 || totalAmp == 0))
+            if (!match || (totalFreq == 0 || totalAmp == 0))
             {
                 result = SDL_hid_write(_hidHandle, data, length);
                 _lastWriteTicks = currentTicks;
