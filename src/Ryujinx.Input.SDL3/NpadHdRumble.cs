@@ -159,20 +159,22 @@ namespace Ryujinx.Input.SDL3
         {
             int result = 0;
             ulong currentTicks = SDL_GetTicks();
-
+            
             // Ditch rumble if we haven't hit the poll-rate yet.
+            // TODO: figure out a better way to do this
+            // while the polling check makes the rumble accurate, it also causes it to miss signals.
             if ((currentTicks - _lastWriteTicks) < 8) // https://docs.handheldlegend.com/s/progcc-3/doc/lag-comparison-aAR1mV3JLX
             {
                 result = 1;
                 return result;
             }
-
+            
             bool match = true;
             int totalFreq = 0;
             int totalAmp = 0;
             
             byte* head = data;
-            for (int i = 2; i < (int) length; i++)
+            for (int i = 0; i < (int) length; i++)
             {
                 if (*data != _lastRumbleData[i])
                 {
@@ -181,7 +183,6 @@ namespace Ryujinx.Input.SDL3
 
                 if (i < 2)
                 {
-                    _lastRumbleData[i] = *data;
                     data++;
                     continue;
                 }
@@ -196,8 +197,7 @@ namespace Ryujinx.Input.SDL3
                 {
                     totalAmp += *data;
                 }
-
-                _lastRumbleData[i] = *data;
+                
                 data++;
             }
             data = head;
@@ -205,7 +205,15 @@ namespace Ryujinx.Input.SDL3
             if (!match || (totalFreq == 0 || totalAmp == 0))
             {
                 result = SDL_hid_write(_hidHandle, data, length);
-                _lastWriteTicks = currentTicks;
+                if (result >= 0)
+                {
+                    _lastWriteTicks = currentTicks;
+                    for (int i = 0; i < (int)length; i++)
+                    {
+                        _lastRumbleData[i] = *data;
+                        data++;
+                    }
+                }
             }
 
             return result;
