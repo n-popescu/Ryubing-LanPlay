@@ -15,7 +15,7 @@ namespace Ryujinx.Input.SDL3
         private readonly SDL_hid_device* _hidHandle;
 
         private int _globalCount;
-        private readonly byte[] _lastRumbleData = new byte[10];
+        private byte[] _lastRumbleData = new byte[10];
         private ulong _lastWriteTicks;
 
         private NpadHdRumble(SDL_hid_device* hidHandle)
@@ -157,7 +157,6 @@ namespace Ryujinx.Input.SDL3
         
         public int SendHDRumble(byte* data, nuint length)
         {
-            byte[] dataArray = new ReadOnlySpan<byte>(data, (int) length).ToArray();
             int result = 0;
             ulong currentTicks = SDL_GetTicks();
             
@@ -170,39 +169,45 @@ namespace Ryujinx.Input.SDL3
             
             bool match = true;
             int total = 0;
+            int totalFreq = 0;
+            int totalAmp = 0;
             
+            byte* head = data;
             for (int i = 2; i < (int) length; i++)
             {
-                if (dataArray[i] != _lastRumbleData[i])
+                if (*data != _lastRumbleData[i])
                 {
                     match = false;
                 }
 
-                if (dataArray[i] == 0)
+                if (i < 2)
                 {
-                    total += dataArray[i];
-                }
-            }
-            
-            // Mario Kart 8 Deluxe sends rumble packets where the amplitude is zero, but the frequency isn't.
-            // It's likely that the hardware accounts for this, but on the off-chance it doesn't, we did.
-            byte* head = data;
-            if ((dataArray[2] == 0 && dataArray[4] == 0 && dataArray[6] == 0 && dataArray[8] == 0)     // frequency
-                || (dataArray[3] == 0 && dataArray[5] == 0 && dataArray[7] == 0 && dataArray[9] == 0)) // amplitude
-            {
-                for (int i = 2; i < (int)length; i++)
-                {
-                    *data = 0;
+                    _lastRumbleData[i] = *data;
                     data++;
+                    continue;
                 }
-                total = 0;
+                
+                total += *data;
+
+                // Mario Kart 8 Deluxe sends rumble packets where the amplitude is zero, but the frequency isn't.
+                // It's likely that the hardware accounts for this, but on the off-chance it doesn't, we did.
+                if (i == 2 || i == 4 || i == 6 || i == 8) // frequency
+                {
+                    totalFreq += *data;
+                } 
+                else if (i == 3 || i == 5 || i == 7 || i == 9) // amplitude
+                {
+                    totalAmp += *data;
+                }
+
+                _lastRumbleData[i] = *data;
+                data++;
             }
             data = head;
             
-            if (!match || total == 0)
+            if (!match || (total == 0 || totalFreq == 0 || totalAmp == 0))
             {
                 result = SDL_hid_write(_hidHandle, data, length);
-                Buffer.BlockCopy(dataArray, 0, _lastRumbleData, 0, (int) length);
                 _lastWriteTicks = currentTicks;
             }
             
