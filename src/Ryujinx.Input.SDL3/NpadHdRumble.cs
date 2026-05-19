@@ -86,18 +86,18 @@ namespace Ryujinx.Input.SDL3
         private static int EncodeLowFreq(float lowFreq)
         {
             float lf = Math.Clamp(lowFreq, 40.875885f, 626.286133f);
-            return (int)Math.Round(32 * Math.Log2(lf * 0.1f)) - 0x40;
+            return (int) Math.Round(32 * Math.Log2(lf * 0.1f) - 0x40);
         }
 
         private static int EncodeHighFreq(float highFreq)
         {
             float hf = Math.Clamp(highFreq, 81.75177f, 1252.572266f);
-            return ((int)Math.Round(32 * Math.Log2(hf * 0.1f)) - 0x60) * 4;
+            return (int) Math.Round((32 * Math.Log2(hf * 0.1f) - 0x60) * 4);
         }
 
         private static int EncodeLowAmp(float rawAmp)
         {
-            int encodedAmp = 0;
+            double encodedAmp = 0;
 
             if (rawAmp is > 0 and < 0.012f)
             {
@@ -105,15 +105,15 @@ namespace Ryujinx.Input.SDL3
             }
             else if (rawAmp is >= 0.012f and < 0.112f)
             {
-                encodedAmp = (int)Math.Round(4 * Math.Log2(rawAmp * 110f));
+                encodedAmp = 4 * Math.Log2(rawAmp * 110f);
             }
             else if (rawAmp is >= 0.112f and < 0.225f)
             {
-                encodedAmp = (int)Math.Round(16 * Math.Log2(rawAmp * 17f));
+                encodedAmp = 16 * Math.Log2(rawAmp * 17f);
             }
             else if (rawAmp is >= 0.225f and <= 1f)
             {
-                encodedAmp = (int)Math.Round(32 * Math.Log2(rawAmp * 8.7f));
+                encodedAmp = 32 * Math.Log2(rawAmp * 8.7f);
             }
 
             return (int)Math.Floor(encodedAmp / 2.0) + 64;
@@ -121,7 +121,7 @@ namespace Ryujinx.Input.SDL3
 
         private static int EncodeHighAmp(float rawAmp)
         {
-            int encodedAmp = 0;
+            double encodedAmp = 0;
 
             if (rawAmp is > 0 and < 0.012f)
             {
@@ -129,18 +129,18 @@ namespace Ryujinx.Input.SDL3
             }
             else if (rawAmp is >= 0.012f and < 0.112f)
             {
-                encodedAmp = (int)Math.Round(4 * Math.Log2(rawAmp * 110f));
+                encodedAmp = 4 * Math.Log2(rawAmp * 110f);
             }
             else if (rawAmp is >= 0.112f and < 0.225f)
             {
-                encodedAmp = (int)Math.Round(16 * Math.Log2(rawAmp * 17f));
+                encodedAmp = 16 * Math.Log2(rawAmp * 17f);
             }
             else if (rawAmp is >= 0.225f and <= 1f)
             {
-                encodedAmp = (int)Math.Round(32 * Math.Log2(rawAmp * 8.7f));
+                encodedAmp = 32 * Math.Log2(rawAmp * 8.7f);
             }
 
-            return encodedAmp * 2;
+            return (int) Math.Round(encodedAmp * 2);
         }
 
         public bool HdRumble(VibrationValue left, VibrationValue right)
