@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
-using Ryujinx.Ava.Common.Locale;
+using FluentAvalonia.UI.Controls;
 using Ryujinx.Ava.Common.Models;
 using System;
 using System.Globalization;
@@ -16,26 +16,56 @@ namespace Ryujinx.Ava.UI.Helpers
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is UnsetValueType)
-            {
                 return BindingOperations.DoNothing;
-            }
-
-            if (!targetType.IsAssignableFrom(typeof(string)))
-            {
-                return null;
-            }
 
             if (value is not XCITrimmerFileModel app)
+                return default(Symbol); // no icon
+            
+            bool isProcessing = app.PercentageProgress != null;
+            
+            if (isProcessing)
             {
-                return null;
+                // Failed
+                if (app.ProcessingOutcome is not OperationOutcome.Successful
+                    and not OperationOutcome.Undetermined)
+                {
+                    return Symbol.Alert;
+                }
+
+                // Success
+                if (app.PercentageProgress >= 100)
+                {
+                    return Symbol.Checkmark;
+                }
+
+                // Waiting / queued
+                if (app.PercentageProgress == 0)
+                {
+                    return Symbol.Dismiss;
+                }
+
+                // Currently working
+                return Symbol.Sync;
             }
 
-            return app.PercentageProgress != null ? String.Empty :
-                app.ProcessingOutcome is not OperationOutcome.Successful and not OperationOutcome.Undetermined ? LocaleManager.Instance[LocaleKeys.XCITrimmer_FailedLabel] :
-                app.Trimmable & app.Untrimmable ? LocaleManager.Instance[LocaleKeys.XCITrimmer_PartialLabel] :
-                app.Trimmable ? LocaleManager.Instance[LocaleKeys.XCITrimmer_UntrimmedLabel] :
-                app.Untrimmable ? LocaleManager.Instance[LocaleKeys.XCITrimmer_TrimmedLabel] :
-                String.Empty;
+            // Error state
+            if (app.ProcessingOutcome is not OperationOutcome.Successful
+                and not OperationOutcome.Undetermined)
+                return Symbol.Important;
+
+            // Partial (both trimmable & untrimmable)
+            if (app.Trimmable && app.Untrimmable)
+                return Symbol.Repair;
+
+            // File is currently untrimmed
+            if (app.Trimmable)
+                return Symbol.Dismiss;
+
+            // File is currently trimmed
+            if (app.Untrimmable)
+                return Symbol.Checkmark; // ✔
+
+            return default(Symbol);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

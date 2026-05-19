@@ -263,9 +263,20 @@ Dispatcher.UIThread.Post(() =>
                     Dispatcher.UIThread.Post(() =>
                     {
                         _displayedXCIFiles.AddOrReplaceMatching(_allXCIFiles, viewsSaved);
-                        _selectedXCIFiles.AddOrReplaceMatching(_allXCIFiles, toProcess);
-                        Processing = false;
-                        ApplicationsChanged();
+
+Processing = false;
+ApplicationsChanged();
+
+_selectedXCIFiles.Clear();
+
+foreach (var processed in toProcess)
+{
+    var updated = _allXCIFiles.FirstOrDefault(x => x.Path == processed.Path);
+    if (updated != null)
+        _selectedXCIFiles.Add(updated);
+}
+
+SelectionChanged();
                     });
                 }
             })

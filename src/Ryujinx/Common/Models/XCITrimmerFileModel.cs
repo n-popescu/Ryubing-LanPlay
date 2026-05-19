@@ -11,6 +11,7 @@ namespace Ryujinx.Ava.Common.Models
         bool Untrimmable,
         long PotentialSavingsB,
         long CurrentSavingsB,
+        long OriginalSizeB,
         int? PercentageProgress,
         XCIFileTrimmer.OperationOutcome ProcessingOutcome)
     {
@@ -25,6 +26,7 @@ namespace Ryujinx.Ava.Common.Models
                 trimmer.CanBeUntrimmed,
                 trimmer.DiskSpaceSavingsB,
                 trimmer.DiskSpaceSavedB,
+                applicationData.FileSize,
                 null,
                 XCIFileTrimmer.OperationOutcome.Undetermined
             );
@@ -34,16 +36,41 @@ namespace Ryujinx.Ava.Common.Models
         {
             get
             {
-                return ProcessingOutcome is not XCIFileTrimmer.OperationOutcome.Undetermined and
-                    not XCIFileTrimmer.OperationOutcome.Successful;
+                return ProcessingOutcome is not XCIFileTrimmer.OperationOutcome.Undetermined 
+                    and not XCIFileTrimmer.OperationOutcome.Successful;
             }
         }
 
+        public string StatusText
+{
+    get
+    {
+        if (IsFailed)
+            return "Failed";
+
+        return ProcessingOutcome switch
+        {
+            XCIFileTrimmer.OperationOutcome.Successful => 
+                CurrentSavingsB > 0 ? "Trimmed" : "Untrimmed",
+
+            XCIFileTrimmer.OperationOutcome.Undetermined =>
+                Trimmable ? "Untrimmed" :
+                Untrimmable ? "Trimmed" :
+                "Unknown",
+
+            _ => "Unknown"
+        };
+    }
+}
+
+public bool HasStatusDetail =>
+    ProcessingOutcome != XCIFileTrimmer.OperationOutcome.Undetermined;
+
+
+
         public virtual bool Equals(XCITrimmerFileModel obj)
         {
-            if (obj == null)
-                return false;
-
+            if (obj == null) return false;
             return this.Path == obj.Path;
         }
 
