@@ -29,7 +29,7 @@ namespace Ryujinx.Ava
         internal static string FormatTitle(LocaleKeys? windowTitleKey = null, bool includeVersion = true)
             => windowTitleKey is null
                 ? $"{FullAppName}{(includeVersion ? $" {Program.Version}" : string.Empty)} - {SplashTextHelper.GetSplash()}"
-                : $"{FullAppName}{(includeVersion ? $" {Program.Version}" : string.Empty)} - {LocaleManager.Instance[windowTitleKey.Value]} - {SplashTextHelper.GetSplash}";
+                : $"{FullAppName}{(includeVersion ? $" {Program.Version}" : string.Empty)} - {LocaleManager.Instance[windowTitleKey.Value]} - {SplashTextHelper.GetSplash()}";
 
         public static readonly string FullAppName = string.Intern(ReleaseInformation.IsCanaryBuild ? "Ryujinx Canary" : "Ryujinx");
 
