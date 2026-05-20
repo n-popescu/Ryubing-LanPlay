@@ -1,8 +1,9 @@
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Services.Hid;
+using Ryujinx.Input.HLE;
 using SDL;
 using static SDL.SDL3;
-using System;
+using System;   
 
 namespace Ryujinx.Input.SDL3
 {
@@ -12,6 +13,8 @@ namespace Ryujinx.Input.SDL3
     public unsafe class NpadHdRumble : IDisposable
     {
         private readonly SDL_hid_device* _hidHandle;
+        private readonly ulong _pollRate;
+        private static ushort _product;
         
         private int _globalCount;
         private ulong _lastWriteTicks;
@@ -19,6 +22,8 @@ namespace Ryujinx.Input.SDL3
         private NpadHdRumble(SDL_hid_device* hidHandle)
         {
             _hidHandle = hidHandle;
+            InitializeDevice();
+            _pollRate = GetPollRate();
         }
 
         public static NpadHdRumble Create(SDL_Gamepad* gamepadHandle)
@@ -29,13 +34,13 @@ namespace Ryujinx.Input.SDL3
                 return null;
             }
 
-            ushort product = SDL_GetGamepadProduct(gamepadHandle);
-            if (!Enum.IsDefined(typeof(HDRumbleSupported), product))
+            _product = SDL_GetGamepadProduct(gamepadHandle);
+            if (!Enum.IsDefined(typeof(HDRumbleSupported), _product))
             {
                 return null;
             }
 
-            return new NpadHdRumble(SDL_hid_open(vendor, product, 0));
+            return new NpadHdRumble(SDL_hid_open(vendor, _product, 0));
         }
 
         // Some of the code was translated from https://github.com/MIZUSHIKI/JoyShockLibrary-plus-HDRumble
@@ -67,7 +72,7 @@ namespace Ryujinx.Input.SDL3
 
             fixed (byte* ptr = buf)
             {
-                if (SendHDRumble(ptr, (nuint)buf.Length) >= 0)
+                if (SendHdRumble(ptr, (nuint)buf.Length) >= 0)
                 {
                     return true;
                 }
@@ -153,7 +158,7 @@ namespace Ryujinx.Input.SDL3
                 EncodeHighAmp(right.AmplitudeHigh));
         }
 
-        private int SendHDRumble(byte* data, nuint length)
+        private int SendHdRumble(byte* data, nuint length)
         {
             int result = 0;
             ulong currentTicks = SDL_GetTicks();
@@ -161,7 +166,8 @@ namespace Ryujinx.Input.SDL3
             // Ditch rumble if we haven't hit the poll-rate yet.
             // TODO: figure out a better way to do this
             // While the polling check makes the rumble accurate, it also causes it to miss signals.
-            if ((currentTicks - _lastWriteTicks) < 8) // https://docs.handheldlegend.com/s/progcc-3/doc/lag-comparison-aAR1mV3JLX
+            // https://docs.handheldlegend.com/s/progcc-3/doc/lag-comparison-aAR1mV3JLX
+            if ((currentTicks - _lastWriteTicks) <= _pollRate)
             {
                 return result;
             }
@@ -181,6 +187,81 @@ namespace Ryujinx.Input.SDL3
             return result;
         }
 
+        private void InitializeDevice()
+        {
+            byte[] init = new byte[64];
+
+            // Pro Controller and Charge Grip
+            if (_product 
+                is (ushort)HDRumbleSupported.ProController 
+                or (ushort)HDRumbleSupported.JoyconGrip)
+            {
+                init[0] = 0x80;
+                init[1] = 0x02;
+                
+                fixed (byte* ptr = init)
+                {
+                    SDL_hid_write(_hidHandle, ptr, 64);
+                }
+
+                return;
+            }
+            
+            // Joycons
+            if (_product 
+                is (ushort)HDRumbleSupported.JoyconLeft 
+                or (ushort)HDRumbleSupported.JoyconRight
+                or (ushort)HDRumbleSupported.JoyconPair)
+            {
+                init[0] = 0x01;
+                init[1] = 0x01;
+                init[2] = 0x00;
+                init[3] = 0x01;
+                init[4] = 0x40;
+                init[5] = 0x40;
+                init[6] = 0x00;
+                init[7] = 0x01;
+                init[8] = 0x40;
+                init[9] = 0x40;
+                
+                // TODO: Resend with updated packet for player number LEDs.
+                //       And probably move this to NpadDevices.
+                init[10] = 0x01; // 0x30
+                init[11] = 0x01; // 0x01 0x03 0x07 0x0F
+                
+                fixed (byte* ptr = init)
+                {
+                    SDL_hid_write(_hidHandle, ptr, 64);
+                }
+
+                return;
+            }
+            
+        }
+        
+        private ulong GetPollRate()
+        {
+            byte[] dataArray = new byte[10];
+            int read;
+
+            ulong startTime = SDL_GetTicks();
+            fixed (byte* ptr = dataArray)
+            {
+                read = SDL_hid_read(_hidHandle, ptr, 10);
+            }
+            ulong endTime = SDL_GetTicks();
+            
+            ulong readTime = endTime - startTime;
+            Logger.Debug?.PrintMsg(LogClass.Hid, $"POLL RATE: {readTime}ms.");
+            
+            if (read == 0)
+            {
+                return 0;
+            }
+
+            return readTime;
+        }
+
         public void Dispose()
         {
             SDL_hid_close(_hidHandle);
@@ -189,8 +270,10 @@ namespace Ryujinx.Input.SDL3
 
     public enum HDRumbleSupported : ushort
     {
-        JoyConLeft = 0x2006,
-        JoyConRight = 0x2007,
+        // Currently, HD Rumble only supports the Pro Controller and Joycons.
+        // We need to initialize each device differently.
+        JoyconLeft = 0x2006,
+        JoyconRight = 0x2007,
         JoyconPair = 0x2008,
         ProController = 0x2009,
         JoyconGrip = 0x200e,
