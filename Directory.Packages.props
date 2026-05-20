@@ -11,15 +11,15 @@
     
     <!-- UI -->
     <!-- TODO: Avalonia >= 12.0.0 requires refactoring -->
-    <PackageVersion Include="Avalonia" Version="12.0.2" />
+    <PackageVersion Include="Avalonia" Version="12.0.3" />
     <PackageVersion Include="Avalonia.Controls.DataGrid" Version="12.0.0" />
-    <PackageVersion Include="Avalonia.Desktop" Version="12.0.2" />
+    <PackageVersion Include="Avalonia.Desktop" Version="12.0.3" />
     <!-- TODO: Replace Avalonia.Diagnostics (Deprecated). -->
     <!-- <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3" /> -->
     <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1" />
-    <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="12.0.2" />
+    <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="12.0.3" />
     
-    <PackageVersion Include="FluentAvaloniaUI" Version="3.0.0-preview2" />
+    <PackageVersion Include="FluentAvaloniaUI" Version="3.0.0-preview3" />
 
     <PackageVersion Include="Optris.Icons.Avalonia" Version="12.0.6" />
     <PackageVersion Include="Optris.Icons.Avalonia.FontAwesome" Version="12.0.6" />
@@ -31,8 +31,8 @@
     <PackageVersion Include="SkiaSharp.NativeAssets.macOS" Version="3.119.4-preview.1.1" />
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.4-preview.1.1" />
     
-    <PackageVersion Include="Svg.Controls.Avalonia" Version="12.0.0.6" />
-    <PackageVersion Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.6" />
+    <PackageVersion Include="Svg.Controls.Avalonia" Version="12.0.0.10" />
+    <PackageVersion Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.10" />
     
     <!-- Building & Packaging -->
     <PackageVersion Include="CommandLineParser" Version="2.9.1" />
