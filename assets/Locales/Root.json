@@ -596,7 +596,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": "重启模拟",
         "zh_TW": "重新啟動模擬"
       }
     },
@@ -6101,6 +6101,31 @@
       }
     },
     {
+      "ID": "SettingsTabLoggingEnableNetLogs",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Enable Net Logs",
+        "es_ES": "Habilitar Registros de Red.",
+        "fr_FR": "Activer les Journaux Réseau.",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "开启网络日志",
+        "zh_TW": ""
+      }
+    },
+    {
       "ID": "SettingsTabLoggingDeveloperOptions",
       "Translations": {
         "ar_SA": "خيارات المطور",
@@ -11346,7 +11371,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": "保存",
         "zh_TW": "儲存"
       }
     },
@@ -12223,6 +12248,56 @@
         "uk_UA": "Множник слабкої вібрації:",
         "zh_CN": "弱震动幅度:",
         "zh_TW": "弱震動調節:"
+      }
+    },
+    {
+      "ID": "ControllerSettingsRumbleUseHDRumble",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Enable HD Rumble",
+        "es_ES": "Activa vibración HD",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
+      "ID": "HDRumbleTooltip",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Sends more data to the controller for better rumble.\n\nCurrently only supports first-party Nintendo Switch controllers.\n\nLeave ON if you're using JoyCons or a Pro Controller.",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
       }
     },
     {
@@ -17076,6 +17151,31 @@
       }
     },
     {
+      "ID": "NetLogTooltip",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Prints network log messages in the console.",
+        "es_ES": "Imprimir registros de red en la consola.",
+        "fr_FR": "Affiche les journaux réseau dans la console.",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "在控制台中显示网络日志",
+        "zh_TW": ""
+      }
+    },
+    {
       "ID": "DeveloperOptionTooltip",
       "Translations": {
         "ar_SA": "استخدمه بعناية",
@@ -21423,6 +21523,31 @@
         "uk_UA": "Необхідно перезапустити Ryujinx",
         "zh_CN": "Ryujinx 模拟器需要重启",
         "zh_TW": "需要重新啟動 Ryujinx"
+      }
+    },
+    {
+      "ID": "SettingsShowConsoleRestartMessage",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "The console will be available the next time Ryujinx starts.",
+        "es_ES": "La consola estará disponible la próxima vez que se inicie Ryujinx.",
+        "fr_FR": "La console sera disponible au prochain démarrage de Ryujinx.",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "控制台将会在下次启动 Ryujinx 时可用。",
+        "zh_TW": ""
       }
     },
     {

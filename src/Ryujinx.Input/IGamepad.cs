@@ -1,5 +1,6 @@
 using Ryujinx.Common.Configuration.Hid;
 using Ryujinx.Common.Memory;
+using Ryujinx.HLE.HOS.Services.Hid;
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -75,15 +76,22 @@ namespace Ryujinx.Input
         public void ClearLed() => SetLed(0);
 
         /// <summary>
+        /// Starts an HD vibration effect on the gamepad if available.
+        /// </summary>
+        /// <param name="left">The vibration data for the left side</param>
+        /// <param name="right">The vibration data for the right side</param>
+        bool HDRumble(VibrationValue left, VibrationValue right);
+
+        /// <summary>
         /// Starts a rumble effect on the gamepad.
         /// </summary>
         /// <param name="lowFrequency">The intensity of the low frequency from 0.0f to 1.0f</param>
         /// <param name="highFrequency">The intensity of the high frequency from 0.0f to 1.0f</param>
         /// <param name="durationMs">The duration of the rumble effect in milliseconds.</param>
-        void Rumble(float lowFrequency, float highFrequency, uint durationMs);
+        bool Rumble(float lowFrequency, float highFrequency, uint durationMs);
 
         /// <summary>
-        /// Get a snaphost of the state of the gamepad that is remapped with the informations from the <see cref="InputConfig"/> set via <see cref="SetConfiguration(InputConfig)"/>.
+        /// Get a snaphost of the state of the gamepad that is remapped with the information from the <see cref="InputConfig"/> set via <see cref="SetConfiguration(InputConfig)"/>.
         /// </summary>
         /// <returns>A remapped snaphost of the state of the gamepad.</returns>
         GamepadStateSnapshot GetMappedStateSnapshot();

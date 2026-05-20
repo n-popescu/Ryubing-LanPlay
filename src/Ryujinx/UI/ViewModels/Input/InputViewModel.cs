@@ -574,7 +574,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 if (Devices.Any(controller => controller.Name == name))
                 {
                     controllerNumber++;
-                    name = GetGamepadName(gamepad, controllerNumber);
+                    name = GetUniqueGamepadName(gamepad, ref controllerNumber);
                 }
 
                 return name;
@@ -789,6 +789,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                         StrongRumble = 1f,
                         WeakRumble = 1f,
                         EnableRumble = false,
+                        UseHDRumble = true
                     },
                 };
             }

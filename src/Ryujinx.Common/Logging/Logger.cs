@@ -119,6 +119,7 @@ namespace Ryujinx.Common.Logging
         public static Log? Error { get; private set; }
         public static Log? Guest { get; private set; }
         public static Log? AccessLog { get; private set; }
+        public static Log? NetLog { get; private set; }
         public static Log? Stub { get; private set; }
         public static Log? Trace { get; private set; }
         public static Log Notice { get; } // Always enabled
@@ -136,11 +137,7 @@ namespace Ryujinx.Common.Logging
 
             _time = Stopwatch.StartNew();
 
-            // Logger should log to console by default
-            AddTarget(new AsyncLogTargetWrapper(
-                new ConsoleLogTarget("console"),
-                1000,
-                AsyncLogTargetOverflowAction.Discard));
+            SetConsoleTargetEnabled(true);
 
             Notice = new Log(LogLevel.Notice);
 
@@ -171,6 +168,21 @@ namespace Ryujinx.Common.Logging
             _logTargets.Add(target);
 
             Updated += target.Log;
+        }
+
+        public static void SetConsoleTargetEnabled(bool enabled)
+        {
+            if (enabled)
+            {
+                AddTarget(new AsyncLogTargetWrapper(
+                    new ConsoleLogTarget("console"),
+                    1000,
+                    AsyncLogTargetOverflowAction.Discard));
+            }
+            else
+            {
+                RemoveTarget("console");
+            }
         }
 
         public static void RemoveTarget(string target)
@@ -236,6 +248,7 @@ namespace Ryujinx.Common.Logging
                 case LogLevel.Error     : Error     = enabled ? new Log(LogLevel.Error)     : null; break;
                 case LogLevel.Guest     : Guest     = enabled ? new Log(LogLevel.Guest)     : null; break;
                 case LogLevel.AccessLog : AccessLog = enabled ? new Log(LogLevel.AccessLog) : null; break;
+                case LogLevel.NetLog    : NetLog    = enabled ? new Log(LogLevel.NetLog)    : null; break;
                 case LogLevel.Stub      : Stub      = enabled ? new Log(LogLevel.Stub)      : null; break;
                 case LogLevel.Trace     : Trace     = enabled ? new Log(LogLevel.Trace)     : null; break;
                 case LogLevel.Notice    : break;

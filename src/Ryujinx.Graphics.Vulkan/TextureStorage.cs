@@ -67,6 +67,8 @@ namespace Ryujinx.Graphics.Vulkan
 
         public VkFormat VkFormat { get; }
 
+        public ImageUsageFlags UsageFlags { get; }
+
         public unsafe TextureStorage(
             VulkanRenderer gd,
             Device device,
@@ -93,7 +95,8 @@ namespace Ryujinx.Graphics.Vulkan
 
             SampleCountFlags sampleCountFlags = ConvertToSampleCountFlags(gd.Capabilities.SupportedSampleCounts, (uint)info.Samples);
 
-            ImageUsageFlags usage = GetImageUsage(info.Format, gd.Capabilities, isMsImageStorageSupported, true);
+            ImageUsageFlags usage = GetImageUsage(info.Format, gd.Capabilities, isMsImageStorageSupported);
+            UsageFlags = usage;
 
             ImageCreateFlags flags = ImageCreateFlags.CreateMutableFormatBit | ImageCreateFlags.CreateExtendedUsageBit;
 
@@ -159,7 +162,7 @@ namespace Ryujinx.Graphics.Vulkan
 
                 _imageAuto = new Auto<DisposableImage>(new DisposableImage(_gd.Api, device, _image));
 
-                InitialTransition(ImageLayout.Preinitialized, ImageLayout.General);
+                InitialTransition(ImageLayout.Undefined, ImageLayout.General);
             }
 
             _slices = new TextureSliceInfo[levels * _depthOrLayers];
@@ -307,7 +310,7 @@ namespace Ryujinx.Graphics.Vulkan
             }
         }
 
-        public static ImageUsageFlags GetImageUsage(Format format, in HardwareCapabilities capabilities, bool isMsImageStorageSupported, bool extendedUsage)
+        public static ImageUsageFlags GetImageUsage(Format format, in HardwareCapabilities capabilities, bool isMsImageStorageSupported)
         {
             ImageUsageFlags usage = DefaultUsageFlags;
 
@@ -320,7 +323,7 @@ namespace Ryujinx.Graphics.Vulkan
                 usage |= ImageUsageFlags.ColorAttachmentBit;
             }
 
-            if ((format.IsImageCompatible && isMsImageStorageSupported) || extendedUsage)
+            if (format.IsImageCompatible && isMsImageStorageSupported)
             {
                 usage |= ImageUsageFlags.StorageBit;
             }

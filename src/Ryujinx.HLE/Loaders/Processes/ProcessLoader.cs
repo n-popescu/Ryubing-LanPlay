@@ -14,6 +14,7 @@ using Ryujinx.HLE.Loaders.Executables;
 using Ryujinx.HLE.Loaders.Processes.Extensions;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using Path = System.IO.Path;
 
@@ -27,17 +28,64 @@ namespace Ryujinx.HLE.Loaders.Processes
 
         private ulong _latestPid;
 
-        public ProcessResult ActiveApplication
+        private readonly object _pidLock = new();
+
+#nullable enable
+        public ProcessResult? ActiveApplication
         {
             get
             {
-                if (!_processesByPid.TryGetValue(_latestPid, out ProcessResult value))
-                    throw new RyujinxException(
-                        $"The HLE Process map did not have a process with ID {_latestPid}. Are you missing firmware?");
+                lock (_pidLock)
+                {
+                    // Check if _latestPid is still valid
+                    if (_latestPid == 0)
+                    {
+                        return null;
+                    }
 
-                return value;
+                    // Verify process still exists in kernel (authoritative source)
+                    if (!_device.System.KernelContext.Processes.TryGetValue(_latestPid, out HOS.Kernel.Process.KProcess? kernelProcess))
+                    {
+                        // Process no longer exists in kernel, clear stale state
+                        Logger.Warning?.Print(LogClass.Loader,
+                            $"ActiveApplication PID {_latestPid} no longer exists in kernel, clearing stale state");
+
+                        _processesByPid.TryRemove(_latestPid, out _);
+                        _latestPid = 0;
+                        TitleIDs.CurrentApplication.Value = null;
+
+                        return null;
+                    }
+
+                    // Verify process still exists in ProcessLoader's dictionary
+                    if (_processesByPid.TryGetValue(_latestPid, out ProcessResult? processResult))
+                    {
+                        // Additional check: verify process state
+                        if (kernelProcess.State == HOS.Kernel.Process.ProcessState.Exited ||
+                            kernelProcess.State == HOS.Kernel.Process.ProcessState.Exiting)
+                        {
+                            Logger.Warning?.Print(LogClass.Loader,
+                                $"ActiveApplication PID {_latestPid} is in state {kernelProcess.State}, clearing");
+
+                            _processesByPid.TryRemove(_latestPid, out _);
+                            _latestPid = 0;
+                            TitleIDs.CurrentApplication.Value = null;
+
+                            return null;
+                        }
+
+                        return processResult;
+                    }
+
+                    // Fallback: clear stale PID if not in our dictionary
+                    Logger.Warning?.Print(LogClass.Loader,
+                        $"ActiveApplication PID {_latestPid} not in ProcessLoader dictionary, clearing");
+                    _latestPid = 0;
+                    return null;
+                }
             }
         }
+#nullable disable
 
         public ProcessLoader(Switch device)
         {
@@ -144,7 +192,7 @@ namespace Ryujinx.HLE.Loaders.Processes
         public bool LoadUnpackedNca(string exeFsDirPath, string romFsPath = null)
         {
             ProcessResult processResult = new LocalFileSystem(exeFsDirPath).Load(_device, romFsPath);
-
+            
             if (processResult.ProcessId != 0 && _processesByPid.TryAdd(processResult.ProcessId, processResult))
             {
                 if (processResult.Start(_device))
@@ -276,6 +324,40 @@ namespace Ryujinx.HLE.Loaders.Processes
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Clears a specific process from the ProcessLoader's tracking.
+        /// This should be called when a process exits or is terminated.
+        /// </summary>
+        /// <param name="pid">The process ID to clear</param>
+        public void ClearProcess(ulong pid)
+        {
+            lock (_pidLock)
+            {
+                if (_processesByPid.TryRemove(pid, out _))
+                {
+                    if (_latestPid == pid)
+                    {
+                        _latestPid = 0;
+                        TitleIDs.CurrentApplication.Value = null;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clears all processes from the ProcessLoader's tracking.
+        /// This should be called during system shutdown.
+        /// </summary>
+        public void ClearAllProcesses()
+        {
+            lock (_pidLock)
+            {
+                _processesByPid.Clear();
+                _latestPid = 0;
+                TitleIDs.CurrentApplication.Value = null;
+            }
         }
     }
 }
