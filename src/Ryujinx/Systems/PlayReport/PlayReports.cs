@@ -126,6 +126,12 @@ namespace Ryujinx.Ava.Systems.PlayReport
                         "based on your total Mii count and island level.")
                     .AddValueFormatter("Common", TomodachiLifeLTD_Status)
             )
+            .AddSpec(
+                "01006f8002326000", // Animal Crossing New Horizons
+                spec => spec
+                    .WithDescription("based on your island name.")
+                    .AddValueFormatter("AppCmn", AnimalCrossingNewHorizons_AppCommon)
+            )
         );
 
         private static string Playing(string game) => $"Playing {game}";

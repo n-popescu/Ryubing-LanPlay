@@ -1080,5 +1080,13 @@ namespace Ryujinx.Ava.Systems.PlayReport
             
             return $"Looking after {"Mii".ToQuantity(miiCount)}, with an island level of {fountainLevel}";
         }
+        
+        private static FormattedValue AnimalCrossingNewHorizons_AppCommon(SingleValue value)
+        {
+            MessagePackObject messagePackObject = value.Matched.PackedValue;
+            MessagePackObjectDictionary messagePackObjectDictionary = messagePackObject.AsDictionary();
+
+            return $"Living on {messagePackObjectDictionary["LandName"].AsString()} Island";
+        }
     }
 }
