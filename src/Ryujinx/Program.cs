@@ -154,13 +154,9 @@ namespace Ryujinx.Ava
                     
                     if (container is not null && container.EqualsIgnoreCase("flatpak"))
                     {
-                        Logger.Warning?.PrintMsg(LogClass.Application, "This is very likely an unofficial build, Ryujinx does NOT have a flatpak!");
                         Logger.Info?.PrintMsg(LogClass.Application, "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+                        Logger.Warning?.PrintMsg(LogClass.Application, "This is very likely an unofficial build, Ryujinx does NOT have a flatpak!");
                         Logger.Info?.PrintMsg(LogClass.Application, "Please visit https://ryujinx.app/ for our official builds.");
-                        Logger.Info?.PrintMsg(LogClass.Application,
-                            "    AppImage >> https://update.ryujinx.app/download/query?os=linuxappimage&arch=x64&rc=stable");
-                        Logger.Info?.PrintMsg(LogClass.Application,
-                            "    Tarball >> https://update.ryujinx.app/download/query?os=linux&arch=x64&rc=stable");
                         Logger.Info?.PrintMsg(LogClass.Application, "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
                     }
                 }
