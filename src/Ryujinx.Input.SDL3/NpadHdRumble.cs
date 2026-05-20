@@ -3,7 +3,6 @@ using Ryujinx.HLE.HOS.Services.Hid;
 using SDL;
 using static SDL.SDL3;
 using System;
-using System.Runtime.InteropServices;
 
 namespace Ryujinx.Input.SDL3
 {
@@ -13,9 +12,8 @@ namespace Ryujinx.Input.SDL3
     public unsafe class NpadHdRumble : IDisposable
     {
         private readonly SDL_hid_device* _hidHandle;
-
+        
         private int _globalCount;
-        private byte[] _lastRumbleData = new byte[10];
         private ulong _lastWriteTicks;
 
         private NpadHdRumble(SDL_hid_device* hidHandle)
@@ -69,18 +67,18 @@ namespace Ryujinx.Input.SDL3
 
             fixed (byte* ptr = buf)
             {
-                if (SendHDRumble(ptr, (nuint)buf.Length) < 0)
+                if (SendHDRumble(ptr, (nuint)buf.Length) >= 0)
                 {
-                    if (!String.IsNullOrEmpty(SDL_GetError()))
-                    {
-                        Logger.Error?.PrintMsg(LogClass.Hid, SDL_GetError());
-                        SDL_ClearError();
-                    }
-                    return false;
+                    return true;
                 }
+                
+                if (!String.IsNullOrEmpty(SDL_GetError()))
+                {
+                    Logger.Error?.PrintMsg(LogClass.Hid, SDL_GetError());
+                    SDL_ClearError();
+                }
+                return false;
             }
-
-            return true;
         }
 
         private static int EncodeLowFreq(float lowFreq)
@@ -155,67 +153,31 @@ namespace Ryujinx.Input.SDL3
                 EncodeHighAmp(right.AmplitudeHigh));
         }
 
-        public int SendHDRumble(byte* data, nuint length)
+        private int SendHDRumble(byte* data, nuint length)
         {
             int result = 0;
             ulong currentTicks = SDL_GetTicks();
-            
+
             // Ditch rumble if we haven't hit the poll-rate yet.
             // TODO: figure out a better way to do this
-            // while the polling check makes the rumble accurate, it also causes it to miss signals.
+            // While the polling check makes the rumble accurate, it also causes it to miss signals.
             if ((currentTicks - _lastWriteTicks) < 8) // https://docs.handheldlegend.com/s/progcc-3/doc/lag-comparison-aAR1mV3JLX
             {
-                result = 1;
                 return result;
             }
             
-            bool match = true;
-            int totalFreq = 0;
-            int totalAmp = 0;
-            
-            byte* head = data;
-            for (int i = 0; i < (int) length; i++)
+            SDL_LockJoysticks();
             {
-                if (*data != _lastRumbleData[i])
-                {
-                    match = false;
-                }
-
-                if (i < 2)
-                {
-                    data++;
-                    continue;
-                }
-
-                // Mario Kart 8 Deluxe sends rumble packets where the amplitude is zero, but the frequency isn't.
-                // It's likely that the hardware accounts for this, but on the off-chance it doesn't, we did.
-                if (i == 2 || i == 4 || i == 6 || i == 8) // frequency
-                {
-                    totalFreq += *data;
-                }
-                else if (i == 3 || i == 5 || i == 7 || i == 9) // amplitude
-                {
-                    totalAmp += *data;
-                }
-                
-                data++;
-            }
-            data = head;
-
-            if (!match || (totalFreq == 0 || totalAmp == 0))
-            {
+                // Fun fact: Mario Kart 8 Deluxe sends rumble packets
+                // where the amplitude is zero, but the frequency isn't.
                 result = SDL_hid_write(_hidHandle, data, length);
                 if (result >= 0)
                 {
                     _lastWriteTicks = currentTicks;
-                    for (int i = 0; i < (int)length; i++)
-                    {
-                        _lastRumbleData[i] = *data;
-                        data++;
-                    }
                 }
             }
-
+            SDL_UnlockJoysticks();
+            
             return result;
         }
 
