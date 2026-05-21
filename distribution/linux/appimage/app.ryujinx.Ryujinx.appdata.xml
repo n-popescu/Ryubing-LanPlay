@@ -10,6 +10,9 @@
 	</description>
 	<launchable type="desktop-id">app.ryujinx.Ryujinx.desktop</launchable>
 	<url type="homepage">https://ryujinx.app/</url>
+	<developer id="app.ryujinx">
+		<name>Ryubing</name>
+	</developer>
 	<screenshots>
 		<screenshot type="default">
 			<image>https://git.ryujinx.app/projects/Ryubing/raw/branch/master/docs/shell.png</image>
@@ -18,4 +21,5 @@
 	<provides>
 		<id>app.ryujinx.Ryujinx.desktop</id>
 	</provides>
+	<content_rating type="oars-1.1" />
 </component>
