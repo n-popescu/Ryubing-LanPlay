@@ -25,5 +25,5 @@ chmod +x AppDir/AppRun AppDir/usr/bin/Ryujinx*
 
 mkdir -p "$OUTDIR"
 
-appimagetool --appimage-extract-and-run -n --comp zstd --mksquashfs-opt -Xcompression-level --mksquashfs-opt 21 \
+appimagetool --appimage-extract-and-run --comp zstd --mksquashfs-opt -Xcompression-level --mksquashfs-opt 21 \
     AppDir "$OUTDIR"/Ryujinx.AppImage
