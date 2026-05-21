@@ -14,9 +14,9 @@ cp -r "$BUILDDIR"/* AppDir/usr/lib/
 
 cp distribution/linux/appimage/app.ryujinx.Ryujinx.appdata.xml AppDir/usr/share/metainfo/app.ryujinx.Ryujinx.appdata.xml
 cp distribution/linux/app.ryujinx.Ryujinx.desktop AppDir/app.ryujinx.Ryujinx.desktop
-cp distribution/misc/Logo.svg AppDir/app.ryujinx.Ryujinx.svg
+cp distribution/misc/Logo.png AppDir/app.ryujinx.Ryujinx.png
 
-ln -s ./app.ryujinx.Ryujinx.svg AppDir/.DirIcon  # Must be png, swap out later
+ln -s ./app.ryujinx.Ryujinx.png AppDir/.DirIcon
 ln -s ../lib/Ryujinx AppDir/usr/bin/Ryujinx
 ln -s ./usr/lib/Ryujinx.sh AppDir/AppRun
 
