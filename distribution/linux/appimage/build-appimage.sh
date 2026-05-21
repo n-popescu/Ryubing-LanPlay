@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 set -eu
 
 ROOTDIR="$(readlink -f "$(dirname "$0")")"/../../../
@@ -8,14 +8,17 @@ BUILDDIR=${BUILDDIR:-publish}
 OUTDIR=${OUTDIR:-publish_appimage}
 
 rm -rf AppDir
-mkdir -p AppDir/usr/bin
+mkdir -p AppDir/usr/lib AppDir/usr/bin AppDir/usr/share/metainfo
 
-cp distribution/linux/Ryujinx.desktop AppDir/Ryujinx.desktop
-cp distribution/linux/appimage/AppRun AppDir/AppRun
-cp distribution/misc/Logo.svg AppDir/Ryujinx.svg
+cp -r "$BUILDDIR"/* AppDir/usr/lib/
 
+cp distribution/linux/appimage/app.ryujinx.Ryujinx.appdata.xml AppDir/usr/share/metainfo/app.ryujinx.Ryujinx.appdata.xml
+cp distribution/linux/app.ryujinx.Ryujinx.desktop AppDir/app.ryujinx.Ryujinx.desktop
+cp distribution/misc/Logo.svg AppDir/app.ryujinx.Ryujinx.svg
 
-cp -r "$BUILDDIR"/* AppDir/usr/bin/
+ln -s ./app.ryujinx.Ryujinx.svg AppDir/.DirIcon  # Must be png, swap out later
+ln -s ../lib/Ryujinx AppDir/usr/bin/Ryujinx
+ln -s ./usr/lib/Ryujinx.sh AppDir/AppRun
 
 # Ensure necessary bins are set as executable
 chmod +x AppDir/AppRun AppDir/usr/bin/Ryujinx*
