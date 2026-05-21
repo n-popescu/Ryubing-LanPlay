@@ -10,7 +10,8 @@ OUTDIR=${OUTDIR:-publish_appimage}
 # AppStream
 
 rm -rf AppDir
-mkdir -p AppDir/usr/{lib,bin} AppDir/usr/share/{metainfo,applications}
+mkdir -p AppDir/usr/lib AppDir/usr/bin
+mkdir -p AppDir/usr/share/metainfo AppDir/usr/share/applications
 mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps/
 
 cp -r "$BUILDDIR"/* AppDir/usr/lib/
@@ -18,13 +19,13 @@ cp -r "$BUILDDIR"/* AppDir/usr/lib/
 cp distribution/linux/appimage/app.ryujinx.Ryujinx.appdata.xml AppDir/usr/share/metainfo/app.ryujinx.Ryujinx.appdata.xml
 cp distribution/linux/app.ryujinx.Ryujinx.desktop AppDir/usr/share/applications/app.ryujinx.Ryujinx.desktop
 cp distribution/misc/Logo.png AppDir/usr/share/icons/hicolor/256x256/apps/app.ryujinx.Ryujinx.png
+ln -s ../lib/Ryujinx AppDir/usr/bin/Ryujinx
 
 # AppImage Root
 
 ln -s ./usr/share/applications/app.ryujinx.Ryujinx.desktop AppDir/app.ryujinx.Ryujinx.desktop
 ln -s ./usr/share/icons/hicolor/256x256/apps/app.ryujinx.Ryujinx.png AppDir/.DirIcon
 ln -s ./usr/share/icons/hicolor/256x256/apps/app.ryujinx.Ryujinx.png AppDir/app.ryujinx.Ryujinx.png
-ln -s ../lib/Ryujinx AppDir/usr/bin/Ryujinx
 ln -s ./usr/lib/Ryujinx.sh AppDir/AppRun
 
 # Ensure necessary bins are set as executable
