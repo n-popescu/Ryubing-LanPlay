@@ -49,8 +49,6 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
         private AccessPoint _accessPoint;
         private Station _station;
 
-        protected virtual bool ValidateLocalCommunicationId => true;
-
         private ushort CheckDevelopmentChannel(ushort channel)
         {
             return (ushort)(!IsDevelopment ? 0 : channel);
@@ -533,7 +531,7 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
 
         [CommandCmif(200)]
         // OpenAccessPoint()
-        public virtual ResultCode OpenAccessPoint(ServiceCtx context)
+        public ResultCode OpenAccessPoint(ServiceCtx context)
         {
             if (_nifmResultCode != ResultCode.Success)
             {
@@ -622,9 +620,7 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
                 networkConfig.IntentId.LocalCommunicationId = (long)controlProperty.LocalCommunicationId[0];
             }
 
-            bool isLocalCommunicationIdValid = !ValidateLocalCommunicationId ||
-                CheckLocalCommunicationIdPermission(context, (ulong)networkConfig.IntentId.LocalCommunicationId);
-
+            bool isLocalCommunicationIdValid = CheckLocalCommunicationIdPermission(context, (ulong)networkConfig.IntentId.LocalCommunicationId);
             if (!isLocalCommunicationIdValid && NetworkClient.NeedsRealId)
             {
                 Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, "CreateNetworkImpl: Invalid object!");

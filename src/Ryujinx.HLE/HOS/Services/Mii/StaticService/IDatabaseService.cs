@@ -1,5 +1,4 @@
 using Ryujinx.Common;
-using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Ipc;
 using Ryujinx.HLE.HOS.Services.Mii.Types;
 using System;
@@ -35,11 +34,7 @@ namespace Ryujinx.HLE.HOS.Services.Mii.StaticService
         {
             SourceFlag flag = (SourceFlag)context.RequestData.ReadInt32();
 
-            uint count = GetCount(flag);
-
-            context.ResponseData.Write(count);
-
-            Logger.NetLog?.PrintMsg(LogClass.ServiceMii, $"GetCount: flag={flag}, count={count}");
+            context.ResponseData.Write(GetCount(flag));
 
             return ResultCode.Success;
         }
@@ -62,8 +57,6 @@ namespace Ryujinx.HLE.HOS.Services.Mii.StaticService
 
             WriteSpanToBuffer(context, outputBuffer, elementsSpan);
 
-            Logger.NetLog?.PrintMsg(LogClass.ServiceMii, $"Get: flag={flag}, count={count}, result={result}");
-
             return result;
         }
 
@@ -84,8 +77,6 @@ namespace Ryujinx.HLE.HOS.Services.Mii.StaticService
             context.ResponseData.Write(count);
 
             WriteSpanToBuffer(context, outputBuffer, elementsSpan);
-
-            Logger.NetLog?.PrintMsg(LogClass.ServiceMii, $"Get1: flag={flag}, count={count}, result={result}");
 
             return result;
         }
@@ -150,8 +141,6 @@ namespace Ryujinx.HLE.HOS.Services.Mii.StaticService
 
             WriteSpanToBuffer(context, outputBuffer, elementsSpan);
 
-            Logger.NetLog?.PrintMsg(LogClass.ServiceMii, $"Get2: flag={flag}, count={count}, result={result}");
-
             return result;
         }
 
@@ -172,8 +161,6 @@ namespace Ryujinx.HLE.HOS.Services.Mii.StaticService
             context.ResponseData.Write(count);
 
             WriteSpanToBuffer(context, outputBuffer, elementsSpan);
-
-            Logger.NetLog?.PrintMsg(LogClass.ServiceMii, $"Get3: flag={flag}, count={count}, result={result}");
 
             return result;
         }

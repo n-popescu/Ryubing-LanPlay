@@ -172,12 +172,6 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
                     return WinSockHelper.ConvertError((WsaError)exception.ErrorCode);
                 }
             }
-            catch (InvalidOperationException exception)
-            {
-                Logger.Warning?.Print(LogClass.ServiceBsd, $"Socket connection failed: {exception.Message}");
-
-                return LinuxError.EINVAL;
-            }
         }
 
         public void Disconnect()
@@ -455,10 +449,6 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
 
                     Socket.SetSocketOption(level, SocketOptionName.Linger, new LingerOption(value != 0, value2));
                 }
-                else if (level == SocketOptionLevel.Socket && (option == BsdSocketOption.SoRcvTimeo || option == BsdSocketOption.SoSndTimeo))
-                {
-                    Socket.SetSocketOption(level, optionName, ConvertTimeValToMilliseconds(optionValue));
-                }
                 else
                 {
                     Socket.SetSocketOption(level, optionName, value);
@@ -475,36 +465,6 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
 
                 return WinSockHelper.ConvertError((WsaError)exception.ErrorCode);
             }
-        }
-
-        private static int ConvertTimeValToMilliseconds(ReadOnlySpan<byte> optionValue)
-        {
-            long seconds;
-            long microseconds;
-
-            if (optionValue.Length >= 16)
-            {
-                seconds = MemoryMarshal.Read<long>(optionValue);
-                microseconds = MemoryMarshal.Read<long>(optionValue[8..]);
-            }
-            else if (optionValue.Length >= 8)
-            {
-                seconds = MemoryMarshal.Read<int>(optionValue);
-                microseconds = MemoryMarshal.Read<int>(optionValue[4..]);
-            }
-            else
-            {
-                return optionValue.Length >= 4 ? MemoryMarshal.Read<int>(optionValue) : MemoryMarshal.Read<byte>(optionValue);
-            }
-
-            if (seconds <= 0 && microseconds <= 0)
-            {
-                return 0;
-            }
-
-            long milliseconds = (seconds * 1000) + ((microseconds + 999) / 1000);
-
-            return (int)Math.Clamp(milliseconds, 1, int.MaxValue);
         }
 
         public LinuxError Read(out int readSize, Span<byte> buffer)
