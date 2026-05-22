@@ -48,6 +48,8 @@ namespace Ryujinx.Ava.UI.Windows
 
         private bool _isLoading;
         private bool _applicationsLoadedOnce;
+        private double _windowStartupWidthDelta;
+        private double _windowStartupHeightDelta;
 
         private UserChannelPersistence _userChannelPersistence;
         private static bool _deferLoad;
@@ -477,8 +479,8 @@ namespace Ryujinx.Ava.UI.Windows
             {
                 // Since scaling is being applied to the loaded settings from disk (see SetWindowSizePosition() above), scaling should be removed from width/height before saving out to disk
                 // as well - otherwise anyone not using a 1.0 scale factor their window will increase in size with every subsequent launch of the program when scaling is applied (Nov. 14, 2024)
-                ConfigurationState.Instance.UI.WindowStartup.WindowSizeHeight.Value = (int)(Height / Program.WindowScaleFactor);
-                ConfigurationState.Instance.UI.WindowStartup.WindowSizeWidth.Value = (int)(Width / Program.WindowScaleFactor);
+                ConfigurationState.Instance.UI.WindowStartup.WindowSizeHeight.Value = (int)((Height - _windowStartupHeightDelta) / Program.WindowScaleFactor);
+                ConfigurationState.Instance.UI.WindowStartup.WindowSizeWidth.Value = (int)((Width - _windowStartupWidthDelta) / Program.WindowScaleFactor);
 
                 ConfigurationState.Instance.UI.WindowStartup.WindowPositionX.Value = Position.X;
                 ConfigurationState.Instance.UI.WindowStartup.WindowPositionY.Value = Position.Y;
@@ -492,6 +494,9 @@ namespace Ryujinx.Ava.UI.Windows
             base.OnOpened(e);
 
             Initialize();
+
+            _windowStartupWidthDelta = Math.Max(0, Width - ViewModel.WindowWidth);
+            _windowStartupHeightDelta = Math.Max(0, Height - ViewModel.WindowHeight);
 
             PlatformSettings!.ColorValuesChanged += OnPlatformColorValuesChanged;
 
