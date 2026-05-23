@@ -110,7 +110,8 @@
                                 MaxLines="2"
                                 TextWrapping="Wrap"
                                 TextTrimming="CharacterEllipsis"
-                                Text="{Binding Name}" />
+                                Text="{Binding Name}"
+                                FontStyle="{Binding ., Converter={x:Static helpers:XCITrimmerFileItalicsConverter.Instance}}" />
                             <Grid
                                 Grid.Column="2"
                                 MinWidth="120"
