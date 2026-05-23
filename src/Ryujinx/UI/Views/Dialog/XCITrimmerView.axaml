@@ -50,7 +50,7 @@
                     Margin="5,0,0,0"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Right"
-                    Watermark="{ext:Locale Search}"
+                    Watermark="{ext:Locale CommonSearch_SearchWatermark}"
                     Text="{Binding Search}" />
             </StackPanel>
         </Grid>

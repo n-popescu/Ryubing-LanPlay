@@ -60,7 +60,7 @@
                 Grid.Column="1"
                 HorizontalAlignment="Stretch"
                 Margin="10,0, 0, 0" ColumnDefinitions="Auto,*">
-                <TextBlock Text="{ext:Locale Search}" VerticalAlignment="Center" />
+                <TextBlock Text="{ext:Locale CommonSearch_SearchWatermark}" VerticalAlignment="Center" />
                 <TextBox
                     Margin="10,0,0,0"
                     Grid.Column="1"
