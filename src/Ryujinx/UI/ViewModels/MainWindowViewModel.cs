@@ -2077,7 +2077,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Window.Position.X + (int)(Window.Bounds.Width / 2),
                 Window.Position.Y + (int)(Window.Bounds.Height / 2));
 
-            var screen =
+            Avalonia.Platform.Screen? screen =
                 Window.Screens.ScreenFromVisual(Window) ??
                 Window.Screens.ScreenFromPoint(windowCenter) ??
                 Window.Screens.Primary;
