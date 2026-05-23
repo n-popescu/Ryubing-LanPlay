@@ -33,7 +33,7 @@
                           HorizontalContentAlignment="Left"
                           MinWidth="100">
                     <ComboBoxItem
-                        Content="{ext:Locale Name}" />
+                        Content="{ext:Locale CommonSort_Name}" />
                     <ComboBoxItem
                         Content="{ext:Locale Size}" />
                     <ComboBox.Styles>
@@ -46,9 +46,9 @@
                           HorizontalContentAlignment="Left"
                           MinWidth="150">
                     <ComboBoxItem
-                        Content="{ext:Locale OrderAscending}" />
+                        Content="{ext:Locale CommonSort_OrderAscending}" />
                     <ComboBoxItem
-                        Content="{ext:Locale OrderDescending}" />
+                        Content="{ext:Locale CommonSort_OrderDescending}" />
                     <ComboBox.Styles>
                         <Style Selector="ContentControl#ContentPresenter">
                             <Setter Property="HorizontalAlignment" Value="Left" />

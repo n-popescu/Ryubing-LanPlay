@@ -751,31 +751,6 @@
       }
     },
     {
-      "ID": "GameListHeaderApplication",
-      "Translations": {
-        "ar_SA": "الاسم",
-        "de_DE": "",
-        "el_GR": "Όνομα",
-        "en_US": "Name",
-        "es_ES": "Nombre",
-        "fr_FR": "Nom",
-        "he_IL": "שם",
-        "it_IT": "Nome",
-        "ja_JP": "名称",
-        "ko_KR": "이름",
-        "no_NO": "Navn",
-        "pl_PL": "Nazwa",
-        "pt_BR": "Nome",
-        "ru_RU": "Название",
-        "sv_SE": "Namn",
-        "th_TH": "ชื่อ",
-        "tr_TR": "Oyun Adı",
-        "uk_UA": "Назва",
-        "zh_CN": "名称",
-        "zh_TW": "名稱"
-      }
-    },
-    {
       "ID": "GameListHeaderDeveloper",
       "Translations": {
         "ar_SA": "",
@@ -12976,56 +12951,6 @@
       }
     },
     {
-      "ID": "OrderAscending",
-      "Translations": {
-        "ar_SA": "تصاعدي",
-        "de_DE": "Aufsteigend",
-        "el_GR": "Αύξουσα",
-        "en_US": "Ascending",
-        "es_ES": "Ascendente",
-        "fr_FR": "Croissant",
-        "he_IL": "סדר עולה",
-        "it_IT": "Crescente",
-        "ja_JP": "昇順",
-        "ko_KR": "오름차순",
-        "no_NO": "Stigende",
-        "pl_PL": "Rosnąco",
-        "pt_BR": "Ascendente",
-        "ru_RU": "По Возрастанию",
-        "sv_SE": "Stigande",
-        "th_TH": "จากน้อยไปมาก",
-        "tr_TR": "Artan",
-        "uk_UA": "За зростанням",
-        "zh_CN": "升序",
-        "zh_TW": "從小到大"
-      }
-    },
-    {
-      "ID": "OrderDescending",
-      "Translations": {
-        "ar_SA": "تنازلي",
-        "de_DE": "Absteigend",
-        "el_GR": "Φθίνουσα",
-        "en_US": "Descending",
-        "es_ES": "Descendente",
-        "fr_FR": "Décroissant",
-        "he_IL": "סדר יורד",
-        "it_IT": "Decrescente",
-        "ja_JP": "降順",
-        "ko_KR": "내림차순",
-        "no_NO": "Synkende",
-        "pl_PL": "Malejąco",
-        "pt_BR": "Descendente",
-        "ru_RU": "По Убыванию",
-        "sv_SE": "Fallande",
-        "th_TH": "จากมากไปน้อย",
-        "tr_TR": "Azalan",
-        "uk_UA": "За спаданням",
-        "zh_CN": "降序",
-        "zh_TW": "從大到小"
-      }
-    },
-    {
       "ID": "SettingsTabGraphicsFeatures",
       "Translations": {
         "ar_SA": "الميزات والتحسينات",
@@ -17623,31 +17548,6 @@
         "uk_UA": "Менеджер збереження",
         "zh_CN": "存档管理器",
         "zh_TW": "存檔管理員"
-      }
-    },
-    {
-      "ID": "Name",
-      "Translations": {
-        "ar_SA": "الاسم",
-        "de_DE": "",
-        "el_GR": "Όνομα",
-        "en_US": "Name",
-        "es_ES": "Nombre",
-        "fr_FR": "Nom",
-        "he_IL": "שם",
-        "it_IT": "Nome",
-        "ja_JP": "名称",
-        "ko_KR": "이름",
-        "no_NO": "Navn",
-        "pl_PL": "Nazwa",
-        "pt_BR": "Nome",
-        "ru_RU": "Название",
-        "sv_SE": "Namn",
-        "th_TH": "ชื่อ",
-        "tr_TR": "İsim",
-        "uk_UA": "Назва",
-        "zh_CN": "名称",
-        "zh_TW": "名稱"
       }
     },
     {

@@ -792,7 +792,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 {
                     ApplicationSort.Favorite => LocaleManager.Instance[LocaleKeys.CommonFavorite],
                     ApplicationSort.TitleId => LocaleManager.Instance[LocaleKeys.DlcManagerTableHeadingTitleIdLabel],
-                    ApplicationSort.Title => LocaleManager.Instance[LocaleKeys.GameListHeaderApplication],
+                    ApplicationSort.Title => LocaleManager.Instance[LocaleKeys.CommonSort_Name],
                     ApplicationSort.Developer => LocaleManager.Instance[LocaleKeys.GameListSortDeveloper],
                     ApplicationSort.LastPlayed => LocaleManager.Instance[LocaleKeys.GameListSortLastPlayed],
                     ApplicationSort.TotalTimePlayed => LocaleManager.Instance[LocaleKeys.GameListSortTimePlayed],
