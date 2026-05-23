@@ -44,7 +44,6 @@ namespace Ryujinx.Ava.UI.Views.Main
             ResumeEmulationMenuItem.Command = Commands.Create(() => ViewModel.AppHost?.Resume());
             StopEmulationMenuItem.Command = Commands.Create(() => ViewModel.AppHost?.ShowExitPrompt().OrCompleted());
             RestartEmulationMenuItem.Command = Commands.Create(() => ViewModel.RestartEmulation());
-            CheatManagerMenuItem.Command = Commands.CreateSilentFail(OpenCheatManagerForCurrentApp);
             InstallFileTypesMenuItem.Command = Commands.Create(InstallFileTypes);
             UninstallFileTypesMenuItem.Command = Commands.Create(UninstallFileTypes);
             XciTrimmerMenuItem.Command = Commands.Create(XciTrimmerView.Show);
@@ -154,7 +153,7 @@ namespace Ryujinx.Ava.UI.Views.Main
             ViewModel.LoadConfigurableHotKeys();
         }
 
-        public AppletMetadata MiiApplet => new(ViewModel.ContentManager, "miiEdit", 0x0100000000001009);
+        public AppletMetadata MiiApplet => new(ViewModel.ContentManager, LocaleManager.Instance[LocaleKeys.MenuBar_Actions_MiiEditorButton], 0x0100000000001009);
 
         public async Task OpenMiiApplet()
         {
@@ -162,24 +161,6 @@ namespace Ryujinx.Ava.UI.Views.Main
                 return;
 
             await ViewModel.LoadApplication(appData, ViewModel.IsFullScreen || ViewModel.StartGamesInFullscreen, nacpData);
-        }
-
-        public async Task OpenCheatManagerForCurrentApp()
-        {
-            if (!ViewModel.IsGameRunning)
-                return;
-
-            string name = ViewModel.AppHost.Device.Processes.ActiveApplication.ApplicationControlProperties.Title[(int)ViewModel.AppHost.Device.System.State.DesiredTitleLanguage].NameString.ToString();
-
-            await StyleableAppWindow.ShowAsync(
-                new CheatWindow(
-                    Window.VirtualFileSystem,
-                    ViewModel.AppHost.Device.Processes.ActiveApplication.ProgramIdText,
-                    name,
-                    ViewModel.SelectedApplication.Path)
-            );
-
-            ViewModel.AppHost.Device.EnableCheats();
         }
 
         private void ScanAmiiboMenuItem_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
