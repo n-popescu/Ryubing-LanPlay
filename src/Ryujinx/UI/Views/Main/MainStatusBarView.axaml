@@ -63,11 +63,13 @@
                 <TextBlock
                     Name="StatusBarProgressStatus"
                     Grid.Column="5"
-                    MinWidth="200"
                     Margin="5,0,0,0"
                     VerticalAlignment="Center"
                     IsVisible="{Binding StatusBarProgressStatusVisible}"
-                    Text="{Binding StatusBarProgressStatusText}" />
+                    Text="{Binding StatusBarProgressStatusText}"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="NoWrap"
+                    MaxWidth="1000" />
                 <ProgressBar
                     Name="LoadProgressBar"
                     Grid.Column="6"
