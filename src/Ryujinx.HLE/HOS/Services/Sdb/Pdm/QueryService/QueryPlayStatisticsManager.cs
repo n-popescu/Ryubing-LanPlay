@@ -31,7 +31,7 @@ namespace Ryujinx.HLE.HOS.Services.Sdb.Pdm.QueryService
                 }
             }
 
-            Process process = context.Device.Processes.GetProcess(context.ClientProcessId);
+            var process = context.Device.Processes.GetProcess(context.ClientProcessId);
             PlayLogQueryCapability queryCapability = (PlayLogQueryCapability)process.ApplicationControlProperties.PlayLogQueryCapability;
 
             List<ulong> titleIds = [];
