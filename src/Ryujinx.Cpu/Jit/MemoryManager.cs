@@ -136,7 +136,7 @@ namespace Ryujinx.Cpu.Jit
             }
             catch
             {
-                if (IsPoisonedPointer(va))
+                if (IsPoisoned(va))
                 {
                     if (Interlocked.Increment(ref _invalidAccessCount) % 256 == 0)
                     {
