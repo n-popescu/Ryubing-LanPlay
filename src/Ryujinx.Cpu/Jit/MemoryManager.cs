@@ -1,5 +1,4 @@
 using ARMeilleure.Memory;
-using Ryujinx.Common.Logging;
 using Ryujinx.Memory;
 using Ryujinx.Memory.Range;
 using Ryujinx.Memory.Tracking;
@@ -18,23 +17,43 @@ namespace Ryujinx.Cpu.Jit
     public sealed class MemoryManager : VirtualMemoryManagerRefCountedBase, IMemoryManager, IVirtualMemoryManagerTracked
     {
         private const int PteSize = 8;
+
         private const int PointerTagBit = 62;
+
         private readonly MemoryBlock _backingMemory;
         private readonly InvalidAccessHandler _invalidAccessHandler;
 
-        private long _invalidAccessCount = 0;
+        /// <inheritdoc/>
         public bool UsesPrivateAllocations => false;
+
+        /// <summary>
+        /// Address space width in bits.
+        /// </summary>
         public int AddressSpaceBits { get; }
-        public nint PageTablePointer => (nint)_pageTable.Pointer;
+
         private readonly MemoryBlock _pageTable;
+
         private readonly ManagedPageFlags _pages;
 
+        /// <summary>
+        /// Page table base pointer.
+        /// </summary>
+        public nint PageTablePointer => _pageTable.Pointer;
+
         public MemoryManagerType Type => MemoryManagerType.SoftwarePageTable;
+
         public MemoryTracking Tracking { get; }
+
         public event Action<ulong, ulong> UnmapEvent;
 
         protected override ulong AddressSpaceSize { get; }
 
+        /// <summary>
+        /// Creates a new instance of the memory manager.
+        /// </summary>
+        /// <param name="backingMemory">Physical backing memory where virtual memory will be mapped to</param>
+        /// <param name="addressSpaceSize">Size of the address space</param>
+        /// <param name="invalidAccessHandler">Optional function to handle invalid memory accesses</param>
         public MemoryManager(MemoryBlock backingMemory, ulong addressSpaceSize, InvalidAccessHandler invalidAccessHandler = null)
         {
             _backingMemory = backingMemory;
@@ -42,29 +61,20 @@ namespace Ryujinx.Cpu.Jit
 
             ulong asSize = PageSize;
             int asBits = PageBits;
+
             while (asSize < addressSpaceSize)
             {
                 asSize <<= 1;
                 asBits++;
             }
+
             AddressSpaceBits = asBits;
             AddressSpaceSize = asSize;
-
             _pageTable = new MemoryBlock((asSize / PageSize) * PteSize);
-            _pages = new ManagedPageFlags(AddressSpaceBits);
-            Tracking = new MemoryTracking(this, PageSize);
-        }
 
-        private static bool IsPoisoned(ulong va)
-        {
-            if (va == 0 || va == 1) return true;
-            if ((va & 0x6969696969696969UL) != 0) return true;
-            if ((va & 0x00F0F0F0F0F0F0F0UL) == 0x0034b4b000000000UL) return true;
-            if ((va & 0xFFFFFFFF00000000UL) == 0x0034b4b900000000UL) return true;
-            if ((va & 0xFFFFFFFF00000000UL) == 0x0034b4b700000000UL)
-            if (va < 0x10000) return true;
-            if ((va >> 32) == 0x0034b4b7) return true; // Extra broad check
-            return false;
+            _pages = new ManagedPageFlags(AddressSpaceBits);
+
+            Tracking = new MemoryTracking(this, PageSize);
         }
 
         /// <inheritdoc/>
@@ -134,62 +144,54 @@ namespace Ryujinx.Cpu.Jit
         {
             try
             {
+                SignalMemoryTrackingImpl(va, (ulong)Unsafe.SizeOf<T>(), false, true);
+
                 return Read<T>(va);
             }
-            catch
+            catch (InvalidMemoryRegionException)
             {
-                if (IsPoisoned(va))
+                if (_invalidAccessHandler == null || !_invalidAccessHandler(va))
                 {
-                    if (Interlocked.Increment(ref _invalidAccessCount) % 256 == 0)
-                    {
-                        Ryujinx.Common.Logging.Logger.Warning?.Print(Ryujinx.Common.Logging.LogClass.Cpu, 
-                            $"Suppressed exception on poisoned address 0x{va:X16}");
-                    }
-                    return default;
+                    throw;
                 }
-                throw;
-            }
-        }
 
-        public override T Read<T>(ulong va)
-        {
-            if (IsPoisoned(va))
-            {
-                LogSuppressed(va, "Read");
                 return default;
             }
-            return base.Read<T>(va);
         }
-
-
 
         /// <inheritdoc/>
         public override void Read(ulong va, Span<byte> data)
         {
-            if (IsPoisoned(va))
+            try
             {
-                LogSuppressed(va, "ReadSpan");
-                data.Clear();
-                return;
+                base.Read(va, data);
             }
-            base.Read(va, data);
+            catch (InvalidMemoryRegionException)
+            {
+                if (_invalidAccessHandler == null || !_invalidAccessHandler(va))
+                {
+                    throw;
+                }
+            }
         }
-        public override void Write(ulong va, ReadOnlySpan<byte> data)
+        
+        public override bool TryReadUnsafe(ulong va, int length, out Span<byte> data)
         {
-            if (IsPoisoned(va))
-            {
-                LogSuppressed(va, "Write");
-                return;
-            }
-            base.Write(va, data);
+            throw new NotImplementedException();
         }
 
-        private void LogSuppressed(ulong va, string op)
+        public override void Write(ulong va, ReadOnlySpan<byte> data)
         {
-            if (Interlocked.Increment(ref _invalidAccessCount) % 64 == 0)
+            try
             {
-                Ryujinx.Common.Logging.Logger.Warning?.Print(Ryujinx.Common.Logging.LogClass.Cpu, 
-                    $"Suppressed {op} @ 0x{va:X16}");
+                base.Write(va, data);
+            }
+            catch (InvalidMemoryRegionException)
+            {
+                if (_invalidAccessHandler == null || !_invalidAccessHandler(va))
+                {
+                    throw;
+                }
             }
         }
 
