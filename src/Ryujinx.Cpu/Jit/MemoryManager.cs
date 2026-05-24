@@ -35,12 +35,6 @@ namespace Ryujinx.Cpu.Jit
 
         protected override ulong AddressSpaceSize { get; }
 
-        /// <summary>
-        /// Creates a new instance of the memory manager.
-        /// </summary>
-        /// <param name="backingMemory">Physical backing memory where virtual memory will be mapped to</param>
-        /// <param name="addressSpaceSize">Size of the address space</param>
-        /// <param name="invalidAccessHandler">Optional function to handle invalid memory accesses</param>
         public MemoryManager(MemoryBlock backingMemory, ulong addressSpaceSize, InvalidAccessHandler invalidAccessHandler = null)
         {
             _backingMemory = backingMemory;
@@ -63,7 +57,9 @@ namespace Ryujinx.Cpu.Jit
 
         private static bool IsPoisonedPointer(ulong addr)
         {
-            return addr == 0 || (addr & 0x6969696969696969UL) != 0;
+            return addr == 0 
+                || (addr & 0x6969696969696969UL) != 0 
+                || (addr & 0x00F0F0F0F0F0F0F0UL) == 0x0034b4b000000000UL;
         }
 
         /// <inheritdoc/>
@@ -140,7 +136,7 @@ namespace Ryujinx.Cpu.Jit
             {
                 if (IsPoisonedPointer(va))
                 {
-                    if (Interlocked.Increment(ref _invalidAccessCount) % 4096 == 0)
+                    if (Interlocked.Increment(ref _invalidAccessCount) % 2048 == 0)
                     {
                         Logger.Warning?.Print(LogClass.Cpu, $"[TOTK Mod Tolerant] Suppressed poisoned read @ 0x{va:X16}");
                     }
@@ -164,7 +160,7 @@ namespace Ryujinx.Cpu.Jit
             {
                 if (IsPoisonedPointer(va))
                 {
-                    if (Interlocked.Increment(ref _invalidAccessCount) % 4096 == 0)
+                    if (Interlocked.Increment(ref _invalidAccessCount) % 2048 == 0)
                     {
                         Logger.Warning?.Print(LogClass.Cpu, $"[TOTK Mod Tolerant] Suppressed poisoned read @ 0x{va:X16}");
                     }
@@ -185,10 +181,7 @@ namespace Ryujinx.Cpu.Jit
             catch (InvalidMemoryRegionException)
             {
                 if (IsPoisonedPointer(va))
-                {
-                    return; // silently ignore writes to poisoned memory
-                }
-
+                    return;
                 if (_invalidAccessHandler == null || !_invalidAccessHandler(va))
                     throw;
             }
