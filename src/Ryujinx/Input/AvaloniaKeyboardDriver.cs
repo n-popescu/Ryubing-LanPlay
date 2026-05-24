@@ -181,7 +181,7 @@ namespace Ryujinx.Ava.Input
             {
                 if (OperatingSystem.IsMacOS())
                 {
-                    var flags = CGEventSourceFlagsState(CGEventSourceStateID.HIDSystemState);
+                    CGEventFlags flags = CGEventSourceFlagsState(CGEventSourceStateID.HIDSystemState);
                     currentState = (flags & CGEventFlags.AlphaShift) != 0;
                 }
                 else
