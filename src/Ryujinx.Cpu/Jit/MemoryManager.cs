@@ -55,13 +55,13 @@ namespace Ryujinx.Cpu.Jit
             Tracking = new MemoryTracking(this, PageSize);
         }
 
-        private static bool IsPoisonedPointer(ulong addr)
+        private static bool IsPoisoned(ulong va)
         {
-            if (addr == 0 || addr == 1) return true;
-            if ((addr & 0x6969696969696969UL) != 0) return true;
-            if ((addr & 0x00F0F0F0F0F0F0F0UL) == 0x0034b4b000000000UL) return true;
-            if ((addr & 0xFFFFFFFF00000000UL) == 0x0034b4b900000000UL) return true;
-            if (addr < 0x10000) return true;
+            if (va == 0 || va == 1) return true;
+            if ((va & 0x6969696969696969UL) != 0) return true;
+            if ((va & 0x00F0F0F0F0F0F0F0UL) == 0x0034b4b000000000UL) return true;
+            if ((va & 0xFFFFFFFF00000000UL) == 0x0034b4b900000000UL) return true;
+            if (va < 0x10000) return true;
             return false;
         }
 
@@ -151,13 +151,9 @@ namespace Ryujinx.Cpu.Jit
 
         public override T Read<T>(ulong va)
         {
-            if (IsPoisonedPointer(va))
+            if (IsPoisoned(va))
             {
-                if (Interlocked.Increment(ref _invalidAccessCount) % 256 == 0)
-                {
-                    Ryujinx.Common.Logging.Logger.Warning?.Print(Ryujinx.Common.Logging.LogClass.Cpu, 
-                        $"Suppressed poisoned read @ 0x{va:X16}");
-                }
+                LogSuppressed(va, "Read");
                 return default;
             }
             return base.Read<T>(va);
@@ -168,13 +164,9 @@ namespace Ryujinx.Cpu.Jit
         /// <inheritdoc/>
         public override void Read(ulong va, Span<byte> data)
         {
-            if (IsPoisonedPointer(va))
+            if (IsPoisoned(va))
             {
-                if (Interlocked.Increment(ref _invalidAccessCount) % 256 == 0)
-                {
-                    Ryujinx.Common.Logging.Logger.Warning?.Print(Ryujinx.Common.Logging.LogClass.Cpu, 
-                        $"Suppressed poisoned read @ 0x{va:X16}");
-                }
+                LogSuppressed(va, "ReadSpan");
                 data.Clear();
                 return;
             }
@@ -182,9 +174,21 @@ namespace Ryujinx.Cpu.Jit
         }
         public override void Write(ulong va, ReadOnlySpan<byte> data)
         {
-            if (IsPoisonedPointer(va))
+            if (IsPoisoned(va))
+            {
+                LogSuppressed(va, "Write");
                 return;
+            }
             base.Write(va, data);
+        }
+
+        private void LogSuppressed(ulong va, string op)
+        {
+            if (Interlocked.Increment(ref _invalidAccessCount) % 64 == 0)
+            {
+                Ryujinx.Common.Logging.Logger.Warning?.Print(Ryujinx.Common.Logging.LogClass.Cpu, 
+                    $"Suppressed {op} @ 0x{va:X16}");
+            }
         }
 
         /// <inheritdoc/>
