@@ -57,9 +57,12 @@ namespace Ryujinx.Cpu.Jit
 
         private static bool IsPoisonedPointer(ulong addr)
         {
-            return addr == 0 
-                || (addr & 0x6969696969696969UL) != 0 
-                || (addr & 0x00F0F0F0F0F0F0F0UL) == 0x0034b4b000000000UL;
+            if (addr == 0) return true;
+            if ((addr & 0x6969696969696969UL) != 0) return true;
+            if ((addr & 0x00F0F0F0F0F0F0F0UL) == 0x0034b4b000000000UL) return true;
+            if (addr < 0x1000) return true;
+            if ((addr & 0xFFFFFFFF00000000UL) == 0x0034b4b900000000UL) return true;
+            return false;
         }
 
         /// <inheritdoc/>
@@ -136,7 +139,7 @@ namespace Ryujinx.Cpu.Jit
             {
                 if (IsPoisonedPointer(va))
                 {
-                    if (Interlocked.Increment(ref _invalidAccessCount) % 2048 == 0)
+                    if (Interlocked.Increment(ref _invalidAccessCount) % 512 == 0)
                     {
                         Logger.Warning?.Print(LogClass.Cpu, $"[TOTK Mod Tolerant] Suppressed poisoned read @ 0x{va:X16}");
                     }
@@ -160,9 +163,9 @@ namespace Ryujinx.Cpu.Jit
             {
                 if (IsPoisonedPointer(va))
                 {
-                    if (Interlocked.Increment(ref _invalidAccessCount) % 2048 == 0)
+                    if (Interlocked.Increment(ref _invalidAccessCount) % 512 == 0)
                     {
-                        Logger.Warning?.Print(LogClass.Cpu, $"[TOTK Mod Tolerant] Suppressed poisoned read @ 0x{va:X16}");
+                        Logger.Warning?.Print(LogClass.Cpu, $"Suppressed poisoned read @ 0x{va:X16}");
                     }
                     data.Clear();
                     return;
