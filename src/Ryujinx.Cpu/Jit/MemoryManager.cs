@@ -61,7 +61,9 @@ namespace Ryujinx.Cpu.Jit
             if ((va & 0x6969696969696969UL) != 0) return true;
             if ((va & 0x00F0F0F0F0F0F0F0UL) == 0x0034b4b000000000UL) return true;
             if ((va & 0xFFFFFFFF00000000UL) == 0x0034b4b900000000UL) return true;
+            if ((va & 0xFFFFFFFF00000000UL) == 0x0034b4b700000000UL)
             if (va < 0x10000) return true;
+            if ((va >> 32) == 0x0034b4b7) return true; // Extra broad check
             return false;
         }
 
