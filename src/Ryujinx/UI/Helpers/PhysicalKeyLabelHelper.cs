@@ -2,6 +2,7 @@ using Avalonia.Input;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Input;
 using Ryujinx.Common.Configuration;
+using Ryujinx.Common.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -97,32 +98,38 @@ namespace Ryujinx.Ava.UI.Helpers
                     return;
                 }
 
+                string labelsPath = GetObservedLabelsPath();
+                if (!File.Exists(labelsPath))
+                {
+                    _observedLayoutLabelsLoaded = true;
+                    return;
+                }
+
                 try
                 {
-                    string labelsPath = GetObservedLabelsPath();
+                    string labelsJson = File.ReadAllText(labelsPath);
+                    Dictionary<string, string>? labels = JsonSerializer.Deserialize<Dictionary<string, string>>(labelsJson, _serializerOptions);
 
-                    if (File.Exists(labelsPath))
+                    if (labels != null)
                     {
-                        Dictionary<string, string> labels = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(labelsPath), _serializerOptions);
-
-                        if (labels != null)
+                        foreach ((string key, string value) in labels)
                         {
-                            foreach ((string key, string value) in labels)
+                            if (Enum.TryParse(key, out ConfigPhysicalKey physicalKey) &&
+                                !string.IsNullOrEmpty(value))
                             {
-                                if (Enum.TryParse(key, out ConfigPhysicalKey physicalKey) &&
-                                    !string.IsNullOrEmpty(value))
-                                {
-                                    _observedLayoutLabels[physicalKey] = value;
-                                }
+                                _observedLayoutLabels[physicalKey] = value;
                             }
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Logger.Warning?.Print(LogClass.UI, $"Unable to load observed keyboard layout labels from '{labelsPath}': {ex.Message}");
                 }
-
-                _observedLayoutLabelsLoaded = true;
+                finally
+                {
+                    _observedLayoutLabelsLoaded = true;
+                }
             }
         }
 
@@ -132,7 +139,7 @@ namespace Ryujinx.Ava.UI.Helpers
             {
                 try
                 {
-                    Dictionary<string, string> labels = [];
+                    Dictionary<string, string> labels = new();
 
                     foreach ((ConfigPhysicalKey key, string value) in _observedLayoutLabels)
                     {
@@ -141,8 +148,9 @@ namespace Ryujinx.Ava.UI.Helpers
 
                     File.WriteAllText(GetObservedLabelsPath(), JsonSerializer.Serialize(labels, _serializerOptions));
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Logger.Warning?.Print(LogClass.UI, $"Unable to save observed keyboard layout labels: {ex.Message}");
                 }
             }
         }
@@ -189,8 +197,9 @@ namespace Ryujinx.Ava.UI.Helpers
             {
                 return OperatingSystem.IsWindows() && Console.CapsLock;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.Debug?.Print(LogClass.UI, $"CapsLock state query failed: {ex.Message}");
                 return false;
             }
         }

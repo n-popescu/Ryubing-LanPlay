@@ -1,5 +1,6 @@
 using Ryujinx.Ava.UI.ViewModels;
 using Ryujinx.Ava.UI.ViewModels.Input;
+using Ryujinx.Common.Logging;
 using Ryujinx.Input;
 using System;
 using System.Threading;
@@ -227,14 +228,9 @@ namespace Ryujinx.Ava.UI.Models.Input
                             throw new ArgumentException($"Unable to poll device type \"{Type}\"");
                     }
                 }
-                catch (ObjectDisposedException)
+                catch (Exception ex) when (ex is ObjectDisposedException || ex is NullReferenceException || ex is NotSupportedException)
                 {
-                }
-                catch (NullReferenceException)
-                {
-                }
-                catch (NotSupportedException)
-                {
+                    Logger.Debug?.Print(LogClass.UI, $"StickVisualizer polling failed: {ex}");
                 }
 
                 UiStickLeft = leftBuffer;
