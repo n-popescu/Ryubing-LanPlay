@@ -193,9 +193,9 @@ namespace Ryujinx.Ava.Input
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // ignore and fallback to "not pressed"
+                Logger.Debug?.Print(LogClass.UI, $"Failed to query CapsLock state: {ex}");
             }
 
             return currentState;
