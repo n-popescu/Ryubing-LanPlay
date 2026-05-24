@@ -1,6 +1,7 @@
 using Ryujinx.Common.Configuration.Hid;
 using Ryujinx.Common.Configuration.Hid.Keyboard;
 using Ryujinx.Common.Logging;
+using Ryujinx.HLE.HOS.Services.Hid;
 using Ryujinx.Input;
 using System;
 using System.Collections.Generic;
@@ -128,9 +129,11 @@ namespace Ryujinx.Ava.Input
             Logger.Debug?.Print(LogClass.UI, "SetLed called on an AvaloniaKeyboard");
         }
 
+        public bool HDRumble(VibrationValue left, VibrationValue right) => false;
+
         public void SetTriggerThreshold(float triggerThreshold) { }
 
-        public void Rumble(float lowFrequency, float highFrequency, uint durationMs) { }
+        public bool Rumble(float lowFrequency, float highFrequency, uint durationMs) => false;
 
         public Vector3 GetMotionData(MotionInputId inputId) => Vector3.Zero;
 

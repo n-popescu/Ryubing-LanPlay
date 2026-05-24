@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Ryujinx.Ava.UI.Windows;
 
 namespace Ryujinx.Ava.UI.Views.Settings
 {

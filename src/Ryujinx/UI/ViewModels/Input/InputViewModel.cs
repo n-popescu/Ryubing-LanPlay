@@ -338,7 +338,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 int deviceIndex = -1;
                 for (int i = 0; i < Devices.Count; i++)
                 {
-                    ValueTuple<DeviceType, string, string> device = Devices[i];
+                    (DeviceType Type, string Id, string Name) device = Devices[i];
                     if (device.Type == selectedDevice.Item1 && device.Id == selectedDevice.Item2)
                     {
                         deviceIndex = i;
@@ -909,7 +909,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                     selectedDeviceIndex = -1;
                     for (int i = 0; i < Devices.Count; i++)
                     {
-                        ValueTuple<DeviceType, string, string> device = Devices[i];
+                        (DeviceType Type, string Id, string Name) device = Devices[i];
                         if (device.Type == selectedDevice.Type && device.Id == selectedDevice.Id)
                         {
                             selectedDeviceIndex = i;
