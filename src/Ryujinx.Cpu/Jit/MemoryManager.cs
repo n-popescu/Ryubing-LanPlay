@@ -57,11 +57,11 @@ namespace Ryujinx.Cpu.Jit
 
         private static bool IsPoisonedPointer(ulong addr)
         {
-            if (addr == 0) return true;
+            if (addr == 0 || addr == 1) return true;
             if ((addr & 0x6969696969696969UL) != 0) return true;
             if ((addr & 0x00F0F0F0F0F0F0F0UL) == 0x0034b4b000000000UL) return true;
-            if (addr < 0x1000) return true;
             if ((addr & 0xFFFFFFFF00000000UL) == 0x0034b4b900000000UL) return true;
+            if (addr < 0x10000) return true;
             return false;
         }
 
@@ -132,62 +132,59 @@ namespace Ryujinx.Cpu.Jit
         {
             try
             {
-                SignalMemoryTrackingImpl(va, (ulong)Unsafe.SizeOf<T>(), false, true);
                 return Read<T>(va);
             }
-            catch (InvalidMemoryRegionException)
+            catch
             {
                 if (IsPoisonedPointer(va))
                 {
-                    if (Interlocked.Increment(ref _invalidAccessCount) % 512 == 0)
+                    if (Interlocked.Increment(ref _invalidAccessCount) % 256 == 0)
                     {
-                        Logger.Warning?.Print(LogClass.Cpu, $"[TOTK Mod Tolerant] Suppressed poisoned read @ 0x{va:X16}");
+                        Ryujinx.Common.Logging.Logger.Warning?.Print(Ryujinx.Common.Logging.LogClass.Cpu, 
+                            $"Suppressed exception on poisoned address 0x{va:X16}");
                     }
                     return default;
                 }
-
-                if (_invalidAccessHandler == null || !_invalidAccessHandler(va))
-                    throw;
-                return default;
+                throw;
             }
         }
+
+        public override T Read<T>(ulong va)
+        {
+            if (IsPoisonedPointer(va))
+            {
+                if (Interlocked.Increment(ref _invalidAccessCount) % 256 == 0)
+                {
+                    Ryujinx.Common.Logging.Logger.Warning?.Print(Ryujinx.Common.Logging.LogClass.Cpu, 
+                        $"Suppressed poisoned read @ 0x{va:X16}");
+                }
+                return default;
+            }
+            return base.Read<T>(va);
+        }
+
+
 
         /// <inheritdoc/>
         public override void Read(ulong va, Span<byte> data)
         {
-            try
+            if (IsPoisonedPointer(va))
             {
-                base.Read(va, data);
-            }
-            catch (InvalidMemoryRegionException)
-            {
-                if (IsPoisonedPointer(va))
+                if (Interlocked.Increment(ref _invalidAccessCount) % 256 == 0)
                 {
-                    if (Interlocked.Increment(ref _invalidAccessCount) % 512 == 0)
-                    {
-                        Logger.Warning?.Print(LogClass.Cpu, $"Suppressed poisoned read @ 0x{va:X16}");
-                    }
-                    data.Clear();
-                    return;
+                    Ryujinx.Common.Logging.Logger.Warning?.Print(Ryujinx.Common.Logging.LogClass.Cpu, 
+                        $"Suppressed poisoned read @ 0x{va:X16}");
                 }
-
-                if (_invalidAccessHandler == null || !_invalidAccessHandler(va))
-                    throw;
+                data.Clear();
+                return;
             }
+            base.Read(va, data);
         }
         public override void Write(ulong va, ReadOnlySpan<byte> data)
         {
-            try
-            {
-                base.Write(va, data);
-            }
-            catch (InvalidMemoryRegionException)
-            {
-                if (IsPoisonedPointer(va))
-                    return;
-                if (_invalidAccessHandler == null || !_invalidAccessHandler(va))
-                    throw;
-            }
+            if (IsPoisonedPointer(va))
+                return;
+            base.Write(va, data);
         }
 
         /// <inheritdoc/>
