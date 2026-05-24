@@ -10,6 +10,52 @@ namespace Ryujinx.Common
     // My code is crappy and I know it. Props to VewDev for assisting me in these shenanigans. - Awesomeangotti
     public class SplashTextHelper
     {
+        // These variables will be set to something once I figure out how to implement user selectable options. Perhaps just check and assign at boot?
+        private static bool s_loadingSplashEnabled = true;
+        
+        private static bool s_logSplashEnabled = true;
+        
+        private static bool s_titleSplashEnabled = true;
+        
+        private static string s_finalSplash = "";
+
+        private static string GetSplash()
+        {
+            if (string.IsNullOrEmpty(s_finalSplash))
+            {
+                s_finalSplash = _GetLangJson();
+                if (string.IsNullOrEmpty(s_finalSplash))
+                {
+                    s_finalSplash = "Splash Text";
+                }
+            }
+            return $"{s_finalSplash}";
+        }
+
+        public static string GetTitleSplash()
+        {
+            if (s_titleSplashEnabled)
+            {
+                if (OperatingSystem.IsMacOS())
+                {
+                    return "";
+                }
+                
+                return $" - {GetSplash()}";
+            }
+            return "";
+
+        }
+        
+        public static string GetLoadingSplash()
+        {
+            if (s_loadingSplashEnabled)
+            {
+                return $"\"{GetSplash()}\"";    
+            }
+            return "";
+        }
+        
         public static void PrintSplash()
         {
             Logger.Notice.Print(LogClass.Application,  "   ___                 __    _              ");
@@ -17,41 +63,18 @@ namespace Ryujinx.Common
             Logger.Notice.Print(LogClass.Application, @" / , _/ / // // // / / _ \ / /  / _ \ / _ `/");
             Logger.Notice.Print(LogClass.Application, @"/_/|_|  \_, / \_,_/ /_.__//_/  /_//_/ \_, / ");
             Logger.Notice.Print(LogClass.Application,  "       /___/                         /___/  ");
-
-            Logger.Notice.Print(LogClass.Application, "");
-            Logger.Notice.Print(LogClass.Application, GetSplash());
-            Logger.Notice.Print(LogClass.Application, "");
-        }
-
-        private static string _Final_Splash = "";
-
-        public static string GetSplash()
-        {
-            if (string.IsNullOrEmpty(_Final_Splash))
+            
+            if (s_logSplashEnabled)
             {
-                _Final_Splash = _Get_Lang_Json();
-                if (string.IsNullOrEmpty(_Final_Splash))
-                {
-                    _Final_Splash = "Splash Text";
-                }
+                Logger.Notice.Print(LogClass.Application, "");
+                Logger.Notice.Print(LogClass.Application, GetSplash());
+                Logger.Notice.Print(LogClass.Application, "");
             }
-
-            return $"{_Final_Splash}";
-        }
-
-        public static string GetTitleSplash()
-        {
-            if (OperatingSystem.IsMacOS())
-            {
-                return "";
-            }
-
-            return $" - {GetSplash()}";
         }
         
-        private static _Splash_Locales _Splash_Json;
+        private static SplashLocales s_SplashJson;
 
-        private static string _Get_Lang_Json()
+        private static string _GetLangJson()
         {
             try
             {
@@ -62,9 +85,9 @@ namespace Ryujinx.Common
                     path = path.Replace('.', '/');
                     path = path.Append(".json");
                     data = EmbeddedResources.ReadAllText(path);
-                    _Splash_Json = JsonSerializer.Deserialize<_Splash_Locales>(data);
+                    s_SplashJson = JsonSerializer.Deserialize<SplashLocales>(data);
                 }
-                return _Splash_Json.Locales[ConfigurationState.Instance.UI.LanguageCode.Value].GetRandomElement();
+                return s_SplashJson.Locales[ConfigurationState.Instance.UI.LanguageCode.Value].GetRandomElement();
             }
             catch
             {
@@ -72,9 +95,9 @@ namespace Ryujinx.Common
             }
         }
 
-        private struct _Splash_Locales
+        private struct SplashLocales
         {
-            public Dictionary<string, List<string>> Locales { get; set; }
+            public Dictionary<string, List<string>> Locales { get; }
         }
 
     }

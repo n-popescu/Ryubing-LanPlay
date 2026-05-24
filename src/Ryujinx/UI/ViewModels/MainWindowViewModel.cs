@@ -1258,7 +1258,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                         break;
                     case ShaderCacheLoadingState shaderCacheState:
                         CacheLoadStatus = $"{current} / {total}";
-                        Splash = $"\"{SplashTextHelper.GetSplash()}\"";
+                        Splash = $"{SplashTextHelper.GetLoadingSplash()}";
                         switch (shaderCacheState)
                         {
                             case ShaderCacheLoadingState.Start:
