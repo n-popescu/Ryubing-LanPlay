@@ -19,6 +19,7 @@ using Ryujinx.Common.Configuration.Hid.Keyboard;
 using Ryujinx.Common.Logging;
 using Ryujinx.Common.Utilities;
 using Ryujinx.Input;
+using Ryujinx.Input.SDL3;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -990,10 +991,31 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             }
             else if (activeDevice.Type == DeviceType.Controller)
             {
-                bool isNintendoStyle = activeDevice.Name.Contains("Nintendo");
-
                 string id = activeDevice.Id.Split(" ")[0];
                 string name = activeDevice.Name;
+
+                bool isNintendoStyle = false;
+
+                try
+                {
+                    IGamepad gp = _mainWindow?.InputManager?.GamepadDriver?.GetGamepad(id);
+
+                    if (gp is SDL3Gamepad sdlGp)
+                    {
+                        // Nintendo vendor ID is 0x057E
+                        isNintendoStyle = sdlGp.VendorId == 0x057E;
+                    }
+                    else
+                    {
+                        // Fallback to name-based detection
+                        isNintendoStyle = name.Contains("Nintendo", StringComparison.OrdinalIgnoreCase);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Debug?.Print(LogClass.UI, $"Controller vendor detection failed for '{name}': {ex.Message}");
+                    isNintendoStyle = name.Contains("Nintendo", StringComparison.OrdinalIgnoreCase);
+                }
 
                 config = InputConfigDefaults.CreateDefaultControllerConfiguration(
                     id,
