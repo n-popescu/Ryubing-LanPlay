@@ -18,7 +18,7 @@ namespace Ryujinx.Cpu.AppleHv
 
         public ulong ThreadUid { get; set; }
 
-        // Full shadow state
+        // Full shadow state & cache
         private readonly ulong[] _x = new ulong[32];
         private readonly V128[] _v = new V128[32];
 
