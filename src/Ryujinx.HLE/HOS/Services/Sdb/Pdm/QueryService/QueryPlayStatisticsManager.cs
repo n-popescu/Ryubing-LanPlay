@@ -2,6 +2,7 @@ using Ryujinx.Common;
 using Ryujinx.Cpu;
 using Ryujinx.HLE.HOS.Services.Account.Acc;
 using Ryujinx.HLE.HOS.Services.Sdb.Pdm.QueryService.Types;
+using Ryujinx.HLE.Loaders.Processes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace Ryujinx.HLE.HOS.Services.Sdb.Pdm.QueryService
                 }
             }
 
-            var process = context.Device.Processes.GetProcess(context.ClientProcessId);
+            ProcessResult process = context.Device.Processes.GetProcess(context.ClientProcessId);
             PlayLogQueryCapability queryCapability = (PlayLogQueryCapability)process.ApplicationControlProperties.PlayLogQueryCapability;
 
             List<ulong> titleIds = [];

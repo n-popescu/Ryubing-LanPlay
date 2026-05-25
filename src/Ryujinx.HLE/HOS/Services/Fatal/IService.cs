@@ -1,5 +1,6 @@
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Services.Fatal.Types;
+using Ryujinx.HLE.Loaders.Processes;
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -50,7 +51,7 @@ namespace Ryujinx.HLE.HOS.Services.Fatal
 
         private ResultCode ThrowFatalWithCpuContextImpl(ServiceCtx context, ResultCode resultCode, ulong pid, FatalPolicy fatalPolicy, ReadOnlySpan<byte> cpuContext)
         {
-            var process = context.Device.Processes.GetProcess(pid);
+            ProcessResult process = context.Device.Processes.GetProcess(pid);
             StringBuilder errorReport = new();
 
             errorReport.AppendLine();
