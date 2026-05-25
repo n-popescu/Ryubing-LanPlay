@@ -91,7 +91,7 @@ namespace Ryujinx.HLE.Loaders.Processes
         {
             if (programId == 0)
             {
-                return ProcessKind.Homebrew;
+                return ProcessKind.Application;
             }
 
             if (programId is >= 0x0100000000001000 and <= 0x0100000000001FFF)
