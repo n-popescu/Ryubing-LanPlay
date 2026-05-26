@@ -15,6 +15,7 @@ using Ryujinx.Graphics.OpenGL;
 using Ryujinx.Graphics.Vulkan;
 using Ryujinx.HLE;
 using Ryujinx.Input;
+using Ryujinx.Input.SDL3;
 using Silk.NET.Vulkan;
 using System;
 using System.IO;
@@ -85,6 +86,19 @@ namespace Ryujinx.Headless
             }
 
             string gamepadName = gamepad.Name;
+            
+            bool isNintendoStyle = false;
+            
+            if (gamepad is SDL3Gamepad sdlGp)
+            {
+                // Nintendo vendor ID is 0x057E
+                isNintendoStyle = sdlGp.VendorId == 0x057E;
+            }
+            else
+            {
+                // Fallback to name-based detection
+                isNintendoStyle = gamepadName.Contains("Nintendo", StringComparison.OrdinalIgnoreCase);
+            }
 
             gamepad.Dispose();
 
@@ -102,7 +116,6 @@ namespace Ryujinx.Headless
                 }
                 else
                 {
-                    bool isNintendoStyle = gamepadName.Contains("Nintendo");
 
                     config = InputConfigDefaults.CreateDefaultControllerConfiguration(
                         null,
