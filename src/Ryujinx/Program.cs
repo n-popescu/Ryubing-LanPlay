@@ -257,6 +257,10 @@ namespace Ryujinx.Ava
             // Setup base data directory.
             AppDataManager.Initialize(CommandLineState.BaseDirPathArg);
 
+            // Initialize per-device gyro calibration store.
+            Ryujinx.Input.Motion.GyroCalibrationStoreProvider.Initialize(
+                Path.Combine(AppDataManager.BaseDirPath, "gyro_calibration.json"));
+
             // Initialize the configuration.
             ConfigurationState.Initialize();
 

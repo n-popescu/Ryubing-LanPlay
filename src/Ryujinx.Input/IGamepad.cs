@@ -83,6 +83,14 @@ namespace Ryujinx.Input
         bool HDRumble(VibrationValue left, VibrationValue right);
 
         /// <summary>
+        /// Returns a stable identifier for the physical sensor associated with the given motion input,
+        /// suitable for keying per-device calibration data. Returns null when no stable identity is available
+        /// (e.g. keyboards, mice, or controllers without a serial number).
+        /// </summary>
+        /// <param name="sensor">The motion sensor to identify (gyroscope or accelerometer; left or right side for paired devices).</param>
+        public string GetCalibrationKey(MotionInputId sensor) => null;
+
+        /// <summary>
         /// Starts a rumble effect on the gamepad.
         /// </summary>
         /// <param name="lowFrequency">The intensity of the low frequency from 0.0f to 1.0f</param>

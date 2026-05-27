@@ -21,5 +21,12 @@ namespace Ryujinx.Common.Configuration.Hid.Controller.Motion
         /// Enable Motion Controls
         /// </summary>
         public bool EnableMotion { get; set; }
+
+        /// <summary>
+        /// Allow the gyro calibrator to refine the bias estimate automatically while the
+        /// controller is at rest during gameplay. When disabled, only manual wizard calibration
+        /// updates the bias.
+        /// </summary>
+        public bool EnablePassiveCalibration { get; set; } = false;
     }
 }

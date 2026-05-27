@@ -105,6 +105,16 @@ namespace Ryujinx.Input.SDL3
             right.SetConfiguration(configuration);
         }
 
+        public string GetCalibrationKey(MotionInputId sensor)
+        {
+            return sensor switch
+            {
+                MotionInputId.Gyroscope or MotionInputId.Accelerometer => left?.GetCalibrationKey(MotionInputId.Gyroscope),
+                MotionInputId.SecondGyroscope or MotionInputId.SecondAccelerometer => right?.GetCalibrationKey(MotionInputId.Gyroscope),
+                _ => null,
+            };
+        }
+
         public void SetLed(uint packedRgb)
         {
         }

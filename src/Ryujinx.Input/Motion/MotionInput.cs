@@ -12,23 +12,29 @@ namespace Ryujinx.Input
         public Vector3 Rotation { get; set; }
 
         private readonly MotionSensorFilter _filter;
+        private readonly GyroCalibrator _calibrator;
 
-        public MotionInput()
+        public MotionInput(GyroCalibrator calibrator = null)
         {
             TimeStamp = 0;
             Accelerometer = new Vector3();
             Gyroscrope = new Vector3();
             Rotation = new Vector3();
+            _calibrator = calibrator ?? new GyroCalibrator();
 
-            // TODO: RE the correct filter.
             _filter = new MotionSensorFilter(0f);
         }
+
+        public GyroCalibrator Calibrator => _calibrator;
 
         public void Update(Vector3 accel, Vector3 gyro, ulong timestamp, int sensitivity, float deadzone)
         {
             if (TimeStamp != 0)
             {
                 Accelerometer = -accel;
+
+                // Subtract estimated bias (and let the calibrator learn from rest samples).
+                gyro = _calibrator.Process(gyro, accel, timestamp);
 
                 if (gyro.Length() < deadzone)
                 {

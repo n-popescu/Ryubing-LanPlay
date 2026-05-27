@@ -152,6 +152,10 @@ namespace Ryujinx.Headless
 
             AppDataManager.Initialize(option.BaseDataDir);
 
+            // Initialize per-device gyro calibration store.
+            Ryujinx.Input.Motion.GyroCalibrationStoreProvider.Initialize(
+                System.IO.Path.Combine(AppDataManager.BaseDirPath, "gyro_calibration.json"));
+
             if (useLastUsedProfile && AccountSaveDataManager.GetLastUsedUser().TryGet(out UserProfile profile))
                 option.UserProfile = profile.Name;
 

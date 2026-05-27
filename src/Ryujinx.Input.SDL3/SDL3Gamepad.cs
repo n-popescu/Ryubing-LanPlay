@@ -168,6 +168,26 @@ namespace Ryujinx.Input.SDL3
 
         public bool IsConnected => SDL_GamepadConnected(_gamepadHandle);
 
+        public string GetCalibrationKey(MotionInputId sensor)
+        {
+            // Single-gyro controllers ignore the sensor distinction.
+            SDL_GUID sdlGuid = SDL_GetJoystickGUID(SDL_GetGamepadJoystick(_gamepadHandle));
+
+            // Convert SDL_GUID's 16 raw bytes to a 32-char hex string (stable key for the same physical device).
+            const string Hex = "0123456789abcdef";
+            char[] buf = new char[32];
+            for (int i = 0; i < 16; i++)
+            {
+                byte b = sdlGuid.data[i];
+                buf[i * 2] = Hex[b >> 4];
+                buf[i * 2 + 1] = Hex[b & 0x0f];
+            }
+            string guidStr = new(buf);
+
+            string serial = SDL_GetGamepadSerial(_gamepadHandle);
+            return string.IsNullOrEmpty(serial) ? guidStr : $"{guidStr}:{serial}";
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing && _hdRumble != null)

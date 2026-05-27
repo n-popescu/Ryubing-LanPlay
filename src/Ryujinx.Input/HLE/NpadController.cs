@@ -5,6 +5,7 @@ using Ryujinx.Common.Configuration.Hid.Controller.Motion;
 using Ryujinx.Common.Configuration.Hid.Keyboard;
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Services.Hid;
+using Ryujinx.Input.Motion;
 using System;
 using System.Collections.Concurrent;
 using System.Numerics;
@@ -210,6 +211,9 @@ namespace Ryujinx.Input.HLE
         private MotionInput _leftMotionInput;
         private MotionInput _rightMotionInput;
 
+        private readonly System.Collections.Generic.List<string> _registeredCalibrationKeys = new();
+        private readonly System.Collections.Generic.List<(GyroCalibrationStore Store, Action<string, GyroCalibrationEntry> Handler)> _storeEntryHandlers = new();
+
         private IGamepad _gamepad;
         private InputConfig _config;
 
@@ -264,21 +268,106 @@ namespace Ryujinx.Input.HLE
 
             _config = config;
 
+            // The motion-input reinit only fires on enable/backend changes (existing logic).
+            // For toggles that don't reinit -- e.g. EnablePassiveCalibration -- push them to
+            // the live calibrators directly so the change takes effect without a restart.
+            if (config is StandardControllerInputConfig live && live.Motion != null)
+            {
+                bool passiveEnabled = live.Motion.EnablePassiveCalibration;
+                if (_leftMotionInput?.Calibrator != null)
+                {
+                    _leftMotionInput.Calibrator.PassiveLearningEnabled = passiveEnabled;
+                }
+                if (_rightMotionInput?.Calibrator != null && _rightMotionInput != _leftMotionInput)
+                {
+                    _rightMotionInput.Calibrator.PassiveLearningEnabled = passiveEnabled;
+                }
+            }
+
             _gamepad?.SetConfiguration(config);
         }
 
         private void UpdateMotionInput(MotionConfigController motionConfig)
         {
+            // Release any previously-registered calibration keys before re-binding.
+            foreach (string key in _registeredCalibrationKeys)
+            {
+                GyroCalibrationStoreProvider.UnregisterActiveKey(key);
+            }
+            _registeredCalibrationKeys.Clear();
+
+            foreach (var (store, handler) in _storeEntryHandlers)
+            {
+                store.EntryUpdated -= handler;
+            }
+            _storeEntryHandlers.Clear();
+
             if (motionConfig.MotionBackend != MotionInputBackendType.CemuHook)
             {
-                _leftMotionInput = new MotionInput();
-                _rightMotionInput = new MotionInput();
+                _leftMotionInput = new MotionInput(CreateCalibratorFor(MotionInputId.Gyroscope));
+                _rightMotionInput = new MotionInput(CreateCalibratorFor(MotionInputId.SecondGyroscope));
             }
             else
             {
                 _leftMotionInput = null;
                 _rightMotionInput = null;
             }
+        }
+
+        private GyroCalibrator CreateCalibratorFor(MotionInputId sensor)
+        {
+            var calibrator = new GyroCalibrator();
+
+            // Resolve current passive-calibration toggle from config.
+            if (_config is StandardControllerInputConfig cfg && cfg.Motion != null)
+            {
+                calibrator.PassiveLearningEnabled = cfg.Motion.EnablePassiveCalibration;
+            }
+
+            string key = _gamepad?.GetCalibrationKey(sensor);
+            if (string.IsNullOrEmpty(key))
+            {
+                return calibrator;
+            }
+
+            GyroCalibrationStoreProvider.RegisterActiveKey(key, _gamepad?.Name ?? "Unknown");
+            _registeredCalibrationKeys.Add(key);
+
+            GyroCalibrationStore store = GyroCalibrationStoreProvider.Instance;
+            if (store != null && store.TryGet(key, out var entry))
+            {
+                calibrator.SetBias(entry.Bias);
+            }
+
+            string controllerName = _gamepad?.Name ?? "Unknown";
+            calibrator.OnPassiveUpdate += bias =>
+            {
+                store?.Set(key, new GyroCalibrationEntry
+                {
+                    Name = controllerName,
+                    Bias = bias,
+                    CalibratedAt = DateTime.UtcNow,
+                    Source = GyroCalibrationSource.Passive,
+                });
+                store?.RequestDebouncedSave(60_000);
+            };
+
+            // Apply external store updates (e.g. wizard completion) to the live calibrator
+            // without waiting for a full motion-input reinit.
+            if (store != null)
+            {
+                Action<string, GyroCalibrationEntry> handler = (changedKey, entry) =>
+                {
+                    if (changedKey == key)
+                    {
+                        calibrator.SetBias(entry.Bias);
+                    }
+                };
+                store.EntryUpdated += handler;
+                _storeEntryHandlers.Add((store, handler));
+            }
+
+            return calibrator;
         }
 
         public void Update()
@@ -543,6 +632,18 @@ namespace Ryujinx.Input.HLE
         {
             if (disposing)
             {
+                foreach (string key in _registeredCalibrationKeys)
+                {
+                    GyroCalibrationStoreProvider.UnregisterActiveKey(key);
+                }
+                _registeredCalibrationKeys.Clear();
+
+                foreach (var (store, handler) in _storeEntryHandlers)
+                {
+                    store.EntryUpdated -= handler;
+                }
+                _storeEntryHandlers.Clear();
+
                 _gamepad?.Dispose();
             }
         }

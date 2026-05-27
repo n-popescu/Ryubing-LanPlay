@@ -141,6 +141,24 @@ namespace Ryujinx.Input.SDL3
         public string Name { get; }
         public bool IsConnected => SDL_GamepadConnected(_gamepadHandle);
 
+        public string GetCalibrationKey(MotionInputId sensor)
+        {
+            SDL_GUID sdlGuid = SDL_GetJoystickGUID(SDL_GetGamepadJoystick(_gamepadHandle));
+
+            const string Hex = "0123456789abcdef";
+            char[] buf = new char[32];
+            for (int i = 0; i < 16; i++)
+            {
+                byte b = sdlGuid.data[i];
+                buf[i * 2] = Hex[b >> 4];
+                buf[i * 2 + 1] = Hex[b & 0x0f];
+            }
+            string guidStr = new(buf);
+
+            string serial = SDL_GetGamepadSerial(_gamepadHandle);
+            return string.IsNullOrEmpty(serial) ? guidStr : $"{guidStr}:{serial}";
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing && _hdRumble != null)
