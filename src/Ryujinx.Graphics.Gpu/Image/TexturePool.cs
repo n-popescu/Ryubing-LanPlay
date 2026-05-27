@@ -529,6 +529,19 @@ namespace Ryujinx.Graphics.Gpu.Image
             }
         }
 
+        private static bool IsUninitializedDescriptor(in TextureDescriptor descriptor)
+        {
+            uint w = descriptor.Word0;
+
+            return descriptor.Word1 == w
+                && descriptor.Word2 == w
+                && descriptor.Word3 == w
+                && descriptor.Word4 == w
+                && descriptor.Word5 == w
+                && descriptor.Word6 == w
+                && descriptor.Word7 == w;
+        }
+
         /// <summary>
         /// Gets texture information from a texture descriptor.
         /// </summary>
@@ -586,7 +599,7 @@ namespace Ryujinx.Graphics.Gpu.Image
 
             if (!FormatTable.TryGetTextureFormat(format, srgb, out FormatInfo formatInfo))
             {
-                if (gpuVa != 0 && format != 0)
+                if (gpuVa != 0 && format != 0 && !IsUninitializedDescriptor(descriptor))
                 {
                     Logger.Error?.Print(LogClass.Gpu, $"Invalid texture format 0x{format:X} (sRGB: {srgb}).");
                 }
