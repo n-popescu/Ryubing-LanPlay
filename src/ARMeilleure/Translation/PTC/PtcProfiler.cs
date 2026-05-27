@@ -25,7 +25,7 @@ namespace ARMeilleure.Translation.PTC
     {
         private const string OuterHeaderMagicString = "Pohd\0\0\0\0";
 
-        private const uint InternalVersion = 7028; //! Not to be incremented manually for each change to the ARMeilleure project.
+        private const uint InternalVersion = 7031; //! Not to be incremented manually for each change to the ARMeilleure project.
 
         private static readonly uint[] _migrateInternalVersions =
         [
