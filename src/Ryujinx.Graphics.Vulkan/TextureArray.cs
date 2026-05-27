@@ -54,6 +54,11 @@ namespace Ryujinx.Graphics.Vulkan
 
         public void SetSamplers(int index, ISampler[] samplers)
         {
+            if (_isBuffer)
+            {
+                return;
+            }
+
             for (int i = 0; i < samplers.Length; i++)
             {
                 ISampler sampler = samplers[i];
@@ -109,6 +114,11 @@ namespace Ryujinx.Graphics.Vulkan
 
         public void QueueWriteToReadBarriers(CommandBufferScoped cbs, PipelineStageFlags stageFlags)
         {
+            if (_isBuffer)
+            {
+                return;
+            }
+
             HashSet<TextureStorage> storages = _storages;
 
             if (storages == null)

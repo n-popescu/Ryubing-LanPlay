@@ -89,6 +89,11 @@ namespace Ryujinx.Graphics.Vulkan
 
         public void QueueWriteToReadBarriers(CommandBufferScoped cbs, PipelineStageFlags stageFlags)
         {
+            if (_isBuffer)
+            {
+                return;
+            }
+
             HashSet<TextureStorage> storages = _storages;
 
             if (storages == null)
