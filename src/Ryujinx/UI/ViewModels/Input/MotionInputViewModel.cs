@@ -27,5 +27,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         [ObservableProperty]
         public partial bool EnableCemuHookMotion { get; set; }
+
+        [ObservableProperty]
+        public partial bool EnablePassiveCalibration { get; set; }
     }
 }

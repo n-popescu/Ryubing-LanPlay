@@ -1,0 +1,124 @@
+<window:StyleableAppWindow
+    x:Class="Ryujinx.Ava.UI.Windows.GyroCalibrationWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ext="clr-namespace:Ryujinx.Ava.Common.Markup"
+    xmlns:window="clr-namespace:Ryujinx.Ava.UI.Windows"
+    xmlns:viewModels="clr-namespace:Ryujinx.Ava.UI.ViewModels.Input"
+    Width="500"
+    Height="380"
+    CanResize="False"
+    WindowStartupLocation="CenterOwner"
+    Title="{ext:Locale GyroCalibrationWindowTitle}"
+    x:DataType="viewModels:GyroCalibrationViewModel"
+    mc:Ignorable="d">
+    <Grid Margin="24" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto">
+        <TextBlock
+            Grid.Row="0"
+            FontSize="14"
+            TextWrapping="Wrap"
+            Text="{ext:Locale GyroCalibrationWindowInstructions}" />
+
+        <Border
+            Grid.Row="1"
+            Margin="0,16,0,0"
+            Padding="12,10"
+            BorderBrush="{DynamicResource ThemeControlBorderColor}"
+            BorderThickness="1"
+            CornerRadius="6">
+            <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,*,Auto" RowDefinitions="Auto">
+                <TextBlock Grid.Column="0" FontFamily="Consolas" FontWeight="Bold" Text="x:" />
+                <TextBlock Grid.Column="1" FontFamily="Consolas" Margin="6,0,12,0"
+                           Text="{Binding LiveX, StringFormat='{}{0:+0.000;-0.000}'}" />
+                <TextBlock Grid.Column="2" FontFamily="Consolas" FontWeight="Bold" Text="y:" />
+                <TextBlock Grid.Column="3" FontFamily="Consolas" Margin="6,0,12,0"
+                           Text="{Binding LiveY, StringFormat='{}{0:+0.000;-0.000}'}" />
+                <TextBlock Grid.Column="4" FontFamily="Consolas" FontWeight="Bold" Text="z:" />
+                <TextBlock Grid.Column="5" FontFamily="Consolas" Margin="6,0,4,0"
+                           Text="{Binding LiveZ, StringFormat='{}{0:+0.000;-0.000}'}" />
+                <TextBlock Grid.Column="6" FontFamily="Consolas" Opacity="0.6" Text="°/s" />
+            </Grid>
+        </Border>
+
+        <ProgressBar
+            Grid.Row="2"
+            Margin="0,16,0,0"
+            Height="6"
+            Minimum="0"
+            Maximum="1"
+            Value="{Binding Progress}" />
+
+        <TextBlock
+            Grid.Row="3"
+            Margin="0,12,0,0"
+            HorizontalAlignment="Center"
+            FontWeight="SemiBold"
+            Text="{Binding StatusMessage}"
+            IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+        <!-- Completion panel: shows after a successful calibration. -->
+        <Border
+            Grid.Row="4"
+            Margin="0,16,0,0"
+            Padding="14,12"
+            BorderBrush="{DynamicResource ThemeControlBorderColor}"
+            BorderThickness="1"
+            CornerRadius="6"
+            IsVisible="{Binding Success}">
+            <StackPanel Orientation="Vertical" Spacing="8">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock FontFamily="Consolas" FontSize="13" Opacity="0.7" Text="bias removed:" />
+                    <TextBlock FontFamily="Consolas" FontSize="13">
+                        <Run Text="x="/><Run Text="{Binding BiasX, StringFormat='{}{0:+0.000;-0.000}'}" />
+                        <Run Text="  y="/><Run Text="{Binding BiasY, StringFormat='{}{0:+0.000;-0.000}'}" />
+                        <Run Text="  z="/><Run Text="{Binding BiasZ, StringFormat='{}{0:+0.000;-0.000}'}" />
+                    </TextBlock>
+                </StackPanel>
+                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto">
+                    <TextBlock Grid.Column="0" FontFamily="Consolas" FontSize="13"
+                               Text="{ext:Locale GyroCalibrationWindowSuggestedDeadzone}" />
+                    <TextBlock Grid.Column="1" Margin="8,0,0,0" FontFamily="Consolas" FontSize="13" FontWeight="SemiBold"
+                               Text="{Binding SuggestedDeadzone, StringFormat='{}{0:0.000}'}" />
+                    <TextBlock Grid.Column="2" FontFamily="Consolas" FontSize="13" Opacity="0.6">
+                        <Run Text="(current "/><Run Text="{Binding CurrentDeadzone, StringFormat='{}{0:0.00}'}" /><Run Text=")"/>
+                    </TextBlock>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <StackPanel
+            Grid.Row="6"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+            Spacing="10">
+            <!-- Initial / running state -->
+            <Button
+                MinWidth="100"
+                Content="{ext:Locale GyroCalibrationWindowCancel}"
+                Click="OnCancel"
+                IsVisible="{Binding !Success}" />
+            <Button
+                MinWidth="100"
+                Classes="accent"
+                Content="{ext:Locale GyroCalibrationWindowStart}"
+                Click="OnStart"
+                IsEnabled="{Binding !IsRunning}"
+                IsVisible="{Binding !Success}" />
+
+            <!-- Completed state -->
+            <Button
+                MinWidth="100"
+                Content="{ext:Locale GyroCalibrationWindowKeepDeadzone}"
+                Click="OnKeepDeadzone"
+                IsVisible="{Binding Success}" />
+            <Button
+                MinWidth="100"
+                Classes="accent"
+                Content="{ext:Locale GyroCalibrationWindowApplyDeadzone}"
+                Click="OnApplyDeadzone"
+                IsVisible="{Binding Success}" />
+        </StackPanel>
+    </Grid>
+</window:StyleableAppWindow>

@@ -10,6 +10,7 @@ namespace Ryujinx.Ava.UI.Models.Input
     public partial class GamepadInputConfig : BaseModel
     {
         public bool EnableCemuHookMotion { get; set; }
+        public bool EnablePassiveCalibration { get; set; } = false;
         public string DsuServerHost { get; set; }
         public int DsuServerPort { get; set; }
         public int Slot { get; set; }
@@ -220,6 +221,7 @@ namespace Ryujinx.Ava.UI.Models.Input
                     EnableMotion = controllerInput.Motion.EnableMotion;
                     GyroDeadzone = controllerInput.Motion.GyroDeadzone;
                     Sensitivity = controllerInput.Motion.Sensitivity;
+                    EnablePassiveCalibration = controllerInput.Motion.EnablePassiveCalibration;
 
                     if (controllerInput.Motion is CemuHookMotionConfigController cemuHook)
                     {
@@ -334,6 +336,7 @@ namespace Ryujinx.Ava.UI.Models.Input
                     MotionBackend = MotionInputBackendType.CemuHook,
                     GyroDeadzone = GyroDeadzone,
                     Sensitivity = Sensitivity,
+                    EnablePassiveCalibration = EnablePassiveCalibration,
                     DsuServerHost = DsuServerHost,
                     DsuServerPort = DsuServerPort,
                     Slot = Slot,
@@ -349,6 +352,7 @@ namespace Ryujinx.Ava.UI.Models.Input
                     MotionBackend = MotionInputBackendType.GamepadDriver,
                     GyroDeadzone = GyroDeadzone,
                     Sensitivity = Sensitivity,
+                    EnablePassiveCalibration = EnablePassiveCalibration,
                 };
             }
 
