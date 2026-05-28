@@ -136,9 +136,6 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         [ObservableProperty] public partial float VolumeBeforeMute { get; set; }
 
-        [ObservableProperty]
-        public partial bool AreMimeTypesRegistered { get; set; } = FileAssociationHelper.AreMimeTypesRegistered;
-
         [ObservableProperty] public partial Cursor Cursor { get; set; }
 
         [ObservableProperty] public partial string Title { get; set; }
@@ -218,6 +215,11 @@ namespace Ryujinx.Ava.UI.ViewModels
                 .Subscribe();
 
             _rendererWaitEvent = new AutoResetEvent(false);
+
+            LocaleManager.Instance.PropertyChanged += (sender, args) =>
+                {
+                    RefreshFileTypeToggle();
+                };
 
             if (Program.PreviewerDetached)
             {
@@ -679,11 +681,6 @@ namespace Ryujinx.Ava.UI.ViewModels
             get => ConsoleHelper.SetConsoleWindowStateSupported;
         }
 
-        public bool ManageFileTypesVisible
-        {
-            get => FileAssociationHelper.IsTypeAssociationSupported;
-        }
-
         public Glyph Glyph
         {
             get => (Glyph)ConfigurationState.Instance.UI.GameListViewMode.Value;
@@ -939,6 +936,67 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
 
             return false;
+        }
+
+        public bool ManageFileTypesVisible
+        {
+            get => FileAssociationHelper.IsTypeAssociationSupported;
+        }
+        private void RefreshFileTypeToggle()
+            {
+                OnPropertyChanged(nameof(FileTypeToggleText));
+                OnPropertyChanged(nameof(FileTypeToggleIcon));
+            }
+
+        private bool _areMimeTypesRegistered = FileAssociationHelper.AreMimeTypesRegistered;
+
+        public bool AreMimeTypesRegistered
+        {
+            get => _areMimeTypesRegistered;
+            set
+            {
+                if (_areMimeTypesRegistered != value)
+                {
+                    _areMimeTypesRegistered = value;
+                    RefreshFileTypeToggle();
+                }
+            }
+        }
+
+        public string FileTypeToggleText =>
+            AreMimeTypesRegistered
+                ? LocaleManager.Instance[LocaleKeys.MenuBar_File_UninstallFileTypes]
+                : LocaleManager.Instance[LocaleKeys.MenuBar_File_InstallFileTypes];
+
+        public string FileTypeToggleIcon =>
+            AreMimeTypesRegistered
+                ? "fa-solid fa-link-slash"
+                : "fa-solid fa-link";
+
+        private async Task ToggleFileTypes()
+        {
+            if (AreMimeTypesRegistered)
+                await UninstallFileTypes();
+            else
+                await InstallFileTypes();
+        }
+
+        private async Task InstallFileTypes()
+        {
+            AreMimeTypesRegistered = FileAssociationHelper.Install();
+            if (AreMimeTypesRegistered)
+                await ContentDialogHelper.CreateInfoDialog(LocaleManager.Instance[LocaleKeys.DialogInstallFileTypesSuccessMessage], string.Empty, LocaleManager.Instance[LocaleKeys.InputDialogOk], string.Empty, string.Empty);
+            else
+                await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.DialogInstallFileTypesErrorMessage]);
+        }
+
+        private async Task UninstallFileTypes()
+        {
+            AreMimeTypesRegistered = !FileAssociationHelper.Uninstall();
+            if (!AreMimeTypesRegistered)
+                await ContentDialogHelper.CreateInfoDialog(LocaleManager.Instance[LocaleKeys.DialogUninstallFileTypesSuccessMessage], string.Empty, LocaleManager.Instance[LocaleKeys.InputDialogOk], string.Empty, string.Empty);
+            else
+                await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.DialogUninstallFileTypesErrorMessage]);
         }
 
         public async Task HandleFirmwareInstallation(string filename)
@@ -1667,7 +1725,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 else
                 {
                     await ContentDialogHelper.CreateErrorDialog(
-                        LocaleManager.Instance[LocaleKeys.MenuBarFileOpenFromFileError]);
+                        LocaleManager.Instance[LocaleKeys.Error_NoApplicationFoundInFile]);
                 }
             }
         }

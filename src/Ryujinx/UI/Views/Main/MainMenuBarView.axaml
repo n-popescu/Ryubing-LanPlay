@@ -7,6 +7,7 @@
     mc:Ignorable="d"
     xmlns:viewModels="clr-namespace:Ryujinx.Ava.UI.ViewModels"
     xmlns:controls="clr-namespace:Ryujinx.Ava.UI.Controls"
+    xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
     xmlns:common="clr-namespace:Ryujinx.Common;assembly=Ryujinx.Common"
     xmlns:renderDocApi="clr-namespace:Ryujinx.Graphics.RenderDocApi;assembly=Ryujinx.Graphics.RenderDocApi"
     x:DataType="viewModels:MainWindowViewModel"
@@ -29,49 +30,53 @@
                     <DockPanel Margin="0" HorizontalAlignment="Stretch" />
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
-            <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBarFile}">
+            <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBar_File_FileLabel}">
                 <MenuItem
                     Command="{Binding OpenFile}"
-                    Header="{ext:Locale MenuBarFileOpenFromFile}"
+                    Header="{ext:Locale MenuBar_File_LoadApplicationButton}"
                     Icon="{ext:Icon fa-solid fa-file}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <MenuItem
                     Command="{Binding OpenFolder}"
-                    Header="{ext:Locale MenuBarFileOpenUnpacked}"
+                    Header="{ext:Locale MenuBar_File_LoadUnpackedGameButton}"
                     Icon="{ext:Icon fa-solid fa-folder-open}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <MenuItem
                     Command="{Binding LoadTitleUpdatesFromFolder}"
-                    Header="{ext:Locale MenuBarFileLoadTitleUpdatesFromFolder}"
+                    Header="{ext:Locale MenuBar_File_LoadTitleUpdatesFromFolderButton}"
                     Icon="{ext:Icon fa-solid fa-diagram-predecessor}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <MenuItem
                     Command="{Binding LoadDlcFromFolder}"
-                    Header="{ext:Locale MenuBarFileLoadDlcFromFolder}"
+                    Header="{ext:Locale MenuBar_File_LoadDLCFromFolderButton}"
                     Icon="{ext:Icon fa-solid fa-puzzle-piece}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <Separator />
                 <MenuItem
                     Command="{Binding OpenRyujinxFolder}"
-                    Header="{ext:Locale MenuBarFileOpenEmuFolder}"
+                    Header="{ext:Locale MenuBar_File_OpenRyuijnxFolderButton}"
                     Icon="{ext:Icon fa-solid fa-folder-closed}" />
                 <MenuItem
                     Command="{Binding OpenLogsFolder}"
-                    Header="{ext:Locale MenuBarFileOpenLogsFolder}"
+                    Header="{ext:Locale MenuBar_File_OpenLogsFolderButton}"
                     Icon="{ext:Icon fa-solid fa-terminal}" />
                 <MenuItem
                     Command="{Binding OpenScreenshotsFolder}"
-                    Header="{ext:Locale MenuBarFileOpenScreenshotsFolder}"
+                    Header="{ext:Locale MenuBar_File_OpenScreenshotsFolderButton}"
                     Icon="{ext:Icon fa-solid fa-image}" />
                 <Separator IsVisible="{Binding ManageFileTypesVisible}" />
-                <MenuItem Header="{ext:Locale MenuBar_File_ManageFileTypes}" IsVisible="{Binding ManageFileTypesVisible}" Icon="{ext:Icon fa-solid fa-clipboard}">
-                    <MenuItem Name="InstallFileTypesMenuItem" Header="{ext:Locale MenuBar_File_InstallFileTypes}" IsEnabled="{Binding AreMimeTypesRegistered, Converter={x:Static BoolConverters.Not}}" Icon="{ext:Icon fa-solid fa-square-plus}" />
-                    <MenuItem Name="UninstallFileTypesMenuItem" Header="{ext:Locale MenuBar_File_UninstallFileTypes}" IsEnabled="{Binding AreMimeTypesRegistered}" Icon="{ext:Icon fa-solid fa-square-minus}" />
+                <MenuItem
+                    Command="{Binding ToggleFileTypes}"
+                    Header="{Binding FileTypeToggleText}"
+                    IsVisible="{Binding ManageFileTypesVisible}">
+                    <MenuItem.Icon>
+                        <i:Icon Value="{Binding FileTypeToggleIcon}" />
+                    </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
                 <MenuItem
                     Name="CloseRyujinxMenuItem"
-                    Header="{ext:Locale MenuBarFileExit}"
+                    Header="{ext:Locale MenuBar_File_ExitButton}"
                     Icon="{ext:Icon fa-solid fa-power-off}" />
             </MenuItem>
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBar_Options_OptionsLabel}">
