@@ -478,14 +478,17 @@ namespace Ryujinx.Ava.UI.Helpers
             ContentDialogResult result;
             bool isTopDialog = true;
 
-            Window parent = GetMainWindow();
+            // Parent the overlay on the currently active window so dialogs opened from a
+            // sub-window (e.g. SettingsWindow) appear over it rather than under it.
+            // Falls back to MainWindow if no window is reported active.
+            Window parent = GetActiveWindow() ?? GetMainWindow();
 
             if (_contentDialogOverlayWindow != null)
             {
                 isTopDialog = false;
             }
 
-            if (parent is MainWindow window)
+            if (parent != null)
             {
                 parent.Activate();
 
@@ -582,6 +585,22 @@ namespace Ryujinx.Ava.UI.Helpers
                     if (item is MainWindow window)
                     {
                         return window;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private static Window GetActiveWindow()
+        {
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime al)
+            {
+                foreach (Window item in al.Windows)
+                {
+                    if (item.IsActive)
+                    {
+                        return item;
                     }
                 }
             }

@@ -2,6 +2,7 @@ using Avalonia.VisualTree;
 using FluentAvalonia.UI.Controls;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.UI.Controls;
+using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Ava.UI.Models.Input;
 using Ryujinx.Ava.UI.ViewModels.Input;
 using Ryujinx.Ava.UI.Windows;
@@ -121,7 +122,7 @@ namespace Ryujinx.Ava.UI.Views.Input
                 config.MirrorInput = content.ViewModel.MirrorInput;
             };
 
-            await contentDialog.ShowAsync();
+            await ContentDialogHelper.ShowAsync(contentDialog);
         }
     }
 }

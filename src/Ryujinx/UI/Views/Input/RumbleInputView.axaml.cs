@@ -1,6 +1,7 @@
 using FluentAvalonia.UI.Controls;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.UI.Controls;
+using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Ava.UI.Models.Input;
 using Ryujinx.Ava.UI.ViewModels.Input;
 using System.Threading.Tasks;
@@ -49,7 +50,7 @@ namespace Ryujinx.Ava.UI.Views.Input
                 config.UseHDRumble = content.ViewModel.EnableHDRumble;
             };
 
-            await contentDialog.ShowAsync();
+            await ContentDialogHelper.ShowAsync(contentDialog);
         }
     }
 }
