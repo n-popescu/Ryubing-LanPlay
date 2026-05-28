@@ -68,7 +68,8 @@
                 <MenuItem
                     Command="{Binding ToggleFileTypes}"
                     Header="{Binding FileTypeToggleText}"
-                    IsVisible="{Binding ManageFileTypesVisible}">
+                    IsVisible="{Binding ManageFileTypesVisible}"
+                    ToolTip.Tip="{ext:Locale MenuBar_File_FileTypeAssociationsToolTip}">
                     <MenuItem.Icon>
                         <i:Icon Value="{Binding FileTypeToggleIcon}" />
                     </MenuItem.Icon>

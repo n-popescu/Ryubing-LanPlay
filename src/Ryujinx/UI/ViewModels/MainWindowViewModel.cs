@@ -942,6 +942,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             get => FileAssociationHelper.IsTypeAssociationSupported;
         }
+
         private void RefreshFileTypeToggle()
             {
                 OnPropertyChanged(nameof(FileTypeToggleText));
@@ -965,8 +966,8 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public string FileTypeToggleText =>
             AreMimeTypesRegistered
-                ? LocaleManager.Instance[LocaleKeys.MenuBar_File_UninstallFileTypes]
-                : LocaleManager.Instance[LocaleKeys.MenuBar_File_InstallFileTypes];
+                ? LocaleManager.Instance[LocaleKeys.MenuBar_File_RemoveFileTypeAssociationsButton]
+                : LocaleManager.Instance[LocaleKeys.MenuBar_File_AssociateFileTypesButton];
 
         public string FileTypeToggleIcon =>
             AreMimeTypesRegistered
@@ -985,18 +986,18 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             AreMimeTypesRegistered = FileAssociationHelper.Install();
             if (AreMimeTypesRegistered)
-                await ContentDialogHelper.CreateInfoDialog(LocaleManager.Instance[LocaleKeys.DialogInstallFileTypesSuccessMessage], string.Empty, LocaleManager.Instance[LocaleKeys.InputDialogOk], string.Empty, string.Empty);
+                await ContentDialogHelper.CreateInfoDialog(LocaleManager.Instance[LocaleKeys.Dialog_FileTypeAssociations_AssociationSuccessMessage], string.Empty, LocaleManager.Instance[LocaleKeys.InputDialogOk], string.Empty, string.Empty);
             else
-                await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.DialogInstallFileTypesErrorMessage]);
+                await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.Error_AssociateFileTypesFailed]);
         }
 
         private async Task UninstallFileTypes()
         {
             AreMimeTypesRegistered = !FileAssociationHelper.Uninstall();
             if (!AreMimeTypesRegistered)
-                await ContentDialogHelper.CreateInfoDialog(LocaleManager.Instance[LocaleKeys.DialogUninstallFileTypesSuccessMessage], string.Empty, LocaleManager.Instance[LocaleKeys.InputDialogOk], string.Empty, string.Empty);
+                await ContentDialogHelper.CreateInfoDialog(LocaleManager.Instance[LocaleKeys.Dialog_FileTypeAssociations_RemoveAssociationSuccessMessage], string.Empty, LocaleManager.Instance[LocaleKeys.InputDialogOk], string.Empty, string.Empty);
             else
-                await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.DialogUninstallFileTypesErrorMessage]);
+                await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.Error_RemoveFileAssociationsFailed]);
         }
 
         public async Task HandleFirmwareInstallation(string filename)

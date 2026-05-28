@@ -201,7 +201,7 @@
       }
     },
     {
-      "ID": "InstallFileTypes",
+      "ID": "AssociateFileTypesButton",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -216,7 +216,7 @@
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
-        "ru_RU": "Установить типы файлов",
+        "ru_RU": "Связать файлы с приложением",
         "sv_SE": "",
         "th_TH": "",
         "tr_TR": "",
@@ -226,7 +226,7 @@
       }
     },
     {
-      "ID": "UninstallFileTypes",
+      "ID": "RemoveFileTypeAssociationsButton",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",
@@ -241,7 +241,32 @@
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
-        "ru_RU": "Удалить типы файлов",
+        "ru_RU": "Удалить ассоциации файлов",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
+      "ID": "FileTypeAssociationsToolTip",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Associates supported file types (NSP, XCI, NCA, NRO, NSO, PFS0) with Ryujinx so they open automatically when double-clicked in your file manager. Removing file associations stops this behavior.",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "Связывает поддерживаемые типы файлов (NSP, XCI, NCA, NRO, NSO, PFS0) с Ryujinx, чтобы они автоматически открывались при двойном щелчке в файловом менеджере. Удаление ассоциаций файлов отключает это поведение.",
         "sv_SE": "",
         "th_TH": "",
         "tr_TR": "",

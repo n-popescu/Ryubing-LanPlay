@@ -1,0 +1,54 @@
+{
+  "Locales": [
+    {
+      "ID": "AssociationSuccessMessage",
+      "Translations": {
+        "ar_SA": "تم تثبيت أنواع الملفات بنجاح!",
+        "de_DE": "Dateitypen erfolgreich installiert!",
+        "el_GR": "Επιτυχής εγκατάσταση τύπων αρχείων!",
+        "en_US": "Successfully installed file types!",
+        "es_ES": "¡Tipos de archivos instalados con éxito!",
+        "fr_FR": "Types de fichiers installés avec succès !",
+        "he_IL": "סוגי קבצים הותקנו בהצלחה!",
+        "it_IT": "Tipi di file installati con successo!",
+        "ja_JP": "ファイル形式のインストールに成功しました!",
+        "ko_KR": "파일 형식을 성공적으로 설치했습니다!",
+        "no_NO": "Filtyper ble installert!",
+        "pl_PL": "Pomyślnie zainstalowano typy plików!",
+        "pt_BR": "Tipos de arquivo instalados com sucesso!",
+        "ru_RU": "Типы файлов успешно установлены!",
+        "sv_SE": "Filtyper har installerats!",
+        "th_TH": "ติดตั้งตามประเภทของไฟล์สำเร็จแล้ว!",
+        "tr_TR": "Dosya uzantıları başarıyla yüklendi!",
+        "uk_UA": "Успішно встановлено типи файлів!",
+        "zh_CN": "关联文件类型成功！",
+        "zh_TW": "成功安裝檔案類型!"
+      }
+    },
+    {
+      "ID": "RemoveAssociationSuccessMessage",
+      "Translations": {
+        "ar_SA": "تم إلغاء تثبيت أنواع الملفات بنجاح!",
+        "de_DE": "Dateitypen erfolgreich deinstalliert!",
+        "el_GR": "Επιτυχής απεγκατάσταση τύπων αρχείων!",
+        "en_US": "Successfully uninstalled file types!",
+        "es_ES": "¡Tipos de archivos desinstalados con éxito!",
+        "fr_FR": "Types de fichiers désinstallés avec succès !",
+        "he_IL": "סוגי קבצים הוסרו בהצלחה!",
+        "it_IT": "Tipi di file disinstallati con successo!",
+        "ja_JP": "ファイル形式のアンインストールに成功しました!",
+        "ko_KR": "파일 형식이 성공적으로 제거되었습니다!",
+        "no_NO": "Filtyper ble avinstallert!",
+        "pl_PL": "Pomyślnie odinstalowano typy plików!",
+        "pt_BR": "Tipos de arquivo desinstalados com sucesso!",
+        "ru_RU": "Типы файлов успешно удалены!",
+        "sv_SE": "Filtyper avinstallerades!",
+        "th_TH": "ถอนการติดตั้งตามประเภทของไฟล์สำเร็จแล้ว!",
+        "tr_TR": "Dosya uzantıları başarıyla kaldırıldı!",
+        "uk_UA": "Успішно видалено типи файлів!",
+        "zh_CN": "成功解除文件类型关联！",
+        "zh_TW": "成功移除檔案類型!"
+      }
+    }
+  ]
+}
