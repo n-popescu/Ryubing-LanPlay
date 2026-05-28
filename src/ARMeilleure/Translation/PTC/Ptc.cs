@@ -39,9 +39,6 @@ namespace ARMeilleure.Translation.PTC
         private const string ActualDir = "0";
         private const string BackupDir = "1";
 
-        private const string TitleIdTextDefault = "0000000000000000";
-        private const string DisplayVersionDefault = "0";
-
         public static readonly Symbol PageTableSymbol = new(SymbolType.Special, 1);
         public static readonly Symbol CountTableSymbol = new(SymbolType.Special, 2);
         public static readonly Symbol DispatchStubSymbol = new(SymbolType.Special, 3);
@@ -69,8 +66,6 @@ namespace ARMeilleure.Translation.PTC
 
         private bool _disposed;
 
-        public string TitleIdText { get; private set; }
-        public string DisplayVersion { get; private set; }
         public PtcCacheInfo CacheInfo { get; private set; }
 
         private MemoryManagerType _memoryMode;
@@ -100,9 +95,7 @@ namespace ARMeilleure.Translation.PTC
 
             _disposed = false;
 
-            TitleIdText = TitleIdTextDefault;
-            DisplayVersion = DisplayVersionDefault;
-            CacheInfo = new PtcCacheInfo(0, TitleIdTextDefault, TitleIdTextDefault, 0, DisplayVersionDefault, "Unknown", "default");
+            CacheInfo = new PtcCacheInfo(0, null, null, 0, null, "Unknown", "default");
 
             CachePathActual = string.Empty;
             CachePathBackup = string.Empty;
@@ -126,19 +119,8 @@ namespace ARMeilleure.Translation.PTC
                 $"programIndex: {cacheInfo.ProgramIndex}, version: '{cacheInfo.DisplayVersion}', kind: {cacheInfo.ProcessKind}, " +
                 $"selector: '{cacheInfo.CacheSelector}', key: '{cacheInfo.CacheKey}', enabled: {enabled}).");
 
-            if (!enabled || string.IsNullOrEmpty(cacheInfo.TitleIdText) || cacheInfo.TitleIdText == TitleIdTextDefault)
+            if (!enabled || cacheInfo.TitleIdText == PtcCacheInfo.TitleIdTextDefault)
             {
-                TitleIdText = TitleIdTextDefault;
-                DisplayVersion = DisplayVersionDefault;
-                CacheInfo = new PtcCacheInfo(
-                    cacheInfo.ProcessId,
-                    TitleIdText,
-                    cacheInfo.ApplicationIdText,
-                    cacheInfo.ProgramIndex,
-                    DisplayVersion,
-                    cacheInfo.ProcessKind,
-                    cacheInfo.CacheSelector);
-
                 CachePathActual = string.Empty;
                 CachePathBackup = string.Empty;
 
@@ -147,20 +129,10 @@ namespace ARMeilleure.Translation.PTC
                 return;
             }
 
-            TitleIdText = cacheInfo.TitleIdText;
-            DisplayVersion = !string.IsNullOrEmpty(cacheInfo.DisplayVersion) ? cacheInfo.DisplayVersion : DisplayVersionDefault;
-            CacheInfo = new PtcCacheInfo(
-                cacheInfo.ProcessId,
-                TitleIdText,
-                cacheInfo.ApplicationIdText,
-                cacheInfo.ProgramIndex,
-                DisplayVersion,
-                cacheInfo.ProcessKind,
-                cacheInfo.CacheSelector);
             _memoryMode = memoryMode;
 
-            string workPathActual = Path.Combine(AppDataManager.GamesDirPath, TitleIdText, "cache", "cpu", ActualDir);
-            string workPathBackup = Path.Combine(AppDataManager.GamesDirPath, TitleIdText, "cache", "cpu", BackupDir);
+            string workPathActual = Path.Combine(AppDataManager.GamesDirPath, CacheInfo.TitleIdText, "cache", "cpu", ActualDir);
+            string workPathBackup = Path.Combine(AppDataManager.GamesDirPath, CacheInfo.TitleIdText, "cache", "cpu", BackupDir);
 
             if (!Directory.Exists(workPathActual))
             {
@@ -172,13 +144,13 @@ namespace ARMeilleure.Translation.PTC
                 Directory.CreateDirectory(workPathBackup);
             }
 
-            CachePathActual = Path.Combine(workPathActual, DisplayVersion) + "-" + CacheInfo.CacheSelector;
-            CachePathBackup = Path.Combine(workPathBackup, DisplayVersion) + "-" + CacheInfo.CacheSelector;
+            CachePathActual = Path.Combine(workPathActual, CacheInfo.DisplayVersion) + "-" + CacheInfo.CacheSelector;
+            CachePathBackup = Path.Combine(workPathBackup, CacheInfo.DisplayVersion) + "-" + CacheInfo.CacheSelector;
 
             Logger.Info?.Print(
                 LogClass.Ptc,
-                $"PPTC cache owner selected (pid: {CacheInfo.ProcessId}, title: {TitleIdText}, application: {CacheInfo.ApplicationIdText}, " +
-                $"version: '{DisplayVersion}', kind: {CacheInfo.ProcessKind}, selector: '{CacheInfo.CacheSelector}', " +
+                $"PPTC cache owner selected (pid: {CacheInfo.ProcessId}, title: {CacheInfo.TitleIdText}, application: {CacheInfo.ApplicationIdText}, " +
+                $"version: '{CacheInfo.DisplayVersion}', kind: {CacheInfo.ProcessKind}, selector: '{CacheInfo.CacheSelector}', " +
                 $"key: '{CacheInfo.CacheKey}', path: '{CachePathActual}').");
 
             PreLoad();
@@ -461,7 +433,7 @@ namespace ARMeilleure.Translation.PTC
             Logger.Info?.Print(
                 LogClass.Ptc,
                 $"{(isBackup ? "Loaded Backup Translation Cache" : "Loaded Translation Cache")} " +
-                $"(pid: {CacheInfo.ProcessId}, title: {TitleIdText}, version: '{DisplayVersion}', kind: {CacheInfo.ProcessKind}, " +
+                $"(pid: {CacheInfo.ProcessId}, title: {CacheInfo.TitleIdText}, version: '{CacheInfo.DisplayVersion}', kind: {CacheInfo.ProcessKind}, " +
                 $"selector: '{CacheInfo.CacheSelector}', key: '{CacheInfo.CacheKey}', path: '{fileName}', " +
                 $"size: {fileSize} bytes, translated functions: {GetEntriesCount()}).");
 
@@ -607,7 +579,7 @@ namespace ARMeilleure.Translation.PTC
             {
                 Logger.Info?.Print(
                     LogClass.Ptc,
-                    $"Saved Translation Cache (pid: {CacheInfo.ProcessId}, title: {TitleIdText}, version: '{DisplayVersion}', " +
+                    $"Saved Translation Cache (pid: {CacheInfo.ProcessId}, title: {CacheInfo.TitleIdText}, version: '{CacheInfo.DisplayVersion}', " +
                     $"kind: {CacheInfo.ProcessKind}, selector: '{CacheInfo.CacheSelector}', key: '{CacheInfo.CacheKey}', " +
                     $"path: '{fileName}', size: {fileSize} bytes, translated functions: {translatedFuncsCount}).");
             }

@@ -278,7 +278,7 @@ namespace ARMeilleure.Translation.PTC
             Logger.Info?.Print(
                 LogClass.Ptc,
                 $"{(isBackup ? "Loaded Backup Profiling Info" : "Loaded Profiling Info")} " +
-                $"(pid: {_ptc.CacheInfo.ProcessId}, title: {_ptc.TitleIdText}, version: '{_ptc.DisplayVersion}', " +
+                $"(pid: {_ptc.CacheInfo.ProcessId}, title: {_ptc.CacheInfo.TitleIdText}, version: '{_ptc.CacheInfo.DisplayVersion}', " +
                 $"kind: {_ptc.CacheInfo.ProcessKind}, selector: '{_ptc.CacheInfo.CacheSelector}', key: '{_ptc.CacheInfo.CacheKey}', " +
                 $"path: '{fileName}', size: {fileSize} bytes, profiled functions: {ProfiledFuncs.Count}).");
 
@@ -403,7 +403,7 @@ namespace ARMeilleure.Translation.PTC
             {
                 Logger.Info?.Print(
                     LogClass.Ptc,
-                    $"Saved Profiling Info (pid: {_ptc.CacheInfo.ProcessId}, title: {_ptc.TitleIdText}, version: '{_ptc.DisplayVersion}', " +
+                    $"Saved Profiling Info (pid: {_ptc.CacheInfo.ProcessId}, title: {_ptc.CacheInfo.TitleIdText}, version: '{_ptc.CacheInfo.DisplayVersion}', " +
                     $"kind: {_ptc.CacheInfo.ProcessKind}, selector: '{_ptc.CacheInfo.CacheSelector}', key: '{_ptc.CacheInfo.CacheKey}', " +
                     $"path: '{fileName}', size: {fileSize} bytes, profiled functions: {profiledFuncsCount}).");
             }
