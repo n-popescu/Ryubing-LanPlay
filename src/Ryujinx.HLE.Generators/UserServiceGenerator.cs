@@ -32,7 +32,7 @@ namespace Ryujinx.HLE.Generators
                 predicate: (node, _) => node is ClassDeclarationSyntax decl && !decl.Modifiers.Any(SyntaxKind.AbstractKeyword) && !decl.Modifiers.Any(SyntaxKind.PrivateKeyword),
                 transform: (ctx, _) =>
                 {
-                    var target = (INamedTypeSymbol)ctx.TargetSymbol;
+                    INamedTypeSymbol target = (INamedTypeSymbol)ctx.TargetSymbol;
                     IEnumerable<(string, string param)> instances = ctx.Attributes.Select(attr =>
                     {
                         string param = attr.ConstructorArguments is [_, { IsNull: false } arg] ? arg.ToCSharpString() : null;
@@ -49,7 +49,7 @@ namespace Ryujinx.HLE.Generators
             context.RegisterSourceOutput(pipeline.Collect(),
                 (ctx, data) =>
                 {
-                    var generator = new CodeGenerator();
+                    CodeGenerator generator = new();
                     
                     generator.AppendLine("#nullable enable");
                     generator.AppendLine("using System;");

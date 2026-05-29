@@ -29,7 +29,7 @@ namespace Ryujinx.HLE.Generators
             {
                 unchecked
                 {
-                    var hashCode = (Namespace != null ? Namespace.GetHashCode() : 0);
+                    int hashCode = (Namespace != null ? Namespace.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (TypeName != null ? TypeName.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (MethodName != null ? MethodName.GetHashCode() : 0);
                     return hashCode;
@@ -59,7 +59,7 @@ namespace Ryujinx.HLE.Generators
             {
                 unchecked
                 {
-                    var hashCode = (Namespace != null ? Namespace.GetHashCode() : 0);
+                    int hashCode = (Namespace != null ? Namespace.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (TypeName != null ? TypeName.GetHashCode() : 0);
                     return hashCode;
                 }
@@ -71,7 +71,7 @@ namespace Ryujinx.HLE.Generators
             Func<SyntaxNode, CancellationToken, bool> predicate = (node, _) => node is MethodDeclarationSyntax;
             Func<GeneratorAttributeSyntaxContext, CancellationToken, CommandData> transform = (ctx, _) =>
             {
-                var target = (IMethodSymbol)ctx.TargetSymbol;
+                IMethodSymbol target = (IMethodSymbol)ctx.TargetSymbol;
                 return new CommandData
                 {
                     Namespace = target.ContainingType.ContainingNamespace?.ToDisplayString(),
@@ -117,7 +117,7 @@ namespace Ryujinx.HLE.Generators
             
             context.RegisterSourceOutput(types, (ctx, data) =>
             {
-                var generator = new CodeGenerator();
+                CodeGenerator generator = new();
                 
                 generator.AppendLine("using Ryujinx.HLE.HOS;");
                 generator.AppendLine("using RC = global::Ryujinx.HLE.HOS.ResultCode;");
