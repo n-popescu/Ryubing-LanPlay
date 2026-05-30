@@ -101,31 +101,6 @@
       }
     },
     {
-      "ID": "LoadDLCFromFolderButton",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "DLC aus Ordner laden...",
-        "el_GR": "",
-        "en_US": "Load DLC...",
-        "es_ES": "Cargar DLC...",
-        "fr_FR": "Charger des DLC...",
-        "he_IL": "",
-        "it_IT": "Carica DLC...",
-        "ja_JP": "",
-        "ko_KR": "DLC 폴더에서 불러오기...",
-        "no_NO": "Last inn DLC...",
-        "pl_PL": "",
-        "pt_BR": "Carregar DLC...",
-        "ru_RU": "Загрузить DLC...",
-        "sv_SE": "Läs in DLC...",
-        "th_TH": "โหลด DLC...",
-        "tr_TR": "",
-        "uk_UA": "Завантажити DLC...",
-        "zh_CN": "加载 DLC...",
-        "zh_TW": "載入 DLC..."
-      }
-    },
-    {
       "ID": "OpenRyuijnxFolderButton",
       "Translations": {
         "ar_SA": "‫فتح مجلد Ryujinx",

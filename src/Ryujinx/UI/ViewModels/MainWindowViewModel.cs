@@ -1660,7 +1660,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(new FilePickerOpenOptions
             {
-                Title = LocaleManager.Instance[LocaleKeys.LoadApplicationFromFileDialogTitle],
+                Title = LocaleManager.Instance[LocaleKeys.Dialog_File_LoadApplicationFromFileFilePickerTitle],
                 FileTypeFilter = new List<FilePickerFileType>
                 {
                     new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
@@ -1731,22 +1731,62 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
-        public async Task LoadDlcFromFolder()
+        private (int added, int removed) ProcessContentFolders(
+            List<string> dirs,
+            LoadContentFromFolderDelegate onDirsSelected)
         {
-            await LoadContentFromFolder(
-                LocaleKeys.AutoloadDlcAddedMessage,
-                LocaleKeys.AutoloadDlcRemovedMessage,
-                ApplicationLibrary.AutoLoadDownloadableContents,
-                LocaleKeys.LoadDLCFromFolderDialogTitle);
+            int removed;
+            int added = onDirsSelected(dirs, out removed);
+
+            return (added, removed);
         }
 
-        public async Task LoadTitleUpdatesFromFolder()
+        private async Task<IReadOnlyList<string>?> PickFolders(LocaleKeys titleKey)
         {
-            await LoadContentFromFolder(
-                LocaleKeys.AutoloadUpdateAddedMessage,
-                LocaleKeys.AutoloadUpdateRemovedMessage,
-                ApplicationLibrary.AutoLoadTitleUpdates,
-                LocaleKeys.LoadTitleUpdatesFromFolderDialogTitle);
+            var result = await StorageProvider.OpenMultiFolderPickerAsync(
+                new FolderPickerOpenOptions
+                {
+                    Title = LocaleManager.Instance[titleKey]
+                });
+
+            if (!result.TryGet(out IReadOnlyList<IStorageFolder> folders))
+                return null;
+
+            return folders.Select(x => x.Path.LocalPath).ToList();
+        }
+        public async Task LoadTitleUpdatesAndDlcFromFolder()
+        {
+            var dirs = await PickFolders(LocaleKeys.Dialog_FileLoading_LoadUnpackedGameFromFolderFilePickerTitle);
+
+            if (dirs == null)
+                return;
+
+            int dlcAdded = ApplicationLibrary.AutoLoadDownloadableContents(
+            dirs.ToList(),
+            out int dlcRemoved);
+
+            int updAdded = ApplicationLibrary.AutoLoadTitleUpdates(
+            dirs.ToList(),
+            out int updRemoved);
+
+            string msg = string.Join("\n",
+                string.Format(LocaleManager.Instance[LocaleKeys.AutoloadUpdateRemovedMessage], updRemoved),
+                string.Format(LocaleManager.Instance[LocaleKeys.AutoloadUpdateAddedMessage], updAdded)
+                string.Format(LocaleManager.Instance[LocaleKeys.AutoloadDlcRemovedMessage], dlcRemoved),
+                string.Format(LocaleManager.Instance[LocaleKeys.AutoloadDlcAddedMessage], dlcAdded),
+            );
+
+            await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                await ContentDialogHelper.ShowTextDialog(
+                    LocaleManager.Instance[LocaleKeys.RyujinxConfirm],
+                    msg,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    LocaleManager.Instance[LocaleKeys.InputDialogOk],
+                    (int)Symbol.Checkmark);
+            });
         }
 
         public async Task OpenFolder()
@@ -1754,7 +1794,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             Optional<IStorageFolder> result = await StorageProvider.OpenSingleFolderPickerAsync(
                 new FolderPickerOpenOptions
                 {
-                    Title = LocaleManager.Instance[LocaleKeys.LoadUnpackedGameFromFolderDialogTitle]
+                    Title = LocaleManager.Instance[LocaleKeys.Dialog_FileLoading_LoadUnpackedGameFromFolderFilePickerTitle]
                 });
 
             if (result.TryGet(out IStorageFolder value))

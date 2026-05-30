@@ -34,7 +34,7 @@
                 <MenuItem
                     Command="{Binding OpenFile}"
                     Header="{ext:Locale MenuBar_File_LoadApplicationButton}"
-                    Icon="{ext:Icon fa-solid fa-file}"
+                    Icon="{ext:Icon fa-solid fa-play}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <MenuItem
                     Command="{Binding OpenFolder}"
@@ -42,14 +42,9 @@
                     Icon="{ext:Icon fa-solid fa-folder-open}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <MenuItem
-                    Command="{Binding LoadTitleUpdatesFromFolder}"
+                    Command="{Binding LoadTitleUpdatesAndDlcFromFolder}"
                     Header="{ext:Locale MenuBar_File_LoadTitleUpdatesFromFolderButton}"
-                    Icon="{ext:Icon fa-solid fa-diagram-predecessor}"
-                    IsEnabled="{Binding EnableNonGameRunningControls}" />
-                <MenuItem
-                    Command="{Binding LoadDlcFromFolder}"
-                    Header="{ext:Locale MenuBar_File_LoadDLCFromFolderButton}"
-                    Icon="{ext:Icon fa-solid fa-puzzle-piece}"
+                    Icon="{ext:Icon fa-solid fa-layer-group}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <Separator />
                 <MenuItem
@@ -59,11 +54,11 @@
                 <MenuItem
                     Command="{Binding OpenLogsFolder}"
                     Header="{ext:Locale MenuBar_File_OpenLogsFolderButton}"
-                    Icon="{ext:Icon fa-solid fa-terminal}" />
+                    Icon="{ext:Icon fa-solid fa-folder-closed}" />
                 <MenuItem
                     Command="{Binding OpenScreenshotsFolder}"
                     Header="{ext:Locale MenuBar_File_OpenScreenshotsFolderButton}"
-                    Icon="{ext:Icon fa-solid fa-image}" />
+                    Icon="{ext:Icon fa-solid fa-folder-closed}" />
                 <Separator IsVisible="{Binding ManageFileTypesVisible}" />
                 <MenuItem
                     Command="{Binding ToggleFileTypes}"
@@ -78,7 +73,7 @@
                 <MenuItem
                     Name="CloseRyujinxMenuItem"
                     Header="{ext:Locale MenuBar_File_ExitButton}"
-                    Icon="{ext:Icon fa-solid fa-power-off}" />
+                    Icon="{ext:Icon fa-solid fa-arrow-right-from-bracket}" />
             </MenuItem>
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBar_Options_OptionsLabel}">
                 <MenuItem
