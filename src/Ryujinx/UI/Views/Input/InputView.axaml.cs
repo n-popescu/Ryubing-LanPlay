@@ -201,20 +201,20 @@ namespace Ryujinx.Ava.UI.Views.Input
                 MaxWidth = 360,
             });
 
-            ContentDialog contentDialog = new ContentDialog
+            FAContentDialog contentDialog = new FAContentDialog
             {
                 Title = LocaleManager.Instance[LocaleKeys.RyujinxConfirm],
                 PrimaryButtonText = LocaleManager.Instance[LocaleKeys.InputDialogYes],
                 CloseButtonText = LocaleManager.Instance[LocaleKeys.InputDialogNo],
-                DefaultButton = ContentDialogButton.Primary,
+                DefaultButton = FAContentDialogButton.Primary,
                 Content = content,
             }.ApplyStyles();
 
-            ContentDialogResult result = owner is not null
+            FAContentDialogResult result = owner is not null
                 ? await contentDialog.ShowAsync(owner)
                 : await ContentDialogHelper.ShowAsync(contentDialog);
 
-            if (result == ContentDialogResult.Primary)
+            if (result == FAContentDialogResult.Primary)
             {
                 ViewModel.ResetCurrentDeviceToDefaults();
             }
