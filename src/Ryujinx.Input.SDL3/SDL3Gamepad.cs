@@ -155,15 +155,16 @@ namespace Ryujinx.Input.SDL3
                 result |= GamepadFeaturesFlag.Led;
             }
             SDL_UnlockProperties(propID);
-
-            // NOTE: Do not call SDL_DestroyProperties here. These properties are owned
-            // internally by SDL and are freed when SDL_CloseGamepad is called (in Dispose).
+            SDL_DestroyProperties(propID);
 
             return result;
         }
 
         public string Id { get; }
         public string Name { get; }
+
+        // Expose vendor id for higher-fidelity device detection in UI
+        public ushort VendorId => _gamepadHandle != null ? SDL_GetGamepadVendor(_gamepadHandle) : (ushort)0;
 
         public bool IsConnected => SDL_GamepadConnected(_gamepadHandle);
 

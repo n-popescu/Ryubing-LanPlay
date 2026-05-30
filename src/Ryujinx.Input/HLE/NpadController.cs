@@ -2,6 +2,7 @@ using Ryujinx.Common;
 using Ryujinx.Common.Configuration.Hid;
 using Ryujinx.Common.Configuration.Hid.Controller;
 using Ryujinx.Common.Configuration.Hid.Controller.Motion;
+using Ryujinx.Common.Configuration.Hid.Keyboard;
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Services.Hid;
 using System;
@@ -233,7 +234,9 @@ namespace Ryujinx.Input.HLE
             _gamepad?.Dispose();
 
             Id = config.Id;
-            _gamepad = GamepadDriver.GetGamepad(Id);
+            _gamepad = config is StandardKeyboardInputConfig && GamepadDriver is IKeyboardModeDriver keyboardModeDriver
+                ? keyboardModeDriver.GetKeyboard(Id, KeyboardInputMode.Physical)
+                : GamepadDriver.GetGamepad(Id);
 
             UpdateUserConfiguration(config);
 
@@ -558,24 +561,25 @@ namespace Ryujinx.Input.HLE
                     !controllerConfig.Rumble.EnableRumble)
                 {
                     return;
+
                 }
-                
+
                 VibrationValue leftVibrationValue = dualVibrationValue.Item1;
                 VibrationValue rightVibrationValue = dualVibrationValue.Item2;
-                
+
                 leftVibrationValue.AmplitudeLow *= controllerConfig.Rumble.WeakRumble;
                 leftVibrationValue.AmplitudeHigh *= controllerConfig.Rumble.StrongRumble;
                 rightVibrationValue.AmplitudeLow *= controllerConfig.Rumble.WeakRumble;
                 rightVibrationValue.AmplitudeHigh *= controllerConfig.Rumble.StrongRumble;
-                
+
                 if (!controllerConfig.Rumble.UseHDRumble || _gamepad?.HDRumble(leftVibrationValue, rightVibrationValue) == false)
                 {
                     float low = Math.Min(1f, (float)((rightVibrationValue.AmplitudeLow * 0.85 + rightVibrationValue.AmplitudeHigh * 0.15)));
                     float high = Math.Min(1f, (float)((leftVibrationValue.AmplitudeLow * 0.15 + leftVibrationValue.AmplitudeHigh * 0.85)));
                     _gamepad?.Rumble(low, high, 0xFFFFFFFF);
                 }
-                
-                Logger.Debug?.Print(LogClass.Hid, $"Effect for {controllerConfig.PlayerIndex} " + 
+
+                Logger.Debug?.Print(LogClass.Hid, $"Effect for {controllerConfig.PlayerIndex} " +
                     // Value=value/multiplier * multiplier (result)
                     $"L.low.amp={leftVibrationValue.AmplitudeLow / controllerConfig.Rumble.WeakRumble} * {controllerConfig.Rumble.WeakRumble} ({leftVibrationValue.AmplitudeLow}), " +
                     $"L.high.amp={leftVibrationValue.AmplitudeHigh / controllerConfig.Rumble.WeakRumble} * {controllerConfig.Rumble.WeakRumble} ({leftVibrationValue.AmplitudeHigh}), " +
