@@ -30,7 +30,10 @@ namespace Ryujinx.Ava.Utilities
         [SupportedOSPlatform("linux")]
         private static void CreateShortcutLinux(string applicationFilePath, string applicationId, byte[] iconData, string iconPath, string desktopPath, string cleanedAppName, string args = "")
         {
-            string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Ryujinx.sh");
+            string basePath = Environment.GetEnvironmentVariable("APPIMAGE");
+            if (String.IsNullOrEmpty(basePath))
+                basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Ryujinx.sh");
+
             string desktopFile = EmbeddedResources.ReadAllText("Ryujinx/Assets/ShortcutFiles/shortcut-template.desktop");
             iconPath += ".png";
 

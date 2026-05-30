@@ -1,13 +1,12 @@
 [Desktop Entry]
-Version=1.0
+Version=1.5
 Name={0}
 Type=Application
 Icon={1}
-Exec={2} %f
-Comment=Nintendo Switch application
-GenericName=Nintendo Switch Emulator
+Exec={2}
+GenericName=Emulated Nintendo Switch Application
+Comment=Running on Ryujinx
 Terminal=false
 Categories=Game;Emulator;
-Keywords=Switch;Nintendo;Emulator;
 StartupWMClass=Ryujinx
 PrefersNonDefaultGPU=true
