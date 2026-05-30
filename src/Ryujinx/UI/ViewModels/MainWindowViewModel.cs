@@ -1771,9 +1771,9 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             string msg = string.Join("\n",
                 string.Format(LocaleManager.Instance[LocaleKeys.AutoloadUpdateRemovedMessage], updRemoved),
-                string.Format(LocaleManager.Instance[LocaleKeys.AutoloadUpdateAddedMessage], updAdded)
+                string.Format(LocaleManager.Instance[LocaleKeys.AutoloadUpdateAddedMessage], updAdded),
                 string.Format(LocaleManager.Instance[LocaleKeys.AutoloadDlcRemovedMessage], dlcRemoved),
-                string.Format(LocaleManager.Instance[LocaleKeys.AutoloadDlcAddedMessage], dlcAdded),
+                string.Format(LocaleManager.Instance[LocaleKeys.AutoloadDlcAddedMessage], dlcAdded)
             );
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
