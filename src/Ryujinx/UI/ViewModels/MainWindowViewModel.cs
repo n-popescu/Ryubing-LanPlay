@@ -1660,7 +1660,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(new FilePickerOpenOptions
             {
-                Title = LocaleManager.Instance[LocaleKeys.Dialog_FileLoading_LoadApplicationFromFileFilePickerTitle],
+                Title = LocaleManager.Instance[LocaleKeys.Dialog_FileMenu_LoadApplicationFromFileFilePickerTitle],
                 FileTypeFilter = new List<FilePickerFileType>
                 {
                     new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
@@ -1756,7 +1756,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         }
         public async Task LoadTitleUpdatesAndDlcFromFolder()
         {
-            var dirs = await PickFolders(LocaleKeys.Dialog_FileLoading_LoadUnpackedGameFromFolderFilePickerTitle);
+            var dirs = await PickFolders(LocaleKeys.Dialog_FileMenu_LoadUnpackedGameFromFolderFilePickerTitle);
 
             if (dirs == null)
                 return;
@@ -1794,7 +1794,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             Optional<IStorageFolder> result = await StorageProvider.OpenSingleFolderPickerAsync(
                 new FolderPickerOpenOptions
                 {
-                    Title = LocaleManager.Instance[LocaleKeys.Dialog_FileLoading_LoadUnpackedGameFromFolderFilePickerTitle]
+                    Title = LocaleManager.Instance[LocaleKeys.Dialog_FileMenu_LoadUnpackedGameFromFolderFilePickerTitle]
                 });
 
             if (result.TryGet(out IStorageFolder value))
