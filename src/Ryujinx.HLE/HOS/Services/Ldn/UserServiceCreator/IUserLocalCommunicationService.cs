@@ -49,6 +49,8 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
         private AccessPoint _accessPoint;
         private Station _station;
 
+        protected virtual bool ValidateLocalCommunicationId => true;
+
         private ushort CheckDevelopmentChannel(ushort channel)
         {
             return (ushort)(!IsDevelopment ? 0 : channel);
@@ -148,7 +150,9 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
             else
             {
                 networkInfo = new NetworkInfo();
-                Logger.NetLog?.PrintMsg(LogClass.ServiceLdn,"GetNetworkInfoImpl: Invalid state!");
+                Logger.NetLog?.PrintMsg(
+                    LogClass.ServiceLdn,
+                    $"GetNetworkInfoImpl: Invalid state! state={_state}, stationConnected={_station?.Connected}, accessPointConnected={_accessPoint?.Connected}");
                 Logger.NetLog?.PrintMsg(LogClass.ServiceLdn,$"GetNetworkInfoImpl: networkInfo = {networkInfo}");
                 return ResultCode.InvalidState;
             }
@@ -620,7 +624,9 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
                 networkConfig.IntentId.LocalCommunicationId = (long)controlProperty.LocalCommunicationId[0];
             }
 
-            bool isLocalCommunicationIdValid = CheckLocalCommunicationIdPermission(context, (ulong)networkConfig.IntentId.LocalCommunicationId);
+            bool isLocalCommunicationIdValid = !ValidateLocalCommunicationId ||
+                CheckLocalCommunicationIdPermission(context, (ulong)networkConfig.IntentId.LocalCommunicationId);
+
             if (!isLocalCommunicationIdValid && NetworkClient.NeedsRealId)
             {
                 Logger.NetLog?.PrintMsg(LogClass.ServiceLdn, "CreateNetworkImpl: Invalid object!");

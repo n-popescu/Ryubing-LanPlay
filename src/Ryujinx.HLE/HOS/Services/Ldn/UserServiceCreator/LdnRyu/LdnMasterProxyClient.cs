@@ -252,9 +252,9 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu
             _networkConnected = true;
             _disconnectReason = DisconnectReason.None;
 
-            _apConnected.Set();
-
             NetworkChange?.Invoke(this, new NetworkChangeEventArgs(info, true));
+
+            _apConnected.Set();
         }
 
         private void HandleDisconnected(LdnHeader header, DisconnectMessage message)
@@ -473,6 +473,7 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu
         public bool CreateNetwork(CreateAccessPointRequest request, byte[] advertiseData)
         {
             _timeout.DisableTimeout();
+            _apConnected.Reset();
 
             ConfigureAccessPoint(ref request.RyuNetworkConfig);
 
@@ -528,6 +529,7 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu
         public bool CreateNetworkPrivate(CreateAccessPointPrivateRequest request, byte[] advertiseData)
         {
             _timeout.DisableTimeout();
+            _apConnected.Reset();
 
             ConfigureAccessPoint(ref request.RyuNetworkConfig);
 
@@ -600,6 +602,7 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu
         public NetworkError Connect(ConnectRequest request)
         {
             _timeout.DisableTimeout();
+            _apConnected.Reset();
 
             if (!EnsureConnected())
             {
@@ -622,6 +625,7 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu
         public NetworkError ConnectPrivate(ConnectPrivateRequest request)
         {
             _timeout.DisableTimeout();
+            _apConnected.Reset();
 
             if (!EnsureConnected())
             {

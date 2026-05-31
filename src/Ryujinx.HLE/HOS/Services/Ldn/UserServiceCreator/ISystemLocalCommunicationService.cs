@@ -8,6 +8,8 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
 
         public ISystemLocalCommunicationService(ServiceCtx context) : base(context) { }
 
+        protected override bool ValidateLocalCommunicationId => false;
+
         // NOTE: This overrides the parent's Initialize method with the same command ID (402)
         // The CommandCmif attribute is inherited from the parent class
         public override ResultCode Initialize(ServiceCtx context)

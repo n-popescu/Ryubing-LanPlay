@@ -81,6 +81,8 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
                 return WinSockHelper.ConvertError((WsaError)exception.ErrorCode);
             }
 
+            updatedCount = 0;
+
             foreach (PollEvent evnt in events)
             {
                 if (evnt.FileDescriptor is ManagedSocket ms)
@@ -113,10 +115,13 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
                     }
 
                     evnt.Data.OutputEvents = outputEvents;
+
+                    if (outputEvents != 0)
+                    {
+                        updatedCount++;
+                    }
                 }
             }
-
-            updatedCount = readEvents.Count + writeEvents.Count + errorEvents.Count;
 
             return LinuxError.SUCCESS;
         }
@@ -152,7 +157,7 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
 
             SocketHelpers.Select(readEvents, writeEvents, errorEvents, timeout);
 
-            updatedCount = readEvents.Count + writeEvents.Count + errorEvents.Count;
+            updatedCount = 0;
 
             foreach (PollEvent pollEvent in events)
             {
@@ -171,6 +176,11 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
                     if (errorEvents.Contains(ms.Socket))
                     {
                         pollEvent.Data.OutputEvents |= PollEventTypeMask.Error;
+                    }
+
+                    if (pollEvent.Data.OutputEvents != 0)
+                    {
+                        updatedCount++;
                     }
                 }
             }

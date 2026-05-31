@@ -28,6 +28,7 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
         private readonly Queue<int> _errors = new();
 
         private readonly AutoResetEvent _connectEvent = new(false);
+        private const int ConnectTimeoutMilliseconds = 10000;
         private ProxyConnectResponse _connectResponse;
 
         private int _receiveTimeout = -1;
@@ -37,9 +38,9 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
         // private int _sendTimeout = -1; // Sends are techically instant right now, so not _really_ used.
 
         private bool _connecting;
-        private bool _broadcast;
         private bool _readShutdown;
-        // private bool _writeShutdown;
+        private bool _writeShutdown;
+        private bool _disconnectSent;
         private bool _closed;
 
         private readonly Dictionary<SocketOptionName, int> _socketOptions = new()
@@ -117,8 +118,17 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
                 }
             }
         }
-        public bool Writable => Connected || ProtocolType == ProtocolType.Udp;
-        public bool Error => false;
+        public bool Writable => !_writeShutdown && (Connected || ProtocolType == ProtocolType.Udp);
+        public bool Error
+        {
+            get
+            {
+                lock (_errors)
+                {
+                    return _errors.Count > 0;
+                }
+            }
+        }
 
         public LdnProxySocket(AddressFamily addressFamily, SocketType socketType, ProtocolType protocolType, LdnProxy proxy)
         {
@@ -152,12 +162,11 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
             return localEp;
         }
 
-        public LdnProxySocket AsAccepted(IPEndPoint remoteEp)
+        public LdnProxySocket AsAccepted(IPEndPoint localEp, IPEndPoint remoteEp)
         {
             Connected = true;
+            LocalEndPoint = localEp;
             RemoteEndPoint = remoteEp;
-
-            IPEndPoint localEp = EnsureLocalEndpoint(true);
 
             _proxy.SignalConnected(localEp, remoteEp, ProtocolType);
 
@@ -182,14 +191,14 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
 
         public void IncomingData(ProxyDataPacket packet)
         {
-            bool isBroadcast = _proxy.IsBroadcast(packet.Header.Info.DestIpV4);
-
-            if (!_closed && (_broadcast || !isBroadcast))
+            if (!_closed)
             {
                 lock (_receiveQueue)
                 {
                     _receiveQueue.Enqueue(packet);
                 }
+
+                _receiveEvent.Set();
             }
         }
 
@@ -228,12 +237,15 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
                         // Is this request made for us?
                         IPEndPoint endpoint = GetEndpoint(request.Info.DestIpV4, request.Info.DestPort);
 
-                        if (Equals(endpoint, LocalEndPoint))
+                        if (MatchesLocalEndpoint(endpoint))
                         {
                             // Yes - let's accept.
                             IPEndPoint remoteEndpoint = GetEndpoint(request.Info.SourceIpV4, request.Info.SourcePort);
 
-                            LdnProxySocket socket = new LdnProxySocket(AddressFamily, SocketType, ProtocolType, _proxy).AsAccepted(remoteEndpoint);
+                            LdnProxySocket socket = new LdnProxySocket(AddressFamily, SocketType, ProtocolType, _proxy)
+                            {
+                                Blocking = Blocking,
+                            }.AsAccepted((IPEndPoint)LocalEndPoint, remoteEndpoint);
 
                             lock (_listenSockets)
                             {
@@ -245,6 +257,18 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
                     }
                 }
             }
+        }
+
+        private bool MatchesLocalEndpoint(IPEndPoint endpoint)
+        {
+            if (LocalEndPoint is not IPEndPoint localEndpoint || endpoint.Port != localEndpoint.Port)
+            {
+                return false;
+            }
+
+            return localEndpoint.Address.Equals(IPAddress.Any) ||
+                localEndpoint.Address.Equals(IPAddress.IPv6Any) ||
+                endpoint.Address.Equals(localEndpoint.Address);
         }
 
         public void Bind(EndPoint localEP)
@@ -291,7 +315,7 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
 
         public void Connect(EndPoint remoteEP)
         {
-            if (_isListening || !IsBound)
+            if (_isListening)
             {
                 throw new InvalidOperationException();
             }
@@ -301,8 +325,27 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
                 throw new NotSupportedException();
             }
 
+            if (ProtocolType == ProtocolType.Tcp)
+            {
+                if (Connected)
+                {
+                    if (RemoteEndPoint is IPEndPoint currentRemote && currentRemote.Equals(remoteEP))
+                    {
+                        return;
+                    }
+
+                    throw new SocketException((int)WsaError.WSAEISCONN);
+                }
+
+                if (_connecting)
+                {
+                    throw new SocketException((int)WsaError.WSAEALREADY);
+                }
+            }
+
             IPEndPoint localEp = EnsureLocalEndpoint(true);
 
+            RemoteEndPoint = (IPEndPoint)remoteEP;
             _connecting = true;
 
             _proxy.RequestConnection(localEp, (IPEndPoint)remoteEP, ProtocolType);
@@ -312,7 +355,13 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
                 throw new SocketException((int)WsaError.WSAEWOULDBLOCK);
             }
 
-            _connectEvent.WaitOne(); //timeout?
+            if (!_connectEvent.WaitOne(ConnectTimeoutMilliseconds))
+            {
+                _connecting = false;
+                SignalError(WsaError.WSAETIMEDOUT);
+
+                throw new SocketException((int)WsaError.WSAETIMEDOUT);
+            }
 
             if (_connectResponse.Info.SourceIpV4 == 0)
             {
@@ -331,7 +380,9 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
 
             _connecting = false;
 
-            if (_connectResponse.Info.SourceIpV4 != 0)
+            _connectResponse = obj;
+
+            if (obj.Info.SourceIpV4 != 0)
             {
                 IPEndPoint remoteEp = GetEndpoint(obj.Info.SourceIpV4, obj.Info.SourcePort);
                 RemoteEndPoint = remoteEp;
@@ -344,17 +395,25 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
 
                 SignalError(WsaError.WSAECONNREFUSED);
             }
+
+            _connectEvent.Set();
         }
 
         public void Disconnect(bool reuseSocket)
         {
             if (Connected)
             {
-                ConnectionEnded();
+                SignalDisconnect();
 
-                // The other side needs to be notified that connection ended.
-                _proxy.EndConnection(LocalEndPoint as IPEndPoint, RemoteEndPoint as IPEndPoint, ProtocolType);
+                ConnectionEnded();
             }
+
+            _readShutdown = true;
+            _writeShutdown = true;
+
+            _receiveEvent.Set();
+            _acceptEvent.Set();
+            _connectEvent.Set();
         }
 
         private void ConnectionEnded()
@@ -366,6 +425,19 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
             }
         }
 
+        private void SignalDisconnect()
+        {
+            if (_disconnectSent ||
+                LocalEndPoint is not IPEndPoint localEndpoint ||
+                RemoteEndPoint is not IPEndPoint remoteEndpoint)
+            {
+                return;
+            }
+
+            _disconnectSent = true;
+            _proxy.EndConnection(localEndpoint, remoteEndpoint, ProtocolType);
+        }
+
         public void GetSocketOption(SocketOptionLevel optionLevel, SocketOptionName optionName, byte[] optionValue)
         {
             if (optionLevel != SocketOptionLevel.Socket)
@@ -375,6 +447,19 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
 
             if (_socketOptions.TryGetValue(optionName, out int result))
             {
+                if (optionName == SocketOptionName.Error)
+                {
+                    lock (_errors)
+                    {
+                        result = _errors.Count > 0 ? _errors.Dequeue() : 0;
+                    }
+
+                    if (result == 0 && _connecting)
+                    {
+                        result = (int)WsaError.WSAEINPROGRESS;
+                    }
+                }
+
                 byte[] data = BitConverter.GetBytes(result);
                 Array.Copy(data, 0, optionValue, 0, Math.Min(data.Length, optionValue.Length));
             }
@@ -401,12 +486,16 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
                 _connectRequests.Enqueue(obj);
             }
 
-            _connectEvent.Set();
+            _acceptEvent.Set();
         }
 
         public void HandleDisconnect(ProxyDisconnectMessage message)
         {
-            Disconnect(false);
+            _readShutdown = true;
+
+            _receiveEvent.Set();
+            _acceptEvent.Set();
+            _connectEvent.Set();
         }
 
         public int Receive(Span<byte> buffer)
@@ -435,7 +524,7 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
             // We just receive all packets meant for us anyways regardless of EP in the actual implementation.
             // The point is mostly to return the endpoint that we got the data from.
 
-            if (!Connected && ProtocolType == ProtocolType.Tcp)
+            if (!Connected && !_readShutdown && ProtocolType == ProtocolType.Tcp)
             {
                 throw new SocketException((int)WsaError.WSAECONNRESET);
             }
@@ -457,29 +546,50 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
             }
 
             int timeout = _receiveTimeout;
+            long deadline = timeout > 0 ? Environment.TickCount64 + timeout : 0;
 
-            _receiveEvent.WaitOne(timeout == 0 ? -1 : timeout);
-
-            if (!Connected && ProtocolType == ProtocolType.Tcp)
+            while (true)
             {
-                throw new SocketException((int)WsaError.WSAECONNRESET);
+                int waitTimeout = -1;
+
+                if (timeout > 0)
+                {
+                    long remaining = deadline - Environment.TickCount64;
+
+                    if (remaining <= 0)
+                    {
+                        break;
+                    }
+
+                    waitTimeout = remaining > int.MaxValue ? int.MaxValue : (int)remaining;
+                }
+
+                bool signalled = _receiveEvent.WaitOne(waitTimeout);
+
+                if (!Connected && !_readShutdown && ProtocolType == ProtocolType.Tcp)
+                {
+                    throw new SocketException((int)WsaError.WSAECONNRESET);
+                }
+
+                lock (_receiveQueue)
+                {
+                    if (_receiveQueue.Count > 0)
+                    {
+                        return ReceiveFromQueue(buffer, flags, ref remoteEp);
+                    }
+                    else if (_readShutdown)
+                    {
+                        return 0;
+                    }
+                }
+
+                if (!signalled && timeout > 0)
+                {
+                    break;
+                }
             }
 
-            lock (_receiveQueue)
-            {
-                if (_receiveQueue.Count > 0)
-                {
-                    return ReceiveFromQueue(buffer, flags, ref remoteEp);
-                }
-                else if (_readShutdown)
-                {
-                    return 0;
-                }
-                else
-                {
-                    throw new SocketException((int)WsaError.WSAETIMEDOUT);
-                }
-            }
+            throw new SocketException((int)WsaError.WSAEWOULDBLOCK);
         }
 
         public int ReceiveFrom(Span<byte> buffer, SocketFlags flags, out SocketError socketError, ref EndPoint remoteEp)
@@ -487,7 +597,7 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
             // We just receive all packets meant for us anyways regardless of EP in the actual implementation.
             // The point is mostly to return the endpoint that we got the data from.
 
-            if (!Connected && ProtocolType == ProtocolType.Tcp)
+            if (!Connected && !_readShutdown && ProtocolType == ProtocolType.Tcp)
             {
                 socketError = SocketError.ConnectionReset;
                 return -1;
@@ -511,31 +621,53 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
             }
 
             int timeout = _receiveTimeout;
+            long deadline = timeout > 0 ? Environment.TickCount64 + timeout : 0;
 
-            _receiveEvent.WaitOne(timeout == 0 ? -1 : timeout);
-
-            if (!Connected && ProtocolType == ProtocolType.Tcp)
+            while (true)
             {
-                throw new SocketException((int)WsaError.WSAECONNRESET);
-            }
+                int waitTimeout = -1;
 
-            lock (_receiveQueue)
-            {
-                if (_receiveQueue.Count > 0)
+                if (timeout > 0)
                 {
-                    return ReceiveFromQueue(buffer, flags, out socketError, ref remoteEp);
+                    long remaining = deadline - Environment.TickCount64;
+
+                    if (remaining <= 0)
+                    {
+                        break;
+                    }
+
+                    waitTimeout = remaining > int.MaxValue ? int.MaxValue : (int)remaining;
                 }
-                else if (_readShutdown)
+
+                bool signalled = _receiveEvent.WaitOne(waitTimeout);
+
+                if (!Connected && !_readShutdown && ProtocolType == ProtocolType.Tcp)
                 {
-                    socketError = SocketError.Success;
-                    return 0;
-                }
-                else
-                {
-                    socketError = SocketError.TimedOut;
+                    socketError = SocketError.ConnectionReset;
                     return -1;
                 }
+
+                lock (_receiveQueue)
+                {
+                    if (_receiveQueue.Count > 0)
+                    {
+                        return ReceiveFromQueue(buffer, flags, out socketError, ref remoteEp);
+                    }
+                    else if (_readShutdown)
+                    {
+                        socketError = SocketError.Success;
+                        return 0;
+                    }
+                }
+
+                if (!signalled && timeout > 0)
+                {
+                    break;
+                }
             }
+
+            socketError = SocketError.WouldBlock;
+            return -1;
         }
 
         private int ReceiveFromQueue(Span<byte> buffer, SocketFlags flags, ref EndPoint remoteEp)
@@ -656,6 +788,11 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
         public int Send(ReadOnlySpan<byte> buffer)
         {
             // Send to the remote host chosen when we "connect" or "accept".
+            if (_writeShutdown)
+            {
+                throw new SocketException((int)WsaError.WSAESHUTDOWN);
+            }
+
             if (!Connected)
             {
                 throw new SocketException();
@@ -667,6 +804,11 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
         public int Send(ReadOnlySpan<byte> buffer, SocketFlags flags)
         {
             // Send to the remote host chosen when we "connect" or "accept".
+            if (_writeShutdown)
+            {
+                throw new SocketException((int)WsaError.WSAESHUTDOWN);
+            }
+
             if (!Connected)
             {
                 throw new SocketException();
@@ -678,6 +820,12 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
         public int Send(ReadOnlySpan<byte> buffer, SocketFlags flags, out SocketError socketError)
         {
             // Send to the remote host chosen when we "connect" or "accept".
+            if (_writeShutdown)
+            {
+                socketError = SocketError.Shutdown;
+                return -1;
+            }
+
             if (!Connected)
             {
                 throw new SocketException();
@@ -688,6 +836,11 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
 
         public int SendTo(ReadOnlySpan<byte> buffer, SocketFlags flags, EndPoint remoteEP)
         {
+            if (_writeShutdown)
+            {
+                throw new SocketException((int)WsaError.WSAESHUTDOWN);
+            }
+
             if (!Connected && ProtocolType == ProtocolType.Tcp)
             {
                 throw new SocketException((int)WsaError.WSAECONNRESET);
@@ -705,6 +858,12 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
 
         public int SendTo(ReadOnlySpan<byte> buffer, SocketFlags flags, out SocketError socketError, EndPoint remoteEP)
         {
+            if (_writeShutdown)
+            {
+                socketError = SocketError.Shutdown;
+                return -1;
+            }
+
             if (!Connected && ProtocolType == ProtocolType.Tcp)
             {
                 socketError = SocketError.ConnectionReset;
@@ -751,9 +910,6 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
                 case SocketOptionName.ReceiveTimeout:
                     _receiveTimeout = optionValue;
                     break;
-                case SocketOptionName.Broadcast:
-                    _broadcast = optionValue != 0;
-                    break;
             }
 
             lock (_socketOptions)
@@ -773,25 +929,35 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
             {
                 case SocketShutdown.Both:
                     _readShutdown = true;
-                    // _writeShutdown = true;
+                    _writeShutdown = true;
+                    SignalDisconnect();
+                    _receiveEvent.Set();
                     break;
                 case SocketShutdown.Receive:
                     _readShutdown = true;
+                    _receiveEvent.Set();
                     break;
                 case SocketShutdown.Send:
-                    // _writeShutdown = true;
+                    _writeShutdown = true;
+                    SignalDisconnect();
                     break;
             }
         }
 
         public void ProxyDestroyed()
         {
-            // Do nothing, for now. Will likely be more useful with TCP.
+            _closed = true;
+            _readShutdown = true;
+            _writeShutdown = true;
+            ConnectionEnded();
+
+            _receiveEvent.Set();
+            _acceptEvent.Set();
+            _connectEvent.Set();
         }
 
         public void Dispose()
         {
-
         }
     }
 }

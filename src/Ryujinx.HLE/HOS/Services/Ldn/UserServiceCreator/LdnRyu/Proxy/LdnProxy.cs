@@ -21,6 +21,7 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
         private readonly uint _subnetMask;
         private readonly uint _localIp;
         private readonly uint _broadcast;
+        private bool _tcpWarningLogged;
 
         public LdnProxy(ProxyConfig config, IProxyClient client, RyuLdnProtocol protocol)
         {
@@ -43,9 +44,10 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
 
         public bool Supported(AddressFamily domain, SocketType type, ProtocolType protocol)
         {
-            if (protocol == ProtocolType.Tcp)
+            if (protocol == ProtocolType.Tcp && !_tcpWarningLogged)
             {
-                Logger.Error?.PrintMsg(LogClass.ServiceLdn, "Tcp proxy networking is untested. Please report this game so that it can be tested.");
+                Logger.Warning?.PrintMsg(LogClass.ServiceLdn, "LDN proxy TCP networking is experimental.");
+                _tcpWarningLogged = true;
             }
 
             return domain == AddressFamily.InterNetwork && (protocol == ProtocolType.Tcp || protocol == ProtocolType.Udp);
@@ -115,51 +117,158 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator.LdnRyu.Proxy
             }
         }
 
+        private void ForConnectionResponseSockets(ProxyInfo info, Action<LdnProxySocket> action)
+        {
+            lock (_sockets)
+            {
+                foreach (LdnProxySocket socket in _sockets)
+                {
+                    if (socket.ProtocolType != info.Protocol ||
+                        socket.LocalEndPoint is not IPEndPoint localEndpoint ||
+                        localEndpoint.Port != info.DestPort ||
+                        socket.RemoteEndPoint is not IPEndPoint remoteEndpoint ||
+                        remoteEndpoint.Port != info.SourcePort)
+                    {
+                        continue;
+                    }
+
+                    action(socket);
+                }
+            }
+        }
+
+        private void ForDataSockets(ProxyInfo info, Action<LdnProxySocket> action)
+        {
+            lock (_sockets)
+            {
+                foreach (LdnProxySocket socket in _sockets)
+                {
+                    if (socket.ProtocolType != info.Protocol ||
+                        socket.LocalEndPoint is not IPEndPoint localEndpoint ||
+                        localEndpoint.Port != info.DestPort ||
+                        !EndpointMatches(localEndpoint, info.DestIpV4))
+                    {
+                        continue;
+                    }
+
+                    if (info.Protocol == ProtocolType.Tcp &&
+                        (!socket.Connected ||
+                         socket.RemoteEndPoint is not IPEndPoint remoteEndpoint ||
+                         remoteEndpoint.Port != info.SourcePort ||
+                         !EndpointMatches(remoteEndpoint, info.SourceIpV4)))
+                    {
+                        continue;
+                    }
+
+                    action(socket);
+                }
+            }
+        }
+
         public void HandleConnectionRequest(LdnHeader header, ProxyConnectRequest request)
         {
+            bool routed = false;
+
             ForRoutedSockets(request.Info, (socket) =>
             {
+                routed = true;
                 socket.HandleConnectRequest(request);
             });
+
+            if (!routed)
+            {
+                Logger.Warning?.PrintMsg(LogClass.ServiceLdn, $"ProxyConnect had no listening socket: {FormatInfo(request.Info)}");
+            }
         }
 
         public void HandleConnectionResponse(LdnHeader header, ProxyConnectResponse response)
         {
-            ForRoutedSockets(response.Info, (socket) =>
+            bool routed = false;
+
+            ForConnectionResponseSockets(response.Info, (socket) =>
             {
+                routed = true;
                 socket.HandleConnectResponse(response);
             });
+
+            if (!routed)
+            {
+                Logger.Warning?.PrintMsg(LogClass.ServiceLdn, $"ProxyConnectReply had no connecting socket: {FormatInfo(response.Info)}");
+            }
         }
 
         public void HandleData(LdnHeader header, ProxyDataHeader proxyHeader, byte[] data)
         {
             ProxyDataPacket packet = new() { Header = proxyHeader, Data = data };
 
-            ForRoutedSockets(proxyHeader.Info, (socket) =>
+            bool routed = false;
+
+            ForDataSockets(proxyHeader.Info, (socket) =>
             {
+                routed = true;
                 socket.IncomingData(packet);
             });
+
+            if (!routed)
+            {
+                Logger.Warning?.PrintMsg(LogClass.ServiceLdn, $"ProxyData had no receiving socket: {FormatInfo(proxyHeader.Info)}");
+            }
         }
 
         public void HandleDisconnect(LdnHeader header, ProxyDisconnectMessage disconnect)
         {
-            ForRoutedSockets(disconnect.Info, (socket) =>
+            bool routed = false;
+
+            ForDataSockets(disconnect.Info, (socket) =>
             {
+                routed = true;
                 socket.HandleDisconnect(disconnect);
             });
+
+            if (!routed)
+            {
+                Logger.Warning?.PrintMsg(LogClass.ServiceLdn, $"ProxyDisconnect had no connected socket: {FormatInfo(disconnect.Info)}");
+            }
         }
 
         private uint GetIpV4(IPEndPoint endpoint)
         {
+            ArgumentNullException.ThrowIfNull(endpoint);
+
             if (endpoint.AddressFamily != AddressFamily.InterNetwork)
             {
                 throw new NotSupportedException();
+            }
+
+            if (endpoint.Address.Equals(IPAddress.Any))
+            {
+                return _localIp;
             }
 
             byte[] address = endpoint.Address.GetAddressBytes();
             Array.Reverse(address);
 
             return BitConverter.ToUInt32(address);
+        }
+
+        private bool EndpointMatches(IPEndPoint endpoint, uint ipv4)
+        {
+            return endpoint.Address.Equals(IPAddress.Any) ||
+                endpoint.Address.Equals(IPAddress.IPv6Any) ||
+                GetIpV4(endpoint) == ipv4;
+        }
+
+        private static string FormatInfo(ProxyInfo info)
+        {
+            return $"{FormatIp(info.SourceIpV4)}:{info.SourcePort} -> {FormatIp(info.DestIpV4)}:{info.DestPort} ({info.Protocol})";
+        }
+
+        private static string FormatIp(uint ipv4)
+        {
+            byte[] address = BitConverter.GetBytes(ipv4);
+            Array.Reverse(address);
+
+            return new IPAddress(address).ToString();
         }
 
         private ProxyInfo MakeInfo(IPEndPoint localEp, IPEndPoint remoteEP, ProtocolType type)
