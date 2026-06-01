@@ -1756,7 +1756,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         }
         public async Task LoadTitleUpdatesAndDlcFromFolder()
         {
-            var dirs = await PickFolders(LocaleKeys.Dialog_FileMenu_LoadUnpackedGameFromFolderFilePickerTitle);
+            var dirs = await PickFolders(LocaleKeys.Dialog_FileMenu_ImportTitleUpdatesFromFolderFilePickerTitle);
 
             if (dirs == null)
                 return;
@@ -1794,7 +1794,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             Optional<IStorageFolder> result = await StorageProvider.OpenSingleFolderPickerAsync(
                 new FolderPickerOpenOptions
                 {
-                    Title = LocaleManager.Instance[LocaleKeys.Dialog_FileMenu_LoadUnpackedGameFromFolderFilePickerTitle]
+                    Title = LocaleManager.Instance[LocaleKeys.Dialog_FileMenu_LoadUnpackedApplicationFromFolderFilePickerTitle]
                 });
 
             if (result.TryGet(out IStorageFolder value))
