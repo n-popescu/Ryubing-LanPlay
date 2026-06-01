@@ -44,7 +44,7 @@
                 <MenuItem
                     Command="{Binding LoadTitleUpdatesAndDlcFromFolder}"
                     Header="{ext:Locale MenuBar_File_LoadTitleUpdatesAndDLCFromFolderButton}"
-                    Icon="{ext:Icon fa-solid fa-layer-group}"
+                    Icon="{ext:Icon fa-solid fa-inbox}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <Separator />
                 <MenuItem
