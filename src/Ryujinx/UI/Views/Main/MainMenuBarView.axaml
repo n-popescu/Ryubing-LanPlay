@@ -33,17 +33,17 @@
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBar_File_FileLabel}">
                 <MenuItem
                     Command="{Binding OpenFile}"
-                    Header="{ext:Locale MenuBar_File_LoadApplicationButton}"
+                    Header="{ext:Locale MenuBar_File_OpenApplicationButton}"
                     Icon="{ext:Icon fa-solid fa-play}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <MenuItem
                     Command="{Binding OpenFolder}"
-                    Header="{ext:Locale MenuBar_File_LoadUnpackedGameButton}"
+                    Header="{ext:Locale MenuBar_File_OpenUnpackedApplicationButton}"
                     Icon="{ext:Icon fa-solid fa-folder-open}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <MenuItem
                     Command="{Binding LoadTitleUpdatesAndDlcFromFolder}"
-                    Header="{ext:Locale MenuBar_File_LoadTitleUpdatesFromFolderButton}"
+                    Header="{ext:Locale MenuBar_File_LoadTitleUpdatesAndDLCFromFolderButton}"
                     Icon="{ext:Icon fa-solid fa-layer-group}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <Separator />
