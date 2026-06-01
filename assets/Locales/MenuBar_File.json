@@ -79,9 +79,9 @@
       "ID": "LoadTitleUpdatesAndDLCFromFolderButton",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Titel-Updates aus Ordner laden...",
+        "de_DE": "Titel-Updates/DLC laden...",
         "el_GR": "",
-        "en_US": "Load Title Updates...",
+        "en_US": "Load Title Updates/DLC...",
         "es_ES": "Cargar Actualizaciones de Títulos/DLC...",
         "fr_FR": "Charger les Mises à Jour de Titres/DLC...",
         "he_IL": "",
