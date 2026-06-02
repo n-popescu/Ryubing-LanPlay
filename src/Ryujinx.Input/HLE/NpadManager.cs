@@ -211,7 +211,7 @@ namespace Ryujinx.Input.HLE
                     playerInputAssignment,
                     PlayerInputAssignmentHelper.CreatePrimaryDevice(inputConfig));
 
-                if (normalizedAssignment.Devices.Count > 0)
+                if (normalizedAssignment.EnableDynamicInputSwap || normalizedAssignment.Devices.Count > 0)
                 {
                     return normalizedAssignment;
                 }

@@ -757,7 +757,7 @@ namespace Ryujinx.Input.HLE
                 .Where(device => device.Type == AssignedInputDeviceType.Controller)
                 .ToList() ?? [];
 
-            if (assignedControllers.Count > 0)
+            if (_playerInputAssignment?.EnableDynamicInputSwap == true)
             {
                 foreach (AssignedInputDevice assignedController in assignedControllers)
                 {
@@ -770,6 +770,7 @@ namespace Ryujinx.Input.HLE
                         }
                     }
                 }
+
                 yield break;
             }
 
