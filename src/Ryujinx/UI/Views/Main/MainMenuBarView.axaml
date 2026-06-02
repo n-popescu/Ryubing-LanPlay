@@ -62,11 +62,11 @@
                 <Separator IsVisible="{Binding ManageFileTypesVisible}" />
                 <MenuItem
                     Command="{Binding ToggleFileTypeAssociations}"
-                    Header="{Binding FileTypeToggleText}"
+                    Header="{Binding FileTypeAssociationsText}"
                     IsVisible="{Binding ManageFileTypesVisible}"
                     ToolTip.Tip="{ext:Locale MenuBar_File_FileTypeAssociationsToolTip}">
                     <MenuItem.Icon>
-                        <i:Icon Value="{Binding FileTypeToggleIcon}" />
+                        <i:Icon Value="{Binding FileTypeAssociationsIcon}" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
