@@ -74,19 +74,11 @@
                     Header="{ext:Locale MenuBarFileExit}"
                     Icon="{ext:Icon fa-solid fa-power-off}" />
             </MenuItem>
-            <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBarOptions}">
-                <MenuItem
-                    Command="{Binding ToggleFullscreen}"
-                    Header="{ext:Locale MenuBarOptionsToggleFullscreen}"
-                    Classes="withCheckbox"
-                    Padding="0"
-                    Icon="{ext:Icon fa-solid fa-expand}"
-                    InputGesture="F11">
-                </MenuItem>
+            <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBar_Options_OptionsLabel}">
                 <MenuItem
                     Padding="0"
                     Command="{Binding ToggleStartGamesInFullscreen}"
-                    Header="{ext:Locale MenuBarOptionsStartGamesInFullscreen}"
+                    Header="{ext:Locale MenuBar_Options_StartGamesInFullscreenCheckboxLabel}"
                     Classes="withCheckbox">
                     <MenuItem.Icon>
                         <CheckBox
@@ -99,7 +91,7 @@
                 <MenuItem
                     Padding="0"
                     Command="{Binding ToggleStartGamesWithoutUi}"
-                    Header="{ext:Locale MenuBarOptionsStartGamesWithoutUI}"
+                    Header="{ext:Locale MenuBar_Options_StartGamesWithoutUICheckboxLabel}"
                     Classes="withCheckbox">
                     <MenuItem.Icon>
                         <CheckBox
@@ -109,39 +101,25 @@
                             Padding="0" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem
-                    Padding="0"
-                    IsVisible="{Binding ShowConsoleVisible}"
-                    Command="{Binding ToggleShowConsole}"
-                    Header="{ext:Locale MenuBarOptionsShowConsole}"
-                    Classes="withCheckbox">
-                    <MenuItem.Icon>
-                        <CheckBox
-                            MinWidth="{DynamicResource CheckBoxSize}"
-                            MinHeight="{DynamicResource CheckBoxSize}"
-                            IsChecked="{Binding ShowConsole, Mode=TwoWay}"
-                            Padding="0" />
-                    </MenuItem.Icon>
-                </MenuItem>
                 <Separator/>
                 <MenuItem
                     Name="ChangeLanguageMenuItem" 
                     Padding="0"
-                    Header="{ext:Locale MenuBarOptionsChangeLanguage}"
+                    Header="{ext:Locale MenuBar_Options_LanguageButton}"
                     Icon="{ext:Icon fa-solid fa-globe}"
                     Classes="withCheckbox">
                 </MenuItem>
                 <MenuItem
                     Name="OpenSettingsMenuItem"
                     Padding="0"
-                    Header="{ext:Locale MenuBarOptionsSettings}"
+                    Header="{ext:Locale MenuBar_Options_SettingsButton}"
                     Icon="{ext:Icon fa-solid fa-gear}"
                     Classes="withCheckbox">
                 </MenuItem>
                 <MenuItem
                     Command="{Binding ManageProfiles}"
                     Padding="0"
-                    Header="{ext:Locale MenuBarOptionsManageUserProfiles}"
+                    Header="{ext:Locale MenuBar_Options_UserProfilesButton}"
                     Icon="{ext:Icon fa-solid fa-user}"
                     IsEnabled="{Binding EnableNonGameRunningControls}"
                     Classes="withCheckbox">
@@ -270,6 +248,20 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBarView}">
+                <MenuItem
+                    Padding="0"
+                    IsVisible="{Binding ShowConsoleVisible}"
+                    Command="{Binding ToggleShowConsole}"
+                    Header="{ext:Locale MenuBar_View_ShowConsoleButton}"
+                    Classes="withCheckbox">
+                    <MenuItem.Icon>
+                        <CheckBox
+                            MinWidth="{DynamicResource CheckBoxSize}"
+                            MinHeight="{DynamicResource CheckBoxSize}"
+                            IsChecked="{Binding ShowConsole, Mode=TwoWay}"
+                            Padding="0" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBarViewWindow}" Icon="{ext:Icon fa-solid fa-window-restore}">
                     <MenuItem Name="WindowSize720PMenuItem" Header="{ext:Locale MenuBarViewWindow720}" CommandParameter="1280 720" />
                     <MenuItem Name="WindowSize1080PMenuItem" Header="{ext:Locale MenuBarViewWindow1080}" CommandParameter="1920 1080" />
@@ -277,6 +269,14 @@
                     <MenuItem Name="WindowSize2160PMenuItem" Header="{ext:Locale MenuBarViewWindow2160}" CommandParameter="3840 2160" />
                 </MenuItem>
                 <MenuItem Name="ToggleFileTypesMenuItem" Header="{ext:Locale MenuBarShowFileTypes}" Icon="{ext:Icon fa-solid fa-tags}" />
+                <MenuItem
+                    Command="{Binding ToggleFullscreen}"
+                    Header="{ext:Locale MenuBar_View_ToggleFullscreenButton}"
+                    Classes="withCheckbox"
+                    Padding="0"
+                    Icon="{ext:Icon fa-solid fa-expand}"
+                    InputGesture="F11">
+                </MenuItem>
             </MenuItem>
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBarHelp}">
                 <MenuItem
