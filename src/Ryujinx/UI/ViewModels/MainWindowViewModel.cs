@@ -945,8 +945,8 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         private void RefreshFileTypeToggle()
             {
-                OnPropertyChanged(nameof(FileTypeToggleText));
-                OnPropertyChanged(nameof(FileTypeToggleIcon));
+                OnPropertyChanged(nameof(FileTypeAssociationsText));
+                OnPropertyChanged(nameof(FileTypeAssociationsIcon));
             }
 
         private bool _areMimeTypesRegistered = FileAssociationHelper.AreMimeTypesRegistered;
@@ -964,25 +964,25 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
-        public string FileTypeToggleText =>
+        public string FileTypeAssociationsText =>
             AreMimeTypesRegistered
                 ? LocaleManager.Instance[LocaleKeys.MenuBar_File_RemoveFileTypeAssociationsButton]
                 : LocaleManager.Instance[LocaleKeys.MenuBar_File_AssociateFileTypesButton];
 
-        public string FileTypeToggleIcon =>
+        public string FileTypeAssociationsIcon =>
             AreMimeTypesRegistered
                 ? "fa-solid fa-link-slash"
                 : "fa-solid fa-link";
 
-        private async Task ToggleFileTypes()
+        private async Task ToggleFileTypeAssociations()
         {
             if (AreMimeTypesRegistered)
-                await UninstallFileTypes();
+                await RemoveFileTypeAssociations();
             else
-                await InstallFileTypes();
+                await AssociateFileTypes();
         }
 
-        private async Task InstallFileTypes()
+        private async Task AssociateFileTypes()
         {
             AreMimeTypesRegistered = FileAssociationHelper.Install();
             if (AreMimeTypesRegistered)
@@ -991,7 +991,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.Error_AssociateFileTypesFailed]);
         }
 
-        private async Task UninstallFileTypes()
+        private async Task RemoveFileTypeAssociations()
         {
             AreMimeTypesRegistered = !FileAssociationHelper.Uninstall();
             if (!AreMimeTypesRegistered)
@@ -1743,7 +1743,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public async Task LoadTitleUpdatesAndDLCFromFolder()
         {
-            if (await PickFolders(LocaleKeys.Dialog_FileMenu_LoadTitleUpdatesAndDLCFromFolderFilePickerTitle) is not { } dirs)
+            if (await PickFolders(LocaleKeys.Dialog_FileMenu_LoadUpdatesAndDLCFromFolderFilePickerTitle) is not { } dirs)
                 return;
 
             int updAdded = ApplicationLibrary.AutoLoadTitleUpdates(dirs.ToList(), out _);

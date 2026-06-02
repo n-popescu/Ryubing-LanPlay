@@ -61,7 +61,7 @@
                     Icon="{ext:Icon fa-solid fa-folder-closed}" />
                 <Separator IsVisible="{Binding ManageFileTypesVisible}" />
                 <MenuItem
-                    Command="{Binding ToggleFileTypes}"
+                    Command="{Binding ToggleFileTypeAssociations}"
                     Header="{Binding FileTypeToggleText}"
                     IsVisible="{Binding ManageFileTypesVisible}"
                     ToolTip.Tip="{ext:Locale MenuBar_File_FileTypeAssociationsToolTip}">
