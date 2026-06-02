@@ -178,15 +178,16 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 ConfigurationState.Instance.Hid.AllowDuplicateDeviceAssignment.Value = value;
 
-                // Update disabled state on all device items
-                foreach (PlayerInputDeviceAssignmentItem item in PlayerInputDevices)
+                if (!value)
                 {
-                    item.IsDisabledByOtherPlayer = !value &&
-                        !string.IsNullOrEmpty(item.AssignedToPlayers) &&
-                        !item.IsAssigned;
+                    KeepCurrentPlayerAssignedDevicesExclusive();
                 }
 
-                RefreshModifiedState();
+                RefreshPlayerInputDeviceAssignmentState();
+                EnsureAtLeastOneAssignedInputDevice();
+                RefreshPlayerInputDeviceAssignmentState();
+
+                IsModified = true;
                 OnPropertyChanged();
             }
         }
@@ -531,9 +532,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 persistedAssignment,
                 PlayerInputAssignmentHelper.CreatePrimaryDevice(persistedConfig));
 
-            return normalizedAssignment.Devices.Count > 0 || persistedConfig == null
-                ? normalizedAssignment
-                : BuildDefaultPlayerInputAssignment(playerIndex, persistedConfig);
+            return normalizedAssignment;
         }
 
         private void LoadConfiguration(InputConfig inputConfig = null, bool reloadPlayerInputDevices = true)
@@ -664,7 +663,83 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 ? PlayerInputDevices.ToDictionary(item => (item.DeviceType, item.Id))
                 : null;
 
-            // Build a map of device -> list of player names that have it assigned (from other players)
+            Dictionary<(AssignedInputDeviceType Type, string Id), List<string>> deviceToOtherPlayers = GetOtherPlayerDeviceAssignments();
+
+            PlayerInputDevices.Clear();
+
+            foreach ((DeviceType Type, string Id, string Name) device in Devices.Where(device => device.Type is DeviceType.Keyboard or DeviceType.Controller))
+            {
+                string deviceId = GetConfigDeviceId(device);
+                AssignedInputDeviceType assignedType = device.Type == DeviceType.Keyboard
+                    ? AssignedInputDeviceType.Keyboard
+                    : AssignedInputDeviceType.Controller;
+                PlayerInputDeviceAssignmentItem editedItem = null;
+                editedItems?.TryGetValue((device.Type, deviceId), out editedItem);
+
+                bool isAssigned = editedItem?.IsAssigned ?? assignment.Devices.Any(assignedDevice =>
+                    assignedDevice.Type == assignedType &&
+                    assignedDevice.Id == deviceId);
+
+                string boundProfile = GetProfileNameOrDefault(editedItem?.BoundProfileName ?? assignment.Devices
+                    .FirstOrDefault(assignedDevice =>
+                        assignedDevice.Type == assignedType &&
+                        assignedDevice.Id == deviceId)?.ProfileName);
+
+                // Find other players using this device
+                deviceToOtherPlayers.TryGetValue((assignedType, deviceId), out List<string> assignedOtherPlayers);
+
+                PlayerInputDevices.Add(new PlayerInputDeviceAssignmentItem
+                {
+                    DeviceType = device.Type,
+                    Id = deviceId,
+                    Name = device.Name,
+                    BoundProfileName = boundProfile,
+                    IsAssigned = isAssigned,
+                    AssignedToPlayers = FormatAssignedPlayerNames(isAssigned, assignedOtherPlayers),
+                    IsDisabledByOtherPlayer = IsDisabledByOtherPlayer(isAssigned, assignedOtherPlayers),
+                });
+            }
+
+            EnsureAtLeastOneAssignedInputDevice();
+            RefreshPlayerInputDeviceAssignmentState();
+            RefreshProfileBindingState();
+            OnPropertyChanged(nameof(PlayerInputDevices));
+        }
+
+        public void ToggleAssignedPlayerInputDevice(PlayerInputDeviceAssignmentItem item, bool isAssigned)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            if (item.IsDisabledByOtherPlayer && isAssigned)
+            {
+                return;
+            }
+
+            if (item.IsDisabledByOtherPlayer && !isAssigned)
+            {
+                item.IsAssigned = false;
+                RefreshPlayerInputDeviceAssignmentState();
+                return;
+            }
+
+            if (!isAssigned && EnableDynamicGamepadSwap && PlayerInputDevices.Count(device => device.IsAssigned && device != item) == 0)
+            {
+                item.IsAssigned = true;
+                RefreshPlayerInputDeviceAssignmentState();
+                return;
+            }
+
+            item.IsAssigned = isAssigned;
+            RefreshPlayerInputDeviceAssignmentState();
+            RefreshProfileBindingState();
+            RefreshModifiedState();
+        }
+
+        private Dictionary<(AssignedInputDeviceType Type, string Id), List<string>> GetOtherPlayerDeviceAssignments()
+        {
             IEnumerable<PlayerIndex> otherPlayers = GetPersistedInputConfigs()
                 .Where(config => config != null && config.PlayerIndex != _playerId)
                 .Select(config => config.PlayerIndex)
@@ -705,93 +780,85 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 }
             }
 
-            PlayerInputDevices.Clear();
-
-            foreach ((DeviceType Type, string Id, string Name) device in Devices.Where(device => device.Type is DeviceType.Keyboard or DeviceType.Controller))
-            {
-                string deviceId = GetConfigDeviceId(device);
-                AssignedInputDeviceType assignedType = device.Type == DeviceType.Keyboard
-                    ? AssignedInputDeviceType.Keyboard
-                    : AssignedInputDeviceType.Controller;
-                PlayerInputDeviceAssignmentItem editedItem = null;
-                editedItems?.TryGetValue((device.Type, deviceId), out editedItem);
-
-                bool isAssigned = editedItem?.IsAssigned ?? assignment.Devices.Any(assignedDevice =>
-                    assignedDevice.Type == assignedType &&
-                    assignedDevice.Id == deviceId);
-
-                string boundProfile = GetProfileNameOrDefault(editedItem?.BoundProfileName ?? assignment.Devices
-                    .FirstOrDefault(assignedDevice =>
-                        assignedDevice.Type == assignedType &&
-                        assignedDevice.Id == deviceId)?.ProfileName);
-
-                // Find other players using this device
-                deviceToOtherPlayers.TryGetValue((assignedType, deviceId), out List<string> assignedOtherPlayers);
-
-                // When duplicates aren't allowed and another player already has this
-                // device, this player cannot claim it — override isAssigned regardless
-                // of what the persisted/default assignment says.
-                if (!AllowDuplicateDeviceAssignment &&
-                    assignedOtherPlayers != null && assignedOtherPlayers.Count > 0)
-                {
-                    isAssigned = false;
-                }
-
-                string assignedToPlayers = null;
-                if (isAssigned)
-                {
-                    string currentPlayerName = GetPlayerDisplayName(_playerId);
-                    assignedToPlayers = assignedOtherPlayers != null && assignedOtherPlayers.Count > 0
-                        ? $"{currentPlayerName}, {string.Join(", ", assignedOtherPlayers)}"
-                        : currentPlayerName;
-                }
-                else if (assignedOtherPlayers != null && assignedOtherPlayers.Count > 0)
-                {
-                    assignedToPlayers = string.Join(", ", assignedOtherPlayers);
-                }
-
-                // Disable if another player has this device AND duplicates are not allowed
-                bool isDisabledByOtherPlayer = !AllowDuplicateDeviceAssignment &&
-                    assignedOtherPlayers != null && assignedOtherPlayers.Count > 0;
-
-                PlayerInputDevices.Add(new PlayerInputDeviceAssignmentItem
-                {
-                    DeviceType = device.Type,
-                    Id = deviceId,
-                    Name = device.Name,
-                    BoundProfileName = boundProfile,
-                    IsAssigned = isAssigned,
-                    AssignedToPlayers = assignedToPlayers,
-                    IsDisabledByOtherPlayer = isDisabledByOtherPlayer,
-                });
-            }
-
-            EnsureAtLeastOneAssignedInputDevice();
-            RefreshProfileBindingState();
-            OnPropertyChanged(nameof(PlayerInputDevices));
+            return deviceToOtherPlayers;
         }
 
-        public void ToggleAssignedPlayerInputDevice(PlayerInputDeviceAssignmentItem item, bool isAssigned)
+        private void RefreshPlayerInputDeviceAssignmentState()
         {
-            if (item == null)
+            Dictionary<(AssignedInputDeviceType Type, string Id), List<string>> deviceToOtherPlayers = GetOtherPlayerDeviceAssignments();
+
+            foreach (PlayerInputDeviceAssignmentItem item in PlayerInputDevices)
             {
-                return;
+                deviceToOtherPlayers.TryGetValue((item.AssignedType, item.Id), out List<string> assignedOtherPlayers);
+
+                item.IsDisabledByOtherPlayer = IsDisabledByOtherPlayer(item.IsAssigned, assignedOtherPlayers);
+
+                if (item.IsDisabledByOtherPlayer)
+                {
+                    item.IsAssigned = false;
+                }
+
+                item.AssignedToPlayers = FormatAssignedPlayerNames(item.IsAssigned, assignedOtherPlayers);
+            }
+        }
+
+        private void KeepCurrentPlayerAssignedDevicesExclusive()
+        {
+            List<PlayerInputAssignment> assignments;
+
+            if (UseGlobalConfig && Program.UseExtraConfig)
+            {
+                assignments = ConfigurationState.InstanceExtra.Hid.PlayerInputAssignments.Value ?? [];
+                ConfigurationState.InstanceExtra.Hid.PlayerInputAssignments.Value = assignments;
+            }
+            else
+            {
+                assignments = ConfigurationState.Instance.Hid.PlayerInputAssignments.Value ?? [];
+                ConfigurationState.Instance.Hid.PlayerInputAssignments.Value = assignments;
             }
 
-            if (item.IsDisabledByOtherPlayer && isAssigned)
+            PlayerInputAssignment currentAssignment = GetEditedPlayerInputAssignment();
+            int assignmentIndex = assignments.FindIndex(assignment => assignment.PlayerIndex == PlayerId);
+
+            if (assignmentIndex == -1)
             {
-                return;
+                assignments.Add(currentAssignment);
+            }
+            else
+            {
+                assignments[assignmentIndex] = currentAssignment;
             }
 
-            if (!isAssigned && EnableDynamicGamepadSwap && PlayerInputDevices.Count(device => device.IsAssigned && device != item) == 0)
+            RemoveDuplicateDeviceAssignmentsForCurrentPlayer(assignments, currentAssignment);
+        }
+
+        private bool IsDisabledByOtherPlayer(bool isAssigned, List<string> assignedOtherPlayers)
+        {
+            return !AllowDuplicateDeviceAssignment &&
+                !isAssigned &&
+                assignedOtherPlayers != null &&
+                assignedOtherPlayers.Count > 0;
+        }
+
+        private string FormatAssignedPlayerNames(bool isAssigned, List<string> assignedOtherPlayers)
+        {
+            if (!isAssigned)
             {
-                item.IsAssigned = true;
-                return;
+                return assignedOtherPlayers != null && assignedOtherPlayers.Count > 0
+                    ? string.Join(", ", assignedOtherPlayers)
+                    : null;
             }
 
-            item.IsAssigned = isAssigned;
-            RefreshProfileBindingState();
-            RefreshModifiedState();
+            string currentPlayerName = GetPlayerDisplayName(_playerId);
+
+            if (!AllowDuplicateDeviceAssignment)
+            {
+                return currentPlayerName;
+            }
+
+            return assignedOtherPlayers != null && assignedOtherPlayers.Count > 0
+                ? $"{currentPlayerName}, {string.Join(", ", assignedOtherPlayers)}"
+                : currentPlayerName;
         }
 
         private PlayerInputAssignment GetEditedPlayerInputAssignment()
@@ -1973,6 +2040,11 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 {
                     newAssignments[assignmentIndex] = assignment;
                 }
+
+                if (!AllowDuplicateDeviceAssignment)
+                {
+                    RemoveDuplicateDeviceAssignmentsForCurrentPlayer(newAssignments, assignment);
+                }
             }
 
             // Atomically replace and signal input change.
@@ -1991,6 +2063,21 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 ConfigurationState.Instance.Hid.InputConfig.Value = newConfig;
                 ConfigurationState.Instance.Hid.PlayerInputAssignments.Value = newAssignments;
                 ConfigurationState.Instance.ToFileFormat().SaveConfig(Program.ConfigurationPath);
+            }
+        }
+
+        private void RemoveDuplicateDeviceAssignmentsForCurrentPlayer(List<PlayerInputAssignment> assignments, PlayerInputAssignment currentAssignment)
+        {
+            if (currentAssignment?.Devices == null || currentAssignment.Devices.Count == 0)
+            {
+                return;
+            }
+
+            foreach (PlayerInputAssignment assignment in assignments.Where(assignment => assignment.PlayerIndex != PlayerId))
+            {
+                assignment.Devices.RemoveAll(device => currentAssignment.Devices.Any(currentDevice =>
+                    currentDevice.Type == device.Type &&
+                    string.Equals(currentDevice.Id, device.Id, StringComparison.Ordinal)));
             }
         }
 
