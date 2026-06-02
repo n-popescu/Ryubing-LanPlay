@@ -1770,16 +1770,14 @@ namespace Ryujinx.Ava.UI.ViewModels
             out int updRemoved);
 
             string msg = string.Join("\n",
-                string.Format(LocaleManager.Instance[LocaleKeys.AutoloadUpdateRemovedMessage], updRemoved),
-                string.Format(LocaleManager.Instance[LocaleKeys.AutoloadUpdateAddedMessage], updAdded),
-                string.Format(LocaleManager.Instance[LocaleKeys.AutoloadDlcRemovedMessage], dlcRemoved),
-                string.Format(LocaleManager.Instance[LocaleKeys.AutoloadDlcAddedMessage], dlcAdded)
+                string.Format(LocaleManager.Instance[LocaleKeys.Dialog_ContentLoading_UpdatesAddedMessage], updAdded),
+                string.Format(LocaleManager.Instance[LocaleKeys.Dialog_ContentLoading_DLCAddedMessage], dlcAdded)
             );
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await ContentDialogHelper.ShowTextDialog(
-                    LocaleManager.Instance[LocaleKeys.RyujinxConfirm],
+                    LocaleManager.Instance[LocaleKeys.RyujinxInfo],
                     msg,
                     string.Empty,
                     string.Empty,
