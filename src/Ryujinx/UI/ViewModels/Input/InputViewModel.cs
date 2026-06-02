@@ -68,6 +68,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         private bool _isLoaded;
         private bool _enableDynamicGamepadSwap;
         private bool _suppressProfileLoad;
+        private bool? _allowDuplicateDeviceAssignment;
+        private List<PlayerInputAssignment> _workingPlayerInputAssignments;
 
         private static readonly InputConfigJsonSerializerContext _serializerContext = new(JsonHelper.GetDefaultSerializerOptions());
 
@@ -156,7 +158,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 if (_enableDynamicGamepadSwap)
                 {
-                    EnsureAtLeastOneAssignedInputDevice();
+                    AssignCurrentDeviceIfNoInputDeviceIsAssigned();
                 }
 
                 RefreshProfileBindingState();
@@ -168,15 +170,15 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         public bool AllowDuplicateDeviceAssignment
         {
-            get => ConfigurationState.Instance.Hid.AllowDuplicateDeviceAssignment.Value;
+            get => _allowDuplicateDeviceAssignment ?? GetSavedAllowDuplicateDeviceAssignment();
             set
             {
-                if (ConfigurationState.Instance.Hid.AllowDuplicateDeviceAssignment.Value == value)
+                if (AllowDuplicateDeviceAssignment == value)
                 {
                     return;
                 }
 
-                ConfigurationState.Instance.Hid.AllowDuplicateDeviceAssignment.Value = value;
+                _allowDuplicateDeviceAssignment = value;
 
                 if (!value)
                 {
@@ -184,12 +186,17 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 }
 
                 RefreshPlayerInputDeviceAssignmentState();
-                EnsureAtLeastOneAssignedInputDevice();
-                RefreshPlayerInputDeviceAssignmentState();
 
                 IsModified = true;
                 OnPropertyChanged();
             }
+        }
+
+        private bool GetSavedAllowDuplicateDeviceAssignment()
+        {
+            return UseGlobalConfig && Program.UseExtraConfig
+                ? ConfigurationState.InstanceExtra.Hid.AllowDuplicateDeviceAssignment.Value
+                : ConfigurationState.Instance.Hid.AllowDuplicateDeviceAssignment.Value;
         }
 
         public PlayerIndex PlayerIdChoose
@@ -513,6 +520,44 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             return ConfigurationState.Instance.Hid.PlayerInputAssignments.Value ?? [];
         }
 
+        private List<PlayerInputAssignment> GetWorkingPlayerInputAssignments()
+        {
+            if (_workingPlayerInputAssignments != null)
+            {
+                return _workingPlayerInputAssignments;
+            }
+
+            _workingPlayerInputAssignments = GetPersistedPlayerInputAssignments()
+                .Where(assignment => assignment != null)
+                .Select(ClonePlayerInputAssignment)
+                .ToList();
+
+            return _workingPlayerInputAssignments;
+        }
+
+        private static PlayerInputAssignment ClonePlayerInputAssignment(PlayerInputAssignment assignment)
+        {
+            if (assignment == null)
+            {
+                return null;
+            }
+
+            return new PlayerInputAssignment
+            {
+                PlayerIndex = assignment.PlayerIndex,
+                EnableDynamicInputSwap = assignment.EnableDynamicInputSwap,
+                Devices = assignment.Devices?
+                    .Where(device => device != null)
+                    .Select(device => new AssignedInputDevice
+                    {
+                        Type = device.Type,
+                        Id = device.Id,
+                        ProfileName = device.ProfileName,
+                    })
+                    .ToList() ?? [],
+            };
+        }
+
         private PlayerInputAssignment GetPersistedPlayerInputAssignment()
         {
             return GetPersistedPlayerInputAssignment(_playerId);
@@ -520,8 +565,18 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         private PlayerInputAssignment GetPersistedPlayerInputAssignment(PlayerIndex playerIndex)
         {
+            return GetPlayerInputAssignment(playerIndex, GetPersistedPlayerInputAssignments());
+        }
+
+        private PlayerInputAssignment GetWorkingPlayerInputAssignment(PlayerIndex playerIndex)
+        {
+            return GetPlayerInputAssignment(playerIndex, _workingPlayerInputAssignments ?? GetPersistedPlayerInputAssignments());
+        }
+
+        private PlayerInputAssignment GetPlayerInputAssignment(PlayerIndex playerIndex, List<PlayerInputAssignment> assignments)
+        {
             InputConfig persistedConfig = GetPersistedInputConfig(playerIndex);
-            PlayerInputAssignment persistedAssignment = GetPersistedPlayerInputAssignments()?.FirstOrDefault(assignment => assignment.PlayerIndex == playerIndex);
+            PlayerInputAssignment persistedAssignment = assignments?.FirstOrDefault(assignment => assignment.PlayerIndex == playerIndex);
 
             if (persistedAssignment == null)
             {
@@ -700,7 +755,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 });
             }
 
-            EnsureAtLeastOneAssignedInputDevice();
             RefreshPlayerInputDeviceAssignmentState();
             RefreshProfileBindingState();
             OnPropertyChanged(nameof(PlayerInputDevices));
@@ -725,13 +779,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 return;
             }
 
-            if (!isAssigned && EnableDynamicGamepadSwap && PlayerInputDevices.Count(device => device.IsAssigned && device != item) == 0)
-            {
-                item.IsAssigned = true;
-                RefreshPlayerInputDeviceAssignmentState();
-                return;
-            }
-
             item.IsAssigned = isAssigned;
             RefreshPlayerInputDeviceAssignmentState();
             RefreshProfileBindingState();
@@ -743,7 +790,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             IEnumerable<PlayerIndex> otherPlayers = GetPersistedInputConfigs()
                 .Where(config => config != null && config.PlayerIndex != _playerId)
                 .Select(config => config.PlayerIndex)
-                .Concat((GetPersistedPlayerInputAssignments() ?? [])
+                .Concat(((_workingPlayerInputAssignments ?? GetPersistedPlayerInputAssignments()) ?? [])
                     .Where(assignment => assignment != null && assignment.PlayerIndex != _playerId)
                     .Select(assignment => assignment.PlayerIndex))
                 .Distinct();
@@ -751,7 +798,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
             foreach (PlayerIndex otherPlayer in otherPlayers)
             {
-                PlayerInputAssignment normalizedOtherAssignment = GetPersistedPlayerInputAssignment(otherPlayer);
+                PlayerInputAssignment normalizedOtherAssignment = GetWorkingPlayerInputAssignment(otherPlayer);
 
                 // Only include players who participate in dynamic input swap.
                 // Players with dynamic swap disabled manage their device through
@@ -804,18 +851,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         private void KeepCurrentPlayerAssignedDevicesExclusive()
         {
-            List<PlayerInputAssignment> assignments;
-
-            if (UseGlobalConfig && Program.UseExtraConfig)
-            {
-                assignments = ConfigurationState.InstanceExtra.Hid.PlayerInputAssignments.Value ?? [];
-                ConfigurationState.InstanceExtra.Hid.PlayerInputAssignments.Value = assignments;
-            }
-            else
-            {
-                assignments = ConfigurationState.Instance.Hid.PlayerInputAssignments.Value ?? [];
-                ConfigurationState.Instance.Hid.PlayerInputAssignments.Value = assignments;
-            }
+            List<PlayerInputAssignment> assignments = GetWorkingPlayerInputAssignments();
 
             PlayerInputAssignment currentAssignment = GetEditedPlayerInputAssignment();
             int assignmentIndex = assignments.FindIndex(assignment => assignment.PlayerIndex == PlayerId);
@@ -882,9 +918,11 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 }
             }
 
-            // When dynamic swap is off, or as a fallback when no devices are assigned,
-            // use the current device with its bound profile name.
-            if (assignment.Devices.Count == 0 && TryGetCurrentDevice(out (DeviceType Type, string Id, string Name) currentDevice) && currentDevice.Type != DeviceType.None)
+            // When dynamic swap is off, keep the legacy single selected-device route.
+            if (!EnableDynamicGamepadSwap &&
+                assignment.Devices.Count == 0 &&
+                TryGetCurrentDevice(out (DeviceType Type, string Id, string Name) currentDevice) &&
+                currentDevice.Type != DeviceType.None)
             {
                 assignment.Devices.Add(new AssignedInputDevice
                 {
@@ -906,7 +944,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 GetPersistedPrimaryAssignedInputDevice());
         }
 
-        private void EnsureAtLeastOneAssignedInputDevice()
+        private void AssignCurrentDeviceIfNoInputDeviceIsAssigned()
         {
             if (PlayerInputDevices.Any(device => device.IsAssigned))
             {
@@ -1282,6 +1320,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         private bool HasUnsavedChanges()
         {
             return
+                (_allowDuplicateDeviceAssignment.HasValue &&
+                    _allowDuplicateDeviceAssignment.Value != GetSavedAllowDuplicateDeviceAssignment()) ||
                 !ConfigsMatch(GetSelectedDeviceConfig(), GetDisplayedInputConfig(GetPersistedInputConfig())) ||
                 !PlayerAssignmentsMatch(GetEditedPlayerInputAssignment(), GetPersistedPlayerInputAssignment());
         }
@@ -1969,6 +2009,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         public void RevertChanges()
         {
+            _allowDuplicateDeviceAssignment = null;
+            _workingPlayerInputAssignments = null;
             _isLoaded = false;
             LoadConfiguration();
             LoadDevice();
@@ -1994,12 +2036,12 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             if (UseGlobalConfig && Program.UseExtraConfig)
             {
                 newConfig.AddRange(ConfigurationState.InstanceExtra.Hid.InputConfig.Value ?? []);
-                newAssignments.AddRange(ConfigurationState.InstanceExtra.Hid.PlayerInputAssignments.Value ?? []);
+                newAssignments.AddRange((_workingPlayerInputAssignments ?? ConfigurationState.InstanceExtra.Hid.PlayerInputAssignments.Value) ?? []);
             }
             else
             {
                 newConfig.AddRange(ConfigurationState.Instance.Hid.InputConfig.Value ?? []);
-                newAssignments.AddRange(ConfigurationState.Instance.Hid.PlayerInputAssignments.Value ?? []);
+                newAssignments.AddRange((_workingPlayerInputAssignments ?? ConfigurationState.Instance.Hid.PlayerInputAssignments.Value) ?? []);
             }
 
             newConfig.RemoveAll(static inputConfig => inputConfig == null);
@@ -2056,14 +2098,19 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 // In User Settings when "Use Global Input" is enabled, it saves global input to global setting
                 ConfigurationState.InstanceExtra.Hid.InputConfig.Value = newConfig;
                 ConfigurationState.InstanceExtra.Hid.PlayerInputAssignments.Value = newAssignments;
+                ConfigurationState.InstanceExtra.Hid.AllowDuplicateDeviceAssignment.Value = AllowDuplicateDeviceAssignment;
                 ConfigurationState.InstanceExtra.ToFileFormat().SaveConfig(Program.GlobalConfigurationPath);
             }
             else
             {
                 ConfigurationState.Instance.Hid.InputConfig.Value = newConfig;
                 ConfigurationState.Instance.Hid.PlayerInputAssignments.Value = newAssignments;
+                ConfigurationState.Instance.Hid.AllowDuplicateDeviceAssignment.Value = AllowDuplicateDeviceAssignment;
                 ConfigurationState.Instance.ToFileFormat().SaveConfig(Program.ConfigurationPath);
             }
+
+            _allowDuplicateDeviceAssignment = null;
+            _workingPlayerInputAssignments = null;
         }
 
         private void RemoveDuplicateDeviceAssignmentsForCurrentPlayer(List<PlayerInputAssignment> assignments, PlayerInputAssignment currentAssignment)
@@ -2073,12 +2120,34 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 return;
             }
 
+            foreach (InputConfig inputConfig in GetPersistedInputConfigs().Where(inputConfig =>
+                inputConfig != null &&
+                inputConfig.PlayerIndex != PlayerId &&
+                inputConfig.EnableDynamicGamepadSwap &&
+                CurrentAssignmentContainsDevice(currentAssignment, PlayerInputAssignmentHelper.CreatePrimaryDevice(inputConfig))))
+            {
+                if (assignments.All(assignment => assignment.PlayerIndex != inputConfig.PlayerIndex))
+                {
+                    assignments.Add(new PlayerInputAssignment
+                    {
+                        PlayerIndex = inputConfig.PlayerIndex,
+                        EnableDynamicInputSwap = true,
+                    });
+                }
+            }
+
             foreach (PlayerInputAssignment assignment in assignments.Where(assignment => assignment.PlayerIndex != PlayerId))
             {
-                assignment.Devices.RemoveAll(device => currentAssignment.Devices.Any(currentDevice =>
-                    currentDevice.Type == device.Type &&
-                    string.Equals(currentDevice.Id, device.Id, StringComparison.Ordinal)));
+                assignment.Devices.RemoveAll(device => CurrentAssignmentContainsDevice(currentAssignment, device));
             }
+        }
+
+        private static bool CurrentAssignmentContainsDevice(PlayerInputAssignment currentAssignment, AssignedInputDevice device)
+        {
+            return device != null &&
+                currentAssignment.Devices.Any(currentDevice =>
+                    currentDevice.Type == device.Type &&
+                    string.Equals(currentDevice.Id, device.Id, StringComparison.Ordinal));
         }
 
         public void NotifyChanges()
