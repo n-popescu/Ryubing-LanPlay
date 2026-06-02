@@ -4,7 +4,6 @@ using Ryujinx.Memory.Tracking;
 using System;
 using System.Runtime.Versioning;
 using System.Threading;
-using Ryujinx.Common.Logging;
 
 namespace Ryujinx.Cpu.AppleHv
 {
@@ -233,7 +232,9 @@ namespace Ryujinx.Cpu.AppleHv
                     ReturnToPool(vcpu);
                     ushort id = (ushort)esr;
                     SupervisorCallHandler(elr - 4UL, id);
-                    Thread.Yield();                    // Helps Vulkan timing
+
+                    Thread.Yield();
+
                     vcpu = RentFromPool(memoryManager.AddressSpace, vcpu);
                     break;
 
@@ -257,20 +258,8 @@ namespace Ryujinx.Cpu.AppleHv
                     throw new Exception($"Unhandled guest exception {ec}.");
             }
 
-            bool tlbInvalidationPending = memoryManager.AddressSpace.GetAndClearUserTlbInvalidationPending();
-
-            if (tlbInvalidationPending)
-            {
-                HvResult invalidateResult = HvApi.hv_vcpu_invalidate_tlb(vcpuHandle);
-                
-                if (invalidateResult != HvResult.Success)
-                {
-                    Logger.Warning?.Print(LogClass.Cpu, "[AppleHv] hv_vcpu_invalidate_tlb failed, using ERET fallback");
-                    return HvAddressSpace.KernelRegionTlbiEretAddress;
-                }
-
-                return HvAddressSpace.KernelRegionEretAddress;
-            }
+            if (memoryManager.AddressSpace.GetAndClearUserTlbInvalidationPending())
+                return HvAddressSpace.KernelRegionTlbiEretAddress;
 
             return HvAddressSpace.KernelRegionEretAddress;
         }

@@ -325,8 +325,5 @@ namespace Ryujinx.Cpu.AppleHv
 
         [LibraryImport(LibraryName, SetLastError = true)]
         public static partial HvResult hv_vcpu_set_pending_interrupt(ulong vcpu, HvInterruptType type, [MarshalAs(UnmanagedType.Bool)] bool pending);
-
-        [DllImport(LibraryName)]
-        public static extern HvResult hv_vcpu_invalidate_tlb(ulong vcpu);
     }
 }
