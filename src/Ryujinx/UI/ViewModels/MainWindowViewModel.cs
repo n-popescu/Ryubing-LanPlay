@@ -1731,57 +1731,31 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
-        private (int added, int removed) ProcessContentFolders(
-            List<string> dirs,
-            LoadContentFromFolderDelegate onDirsSelected)
-        {
-            int removed;
-            int added = onDirsSelected(dirs, out removed);
-
-            return (added, removed);
-        }
-
         private async Task<IReadOnlyList<string>?> PickFolders(LocaleKeys titleKey)
         {
-            var result = await StorageProvider.OpenMultiFolderPickerAsync(
-                new FolderPickerOpenOptions
-                {
-                    Title = LocaleManager.Instance[titleKey]
-                });
-
-            if (!result.TryGet(out IReadOnlyList<IStorageFolder> folders))
-                return null;
-
-            return folders.Select(x => x.Path.LocalPath).ToList();
+            return (await StorageProvider.OpenMultiFolderPickerAsync(new FolderPickerOpenOptions 
+            { 
+                Title = LocaleManager.Instance[titleKey] 
+            })).TryGet(out IReadOnlyList<IStorageFolder> folders)
+                ? folders.Select(f => f.Path.LocalPath).ToList()
+                : null;
         }
-        public async Task LoadTitleUpdatesAndDlcFromFolder()
-        {
-            var dirs = await PickFolders(LocaleKeys.Dialog_FileMenu_LoadTitleUpdatesAndDLCFromFolderFilePickerTitle);
 
-            if (dirs == null)
+        public async Task LoadTitleUpdatesAndDLCFromFolder()
+        {
+            if (await PickFolders(LocaleKeys.Dialog_FileMenu_LoadTitleUpdatesAndDLCFromFolderFilePickerTitle) is not { } dirs)
                 return;
 
-            int dlcAdded = ApplicationLibrary.AutoLoadDownloadableContents(
-            dirs.ToList(),
-            out int dlcRemoved);
-
-            int updAdded = ApplicationLibrary.AutoLoadTitleUpdates(
-            dirs.ToList(),
-            out int updRemoved);
-
-            string msg = string.Join("\n",
-                string.Format(LocaleManager.Instance[LocaleKeys.Dialog_ContentLoading_UpdatesAddedMessage], updAdded),
-                string.Format(LocaleManager.Instance[LocaleKeys.Dialog_ContentLoading_DLCAddedMessage], dlcAdded)
-            );
+            int updAdded = ApplicationLibrary.AutoLoadTitleUpdates(dirs.ToList(), out _);
+            int dlcAdded = ApplicationLibrary.AutoLoadDownloadableContents(dirs.ToList(), out _);
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await ContentDialogHelper.ShowTextDialog(
-                    LocaleManager.Instance[LocaleKeys.RyujinxInfo],
-                    msg,
-                    string.Empty,
-                    string.Empty,
-                    string.Empty,
+                    LocaleManager.Instance[LocaleKeys.RyujinxConfirm],
+                    string.Format(LocaleManager.Instance[LocaleKeys.Dialog_ContentLoading_UpdatesAddedMessage], updAdded) + "\n\n" +
+                    string.Format(LocaleManager.Instance[LocaleKeys.Dialog_ContentLoading_DLCAddedMessage], dlcAdded),
+                    string.Empty, string.Empty, string.Empty,
                     LocaleManager.Instance[LocaleKeys.InputDialogOk],
                     (int)Symbol.Checkmark);
             });
