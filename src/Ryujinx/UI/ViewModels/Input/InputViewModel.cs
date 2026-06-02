@@ -966,6 +966,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         private void SetSelectedProfileSilently(string profileName)
         {
+            bool wasSuppressingProfileLoad = _suppressProfileLoad;
             _suppressProfileLoad = true;
 
             try
@@ -975,7 +976,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             }
             finally
             {
-                _suppressProfileLoad = false;
+                _suppressProfileLoad = wasSuppressingProfileLoad;
             }
         }
 
@@ -1208,7 +1209,12 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 return;
             }
 
-            IsModified =
+            IsModified = HasUnsavedChanges();
+        }
+
+        private bool HasUnsavedChanges()
+        {
+            return
                 !ConfigsMatch(GetSelectedDeviceConfig(), GetDisplayedInputConfig(GetPersistedInputConfig())) ||
                 !PlayerAssignmentsMatch(GetEditedPlayerInputAssignment(), GetPersistedPlayerInputAssignment());
         }
@@ -1307,60 +1313,69 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         private void HandleOnGamepadDisconnected(string id)
         {
-            _isChangeTrackingActive = false; // Disable configuration change tracking
-
             bool selectedControllerDisconnected =
                 TryGetCurrentDevice(out (DeviceType Type, string Id, string Name) currentDevice) &&
                 currentDevice.Type == DeviceType.Controller &&
                 string.Equals(GetGamepadId(currentDevice), id, StringComparison.Ordinal);
 
-            RefreshAvailableDevices();
-
-            InputConfig persistedConfig = GetPersistedInputConfig();
-            InputConfig displayedConfig = GetDisplayedInputConfig(persistedConfig);
-            bool shouldApplyKeyboardFallback =
-                selectedControllerDisconnected ||
-                displayedConfig is StandardKeyboardInputConfig;
-
-            if (shouldApplyKeyboardFallback)
+            if (!selectedControllerDisconnected)
             {
-                if (selectedControllerDisconnected &&
-                    displayedConfig is not StandardKeyboardInputConfig &&
-                    TryCreateKeyboardFallbackConfig(persistedConfig, out StandardKeyboardInputConfig fallbackConfig))
-                {
-                    displayedConfig = fallbackConfig;
-                }
-
-                LoadConfiguration(displayedConfig);
-                LoadDevice();
-                LoadProfiles();
+                RefreshAvailableDevices();
+                RefreshModifiedState();
                 FindPairedDeviceInConfigFile();
-                IsModified = false;
                 NotifyChanges();
+                return;
             }
-            else
-            {
-                IsModified = true;
-                RevertChanges();
-                FindPairedDeviceInConfigFile();
-            }
-            
-            _isChangeTrackingActive = true; // Enable configuration change tracking
 
-        }
-
-        private async void HandleOnGamepadConnected(string id)
-        {
             _isChangeTrackingActive = false; // Disable configuration change tracking
 
             try
             {
-                InputConfig persistedConfig = GetPersistedInputConfig();
-                bool shouldRestoreControllerAfterFallback =
-                    Config is StandardKeyboardInputConfig &&
-                    persistedConfig is StandardControllerInputConfig;
+                RefreshAvailableDevices();
 
-                if (shouldRestoreControllerAfterFallback)
+                InputConfig persistedConfig = GetPersistedInputConfig();
+                InputConfig displayedConfig = GetDisplayedInputConfig(persistedConfig);
+                bool shouldApplyKeyboardFallback =
+                    selectedControllerDisconnected ||
+                    displayedConfig is StandardKeyboardInputConfig;
+
+                if (shouldApplyKeyboardFallback)
+                {
+                    if (selectedControllerDisconnected &&
+                        displayedConfig is not StandardKeyboardInputConfig &&
+                        TryCreateKeyboardFallbackConfig(persistedConfig, out StandardKeyboardInputConfig fallbackConfig))
+                    {
+                        displayedConfig = fallbackConfig;
+                    }
+
+                    LoadConfiguration(displayedConfig);
+                    LoadDevice();
+                    LoadProfiles();
+                    FindPairedDeviceInConfigFile();
+                    IsModified = false;
+                    NotifyChanges();
+                }
+            }
+            finally
+            {
+                _isChangeTrackingActive = true; // Enable configuration change tracking
+            }
+        }
+
+        private async void HandleOnGamepadConnected(string id)
+        {
+            bool hasUnsavedChanges = HasUnsavedChanges();
+            InputConfig persistedConfig = GetPersistedInputConfig();
+            bool shouldRestoreControllerAfterFallback =
+                !hasUnsavedChanges &&
+                Config is StandardKeyboardInputConfig &&
+                persistedConfig is StandardControllerInputConfig;
+
+            if (shouldRestoreControllerAfterFallback)
+            {
+                _isChangeTrackingActive = false; // Disable configuration change tracking
+
+                try
                 {
                     const int reconnectRestoreAttempts = 20;
                     const int reconnectRestoreDelayMs = 250;
@@ -1381,16 +1396,16 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                         await Task.Delay(reconnectRestoreDelayMs);
                     }
                 }
-
-                RefreshAvailableDevices();
-
-                IsModified = true;
-                RevertChanges();
+                finally
+                {
+                    _isChangeTrackingActive = true; // Enable configuration change tracking
+                }
             }
-            finally
-            {
-                _isChangeTrackingActive = true;// Enable configuration change tracking
-            }
+
+            RefreshAvailableDevices();
+            RefreshModifiedState();
+            FindPairedDeviceInConfigFile();
+            NotifyChanges();
         }
 
         private bool TryGetCurrentDevice(out (DeviceType Type, string Id, string Name) device)
@@ -1595,31 +1610,42 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         private void LoadProfiles()
         {
-            ProfilesList.Clear();
+            bool wasSuppressingProfileLoad = _suppressProfileLoad;
+            _suppressProfileLoad = true;
 
-            string basePath = GetProfileBasePath();
-
-            if (!Directory.Exists(basePath))
+            try
             {
-                Directory.CreateDirectory(basePath);
+                ProfilesList.Clear();
+
+                string basePath = GetProfileBasePath();
+
+                if (!Directory.Exists(basePath))
+                {
+                    Directory.CreateDirectory(basePath);
+                }
+
+                ProfilesList.Add(GetCurrentProfileDefaultName());
+
+                foreach (string profile in Directory.GetFiles(basePath, "*.json", SearchOption.AllDirectories))
+                {
+                    ProfilesList.Add(Path.GetFileNameWithoutExtension(profile));
+                }
+
+                string selectedProfile = GetBoundProfileNameForCurrentDevice();
+
+                if (!ProfilesList.Contains(selectedProfile))
+                {
+                    ClearInvalidBindingForCurrentDevice();
+                    selectedProfile = GetCurrentProfileDefaultName();
+                }
+
+                SetSelectedProfileSilently(selectedProfile);
+            }
+            finally
+            {
+                _suppressProfileLoad = wasSuppressingProfileLoad;
             }
 
-            ProfilesList.Add(GetCurrentProfileDefaultName());
-
-            foreach (string profile in Directory.GetFiles(basePath, "*.json", SearchOption.AllDirectories))
-            {
-                ProfilesList.Add(Path.GetFileNameWithoutExtension(profile));
-            }
-
-            string selectedProfile = GetBoundProfileNameForCurrentDevice();
-
-            if (!ProfilesList.Contains(selectedProfile))
-            {
-                ClearInvalidBindingForCurrentDevice();
-                selectedProfile = GetCurrentProfileDefaultName();
-            }
-
-            SetSelectedProfileSilently(selectedProfile);
             RefreshProfileBindingState();
         }
 
