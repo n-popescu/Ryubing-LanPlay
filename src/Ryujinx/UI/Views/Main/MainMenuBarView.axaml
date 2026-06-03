@@ -33,12 +33,12 @@
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBar_File_FileLabel}">
                 <MenuItem
                     Command="{Binding OpenFile}"
-                    Header="{ext:Locale MenuBar_File_OpenApplicationButton}"
+                    Header="{ext:Locale MenuBar_File_StartApplicationButton}"
                     Icon="{ext:Icon fa-solid fa-play}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <MenuItem
                     Command="{Binding OpenFolder}"
-                    Header="{ext:Locale MenuBar_File_OpenUnpackedApplicationButton}"
+                    Header="{ext:Locale MenuBar_File_StartUnpackedApplicationButton}"
                     Icon="{ext:Icon fa-solid fa-folder-open}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <MenuItem
