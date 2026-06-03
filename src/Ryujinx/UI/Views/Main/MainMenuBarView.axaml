@@ -262,21 +262,20 @@
                             Padding="0" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem
+                    Command="{Binding ToggleFullscreen}"
+                    Header="{ext:Locale MenuBar_View_ToggleFullscreenButton}"
+                    Icon="{ext:Icon fa-solid fa-expand}"
+                    InputGesture="F11">
+                </MenuItem>
                 <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBarViewWindow}" Icon="{ext:Icon fa-solid fa-window-restore}">
                     <MenuItem Name="WindowSize720PMenuItem" Header="{ext:Locale MenuBarViewWindow720}" CommandParameter="1280 720" />
                     <MenuItem Name="WindowSize1080PMenuItem" Header="{ext:Locale MenuBarViewWindow1080}" CommandParameter="1920 1080" />
                     <MenuItem Name="WindowSize1440PMenuItem" Header="{ext:Locale MenuBarViewWindow1440}" CommandParameter="2560 1440" />
                     <MenuItem Name="WindowSize2160PMenuItem" Header="{ext:Locale MenuBarViewWindow2160}" CommandParameter="3840 2160" />
                 </MenuItem>
+                 <Separator />
                 <MenuItem Name="ToggleFileTypesMenuItem" Header="{ext:Locale MenuBarShowFileTypes}" Icon="{ext:Icon fa-solid fa-tags}" />
-                <MenuItem
-                    Command="{Binding ToggleFullscreen}"
-                    Header="{ext:Locale MenuBar_View_ToggleFullscreenButton}"
-                    Classes="withCheckbox"
-                    Padding="0"
-                    Icon="{ext:Icon fa-solid fa-expand}"
-                    InputGesture="F11">
-                </MenuItem>
             </MenuItem>
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBarHelp}">
                 <MenuItem
