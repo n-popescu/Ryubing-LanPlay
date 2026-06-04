@@ -34,13 +34,17 @@
                 <MenuItem
                     Command="{Binding StartApplicationFromFile}"
                     Header="{ext:Locale MenuBar_File_StartApplicationButton}"
+                    IsVisible="{Binding IsMacOS}"
                     Icon="{ext:Icon fa-solid fa-play}"
-                    IsEnabled="{Binding EnableNonGameRunningControls}" />
+                    IsEnabled="{Binding EnableNonGameRunningControls}"
+                    InputGesture="{Binding StartApplicationFromFileGesture}" />
                 <MenuItem
-                    Command="{Binding StartUnpackedApplicationFromFolder}"
-                    Header="{ext:Locale MenuBar_File_StartUnpackedApplicationButton}"
-                    Icon="{ext:Icon fa-solid fa-folder-open}"
-                    IsEnabled="{Binding EnableNonGameRunningControls}" />
+                    Command="{Binding StartApplicationFromFile}"
+                    Header="{ext:Locale MenuBar_File_StartApplicationButton}"
+                    IsVisible="{Binding IsMacOS}"
+                    Icon="{ext:Icon fa-solid fa-play}"
+                    IsEnabled="{Binding EnableNonGameRunningControls}"
+                    InputGesture="{Binding StartUnpackedApplicationFromFolderGesture}" />
                 <MenuItem
                     Command="{Binding LoadTitleUpdatesAndDLCFromFolder}"
                     Header="{ext:Locale MenuBar_File_LoadTitleUpdatesAndDLCFromFolderButton}"
