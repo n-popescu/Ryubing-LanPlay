@@ -38,9 +38,9 @@
                     IsEnabled="{Binding EnableNonGameRunningControls}"
                     InputGesture="{Binding StartApplicationFromFileGesture}" />
                 <MenuItem
-                    Command="{Binding StartApplicationFromFile}"
-                    Header="{ext:Locale MenuBar_File_StartApplicationButton}"
-                    Icon="{ext:Icon fa-solid fa-play}"
+                    Command="{Binding StartUnpackedApplicationFromFolder}"
+                    Header="{ext:Locale MenuBar_File_StartUnpackedApplicationButton}"
+                    Icon="{ext:Icon fa-solid fa-folder-open}"
                     IsEnabled="{Binding EnableNonGameRunningControls}"
                     InputGesture="{Binding StartUnpackedApplicationFromFolderGesture}" />
                 <MenuItem
