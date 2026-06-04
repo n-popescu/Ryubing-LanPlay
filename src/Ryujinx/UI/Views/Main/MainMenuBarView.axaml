@@ -32,12 +32,12 @@
             </Menu.ItemsPanel>
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBar_File_FileLabel}">
                 <MenuItem
-                    Command="{Binding OpenFile}"
+                    Command="{Binding StartApplicationFromFile}"
                     Header="{ext:Locale MenuBar_File_StartApplicationButton}"
                     Icon="{ext:Icon fa-solid fa-play}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
                 <MenuItem
-                    Command="{Binding OpenFolder}"
+                    Command="{Binding StartUnpackedApplicationFromFolder}"
                     Header="{ext:Locale MenuBar_File_StartUnpackedApplicationButton}"
                     Icon="{ext:Icon fa-solid fa-folder-open}"
                     IsEnabled="{Binding EnableNonGameRunningControls}" />
@@ -59,11 +59,11 @@
                     Command="{Binding OpenScreenshotsFolder}"
                     Header="{ext:Locale MenuBar_File_OpenScreenshotsFolderButton}"
                     Icon="{ext:Icon fa-solid fa-folder-closed}" />
-                <Separator IsVisible="{Binding ManageFileTypesVisible}" />
+                <Separator IsVisible="{Binding FileTypeAssociationsVisible}" />
                 <MenuItem
                     Command="{Binding ToggleFileTypeAssociations}"
                     Header="{Binding FileTypeAssociationsText}"
-                    IsVisible="{Binding ManageFileTypesVisible}"
+                    IsVisible="{Binding FileTypeAssociationsVisible}"
                     ToolTip.Tip="{ext:Locale MenuBar_File_FileTypeAssociationsToolTip}">
                     <MenuItem.Icon>
                         <i:Icon Value="{Binding FileTypeAssociationsIcon}" />

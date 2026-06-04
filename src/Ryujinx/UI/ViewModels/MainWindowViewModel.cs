@@ -59,6 +59,7 @@ using System.Threading.Tasks;
 using Key = Ryujinx.Input.Key;
 using MissingKeyException = LibHac.Common.Keys.MissingKeyException;
 using Path = System.IO.Path;
+using System.Windows.Input;
 using ShaderCacheLoadingState = Ryujinx.Graphics.Gpu.Shader.ShaderCacheState;
 
 namespace Ryujinx.Ava.UI.ViewModels
@@ -945,9 +946,13 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         private void RefreshFileTypeToggle()
             {
-                OnPropertyChanged(nameof(FileTypeAssociationsText));
+                OnPropertyChanged(nameof(FileTypeAssociationMenuHeader));
                 OnPropertyChanged(nameof(FileTypeAssociationsIcon));
             }
+
+        public ICommand ToggleFileTypeAssociationsCommand { get; }
+
+        public bool IsFileTypeAssociationEnabled => FileAssociationHelper.AreMimeTypesRegistered;
 
         private bool _areMimeTypesRegistered = FileAssociationHelper.AreMimeTypesRegistered;
 
@@ -964,8 +969,8 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
-        public string FileTypeAssociationsText =>
-            AreMimeTypesRegistered
+        public string FileTypeAssociationMenuHeader =>
+            IsFileTypeAssociationEnabled
                 ? LocaleManager.Instance[LocaleKeys.MenuBar_File_RemoveFileTypeAssociationsButton]
                 : LocaleManager.Instance[LocaleKeys.MenuBar_File_AssociateFileTypesButton];
 
@@ -974,12 +979,27 @@ namespace Ryujinx.Ava.UI.ViewModels
                 ? "fa-solid fa-link-slash"
                 : "fa-solid fa-link";
 
-        private async Task ToggleFileTypeAssociations()
+        private async Task ToggleFileTypeAssociationsAsync()
         {
-            if (AreMimeTypesRegistered)
-                await RemoveFileTypeAssociations();
-            else
-                await AssociateFileTypes();
+            try
+            {
+                if (FileAssociationHelper.AreMimeTypesRegistered)
+                {
+                    await RemoveFileTypeAssociations();
+                }
+                else
+                {
+                    await AssociateFileTypes();
+                }
+
+                // Refresh UI
+                OnPropertyChanged(nameof(IsFileTypeAssociationEnabled));
+                OnPropertyChanged(nameof(FileTypeAssociationMenuHeader));
+            }
+            catch (Exception ex)
+            {
+                Logger.Error?.Print(LogClass.Application, $"Failed to toggle file associations: {ex.Message}");
+            }
         }
 
         private async Task AssociateFileTypes()
@@ -1656,7 +1676,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             AppHost.Device.System.SimulateWakeUpMessage();
         }
 
-        public async Task OpenFile()
+        public async Task StartApplicationFromFile()
         {
             Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(new FilePickerOpenOptions
             {
@@ -1731,6 +1751,25 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
+        public async Task StartUnpackedApplicationFromFolder()
+        {
+            Optional<IStorageFolder> result = await StorageProvider.OpenSingleFolderPickerAsync(
+                new FolderPickerOpenOptions
+                {
+                    Title = LocaleManager.Instance[LocaleKeys.Dialog_FileMenu_OpenUnpackedApplicationFromFolderFilePickerTitle]
+                });
+
+            if (result.TryGet(out IStorageFolder value))
+            {
+                ApplicationData applicationData = new()
+                {
+                    Name = Path.GetFileNameWithoutExtension(value.Path.LocalPath), Path = value.Path.LocalPath,
+                };
+
+                await LoadApplication(applicationData);
+            }
+        }
+
         private async Task<IReadOnlyList<string>?> PickFolders(LocaleKeys titleKey)
         {
             return (await StorageProvider.OpenMultiFolderPickerAsync(new FolderPickerOpenOptions 
@@ -1759,25 +1798,6 @@ namespace Ryujinx.Ava.UI.ViewModels
                     LocaleManager.Instance[LocaleKeys.InputDialogOk],
                     (int)Symbol.Checkmark);
             });
-        }
-
-        public async Task OpenFolder()
-        {
-            Optional<IStorageFolder> result = await StorageProvider.OpenSingleFolderPickerAsync(
-                new FolderPickerOpenOptions
-                {
-                    Title = LocaleManager.Instance[LocaleKeys.Dialog_FileMenu_OpenUnpackedApplicationFromFolderFilePickerTitle]
-                });
-
-            if (result.TryGet(out IStorageFolder value))
-            {
-                ApplicationData applicationData = new()
-                {
-                    Name = Path.GetFileNameWithoutExtension(value.Path.LocalPath), Path = value.Path.LocalPath,
-                };
-
-                await LoadApplication(applicationData);
-            }
         }
 
         public static bool InitializeUserConfig(ApplicationData application)

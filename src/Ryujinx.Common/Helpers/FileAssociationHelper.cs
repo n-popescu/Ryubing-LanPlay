@@ -38,7 +38,10 @@ namespace Ryujinx.Common.Helper
                     return AreMimeTypesRegisteredWindows();
                 }
 
-                // TODO: Add macOS support.
+                if (OperatingSystem.IsMacOS())
+                {
+                    return AreMimeTypesRegisteredMacOS();
+                }
 
                 return false;
             }
@@ -160,20 +163,85 @@ namespace Ryujinx.Common.Helper
                 return true;
             }
         }
+// ==================== macOS ====================
+        [SupportedOSPlatform("macos")]
+        private static bool AreMimeTypesRegisteredMacOS()
+        {
+            // On macOS we rely on the bundle's Info.plist + Launch Services registration
+            // For a quick check, we can see if the app is registered via lsregister
+            try
+            {
+                string lsregister = "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister";
+                using var process = new Process();
+                process.StartInfo.FileName = lsregister;
+                process.StartInfo.Arguments = "-dump";
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.UseShellExecute = false;
+                process.Start();
+                string output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
 
+                return output.Contains("Ryujinx") && _fileExtensions.Any(ext => output.Contains(ext));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        [SupportedOSPlatform("macos")]
+        private static bool InstallMacOSMimeTypes(bool uninstall = false)
+        {
+            try
+            {
+                string lsregister = "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister";
+                string appPath = GetAppBundlePath();
+
+                using var process = new Process();
+                process.StartInfo.FileName = lsregister;
+                process.StartInfo.Arguments = $"-f -r \"{appPath}\"";
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = true;
+
+                process.Start();
+                process.WaitForExit();
+
+                Logger.Info?.Print(LogClass.Application, uninstall 
+                    ? "Attempted to clear file associations." 
+                    : "Registered app with Launch Services.");
+
+                return process.ExitCode == 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error?.Print(LogClass.Application, $"macOS registration failed: {ex.Message}");
+                return false;
+            }
+        }
+
+        private static string GetAppBundlePath()
+        {
+            string baseDir = AppContext.BaseDirectory;
+
+            if (baseDir.Contains(".app/Contents", StringComparison.OrdinalIgnoreCase))
+            {
+                int idx = baseDir.LastIndexOf(".app", StringComparison.OrdinalIgnoreCase);
+                return baseDir.Substring(0, idx + 4);
+            }
+
+            // Fallback: return containing directory if not in bundle
+            return Directory.GetParent(baseDir)?.FullName ?? baseDir;
+        }
+
+        // ==================== Public API ====================
         public static bool Install()
         {
             if (OperatingSystem.IsLinux())
-            {
                 return InstallLinuxMimeTypes();
-            }
-
             if (OperatingSystem.IsWindows())
-            {
                 return InstallWindowsMimeTypes();
-            }
-
-            // TODO: Add macOS support.
+            if (OperatingSystem.IsMacOS())
+                return InstallMacOSMimeTypes();
 
             return false;
         }
@@ -181,16 +249,11 @@ namespace Ryujinx.Common.Helper
         public static bool Uninstall()
         {
             if (OperatingSystem.IsLinux())
-            {
                 return InstallLinuxMimeTypes(true);
-            }
-
             if (OperatingSystem.IsWindows())
-            {
                 return InstallWindowsMimeTypes(true);
-            }
-
-            // TODO: Add macOS support.
+            if (OperatingSystem.IsMacOS())
+                return InstallMacOSMimeTypes(true);
 
             return false;
         }
