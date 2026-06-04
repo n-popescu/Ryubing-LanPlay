@@ -59,7 +59,6 @@ using System.Threading.Tasks;
 using Key = Ryujinx.Input.Key;
 using MissingKeyException = LibHac.Common.Keys.MissingKeyException;
 using Path = System.IO.Path;
-using System.Windows.Input;
 using ShaderCacheLoadingState = Ryujinx.Graphics.Gpu.Shader.ShaderCacheState;
 
 namespace Ryujinx.Ava.UI.ViewModels
@@ -939,7 +938,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             return false;
         }
 
-        public bool ManageFileTypesVisible
+        public bool FileTypeAssociationVisible
         {
             get => FileAssociationHelper.IsTypeAssociationSupported;
         }
@@ -949,10 +948,6 @@ namespace Ryujinx.Ava.UI.ViewModels
                 OnPropertyChanged(nameof(FileTypeAssociationMenuHeader));
                 OnPropertyChanged(nameof(FileTypeAssociationsIcon));
             }
-
-        public ICommand ToggleFileTypeAssociationsCommand { get; }
-
-        public bool IsFileTypeAssociationEnabled => FileAssociationHelper.AreMimeTypesRegistered;
 
         private bool _areMimeTypesRegistered = FileAssociationHelper.AreMimeTypesRegistered;
 
@@ -970,7 +965,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         }
 
         public string FileTypeAssociationMenuHeader =>
-            IsFileTypeAssociationEnabled
+            AreMimeTypesRegistered
                 ? LocaleManager.Instance[LocaleKeys.MenuBar_File_RemoveFileTypeAssociationsButton]
                 : LocaleManager.Instance[LocaleKeys.MenuBar_File_AssociateFileTypesButton];
 
@@ -979,27 +974,12 @@ namespace Ryujinx.Ava.UI.ViewModels
                 ? "fa-solid fa-link-slash"
                 : "fa-solid fa-link";
 
-        private async Task ToggleFileTypeAssociationsAsync()
+        private async Task ToggleFileTypeAssociations()
         {
-            try
-            {
-                if (FileAssociationHelper.AreMimeTypesRegistered)
-                {
-                    await RemoveFileTypeAssociations();
-                }
-                else
-                {
-                    await AssociateFileTypes();
-                }
-
-                // Refresh UI
-                OnPropertyChanged(nameof(IsFileTypeAssociationEnabled));
-                OnPropertyChanged(nameof(FileTypeAssociationMenuHeader));
-            }
-            catch (Exception ex)
-            {
-                Logger.Error?.Print(LogClass.Application, $"Failed to toggle file associations: {ex.Message}");
-            }
+            if (AreMimeTypesRegistered)
+                await RemoveFileTypeAssociations();
+            else
+                await AssociateFileTypes();
         }
 
         private async Task AssociateFileTypes()

@@ -59,11 +59,11 @@
                     Command="{Binding OpenScreenshotsFolder}"
                     Header="{ext:Locale MenuBar_File_OpenScreenshotsFolderButton}"
                     Icon="{ext:Icon fa-solid fa-folder-closed}" />
-                <Separator IsVisible="{Binding IsFileTypeAssociationEnabled}" />
+                <Separator IsVisible="{Binding FileTypeAssociationVisible}" />
                 <MenuItem
                     Command="{Binding ToggleFileTypeAssociations}"
-                    Header="{Binding FileTypeAssociationsText}"
-                    IsVisible="{Binding IsFileTypeAssociationEnabled}"
+                    Header="{Binding FileTypeAssociationMenuHeader}"
+                    IsVisible="{Binding FileTypeAssociationVisible}"
                     ToolTip.Tip="{ext:Locale MenuBar_File_FileTypeAssociationsToolTip}">
                     <MenuItem.Icon>
                         <i:Icon Value="{Binding FileTypeAssociationsIcon}" />
