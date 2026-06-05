@@ -32,17 +32,17 @@
             </Menu.ItemsPanel>
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBar_File_FileLabel}">
                 <MenuItem
-                    Command="{Binding StartApplicationFromFile}"
-                    Header="{ext:Locale MenuBar_File_StartApplicationButton}"
-                    Icon="{ext:Icon fa-solid fa-play}"
+                    Command="{Binding LoadApplicationFromFile}"
+                    Header="{ext:Locale MenuBar_File_LoadFileButton}"
+                    Icon="{ext:Icon fa-solid fa-file}"
                     IsEnabled="{Binding EnableNonGameRunningControls}"
-                    InputGesture="{Binding StartApplicationFromFileGesture}" />
+                    InputGesture="{Binding LoadApplicationFromFileGesture}" />
                 <MenuItem
-                    Command="{Binding StartUnpackedApplicationFromFolder}"
-                    Header="{ext:Locale MenuBar_File_StartUnpackedApplicationButton}"
+                    Command="{Binding LoadApplicationFromFolder}"
+                    Header="{ext:Locale MenuBar_File_LoadFolderButton}"
                     Icon="{ext:Icon fa-solid fa-folder-open}"
                     IsEnabled="{Binding EnableNonGameRunningControls}"
-                    InputGesture="{Binding StartUnpackedApplicationFromFolderGesture}" />
+                    InputGesture="{Binding LoadApplicationFromFolderGesture}" />
                 <MenuItem
                     Command="{Binding LoadTitleUpdatesAndDLCFromFolder}"
                     Header="{ext:Locale MenuBar_File_LoadTitleUpdatesAndDLCFromFolderButton}"

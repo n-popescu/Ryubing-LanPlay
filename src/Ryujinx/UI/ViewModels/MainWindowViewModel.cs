@@ -1656,10 +1656,10 @@ namespace Ryujinx.Ava.UI.ViewModels
             AppHost.Device.System.SimulateWakeUpMessage();
         }
 
-        public KeyGesture StartApplicationFromFileGesture => KeyGesture.Parse(OperatingSystem.IsMacOS() ? "Cmd+O" : "Ctrl+O");
-        public KeyGesture StartUnpackedApplicationFromFolderGesture => KeyGesture.Parse(OperatingSystem.IsMacOS() ? "Cmd+Shift+O" : "Ctrl+Shift+O");
+        public KeyGesture LoadApplicationFromFileGesture => KeyGesture.Parse(OperatingSystem.IsMacOS() ? "Cmd+O" : "Ctrl+O");
+        public KeyGesture LoadApplicationFromFolderGesture => KeyGesture.Parse(OperatingSystem.IsMacOS() ? "Cmd+Shift+O" : "Ctrl+Shift+O");
 
-        public async Task StartApplicationFromFile()
+        public async Task LoadApplicationFromFile()
         {
             Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(new FilePickerOpenOptions
             {
@@ -1734,7 +1734,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
-        public async Task StartUnpackedApplicationFromFolder()
+        public async Task LoadApplicationFromFolder()
         {
             Optional<IStorageFolder> result = await StorageProvider.OpenSingleFolderPickerAsync(
                 new FolderPickerOpenOptions
