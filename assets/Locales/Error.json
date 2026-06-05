@@ -26,6 +26,31 @@
       }
     },
     {
+      "ID": "LoadUnpackedApplicationFailed",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Please select an unpacked application folder with a valid ExeFS or NSO/NRO.",
+        "es_ES": "",
+        "fr_FR": "Veuillez sélectionner un répertoire d’application décompressée contenant un ExeFS valide ou NSO/NRO.",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "Пожалуйста, выберите папку распакованного приложения с корректным ExeFS или NSO/NRO",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
       "ID": "AssociateFileTypesFailed",
       "Translations": {
         "ar_SA": "فشل ربط أنواع الملفات.",

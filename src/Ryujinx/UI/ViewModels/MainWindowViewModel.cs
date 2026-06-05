@@ -1663,7 +1663,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(new FilePickerOpenOptions
             {
-                Title = LocaleManager.Instance[LocaleKeys.Dialog_FileMenu_OpenApplicationFromFileFilePickerTitle],
+                Title = LocaleManager.Instance[LocaleKeys.Dialog_FileMenu_LoadApplicationFromFileFilePickerTitle],
                 FileTypeFilter = new List<FilePickerFileType>
                 {
                     new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
@@ -1739,7 +1739,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             Optional<IStorageFolder> result = await StorageProvider.OpenSingleFolderPickerAsync(
                 new FolderPickerOpenOptions
                 {
-                    Title = LocaleManager.Instance[LocaleKeys.Dialog_FileMenu_OpenUnpackedApplicationFromFolderFilePickerTitle]
+                    Title = LocaleManager.Instance[LocaleKeys.Dialog_FileMenu_LoadUnpackedApplicationFromFolderFilePickerTitle]
                 });
 
             if (result.TryGet(out IStorageFolder value))
