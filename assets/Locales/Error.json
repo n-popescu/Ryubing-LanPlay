@@ -76,7 +76,7 @@
       }
     },
     {
-      "ID": "RemoveFileAssociationsFailed",
+      "ID": "RemoveFileTypeAssociationsFailed",
       "Translations": {
         "ar_SA": "فشلت إزالة ارتباطات أنواع الملفات.",
         "de_DE": "Das Entfernen der Dateitypzuordnungen ist fehlgeschlagen.",
