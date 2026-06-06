@@ -20,7 +20,7 @@ namespace Ryujinx.Cpu.AppleHv
 
         public ulong ThreadUid { get; set; }
 
-        // Full shadow state & cache - why the build break?
+        // Full shadow state
         private readonly ulong[] _x = new ulong[32];
         private readonly V128[] _v = new V128[32];
 
@@ -31,7 +31,7 @@ namespace Ryujinx.Cpu.AppleHv
         private ulong _tpidrroEl0;
         private ulong _fpcr;
         private ulong _fpsr;
-        private ulong _pstate;
+        private ulong _pstateRaw;
 
         private long _fallbackCount;
         private long _lastWarningTicks;
@@ -71,7 +71,7 @@ namespace Ryujinx.Cpu.AppleHv
 
         private void InitializeCacheDefaults()
         {
-            _pstate = 0x80000000;
+            _pstateRaw = 0x80000000UL;
             _pc = 0;
             _elrEl1 = 0;
             _esrEl1 = 0;
@@ -134,17 +134,17 @@ namespace Ryujinx.Cpu.AppleHv
                 {
                     _fallbackCount++;
                     LogHvWarning("PAC failure on CPSR");
-                    return (uint)_pstate;
+                    return (uint)_pstateRaw;
                 }
                 res.ThrowOnError();
-                _pstate = val;
+                _pstateRaw = val;
                 return (uint)val;
             }
             set
             {
                 HvResult res = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.CPSR, value);
                 if (res != HvResult.BadArgument) res.ThrowOnError();
-                _pstate = value;
+                _pstateRaw = value;
             }
         }
 

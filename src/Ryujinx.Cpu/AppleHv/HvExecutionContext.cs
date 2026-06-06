@@ -1,4 +1,5 @@
 using ARMeilleure.State;
+using Ryujinx.Common.Logging;
 using Ryujinx.Cpu.AppleHv.Arm;
 using Ryujinx.Memory.Tracking;
 using System;
@@ -71,6 +72,8 @@ namespace Ryujinx.Cpu.AppleHv
         private int _shouldStep;
         private readonly ExceptionCallbacks _exceptionCallbacks;
         private int _interruptRequested;
+
+        // GPU Sync control
         private int _syncCounter;
         private int _strongSyncCounter;
 
@@ -145,16 +148,17 @@ namespace Ryujinx.Cpu.AppleHv
                     if (currentEl == (uint)ExceptionLevel.EL1h)
                     {
                         HvApi.hv_vcpu_get_sys_reg(vcpu.Handle, HvSysReg.SPSR_EL1, out ulong spsr).ThrowOnError();
-                        spsr |= (1 << 21);
+                        spsr |= (1U << 21);
                         HvApi.hv_vcpu_set_sys_reg(vcpu.Handle, HvSysReg.SPSR_EL1, spsr);
                     }
                     else
                     {
-                        Pstate |= (1 << 21);
+                        Pstate |= (1U << 21);
                     }
                     HvApi.hv_vcpu_set_sys_reg(vcpu.Handle, HvSysReg.MDSCR_EL1, 1);
                 }
 
+                // Adaptive GPU synchronization to prevent 0 FPS
                 if (++_syncCounter % 12 == 0)
                 {
                     TryGpuSync();
@@ -204,9 +208,21 @@ namespace Ryujinx.Cpu.AppleHv
         {
             try
             {
+                // Light yield helps prevent Vulkan starvation when Hypervisor runs very fast
                 Thread.Yield();
+
+                if (++_strongSyncCounter % 8 == 0)
+                {
+                    Thread.Yield(); // Stronger synchronization periodically
+                }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                if (_strongSyncCounter % 64 == 0)
+                {
+                    Logger.Warning?.Print(LogClass.Gpu, $"[AppleHv] GPU sync failed: {ex.Message}");
+                }
+            }
         }
 
         private ulong SynchronousException(HvMemoryManager memoryManager, ref HvVcpu vcpu)
@@ -232,9 +248,7 @@ namespace Ryujinx.Cpu.AppleHv
                     ReturnToPool(vcpu);
                     ushort id = (ushort)esr;
                     SupervisorCallHandler(elr - 4UL, id);
-
-                    Thread.Yield();
-
+                    Thread.Yield();                    // Helps with Vulkan + Hypervisor stability
                     vcpu = RentFromPool(memoryManager.AddressSpace, vcpu);
                     break;
 
