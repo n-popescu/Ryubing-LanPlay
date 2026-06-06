@@ -1088,5 +1088,20 @@ namespace Ryujinx.Ava.Systems.PlayReport
 
             return $"Living on {messagePackObjectDictionary["LandName"].AsString()} Island";
         }
+
+        private static FormattedValue NSMBUDRPC(SparseMultiValue values)
+        {
+            if (values.Matched.TryGetValue("WorldNo", out Value world) && values.Matched.TryGetValue("CourseNo", out Value course))
+            {
+                return $"Just played course {world}-{course}";
+            }
+
+            if (values.Matched.TryGetValue("RlId", out Value RlId) | values.Matched.TryGetValue("TotalPlayTime", out Value TotalPlayTime))
+            {
+                return "At the main menu";
+            }
+            
+            return "";
+        }
     }
 }

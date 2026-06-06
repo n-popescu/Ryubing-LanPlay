@@ -132,6 +132,12 @@ namespace Ryujinx.Ava.Systems.PlayReport
                     .WithDescription("based on your island name.")
                     .AddValueFormatter("AppCmn", AnimalCrossingNewHorizons_AppCommon)
             )
+            .AddSpec(
+                "0100ea80032ea000",
+                spec => spec
+                    .WithDescription("based on world map return info.")
+                    .AddSparseMultiValueFormatter(["WorldNo", "CourseNo", "RlId", "TotalPlayTime"], NSMBUDRPC)
+                )
         );
 
         private static string Playing(string game) => $"Playing {game}";
