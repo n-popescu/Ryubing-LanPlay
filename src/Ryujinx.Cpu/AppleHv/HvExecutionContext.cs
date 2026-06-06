@@ -208,19 +208,18 @@ namespace Ryujinx.Cpu.AppleHv
         {
             try
             {
-                // Light yield helps prevent Vulkan starvation when Hypervisor runs very fast
                 Thread.Yield();
 
-                if (++_strongSyncCounter % 8 == 0)
+                if (++_strongSyncCounter % 6 == 0)
                 {
-                    Thread.Yield(); // Stronger synchronization periodically
+                    Thread.Yield();
                 }
             }
             catch (Exception ex)
             {
-                if (_strongSyncCounter % 64 == 0)
+                if (_strongSyncCounter % 100 == 0)
                 {
-                    Logger.Warning?.Print(LogClass.Gpu, $"[AppleHv] GPU sync failed: {ex.Message}");
+                    Logger.Warning?.Print(LogClass.Gpu, $"[AppleHv] GPU sync issue: {ex.Message}");
                 }
             }
         }

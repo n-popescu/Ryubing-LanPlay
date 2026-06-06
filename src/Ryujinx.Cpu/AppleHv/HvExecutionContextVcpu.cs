@@ -20,7 +20,6 @@ namespace Ryujinx.Cpu.AppleHv
 
         public ulong ThreadUid { get; set; }
 
-        // Full shadow state
         private readonly ulong[] _x = new ulong[32];
         private readonly V128[] _v = new V128[32];
 
@@ -95,35 +94,11 @@ namespace Ryujinx.Cpu.AppleHv
             }
         }
 
-        public ulong Pc
-        {
-            get => GetRegCached(HvReg.PC, ref _pc);
-            set => SetRegCached(HvReg.PC, value, ref _pc);
-        }
-
-        public ulong ElrEl1
-        {
-            get => GetSysRegCached(HvSysReg.ELR_EL1, ref _elrEl1);
-            set => SetSysRegCached(HvSysReg.ELR_EL1, value, ref _elrEl1);
-        }
-
-        public ulong EsrEl1
-        {
-            get => GetSysRegCached(HvSysReg.ESR_EL1, ref _esrEl1);
-            set => SetSysRegCached(HvSysReg.ESR_EL1, value, ref _esrEl1);
-        }
-
-        public long TpidrEl0
-        {
-            get => (long)GetSysRegCached(HvSysReg.TPIDR_EL0, ref _tpidrEl0);
-            set => SetSysRegCached(HvSysReg.TPIDR_EL0, (ulong)value, ref _tpidrEl0);
-        }
-
-        public long TpidrroEl0
-        {
-            get => (long)GetSysRegCached(HvSysReg.TPIDRRO_EL0, ref _tpidrroEl0);
-            set => SetSysRegCached(HvSysReg.TPIDRRO_EL0, (ulong)value, ref _tpidrroEl0);
-        }
+        public ulong Pc { get => GetRegCached(HvReg.PC, ref _pc); set => SetRegCached(HvReg.PC, value, ref _pc); }
+        public ulong ElrEl1 { get => GetSysRegCached(HvSysReg.ELR_EL1, ref _elrEl1); set => SetSysRegCached(HvSysReg.ELR_EL1, value, ref _elrEl1); }
+        public ulong EsrEl1 { get => GetSysRegCached(HvSysReg.ESR_EL1, ref _esrEl1); set => SetSysRegCached(HvSysReg.ESR_EL1, value, ref _esrEl1); }
+        public long TpidrEl0 { get => (long)GetSysRegCached(HvSysReg.TPIDR_EL0, ref _tpidrEl0); set => SetSysRegCached(HvSysReg.TPIDR_EL0, (ulong)value, ref _tpidrEl0); }
+        public long TpidrroEl0 { get => (long)GetSysRegCached(HvSysReg.TPIDRRO_EL0, ref _tpidrroEl0); set => SetSysRegCached(HvSysReg.TPIDRRO_EL0, (ulong)value, ref _tpidrroEl0); }
 
         public uint Pstate
         {
@@ -148,17 +123,8 @@ namespace Ryujinx.Cpu.AppleHv
             }
         }
 
-        public uint Fpcr
-        {
-            get => (uint)GetRegCached(HvReg.FPCR, ref _fpcr);
-            set => SetRegCached(HvReg.FPCR, value, ref _fpcr);
-        }
-
-        public uint Fpsr
-        {
-            get => (uint)GetRegCached(HvReg.FPSR, ref _fpsr);
-            set => SetRegCached(HvReg.FPSR, value, ref _fpsr);
-        }
+        public uint Fpcr { get => (uint)GetRegCached(HvReg.FPCR, ref _fpcr); set => SetRegCached(HvReg.FPCR, value, ref _fpcr); }
+        public uint Fpsr { get => (uint)GetRegCached(HvReg.FPSR, ref _fpsr); set => SetRegCached(HvReg.FPSR, value, ref _fpsr); }
 
         public ulong GetX(int index)
         {
