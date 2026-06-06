@@ -974,6 +974,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 ? "fa-solid fa-link-slash"
                 : "fa-solid fa-link";
 
+        [RelayCommand]
         private async Task ToggleFileTypeAssociations()
         {
             if (AreMimeTypesRegistered)
@@ -982,6 +983,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 await AssociateFileTypes();
         }
 
+        [RelayCommand]
         private async Task AssociateFileTypes()
         {
             AreMimeTypesRegistered = FileAssociationHelper.Install();
@@ -991,6 +993,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.Error_AssociateFileTypesFailed]);
         }
 
+        [RelayCommand]
         private async Task RemoveFileTypeAssociations()
         {
             AreMimeTypesRegistered = !FileAssociationHelper.Uninstall();
