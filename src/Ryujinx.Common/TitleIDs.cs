@@ -210,6 +210,7 @@ namespace Ryujinx.Common
             "010013c00e930000", // Hollow Knight: Silksong
             "010085500130a000", // Lego City: Undercover
             "010073c01af34000", // LEGO Horizon Adventures
+            "01003da010e8a000", // Miitopia
             "0100d71004694000", // Minecraft
             "01007430037f6000", // Monopoly
             "0100853015e86000", // No Man's Sky
