@@ -997,7 +997,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             if (!AreMimeTypesRegistered)
                 await ContentDialogHelper.CreateInfoDialog(LocaleManager.Instance[LocaleKeys.Dialog_FileTypeAssociations_RemoveAssociationSuccessMessage], string.Empty, LocaleManager.Instance[LocaleKeys.InputDialogOk], string.Empty, string.Empty);
             else
-                await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.Error_RemoveFileAssociationsFailed]);
+                await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.Error_RemoveFileTypeAssociationsFailed]);
         }
 
         public async Task HandleFirmwareInstallation(string filename)
