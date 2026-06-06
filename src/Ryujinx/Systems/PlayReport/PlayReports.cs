@@ -132,6 +132,13 @@ namespace Ryujinx.Ava.Systems.PlayReport
                     .WithDescription("based on your island name.")
                     .AddValueFormatter("AppCmn", AnimalCrossingNewHorizons_AppCommon)
             )
+            .AddSpec(
+                "01003da010e8a000", // Miitopia 01003da010e8a000
+                spec => spec
+                .WithDescription("I hate this shit so much")
+                .AddValueFormatter("gold", MiitopiaRPC)
+                //.AddSparseMultiValueFormatter(["gold", "stage"], MiitopiaRPC2)
+            )
         );
 
         private static string Playing(string game) => $"Playing {game}";
