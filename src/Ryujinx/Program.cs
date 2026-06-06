@@ -20,6 +20,8 @@ using Ryujinx.Common.SystemInterop;
 using Ryujinx.Common.Utilities;
 using Ryujinx.Graphics.RenderDocApi;
 using Ryujinx.Graphics.Vulkan.MoltenVK;
+using Ryujinx.Graphics.Vulkan.KosmicKrisp;
+using Ryujinx.Graphics.Vulkan.MoltenVK;
 using Ryujinx.Headless;
 using Ryujinx.SDL3.Common;
 using System;
@@ -237,11 +239,6 @@ namespace Ryujinx.Ava
             // Parse arguments
             CommandLineState.ParseArguments(args);
 
-            if (OperatingSystem.IsMacOS())
-            {
-                MVKInitialization.InitializeResolver();
-            }
-
             // Delete backup files after updating.
             Task.Run(Updater.CleanupUpdate);
 
@@ -366,11 +363,22 @@ namespace Ryujinx.Ava
 
             // Check if graphics backend was overridden
             if (CommandLineState.OverrideGraphicsBackend is not null)
+            {
                 ConfigurationState.Instance.Graphics.GraphicsBackend.Value = CommandLineState.OverrideGraphicsBackend.ToLower() switch
+                    {
+                        "opengl" => GraphicsBackend.OpenGl,
+                        "vulkan" => GraphicsBackend.Vulkan,
+                        _ => ConfigurationState.Instance.Graphics.GraphicsBackend.Value
+                    };
+            }
+
+            // Check if translation layer was overridden
+            if (CommandLineState.OverrideTranslationLayer is not null)
+                ConfigurationState.Instance.Graphics.TranslationLayer.Value = CommandLineState.OverrideTranslationLayer.ToLower() switch
                 {
-                    "opengl" => GraphicsBackend.OpenGl,
-                    "vulkan" => GraphicsBackend.Vulkan,
-                    _ => ConfigurationState.Instance.Graphics.GraphicsBackend
+                    "moltenvk" => TranslationLayer.MoltenVK,
+                    "kosmickrisp" => TranslationLayer.KosmicKrisp,
+                    _ => ConfigurationState.Instance.Graphics.TranslationLayer.Value
                 };
 
             // Check if backend threading was overridden

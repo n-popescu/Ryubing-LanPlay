@@ -77,11 +77,6 @@ namespace Ryujinx.Headless
                 };
             }
 
-            if (OperatingSystem.IsMacOS())
-            {
-                MVKInitialization.InitializeResolver();
-            }
-
             Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(options => Load(args, options))
                 .WithNotParsed(errors =>

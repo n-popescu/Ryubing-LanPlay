@@ -81,6 +81,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             Graphics.ShadersDumpPath.Value = cff.GraphicsShadersDumpPath;
             Graphics.BackendThreading.Value = cff.BackendThreading;
             Graphics.GraphicsBackend.Value = cff.GraphicsBackend;
+            Graphics.TranslationLayer.Value = cff.TranslationLayer;
             Graphics.PreferredGpu.Value = cff.PreferredGpu;
             Graphics.AntiAliasing.Value = cff.AntiAliasing;
             Graphics.ScalingFilter.Value = cff.ScalingFilter;
@@ -542,7 +543,9 @@ namespace Ryujinx.Ava.Systems.Configuration
                     if (cff.AudioBackend is AudioBackend.SDL2)
                         cff.AudioBackend = AudioBackend.SDL3;
                 }),
-                (72, static cff => cff.GCLowLatency = false)
+                (72, static cff => cff.GCLowLatency = false),
+                // skip 73
+                (74, static cff => cff.TranslationLayer = TranslationLayer.MoltenVK)
             );
     }
 }

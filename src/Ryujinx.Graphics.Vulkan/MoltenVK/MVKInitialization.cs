@@ -1,52 +1,33 @@
-using Silk.NET.Core.Loader;
-using Silk.NET.Vulkan;
+using Ryujinx.Common.Logging;
 using System;
-using System.Runtime.InteropServices;
+using System.IO;
 using System.Runtime.Versioning;
 
 namespace Ryujinx.Graphics.Vulkan.MoltenVK
 {
     [SupportedOSPlatform("macos")]
-    public static partial class MVKInitialization
+    public static class MVKInitialization
     {
-        private const string VulkanLib = "libvulkan.dylib";
-
-        [LibraryImport("libMoltenVK.dylib")]
-        private static partial Result vkGetMoltenVKConfigurationMVK(nint unusedInstance, out MVKConfiguration config, in nint configSize);
-
-        [LibraryImport("libMoltenVK.dylib")]
-        private static partial Result vkSetMoltenVKConfigurationMVK(nint unusedInstance, in MVKConfiguration config, in nint configSize);
-
         public static void Initialize()
         {
-            nint configSize = (nint)Marshal.SizeOf<MVKConfiguration>();
+            Environment.SetEnvironmentVariable("MVK_CONFIG_USE_METAL_ARGUMENT_BUFFERS", "1");
+            Environment.SetEnvironmentVariable("MVK_CONFIG_VK_SEMAPHORE_SUPPORT_STYLE", "0");
+            Environment.SetEnvironmentVariable("MVK_CONFIG_SYNCHRONOUS_QUEUE_SUBMITS", "0");
+            Environment.SetEnvironmentVariable("MVK_CONFIG_RESUME_LOST_DEVICE", "1");
 
-            vkGetMoltenVKConfigurationMVK(nint.Zero, out MVKConfiguration config, configSize);
+            string contentsDir = Path.GetDirectoryName(AppContext.BaseDirectory.TrimEnd('/'))!;
+            string basePath = Path.Combine(contentsDir, "Resources");
+            string icdPath = Path.Combine(basePath, "vulkan", "icd.d", "MoltenVK_icd.json");
 
-            config.UseMetalArgumentBuffers = true;
+            if (!File.Exists(icdPath))
+                throw new FileNotFoundException("MoltenVK ICD JSON not found", icdPath);
 
-            config.SemaphoreSupportStyle = MVKVkSemaphoreSupportStyle.MVK_CONFIG_VK_SEMAPHORE_SUPPORT_STYLE_SINGLE_QUEUE;
-            config.SynchronousQueueSubmits = false;
+            Logger.Notice.Print(LogClass.Application,
+                $"MVKInitialization.Initialize() called, VK_DRIVER_FILES will be set to: {icdPath}");
 
-            config.ResumeLostDevice = true;
+            Environment.SetEnvironmentVariable("VK_DRIVER_FILES", icdPath);
 
-            vkSetMoltenVKConfigurationMVK(nint.Zero, config, configSize);
-        }
-
-        private static string[] Resolver(string path)
-        {
-            if (path.EndsWith(VulkanLib))
-            {
-                path = path[..^VulkanLib.Length] + "libMoltenVK.dylib";
-                return [path];
-            }
-
-            return [];
-        }
-
-        public static void InitializeResolver()
-        {
-            ((DefaultPathResolver)PathResolver.Default).Resolvers.Insert(0, Resolver);
+            Console.WriteLine($"[MVKInit] VK_DRIVER_FILES just set to: {Environment.GetEnvironmentVariable("VK_DRIVER_FILES")}");
         }
     }
 }

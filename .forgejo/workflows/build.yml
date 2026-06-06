@@ -73,7 +73,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
 
       - name: Build
-        run: dotnet build -c "${{ matrix.configuration }}" -p:Version="${{ steps.version_info.outputs.result }}" -p:SourceRevisionId="${{ steps.version_info.outputs.git_short_hash }}" -p:ExtraDefineConstants=DISABLE_UPDATER
+        run: dotnet build -c "${{ matrix.configuration }}" -p:Version="${{ steps.version_info.outputs.result }}" -p:SourceRevisionId="${{ steps.version_info.outputs.git_short_hash }}" -p:ExtraDefineConstants=DISABLE_UPDATER -p:UseSharedCompilation=false
 
       - name: Test
         uses: actions/unstable-commands@v1
@@ -84,7 +84,7 @@ jobs:
         if: matrix.platform.name != 'linux-arm64'
 
       - name: Publish Ryujinx
-        run: dotnet publish -c "${{ matrix.configuration }}" -r "${{ matrix.platform.name }}" -o ./publish -p:Version="${{ steps.version_info.outputs.result }}" -p:DebugType=embedded -p:SourceRevisionId="${{ steps.version_info.outputs.git_short_hash }}" -p:ExtraDefineConstants=DISABLE_UPDATER src/Ryujinx --self-contained 
+        run: dotnet publish -c "${{ matrix.configuration }}" -r "${{ matrix.platform.name }}" -o ./publish -p:Version="${{ steps.version_info.outputs.result }}" -p:DebugType=embedded -p:SourceRevisionId="${{ steps.version_info.outputs.git_short_hash }}" -p:ExtraDefineConstants=DISABLE_UPDATER -p:UseSharedCompilation=false src/Ryujinx --self-contained 
         if: forgejo.event_name == 'pull_request'
 
       - name: Packing Windows builds

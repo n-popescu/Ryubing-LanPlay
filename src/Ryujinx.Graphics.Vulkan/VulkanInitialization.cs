@@ -5,7 +5,6 @@ using Silk.NET.Core;
 using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.EXT;
 using Silk.NET.Vulkan.Extensions.KHR;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -14,10 +13,11 @@ namespace Ryujinx.Graphics.Vulkan
 {
     public unsafe static class VulkanInitialization
     {
+        private static Version32 Version14 => new(1, 4, 0);
+        
         private const uint InvalidIndex = uint.MaxValue;
         private static readonly uint _minimalVulkanVersion = Vk.Version11.Value;
-        private static readonly uint _minimalInstanceVulkanVersion = Vk.Version12.Value;
-        private static readonly uint _maximumVulkanVersion = Vk.Version12.Value;
+        private static readonly uint _maximumVulkanVersion = Version14.Value;
         private const string AppName = "Ryujinx.Graphics.Vulkan";
         private const int QueuesCount = 2;
 
@@ -194,13 +194,6 @@ namespace Ryujinx.Graphics.Vulkan
             result.ThrowOnError();
 
             using VulkanInstance instance = rawInstance;
-
-            // We currently assume that the instance is compatible with Vulkan 1.2
-            // TODO: Remove this once we relax our initialization codepaths.
-            if (instance.InstanceVersion < _minimalInstanceVulkanVersion)
-            {
-                return [];
-            }
 
             instance.EnumeratePhysicalDevices(out VulkanPhysicalDevice[] physicalDevices).ThrowOnError();
 
@@ -392,6 +385,22 @@ namespace Ryujinx.Graphics.Vulkan
 
             features2.PNext = &supportedPhysicalDeviceVulkan12Features;
 
+            PhysicalDeviceVulkan13Features supportedPhysicalDeviceVulkan13Features = new()
+            {
+                SType = StructureType.PhysicalDeviceVulkan13Features,
+                PNext = features2.PNext,
+            };
+
+            features2.PNext = &supportedPhysicalDeviceVulkan13Features;
+
+            PhysicalDeviceVulkan14Features supportedPhysicalDeviceVulkan14Features = new()
+            {
+                SType = StructureType.PhysicalDeviceVulkan14Features,
+                PNext = features2.PNext,
+            };
+
+            features2.PNext = &supportedPhysicalDeviceVulkan14Features;
+
             api.GetPhysicalDeviceFeatures2(physicalDevice.PhysicalDevice, &features2);
 
             PhysicalDeviceFeatures supportedFeatures = features2.Features;
@@ -499,6 +508,24 @@ namespace Ryujinx.Graphics.Vulkan
             };
 
             pExtendedFeatures = &featuresVk12;
+
+            PhysicalDeviceVulkan13Features featuresVk13 = new()
+            {
+                SType = StructureType.PhysicalDeviceVulkan13Features,
+                PNext = pExtendedFeatures,
+                /* Vulkan 1.3 features here */
+            };
+
+            pExtendedFeatures = &featuresVk13;
+
+            PhysicalDeviceVulkan13Features featuresVk14 = new()
+            {
+                SType = StructureType.PhysicalDeviceVulkan14Features,
+                PNext = pExtendedFeatures,
+                /* Vulkan 1.4 features here */
+            };
+
+            pExtendedFeatures = &featuresVk14;
 
             PhysicalDeviceIndexTypeUint8FeaturesEXT featuresIndexU8;
 

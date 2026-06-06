@@ -17,7 +17,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// <summary>
         /// The current version of the file format
         /// </summary>
-        public const int CurrentVersion = 73;
+        public const int CurrentVersion = 74;
 
         /// <summary>
         /// Version of the configuration file format
@@ -445,6 +445,11 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// Graphics backend
         /// </summary>
         public GraphicsBackend GraphicsBackend { get; set; }
+
+        /// <summary>
+        /// Vulkan translation layer
+        /// </summary>
+        public TranslationLayer TranslationLayer { get; set; }
 
         /// <summary>
         /// Preferred GPU

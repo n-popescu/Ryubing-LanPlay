@@ -48,7 +48,7 @@ EXECUTABLE_SUB_PATH=Contents/MacOS/Ryujinx
 rm -rf "$TEMP_DIRECTORY"
 mkdir -p "$TEMP_DIRECTORY"
 
-DOTNET_COMMON_ARGS=(-p:DebugType=embedded -p:Version="$VERSION" -p:SourceRevisionId="$SOURCE_REVISION_ID" --self-contained true $EXTRA_ARGS)
+DOTNET_COMMON_ARGS=(-p:DebugType=embedded -p:Version="$VERSION" -p:SourceRevisionId="$SOURCE_REVISION_ID" -p:UseSharedCompilation=false --self-contained true $EXTRA_ARGS)
 
 dotnet restore
 dotnet build -c "$CONFIGURATION" src/Ryujinx
@@ -76,6 +76,11 @@ rm "$UNIVERSAL_APP_BUNDLE/$EXECUTABLE_SUB_PATH"
 
 # Make its libraries universal
 python3 "$BASE_DIR/distribution/macos/construct_universal_dylib.py" "$ARM64_APP_BUNDLE" "$X64_APP_BUNDLE" "$UNIVERSAL_APP_BUNDLE" "**/*.dylib"
+
+# Copy arm64-only libraries to UNIVERSAL_APP_BUNDLE
+cp "$ARM64_APP_BUNDLE/Contents/Frameworks/libarmeilleure-jitsupport.dylib" "$UNIVERSAL_APP_BUNDLE/Contents/Frameworks/libarmeilleure-jitsupport.dylib"
+cp "$ARM64_APP_BUNDLE/Contents/Frameworks/libvulkan_kosmickrisp.dylib" "$UNIVERSAL_APP_BUNDLE/Contents/Frameworks/libvulkan_kosmickrisp.dylib"
+cp "$ARM64_APP_BUNDLE/Contents/Frameworks/libvulkan.1.dylib" "$UNIVERSAL_APP_BUNDLE/Contents/Frameworks/libvulkan.1.dylib"
 
 if ! [ -x "$(command -v lipo)" ];
 then

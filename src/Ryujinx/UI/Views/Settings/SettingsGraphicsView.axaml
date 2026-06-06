@@ -28,7 +28,7 @@
                 Spacing="10">
                 <TextBlock Classes="h1" Text="{ext:Locale SettingsTabGraphicsAPI}" />
                 <StackPanel Margin="10,0,0,0" Orientation="Vertical" Spacing="10">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding IsOpenGLAvailable}">
                         <TextBlock VerticalAlignment="Center"
                                 ToolTip.Tip="{ext:Locale SettingsTabGraphicsBackendTooltip}"
                                 Text="{ext:Locale SettingsTabGraphicsBackend}"
@@ -43,6 +43,22 @@
                             <ComboBoxItem
                                 IsEnabled="{Binding IsOpenGLAvailable}"
                                 Content="OpenGL" />
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
+                                IsVisible="{Binding IsKosmicKrispAvailable}">
+                        <TextBlock VerticalAlignment="Center"
+                                   ToolTip.Tip="{ext:Locale SettingsTabTranslationLayerTooltip}"
+                                   Text="{ext:Locale SettingsTabTranslationLayer}"
+                                   Width="250" />
+                        <ComboBox Width="350"
+                                  HorizontalContentAlignment="Left"
+                                  ToolTip.Tip="{ext:Locale SettingsTabTranslationLayerTooltip}"
+                                  SelectedIndex="{Binding TranslationLayerIndex}">
+                            <ComboBoxItem
+                                Content="MoltenVK" />
+                            <ComboBoxItem
+                                Content="KosmicKrisp" />
                         </ComboBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding IsVulkanSelected}">

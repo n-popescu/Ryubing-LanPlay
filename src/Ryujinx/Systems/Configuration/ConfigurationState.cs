@@ -147,6 +147,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 AllowDuplicateDeviceAssignment = Hid.AllowDuplicateDeviceAssignment,
                 RainbowSpeed = Hid.RainbowSpeed,
                 GraphicsBackend = Graphics.GraphicsBackend,
+                TranslationLayer = Graphics.TranslationLayer,
                 PreferredGpu = Graphics.PreferredGpu,
                 MultiplayerLanInterfaceId = Multiplayer.LanInterfaceId,
                 MultiplayerMode = Multiplayer.Mode,
@@ -173,6 +174,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             Graphics.MaxAnisotropy.Value = -1.0f;
             Graphics.AspectRatio.Value = AspectRatio.Fixed16x9;
             Graphics.GraphicsBackend.Value = DefaultGraphicsBackend();
+            Graphics.TranslationLayer.Value = TranslationLayer.MoltenVK;
             Graphics.PreferredGpu.Value = string.Empty;
             Graphics.ShadersDumpPath.Value = string.Empty;
             Logger.EnableDebug.Value = false;

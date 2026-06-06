@@ -11,6 +11,7 @@ namespace Ryujinx.Ava.Utilities
         public static bool? OverrideDockedMode { get; private set; }
         public static bool? OverrideHardwareAcceleration { get; private set; }
         public static string OverrideGraphicsBackend { get; private set; }
+        public static string OverrideTranslationLayer { get; private set; }
         public static string OverrideBackendThreading { get; private set; }
         public static string OverrideBackendThreadingAfterReboot { get; private set; }
         public static string OverridePPTC { get; private set; }
@@ -117,6 +118,16 @@ namespace Ryujinx.Ava.Utilities
                         }
 
                         OverrideGraphicsBackend = args[++i];
+                        break;
+                    case "--translation-layer":
+                        if (i + 1 >= args.Length)
+                        {
+                            Logger.Error?.Print(LogClass.Application, $"Invalid option '{arg}'");
+
+                            continue;
+                        }
+
+                        OverrideTranslationLayer = args[++i];
                         break;
                     case "--backend-threading":
                         if (i + 1 >= args.Length)

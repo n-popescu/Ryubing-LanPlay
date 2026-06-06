@@ -5,7 +5,6 @@ using Ryujinx.Common.Logging;
 using Ryujinx.Graphics.GAL;
 using Ryujinx.Graphics.Shader;
 using Ryujinx.Graphics.Shader.Translation;
-using Ryujinx.Graphics.Vulkan.MoltenVK;
 using Ryujinx.Graphics.Vulkan.Queries;
 using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.EXT;
@@ -98,6 +97,7 @@ namespace Ryujinx.Graphics.Vulkan
         internal bool IsIntelArc { get; private set; }
         internal bool IsQualcommProprietary { get; private set; }
         internal bool IsMoltenVk { get; private set; }
+        internal bool IsKosmicKrisp { get; private set; }
         internal bool SupportsMTL31 { get; private set; }
         internal bool IsTBDR { get; private set; }
         internal bool IsSharedMemory { get; private set; }
@@ -121,18 +121,8 @@ namespace Ryujinx.Graphics.Vulkan
             Textures = [];
             Samplers = [];
 
-            // Any device running on MacOS is using MoltenVK, even Intel and AMD vendors.
-            if (IsMoltenVk = OperatingSystem.IsMacOS())
-                MVKInitialization.Initialize();
-
             SupportsMTL31 = OperatingSystem.IsMacOSVersionAtLeast(14);
         }
-
-        public static VulkanRenderer Create(
-            string preferredGpuId,
-            Func<Instance, Vk, SurfaceKHR> getSurface,
-            Func<string[]> getRequiredExtensions
-        ) => new(Vk.GetApi(), getSurface, getRequiredExtensions, preferredGpuId);
 
         private unsafe void LoadFeatures(uint maxQueueCount, uint queueFamilyIndex)
         {
@@ -407,6 +397,10 @@ namespace Ryujinx.Graphics.Vulkan
             }
 
             IsQualcommProprietary = hasDriverProperties && driverProperties.DriverID == DriverId.QualcommProprietary;
+
+            IsMoltenVk = hasDriverProperties && driverProperties.DriverID == DriverId.Moltenvk;
+
+            IsKosmicKrisp = hasDriverProperties && driverProperties.DriverID == DriverId.MesaKosmickrisp;
 
             ulong minResourceAlignment = Math.Max(
                 Math.Max(
@@ -834,14 +828,14 @@ namespace Ryujinx.Graphics.Vulkan
 
         /// <summary>
         /// Gets the available Vulkan devices using the default Vulkan API
-        /// object returned by <see cref="Vk.GetApi()"/>
+        /// object returned by <see cref="VulkanSpbApi.GetApiFromSpb()"/>
         /// </summary>
         /// <returns></returns>
         public static DeviceInfo[] GetPhysicalDevices()
         {
             try
             {
-                return VulkanInitialization.GetSuitablePhysicalDevices(Vk.GetApi());
+                return VulkanInitialization.GetSuitablePhysicalDevices(VulkanSpbApi.GetApiFromSpb());
             }
             catch (Exception ex)
             {

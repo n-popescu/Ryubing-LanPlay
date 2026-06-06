@@ -35,11 +35,14 @@ using Ryujinx.Graphics.GAL.Multithreading;
 using Ryujinx.Graphics.Gpu;
 using Ryujinx.Graphics.OpenGL;
 using Ryujinx.Graphics.Vulkan;
+using Ryujinx.Graphics.Vulkan.KosmicKrisp;
+using Ryujinx.Graphics.Vulkan.MoltenVK;
 using Ryujinx.HLE.FileSystem;
 using Ryujinx.HLE.HOS;
 using Ryujinx.HLE.HOS.Services.Account.Acc;
 using Ryujinx.Input;
 using Ryujinx.Input.HLE;
+using Silk.NET.Vulkan;
 using SkiaSharp;
 using SPB.Graphics.Vulkan;
 using System;
@@ -975,16 +978,43 @@ namespace Ryujinx.Ava.Systems
             VirtualFileSystem.ReloadKeySet();
 
             // Initialize Renderer.
-            GraphicsBackend backend = ConfigurationState.Instance.Graphics.GraphicsBackend;
+            IRenderer renderer;
 
-            IRenderer renderer = backend switch
+            if (ConfigurationState.Instance.Graphics.GraphicsBackend.Value == GraphicsBackend.Vulkan)
             {
-                GraphicsBackend.Vulkan => VulkanRenderer.Create(
-                    ConfigurationState.Instance.Graphics.PreferredGpu,
-                    (RendererHost.EmbeddedWindow as EmbeddedWindowVulkan)!.CreateSurface,
-                    VulkanHelper.GetRequiredInstanceExtensions),
-                _ => new OpenGLRenderer()
-            };
+                Logger.Notice.Print(LogClass.Application,
+                    $"TranslationLayer at init: {ConfigurationState.Instance.Graphics.TranslationLayer.Value}");
+
+                // MoltenVK is required for any device running < macOS 26, even Intel and AMD vendors.
+                // KosmicKrisp, a Vulkan conformant implementation running on top of Metal 4, requires macOS 26.
+                if (OperatingSystem.IsMacOS())
+                {
+                    TranslationLayer translationLayer = ConfigurationState.Instance.Graphics.TranslationLayer.Value;
+                    if (translationLayer == TranslationLayer.MoltenVK)
+                    {
+                        MVKInitialization.Initialize();
+                    }
+                    else if (translationLayer == TranslationLayer.KosmicKrisp)
+                    {
+                        KKInitialization.Initialize();
+                    }
+                }
+
+                renderer = new VulkanRenderer(
+                    VulkanSpbApi.GetApiFromSpb(),
+                    ((EmbeddedWindowVulkan)RendererHost.EmbeddedWindow).CreateSurface,
+                    VulkanHelper.GetRequiredInstanceExtensions,
+                    ConfigurationState.Instance.Graphics.PreferredGpu.Value);
+
+                Logger.Notice.Print(LogClass.Application,
+                    $"TranslationLayer just set to: {ConfigurationState.Instance.Graphics.TranslationLayer.Value}");
+
+                Console.WriteLine($"VK_DRIVER_FILES post-init: {Environment.GetEnvironmentVariable("VK_DRIVER_FILES")}");
+            }
+            else
+            {
+                renderer = new OpenGLRenderer();
+            }
 
             // Initialize Configuration.
             Device = new Switch(ConfigurationState.Instance.CreateHleConfiguration()

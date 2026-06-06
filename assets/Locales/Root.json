@@ -4226,6 +4226,56 @@
       }
     },
     {
+      "ID": "SettingsTabGraphicsEnableKosmicKrisp",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Enable KosmicKrisp (macOS 26+)",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
+      "ID": "SettingsTabGraphicsEnableKosmicKrispTooltip",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Enables the KosmicKrisp Vulkan-on-Metal translation layer, which is baked into Mesa 26.0+.\n\nOverrides MoltenVK.",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
       "ID": "SettingsTabGraphicsEnableShaderCache",
       "Translations": {
         "ar_SA": "تفعيل ذاكرة المظللات المؤقتة",
@@ -16298,6 +16348,56 @@
         "uk_UA": "Оберіть графічний API (Graphics Backend), який буде використовуватись емулятором.\n\n\"Vulkan\" є найкращим вибором для всіх сучасних графічних процесорів (GPU) за умови наявності актуальних драйверів. Vulkan також забезпечує швидшу компіляцію шейдерів, що зменшує кількість фризів (т.зв. \"заїкань\" зображення), незалежно від виробника GPU.\n\n\"OpenGL\" може дати кращі результати на старих відеокартах Nvidia, старих відеокартах AMD на Linux або на відеокартах з меншою кількістю VRAM, але \"заїкання\" через компіляцію шейдерів будуть частіші.\n\nЯкщо не впевнені, встановіть на \"Vulkan\". Встановіть на \"OpenGL\", якщо ваша відеокарта не підтримує Vulkan навіть на останніх драйверах.",
         "zh_CN": "选择模拟器中使用的图像渲染引擎。\n\n安装了最新显卡驱动程序的所有现代显卡基本都支持 Vulkan，Vulkan 能够提供更快的着色器编译（较少的卡顿）。\n\n在旧版 Nvidia 显卡上、Linux 上的旧版 AMD 显卡，或者显存较低的显卡上，OpenGL 可能会取得更好的效果，但着色器编译更慢（更多的卡顿）。\n\n如果不确定，请设置为“Vulkan”。如果您的 GPU 已安装了最新显卡驱动程序也不支持 Vulkan，那请设置为“OpenGL”。",
         "zh_TW": "選擇模擬器將使用的圖形後端。\n\n只要驅動程式是最新的，Vulkan 對所有現代顯示卡來說都更好用。Vulkan 還能在所有 GPU 廠商上實現更快的著色器編譯 (減少卡頓)。\n\nOpenGL 在舊式 Nvidia GPU、Linux 上的舊式 AMD GPU 或 VRAM 較低的 GPU 上可能會取得更好的效果，不過著色器編譯的卡頓會更嚴重。\n\n如果不確定，請設定為 Vulkan。如果您的 GPU 使用最新的圖形驅動程式也不支援 Vulkan，請設定為 OpenGL。"
+      }
+    },
+    {
+      "ID": "SettingsTabTranslationLayer",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Translation Layer:",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
+      "ID": "SettingsTabTranslationLayerTooltip",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Select the translation layer that will be used with Vulkan on macOS.",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
       }
     },
     {

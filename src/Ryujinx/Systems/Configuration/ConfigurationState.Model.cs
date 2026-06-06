@@ -635,6 +635,11 @@ namespace Ryujinx.Ava.Systems.Configuration
             public ReactiveObject<GraphicsBackend> GraphicsBackend { get; private set; }
 
             /// <summary>
+            /// Vulkan translation layer
+            /// </summary>
+            public ReactiveObject<TranslationLayer> TranslationLayer { get; private set; }
+
+            /// <summary>
             /// Applies anti-aliasing to the renderer.
             /// </summary>
             public ReactiveObject<AntiAliasing> AntiAliasing { get; private set; }
@@ -679,6 +684,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 EnableTextureRecompression.LogChangesToValue(nameof(EnableTextureRecompression));
                 GraphicsBackend = new ReactiveObject<GraphicsBackend>();
                 GraphicsBackend.LogChangesToValue(nameof(GraphicsBackend));
+                TranslationLayer = new ReactiveObject<TranslationLayer>();
+                TranslationLayer.LogChangesToValue(nameof(TranslationLayer));
                 PreferredGpu = new ReactiveObject<string>();
                 PreferredGpu.LogChangesToValue(nameof(PreferredGpu));
                 EnableMacroHLE = new ReactiveObject<bool>();
