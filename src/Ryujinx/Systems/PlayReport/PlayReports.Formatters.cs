@@ -1089,15 +1089,18 @@ namespace Ryujinx.Ava.Systems.PlayReport
             return $"Living on {messagePackObjectDictionary["LandName"].AsString()} Island";
         }
 
-        private static FormattedValue MiitopiaRPC(SingleValue value)
+        private static FormattedValue MiitopiaRPC(SparseMultiValue values)
         {
-            //MessagePackObject messagePackObject = value.Matched.IntValue;
-            return $"Poor fucker only has {value.Matched.IntValue} gold!";
-        }
+            if (values.Matched.TryGetValue("gold", out Value gold))
+            {
+                return $"Traveling with {gold} gold";
+            }
 
-        //private static SparseMultiValue MiitopiaRPC2(SingleValue value)
-        //{
-            //return void;
-        //}
+            if (values.Matched.TryGetValue("secret", out Value secret))
+            {
+                return $"In the MII selector";
+            }
+            return $"At the main menu";
+        }
     }
 }

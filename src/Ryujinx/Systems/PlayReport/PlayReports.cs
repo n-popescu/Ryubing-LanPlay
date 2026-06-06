@@ -135,9 +135,8 @@ namespace Ryujinx.Ava.Systems.PlayReport
             .AddSpec(
                 "01003da010e8a000", // Miitopia 01003da010e8a000
                 spec => spec
-                .WithDescription("I hate this shit so much")
-                .AddValueFormatter("gold", MiitopiaRPC)
-                //.AddSparseMultiValueFormatter(["gold", "stage"], MiitopiaRPC2)
+                .WithDescription("A new fun description in every commit!")
+                .AddSparseMultiValueFormatter(["gold", "secret"], MiitopiaRPC)
             )
         );
 
