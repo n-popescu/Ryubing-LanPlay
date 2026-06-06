@@ -1657,7 +1657,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         }
 
         public KeyGesture LoadApplicationFromFileGesture => KeyGesture.Parse(OperatingSystem.IsMacOS() ? "Cmd+O" : "Ctrl+O");
-        public KeyGesture LoadUnpackedGameFromFolder => KeyGesture.Parse(OperatingSystem.IsMacOS() ? "Cmd+Shift+O" : "Ctrl+Shift+O");
+        public KeyGesture LoadUnpackedGameFromFolderFileGesture => KeyGesture.Parse(OperatingSystem.IsMacOS() ? "Cmd+Shift+O" : "Ctrl+Shift+O");
 
         public async Task LoadApplicationFromFile()
         {

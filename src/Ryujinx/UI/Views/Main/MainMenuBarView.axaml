@@ -42,7 +42,7 @@
                     Header="{ext:Locale MenuBar_File_LoadUnpackedGameFromFolderButton}"
                     Icon="{ext:Icon fa-solid fa-folder-open}"
                     IsEnabled="{Binding EnableNonGameRunningControls}"
-                    InputGesture="{Binding LoadUnpackedGameFromFolder}" />
+                    InputGesture="{Binding LoadUnpackedGameFromFolderFileGesture}" />
                 <MenuItem
                     Command="{Binding LoadTitleUpdatesAndDLCFromFolder}"
                     Header="{ext:Locale MenuBar_File_LoadTitleUpdatesAndDLCFromFolderButton}"
