@@ -107,10 +107,44 @@ namespace Ryujinx.Input.HLE
             ReloadConfiguration(requestedInputConfig, playerInputAssignments, enableKeyboard, enableMouse);
         }
 
-        private void HandleOnGamepadConnected(string _)
+        private void HandleOnGamepadConnected(string id)
         {
+            lock (_lock)
+            {
+                for (int i = 0; i < _controllers.Length; i++)
+                {
+                    if (_controllers[i] != null && PlayerHasAssignedControllerId((PlayerIndex)i, id))
+                    {
+                        _controllers[i]?.Dispose();
+                        _controllers[i] = null;
+                    }
+                }
+            }
+
             // Force input reload
             ReloadConfiguration(_requestedInputConfig, _playerInputAssignments, _enableKeyboard, _enableMouse);
+        }
+
+        private bool PlayerHasAssignedControllerId(PlayerIndex playerIndex, string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return false;
+            }
+
+            InputConfig inputConfig = _requestedInputConfig.FirstOrDefault(config => (int)config.PlayerIndex == (int)playerIndex);
+
+            if (inputConfig == null)
+            {
+                return false;
+            }
+
+            PlayerInputAssignment playerInputAssignment = GetPlayerInputAssignment(inputConfig);
+
+            return playerInputAssignment.EnableDynamicInputSwap &&
+                playerInputAssignment.Devices.Any(device =>
+                    device.Type == AssignedInputDeviceType.Controller &&
+                    string.Equals(device.Id, id, StringComparison.Ordinal));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
