@@ -23,6 +23,7 @@ namespace Ryujinx.Cpu.AppleHv
         private readonly ulong[] _x = new ulong[32];
         private readonly V128[] _v = new V128[32];
 
+        //Shadow cache stuff comment (will remove)
         private ulong _pc;
         private ulong _elrEl1;
         private ulong _esrEl1;
