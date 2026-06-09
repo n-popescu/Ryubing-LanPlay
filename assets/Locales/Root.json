@@ -6251,6 +6251,56 @@
       }
     },
     {
+      "ID": "DialogDynamicInputSwapFirstUseTitle",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Dynamic Input Swap enabled",
+        "es_ES": "Cambio Dinámico de Entrada activado",
+        "fr_FR": "Bascule Dynamique des Périphériques activée",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
+      "ID": "DialogDynamicInputSwapFirstUseMessage",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "All connected input devices have been assigned to Player 1. Use the Assigned Devices menu to choose which devices are available to each player.",
+        "es_ES": "Todos los dispositivos de entrada conectados se han asignado al Jugador 1. Usa el menú Dispositivos asignados para elegir qué dispositivos estarán disponibles para cada jugador.",
+        "fr_FR": "Tous les périphériques d'entrée connectés ont été assignés au Joueur 1. Utilisez le menu Périphériques assignés pour choisir quels périphériques seront disponibles pour chaque joueur.",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
       "ID": "ControllerSettingsAssignedInputDevices",
       "Translations": {
         "ar_SA": "",

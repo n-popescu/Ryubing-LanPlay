@@ -68,6 +68,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         private bool _isLoaded;
         private bool _enableDynamicGamepadSwap;
         private bool _suppressProfileLoad;
+        private bool _dynamicInputSwapFirstUseWarningShown;
         private bool? _allowDuplicateDeviceAssignment;
         private List<PlayerInputAssignment> _workingPlayerInputAssignments;
 
@@ -154,18 +155,58 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                     return;
                 }
 
+                bool isFirstDynamicInputSwapEnable = value && ShouldInitializePlayerOneDynamicInputSwap();
+                bool shouldShowFirstUseWarning =
+                    isFirstDynamicInputSwapEnable &&
+                    !_dynamicInputSwapFirstUseWarningShown &&
+                    _isChangeTrackingActive &&
+                    _isLoaded;
+
                 _enableDynamicGamepadSwap = value;
 
                 if (_enableDynamicGamepadSwap)
                 {
-                    AssignCurrentDeviceIfNoInputDeviceIsAssigned();
+                    if (isFirstDynamicInputSwapEnable)
+                    {
+                        AssignAllConnectedInputDevices();
+                    }
+                    else
+                    {
+                        AssignCurrentDeviceIfNoInputDeviceIsAssigned();
+                    }
                 }
 
                 RefreshProfileBindingState();
                 RefreshModifiedState();
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanOpenAssignedDevices));
+
+                if (shouldShowFirstUseWarning)
+                {
+                    _dynamicInputSwapFirstUseWarningShown = true;
+                    ShowDynamicInputSwapFirstUseWarning();
+                }
             }
+        }
+
+        private bool ShouldInitializePlayerOneDynamicInputSwap()
+        {
+            if (_playerId != PlayerIndex.Player1)
+            {
+                return false;
+            }
+
+            PlayerInputAssignment persistedAssignment = GetPersistedPlayerInputAssignments()
+                .FirstOrDefault(assignment => assignment.PlayerIndex == _playerId);
+
+            return persistedAssignment == null || !persistedAssignment.EnableDynamicInputSwap;
+        }
+
+        private async void ShowDynamicInputSwapFirstUseWarning()
+        {
+            await ContentDialogHelper.CreateWarningDialog(
+                LocaleManager.Instance[LocaleKeys.DialogDynamicInputSwapFirstUseTitle],
+                LocaleManager.Instance[LocaleKeys.DialogDynamicInputSwapFirstUseMessage]);
         }
 
         public bool AllowDuplicateDeviceAssignment
@@ -968,6 +1009,16 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             {
                 firstAvailableItem.IsAssigned = true;
             }
+        }
+
+        private void AssignAllConnectedInputDevices()
+        {
+            foreach (PlayerInputDeviceAssignmentItem item in PlayerInputDevices.Where(device => !device.IsDisabledByOtherPlayer))
+            {
+                item.IsAssigned = true;
+            }
+
+            RefreshPlayerInputDeviceAssignmentState();
         }
 
         private AssignedInputDevice GetCurrentPrimaryAssignedInputDevice()
