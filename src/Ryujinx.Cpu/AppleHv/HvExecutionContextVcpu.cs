@@ -220,11 +220,6 @@ namespace Ryujinx.Cpu.AppleHv
 
                 if ((uint)index > 30) return 0;
 
-                if (index == 0)
-                {
-                    return _x[0];
-                }
-
                 HvResult resX = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.X0 + (uint)index, out value);
                 if (resX == HvResult.BadArgument)
                 {
