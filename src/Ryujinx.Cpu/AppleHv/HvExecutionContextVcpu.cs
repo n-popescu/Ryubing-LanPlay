@@ -23,7 +23,6 @@ namespace Ryujinx.Cpu.AppleHv
         private readonly ulong[] _x = new ulong[32];
         private readonly V128[] _v = new V128[32];
 
-        //Shadow cache stuff comment (will remove)
         private ulong _pc;
         private ulong _elrEl1;
         private ulong _esrEl1;
@@ -35,18 +34,17 @@ namespace Ryujinx.Cpu.AppleHv
 
         private long _fallbackCount;
         private long _lastWarningTicks;
-        private const long WarningCooldownTicks = 1_000_000_000;
+        private const long WarningCooldownTicks = 500_000_000; // 0.5 seconds
 
         private readonly ulong _vcpu;
         private int _interruptRequested;
-
         private readonly object _registerLock = new object();
 
         static HvExecutionContextVcpu()
         {
             _setSimdFpRegFuncMem = new MemoryBlock(MemoryBlock.GetPageSize());
-            _setSimdFpRegFuncMem.Write(0, 0x3DC00040u); // LDR Q0, [X2]
-            _setSimdFpRegFuncMem.Write(4, 0xD61F0060u); // BR X3
+            _setSimdFpRegFuncMem.Write(0, 0x3DC00040u);
+            _setSimdFpRegFuncMem.Write(4, 0xD61F0060u);
             _setSimdFpRegFuncMem.Reprotect(0, _setSimdFpRegFuncMem.Size, MemoryPermission.ReadAndExecute);
 
             _setSimdFpReg = Marshal.GetDelegateForFunctionPointer<SetSimdFpReg>(_setSimdFpRegFuncMem.Pointer);
@@ -82,23 +80,44 @@ namespace Ryujinx.Cpu.AppleHv
                 _fallbackCount = 0;
                 _lastWarningTicks = 0;
                 _interruptRequested = 0;
+
+                // Proactive initialization to reduce BadArgument on early registers (especially X0)
+                for (uint i = 0; i < 8; i++)
+                {
+                    HvApi.hv_vcpu_set_reg(_vcpu, HvReg.X0 + i, 0);
+                }
+                HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.SP_EL0, 0);
+                HvApi.hv_vcpu_set_reg(_vcpu, HvReg.CPSR, _pstateRaw);
             }
         }
 
-        private void LogHvWarning(string operation, string regName, string extraInfo = "")
+        private void LogHvWarning(string operation, string regName, string extra = "")
         {
             if (AggressiveMode) return;
 
             long now = DateTime.UtcNow.Ticks;
-            if (now - _lastWarningTicks > WarningCooldownTicks)
-            {
-                string msg = $"[AppleHv] BadArgument on {operation} {regName}";
-                if (!string.IsNullOrEmpty(extraInfo))
-                    msg += $" | {extraInfo}";
-                msg += $" | Total fallbacks: {Interlocked.Read(ref _fallbackCount)}";
+            if (now - _lastWarningTicks <= WarningCooldownTicks) return;
 
-                Logger.Warning?.Print(LogClass.Cpu, msg);
-                _lastWarningTicks = now;
+            ulong currentPc = GetPcUnsafe();
+
+            string msg = $"[AppleHv] BadArgument on {operation} {regName} | PC=0x{currentPc:X16}";
+            if (!string.IsNullOrEmpty(extra)) msg += $" | {extra}";
+            msg += $" | Total fallbacks: {Interlocked.Read(ref _fallbackCount)}";
+
+            Logger.Warning?.Print(LogClass.Cpu, msg);
+            _lastWarningTicks = now;
+        }
+
+        private ulong GetPcUnsafe()
+        {
+            try
+            {
+                HvApi.hv_vcpu_get_reg(_vcpu, HvReg.PC, out ulong pc);
+                return pc;
+            }
+            catch
+            {
+                return _pc;
             }
         }
 
@@ -160,10 +179,7 @@ namespace Ryujinx.Cpu.AppleHv
                         Interlocked.Increment(ref _fallbackCount);
                         LogHvWarning("Set", "CPSR (Pstate)", $"value=0x{value:X}");
                     }
-                    else
-                    {
-                        res.ThrowOnError();
-                    }
+                    else res.ThrowOnError();
                     _pstateRaw = value;
                 }
             }
@@ -202,6 +218,11 @@ namespace Ryujinx.Cpu.AppleHv
                 }
 
                 if ((uint)index > 30) return 0;
+
+                if (index == 0)
+                {
+                    return _x[0];
+                }
 
                 HvResult resX = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.X0 + (uint)index, out value);
                 if (resX == HvResult.BadArgument)
