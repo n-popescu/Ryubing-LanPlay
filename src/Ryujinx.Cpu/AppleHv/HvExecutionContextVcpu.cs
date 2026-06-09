@@ -39,6 +39,9 @@ namespace Ryujinx.Cpu.AppleHv
         private readonly ulong _vcpu;
         private int _interruptRequested;
 
+        // Lock used ONLY during context swapping / pooling / Reset
+        private readonly object _contextLock = new object();
+
         static HvExecutionContextVcpu()
         {
             _setSimdFpRegFuncMem = new MemoryBlock(MemoryBlock.GetPageSize());
@@ -62,24 +65,24 @@ namespace Ryujinx.Cpu.AppleHv
 
         public void Reset()
         {
-            InitializeCacheDefaults();
-            _fallbackCount = 0;
-            _lastWarningTicks = 0;
-            _interruptRequested = 0;
-        }
+            lock (_contextLock)
+            {
+                _pstateRaw = 0x80000000UL;
+                _pc = 0;
+                _elrEl1 = 0;
+                _esrEl1 = 0;
+                _tpidrEl0 = 0;
+                _tpidrroEl0 = 0;
+                _fpcr = 0;
+                _fpsr = 0;
 
-        private void InitializeCacheDefaults()
-        {
-            _pstateRaw = 0x80000000UL;
-            _pc = 0;
-            _elrEl1 = 0;
-            _esrEl1 = 0;
-            _tpidrEl0 = 0;
-            _tpidrroEl0 = 0;
-            _fpcr = 0;
-            _fpsr = 0;
-            Array.Clear(_x, 0, _x.Length);
-            Array.Clear(_v, 0, _v.Length);
+                Array.Clear(_x, 0, _x.Length);
+                Array.Clear(_v, 0, _v.Length);
+
+                _fallbackCount = 0;
+                _lastWarningTicks = 0;
+                _interruptRequested = 0;
+            }
         }
 
         private void LogHvWarning(string message)
@@ -107,12 +110,13 @@ namespace Ryujinx.Cpu.AppleHv
                 HvResult res = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.CPSR, out ulong val);
                 if (res == HvResult.BadArgument)
                 {
-                    _fallbackCount++;
+                    Interlocked.Increment(ref _fallbackCount);
                     LogHvWarning("PAC failure on CPSR");
                     return (uint)_pstateRaw;
                 }
                 res.ThrowOnError();
                 _pstateRaw = val;
+                Thread.MemoryBarrier();
                 return (uint)val;
             }
             set
@@ -135,12 +139,14 @@ namespace Ryujinx.Cpu.AppleHv
                 HvResult res = HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.SP_EL0, out value);
                 if (res == HvResult.BadArgument)
                 {
-                    _fallbackCount++;
+                    Interlocked.Increment(ref _fallbackCount);
                     LogHvWarning("PAC failure on SP_EL0");
                     return _x[31];
                 }
                 res.ThrowOnError();
-                return _x[31] = value;
+                _x[31] = value;
+                Thread.MemoryBarrier();
+                return value;
             }
 
             if ((uint)index > 30) return 0;
@@ -148,13 +154,15 @@ namespace Ryujinx.Cpu.AppleHv
             HvResult resX = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.X0 + (uint)index, out value);
             if (resX == HvResult.BadArgument)
             {
-                _fallbackCount++;
-                if (_fallbackCount % 128 == 0)
+                Interlocked.Increment(ref _fallbackCount);
+                if (Interlocked.Read(ref _fallbackCount) % 128 == 0)
                     LogHvWarning($"PAC failure on X{index}");
                 return _x[index];
             }
             resX.ThrowOnError();
-            return _x[index] = value;
+            _x[index] = value;
+            Thread.MemoryBarrier();
+            return value;
         }
 
         public void SetX(int index, ulong value)
@@ -180,11 +188,13 @@ namespace Ryujinx.Cpu.AppleHv
             HvResult res = HvApi.hv_vcpu_get_simd_fp_reg(_vcpu, HvSimdFPReg.Q0 + (uint)index, out HvSimdFPUchar16 val);
             if (res == HvResult.BadArgument)
             {
-                _fallbackCount++;
+                Interlocked.Increment(ref _fallbackCount);
                 return _v[index];
             }
             res.ThrowOnError();
-            return _v[index] = new V128(val.Low, val.High);
+            _v[index] = new V128(val.Low, val.High);
+            Thread.MemoryBarrier();
+            return _v[index];
         }
 
         public void SetV(int index, V128 value)
@@ -201,11 +211,13 @@ namespace Ryujinx.Cpu.AppleHv
             HvResult res = HvApi.hv_vcpu_get_reg(_vcpu, reg, out ulong val);
             if (res == HvResult.BadArgument)
             {
-                _fallbackCount++;
+                Interlocked.Increment(ref _fallbackCount);
                 return cached;
             }
             res.ThrowOnError();
-            return cached = val;
+            cached = val;
+            Thread.MemoryBarrier();
+            return val;
         }
 
         private void SetRegCached(HvReg reg, ulong value, ref ulong cached)
@@ -220,11 +232,13 @@ namespace Ryujinx.Cpu.AppleHv
             HvResult res = HvApi.hv_vcpu_get_sys_reg(_vcpu, reg, out ulong val);
             if (res == HvResult.BadArgument)
             {
-                _fallbackCount++;
+                Interlocked.Increment(ref _fallbackCount);
                 return cached;
             }
             res.ThrowOnError();
-            return cached = val;
+            cached = val;
+            Thread.MemoryBarrier();
+            return val;
         }
 
         private void SetSysRegCached(HvSysReg reg, ulong value, ref ulong cached)
@@ -248,6 +262,6 @@ namespace Ryujinx.Cpu.AppleHv
             return Interlocked.Exchange(ref _interruptRequested, 0) != 0;
         }
 
-        public long GetFallbackCount() => _fallbackCount;
+        public long GetFallbackCount() => Interlocked.Read(ref _fallbackCount);
     }
 }
