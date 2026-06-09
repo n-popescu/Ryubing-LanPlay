@@ -39,14 +39,13 @@ namespace Ryujinx.Cpu.AppleHv
         private readonly ulong _vcpu;
         private int _interruptRequested;
 
-        // Lock used ONLY during context swapping / pooling / Reset
-        private readonly object _contextLock = new object();
+        private readonly object _registerLock = new object();
 
         static HvExecutionContextVcpu()
         {
             _setSimdFpRegFuncMem = new MemoryBlock(MemoryBlock.GetPageSize());
-            _setSimdFpRegFuncMem.Write(0, 0x3DC00040u);
-            _setSimdFpRegFuncMem.Write(4, 0xD61F0060u);
+            _setSimdFpRegFuncMem.Write(0, 0x3DC00040u); // LDR Q0, [X2]
+            _setSimdFpRegFuncMem.Write(4, 0xD61F0060u); // BR X3
             _setSimdFpRegFuncMem.Reprotect(0, _setSimdFpRegFuncMem.Size, MemoryPermission.ReadAndExecute);
 
             _setSimdFpReg = Marshal.GetDelegateForFunctionPointer<SetSimdFpReg>(_setSimdFpRegFuncMem.Pointer);
@@ -65,7 +64,7 @@ namespace Ryujinx.Cpu.AppleHv
 
         public void Reset()
         {
-            lock (_contextLock)
+            lock (_registerLock)
             {
                 _pstateRaw = 0x80000000UL;
                 _pc = 0;
@@ -85,168 +84,263 @@ namespace Ryujinx.Cpu.AppleHv
             }
         }
 
-        private void LogHvWarning(string message)
+        private void LogHvWarning(string operation, string regName, string extraInfo = "")
         {
             if (AggressiveMode) return;
 
             long now = DateTime.UtcNow.Ticks;
             if (now - _lastWarningTicks > WarningCooldownTicks)
             {
-                Logger.Warning?.Print(LogClass.Cpu, $"[AppleHv] {message} | Total fallbacks: {_fallbackCount}");
+                string msg = $"[AppleHv] BadArgument on {operation} {regName}";
+                if (!string.IsNullOrEmpty(extraInfo))
+                    msg += $" | {extraInfo}";
+                msg += $" | Total fallbacks: {Interlocked.Read(ref _fallbackCount)}";
+
+                Logger.Warning?.Print(LogClass.Cpu, msg);
                 _lastWarningTicks = now;
             }
         }
 
-        public ulong Pc { get => GetRegCached(HvReg.PC, ref _pc); set => SetRegCached(HvReg.PC, value, ref _pc); }
-        public ulong ElrEl1 { get => GetSysRegCached(HvSysReg.ELR_EL1, ref _elrEl1); set => SetSysRegCached(HvSysReg.ELR_EL1, value, ref _elrEl1); }
-        public ulong EsrEl1 { get => GetSysRegCached(HvSysReg.ESR_EL1, ref _esrEl1); set => SetSysRegCached(HvSysReg.ESR_EL1, value, ref _esrEl1); }
-        public long TpidrEl0 { get => (long)GetSysRegCached(HvSysReg.TPIDR_EL0, ref _tpidrEl0); set => SetSysRegCached(HvSysReg.TPIDR_EL0, (ulong)value, ref _tpidrEl0); }
-        public long TpidrroEl0 { get => (long)GetSysRegCached(HvSysReg.TPIDRRO_EL0, ref _tpidrroEl0); set => SetSysRegCached(HvSysReg.TPIDRRO_EL0, (ulong)value, ref _tpidrroEl0); }
+        public ulong Pc
+        {
+            get { lock (_registerLock) return GetRegCached(HvReg.PC, ref _pc, "PC"); }
+            set { lock (_registerLock) SetRegCached(HvReg.PC, value, ref _pc, "PC"); }
+        }
+
+        public ulong ElrEl1
+        {
+            get { lock (_registerLock) return GetSysRegCached(HvSysReg.ELR_EL1, ref _elrEl1, "ELR_EL1"); }
+            set { lock (_registerLock) SetSysRegCached(HvSysReg.ELR_EL1, value, ref _elrEl1, "ELR_EL1"); }
+        }
+
+        public ulong EsrEl1
+        {
+            get { lock (_registerLock) return GetSysRegCached(HvSysReg.ESR_EL1, ref _esrEl1, "ESR_EL1"); }
+            set { lock (_registerLock) SetSysRegCached(HvSysReg.ESR_EL1, value, ref _esrEl1, "ESR_EL1"); }
+        }
+
+        public long TpidrEl0
+        {
+            get { lock (_registerLock) return (long)GetSysRegCached(HvSysReg.TPIDR_EL0, ref _tpidrEl0, "TPIDR_EL0"); }
+            set { lock (_registerLock) SetSysRegCached(HvSysReg.TPIDR_EL0, (ulong)value, ref _tpidrEl0, "TPIDR_EL0"); }
+        }
+
+        public long TpidrroEl0
+        {
+            get { lock (_registerLock) return (long)GetSysRegCached(HvSysReg.TPIDRRO_EL0, ref _tpidrroEl0, "TPIDRRO_EL0"); }
+            set { lock (_registerLock) SetSysRegCached(HvSysReg.TPIDRRO_EL0, (ulong)value, ref _tpidrroEl0, "TPIDRRO_EL0"); }
+        }
 
         public uint Pstate
         {
             get
             {
-                HvResult res = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.CPSR, out ulong val);
-                if (res == HvResult.BadArgument)
+                lock (_registerLock)
                 {
-                    Interlocked.Increment(ref _fallbackCount);
-                    LogHvWarning("PAC failure on CPSR");
-                    return (uint)_pstateRaw;
+                    HvResult res = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.CPSR, out ulong val);
+                    if (res == HvResult.BadArgument)
+                    {
+                        Interlocked.Increment(ref _fallbackCount);
+                        LogHvWarning("Get", "CPSR (Pstate)");
+                        return (uint)_pstateRaw;
+                    }
+                    res.ThrowOnError();
+                    _pstateRaw = val;
+                    return (uint)val;
                 }
-                res.ThrowOnError();
-                _pstateRaw = val;
-                Thread.MemoryBarrier();
-                return (uint)val;
             }
             set
             {
-                HvResult res = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.CPSR, value);
-                if (res != HvResult.BadArgument) res.ThrowOnError();
-                _pstateRaw = value;
+                lock (_registerLock)
+                {
+                    HvResult res = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.CPSR, value);
+                    if (res == HvResult.BadArgument)
+                    {
+                        Interlocked.Increment(ref _fallbackCount);
+                        LogHvWarning("Set", "CPSR (Pstate)", $"value=0x{value:X}");
+                    }
+                    else
+                    {
+                        res.ThrowOnError();
+                    }
+                    _pstateRaw = value;
+                }
             }
         }
 
-        public uint Fpcr { get => (uint)GetRegCached(HvReg.FPCR, ref _fpcr); set => SetRegCached(HvReg.FPCR, value, ref _fpcr); }
-        public uint Fpsr { get => (uint)GetRegCached(HvReg.FPSR, ref _fpsr); set => SetRegCached(HvReg.FPSR, value, ref _fpsr); }
+        public uint Fpcr
+        {
+            get { lock (_registerLock) return (uint)GetRegCached(HvReg.FPCR, ref _fpcr, "FPCR"); }
+            set { lock (_registerLock) SetRegCached(HvReg.FPCR, value, ref _fpcr, "FPCR"); }
+        }
+
+        public uint Fpsr
+        {
+            get { lock (_registerLock) return (uint)GetRegCached(HvReg.FPSR, ref _fpsr, "FPSR"); }
+            set { lock (_registerLock) SetRegCached(HvReg.FPSR, value, ref _fpsr, "FPSR"); }
+        }
 
         public ulong GetX(int index)
         {
-            ulong value;
-
-            if (index == 31)
+            lock (_registerLock)
             {
-                HvResult res = HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.SP_EL0, out value);
-                if (res == HvResult.BadArgument)
+                ulong value;
+                string regName = index == 31 ? "SP_EL0" : $"X{index}";
+
+                if (index == 31)
+                {
+                    HvResult res = HvApi.hv_vcpu_get_sys_reg(_vcpu, HvSysReg.SP_EL0, out value);
+                    if (res == HvResult.BadArgument)
+                    {
+                        Interlocked.Increment(ref _fallbackCount);
+                        LogHvWarning("GetX", regName);
+                        return _x[31];
+                    }
+                    res.ThrowOnError();
+                    return _x[31] = value;
+                }
+
+                if ((uint)index > 30) return 0;
+
+                HvResult resX = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.X0 + (uint)index, out value);
+                if (resX == HvResult.BadArgument)
                 {
                     Interlocked.Increment(ref _fallbackCount);
-                    LogHvWarning("PAC failure on SP_EL0");
-                    return _x[31];
+                    LogHvWarning("GetX", regName);
+                    return _x[index];
                 }
-                res.ThrowOnError();
-                _x[31] = value;
-                Thread.MemoryBarrier();
-                return value;
+                resX.ThrowOnError();
+                return _x[index] = value;
             }
-
-            if ((uint)index > 30) return 0;
-
-            HvResult resX = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.X0 + (uint)index, out value);
-            if (resX == HvResult.BadArgument)
-            {
-                Interlocked.Increment(ref _fallbackCount);
-                if (Interlocked.Read(ref _fallbackCount) % 128 == 0)
-                    LogHvWarning($"PAC failure on X{index}");
-                return _x[index];
-            }
-            resX.ThrowOnError();
-            _x[index] = value;
-            Thread.MemoryBarrier();
-            return value;
         }
 
         public void SetX(int index, ulong value)
         {
-            if (index == 31)
+            lock (_registerLock)
             {
-                HvResult res = HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.SP_EL0, value);
-                if (res != HvResult.BadArgument) res.ThrowOnError();
-                _x[31] = value;
-            }
-            else if ((uint)index <= 30)
-            {
-                HvResult res = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.X0 + (uint)index, value);
-                if (res != HvResult.BadArgument) res.ThrowOnError();
-                _x[index] = value;
+                string regName = index == 31 ? "SP_EL0" : $"X{index}";
+
+                if (index == 31)
+                {
+                    HvResult res = HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.SP_EL0, value);
+                    if (res == HvResult.BadArgument)
+                    {
+                        Interlocked.Increment(ref _fallbackCount);
+                        LogHvWarning("SetX", regName, $"value=0x{value:X16}");
+                        _x[31] = value;
+                        return;
+                    }
+                    res.ThrowOnError();
+                    _x[31] = value;
+                }
+                else if ((uint)index <= 30)
+                {
+                    HvResult res = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.X0 + (uint)index, value);
+                    if (res == HvResult.BadArgument)
+                    {
+                        Interlocked.Increment(ref _fallbackCount);
+                        LogHvWarning("SetX", regName, $"value=0x{value:X16}");
+                        _x[index] = value;
+                        return;
+                    }
+                    res.ThrowOnError();
+                    _x[index] = value;
+                }
             }
         }
 
         public V128 GetV(int index)
         {
-            if ((uint)index > 31) return V128.Zero;
-
-            HvResult res = HvApi.hv_vcpu_get_simd_fp_reg(_vcpu, HvSimdFPReg.Q0 + (uint)index, out HvSimdFPUchar16 val);
-            if (res == HvResult.BadArgument)
+            lock (_registerLock)
             {
-                Interlocked.Increment(ref _fallbackCount);
-                return _v[index];
+                if ((uint)index > 31) return default;
+
+                HvResult res = HvApi.hv_vcpu_get_simd_fp_reg(_vcpu, HvSimdFPReg.Q0 + (uint)index, out HvSimdFPUchar16 val);
+                if (res == HvResult.BadArgument)
+                {
+                    Interlocked.Increment(ref _fallbackCount);
+                    LogHvWarning("GetV", $"Q{index}");
+                    return _v[index];
+                }
+                res.ThrowOnError();
+                return _v[index] = new V128(val.Low, val.High);
             }
-            res.ThrowOnError();
-            _v[index] = new V128(val.Low, val.High);
-            Thread.MemoryBarrier();
-            return _v[index];
         }
 
         public void SetV(int index, V128 value)
         {
-            if ((uint)index > 31) return;
+            lock (_registerLock)
+            {
+                if ((uint)index > 31) return;
 
-            HvResult res = _setSimdFpReg(_vcpu, HvSimdFPReg.Q0 + (uint)index, value, _setSimdFpRegNativePtr);
-            if (res != HvResult.BadArgument) res.ThrowOnError();
-            _v[index] = value;
+                HvResult res = _setSimdFpReg(_vcpu, HvSimdFPReg.Q0 + (uint)index, value, _setSimdFpRegNativePtr);
+                if (res == HvResult.BadArgument)
+                {
+                    Interlocked.Increment(ref _fallbackCount);
+                    LogHvWarning("SetV", $"Q{index}", $"value={value}");
+                    _v[index] = value;
+                    return;
+                }
+                res.ThrowOnError();
+                _v[index] = value;
+            }
         }
 
-        private ulong GetRegCached(HvReg reg, ref ulong cached)
+        private ulong GetRegCached(HvReg reg, ref ulong cached, string name)
         {
             HvResult res = HvApi.hv_vcpu_get_reg(_vcpu, reg, out ulong val);
             if (res == HvResult.BadArgument)
             {
                 Interlocked.Increment(ref _fallbackCount);
+                LogHvWarning("GetReg", name);
                 return cached;
             }
             res.ThrowOnError();
-            cached = val;
-            Thread.MemoryBarrier();
-            return val;
+            return cached = val;
         }
 
-        private void SetRegCached(HvReg reg, ulong value, ref ulong cached)
+        private void SetRegCached(HvReg reg, ulong value, ref ulong cached, string name)
         {
             HvResult res = HvApi.hv_vcpu_set_reg(_vcpu, reg, value);
-            if (res != HvResult.BadArgument) res.ThrowOnError();
+            if (res == HvResult.BadArgument)
+            {
+                Interlocked.Increment(ref _fallbackCount);
+                LogHvWarning("SetReg", name, $"value=0x{value:X16}");
+                cached = value;
+                return;
+            }
+            res.ThrowOnError();
             cached = value;
         }
 
-        private ulong GetSysRegCached(HvSysReg reg, ref ulong cached)
+        private ulong GetSysRegCached(HvSysReg reg, ref ulong cached, string name)
         {
             HvResult res = HvApi.hv_vcpu_get_sys_reg(_vcpu, reg, out ulong val);
             if (res == HvResult.BadArgument)
             {
                 Interlocked.Increment(ref _fallbackCount);
+                LogHvWarning("GetSysReg", name);
                 return cached;
             }
             res.ThrowOnError();
-            cached = val;
-            Thread.MemoryBarrier();
-            return val;
+            return cached = val;
         }
 
-        private void SetSysRegCached(HvSysReg reg, ulong value, ref ulong cached)
+        private void SetSysRegCached(HvSysReg reg, ulong value, ref ulong cached, string name)
         {
             HvResult res = HvApi.hv_vcpu_set_sys_reg(_vcpu, reg, value);
-            if (res != HvResult.BadArgument) res.ThrowOnError();
+            if (res == HvResult.BadArgument)
+            {
+                Interlocked.Increment(ref _fallbackCount);
+                LogHvWarning("SetSysReg", name, $"value=0x{value:X16}");
+                cached = value;
+                return;
+            }
+            res.ThrowOnError();
             cached = value;
         }
+
+        public long GetFallbackCount() => Interlocked.Read(ref _fallbackCount);
 
         public void RequestInterrupt()
         {
@@ -261,7 +355,5 @@ namespace Ryujinx.Cpu.AppleHv
         {
             return Interlocked.Exchange(ref _interruptRequested, 0) != 0;
         }
-
-        public long GetFallbackCount() => Interlocked.Read(ref _fallbackCount);
     }
 }
