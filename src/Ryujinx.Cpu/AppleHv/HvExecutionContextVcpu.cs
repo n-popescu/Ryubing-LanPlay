@@ -82,12 +82,7 @@ namespace Ryujinx.Cpu.AppleHv
                 _lastWarningTicks = 0;
                 _interruptRequested = 0;
 
-                // Proactive initialization to reduce BadArgument on early registers (especially X0)
-                for (uint i = 0; i < 8; i++)
-                {
-                    HvApi.hv_vcpu_set_reg(_vcpu, HvReg.X0 + i, 0);
-                }
-                HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.SP_EL0, 0);
+                Thread.Sleep(1);
                 HvApi.hv_vcpu_set_reg(_vcpu, HvReg.CPSR, _pstateRaw);
             }
         }
