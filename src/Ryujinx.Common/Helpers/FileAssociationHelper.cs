@@ -11,7 +11,7 @@ namespace Ryujinx.Common.Helper
 {
     public static partial class FileAssociationHelper
     {
-        private static readonly string[] _fileExtensions = [".nca", ".nro", ".nso", ".nsp", ".xci", ".pfs0"];
+        private static readonly string[] _fileExtensions = [".nca", ".nro", ".nso", ".nsp", ".xci"];
 
         [SupportedOSPlatform("linux")]
         private static readonly string _mimeDbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local", "share", "mime");
@@ -22,7 +22,7 @@ namespace Ryujinx.Common.Helper
         [LibraryImport("shell32.dll", SetLastError = true)]
         public static partial void SHChangeNotify(uint wEventId, uint uFlags, nint dwItem1, nint dwItem2);
 
-        public static bool IsTypeAssociationSupported => (OperatingSystem.IsLinux() || OperatingSystem.IsWindows());
+        public static bool IsTypeAssociationSupported => (OperatingSystem.IsLinux() || OperatingSystem.IsWindows() || OperatingSystem.IsMacOS());
 
         public static bool AreMimeTypesRegistered
         {
@@ -38,7 +38,10 @@ namespace Ryujinx.Common.Helper
                     return AreMimeTypesRegisteredWindows();
                 }
 
-                // TODO: Add macOS support.
+                if (OperatingSystem.IsMacOS())
+                {
+                    return AreMimeTypesRegisteredMacOS();
+                }
 
                 return false;
             }
@@ -161,6 +164,106 @@ namespace Ryujinx.Common.Helper
             }
         }
 
+        [SupportedOSPlatform("macos")]
+        private static bool AreMimeTypesRegisteredMacOS()
+        {
+            try
+            {
+                string lsregister = "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister";
+                using var process = new Process();
+                process.StartInfo.FileName = lsregister;
+                process.StartInfo.Arguments = "-dump";
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.UseShellExecute = false;
+                process.Start();
+                string output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+
+                return output.Contains("Ryujinx") && _fileExtensions.Any(ext => output.Contains(ext));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static string GetAppBundlePath()
+        {
+            string baseDir = AppContext.BaseDirectory;
+
+            if (baseDir.Contains(".app/Contents", StringComparison.OrdinalIgnoreCase))
+            {
+                int idx = baseDir.LastIndexOf(".app", StringComparison.OrdinalIgnoreCase);
+                if (idx >= 0)
+                    return baseDir.Substring(0, idx + 4);
+            }
+
+            return baseDir;
+        }
+
+        [SupportedOSPlatform("macos")]
+        private static bool InstallMacOSMimeTypes(bool uninstall = false)
+        {
+            try
+            {
+                string lsregister = "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister";
+                string appPath = GetAppBundlePath();
+
+                if (string.IsNullOrEmpty(appPath))
+                {
+                    Logger.Error?.Print(LogClass.Application, "Could not determine app bundle path.");
+                    return false;
+                }
+
+                using var process = new Process();
+                process.StartInfo.FileName = lsregister;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = true;
+
+                if (uninstall)
+                {
+                    Logger.Info?.Print(LogClass.Application, "Clearing file associations on macOS (force refresh)...");
+                    process.StartInfo.Arguments = $"-f -r \"{appPath}\"";
+                }
+                else
+                {
+                    process.StartInfo.Arguments = $"-f -r \"{appPath}\"";
+                    Logger.Info?.Print(LogClass.Application, "Registering file associations on macOS...");
+                }
+
+                process.Start();
+                process.WaitForExit();
+
+                // Stronger cache clear
+                using var refresh = new Process();
+                refresh.StartInfo.FileName = lsregister;
+                refresh.StartInfo.Arguments = "-kill -seed";
+                refresh.StartInfo.UseShellExecute = false;
+                refresh.StartInfo.CreateNoWindow = true;
+                refresh.Start();
+                refresh.WaitForExit();
+
+                // Extra flush
+                using var flush = new Process();
+                flush.StartInfo.FileName = "/usr/bin/killall";
+                flush.StartInfo.Arguments = "Finder";
+                flush.StartInfo.UseShellExecute = false;
+                flush.StartInfo.CreateNoWindow = true;
+                flush.Start();
+                flush.WaitForExit(2000); // don't hang if it fails
+
+                string action = uninstall ? "cleared" : "registered";
+                Logger.Info?.Print(LogClass.Application, $"File associations {action} on macOS.");
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error?.Print(LogClass.Application, $"macOS file association failed: {ex.Message}");
+                return false;
+            }
+        }
+
         public static bool Install()
         {
             if (OperatingSystem.IsLinux())
@@ -173,7 +276,10 @@ namespace Ryujinx.Common.Helper
                 return InstallWindowsMimeTypes();
             }
 
-            // TODO: Add macOS support.
+            if (OperatingSystem.IsMacOS())
+            {
+                return InstallMacOSMimeTypes();
+            }
 
             return false;
         }
@@ -190,7 +296,10 @@ namespace Ryujinx.Common.Helper
                 return InstallWindowsMimeTypes(true);
             }
 
-            // TODO: Add macOS support.
+             if (OperatingSystem.IsMacOS())
+            {
+                return InstallMacOSMimeTypes(true);
+            }
 
             return false;
         }
