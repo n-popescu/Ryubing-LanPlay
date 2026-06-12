@@ -66,6 +66,7 @@
                     Command="{Binding ToggleFileTypeAssociationsCommand}"
                     Header="{Binding FileTypeAssociationMenuHeader}"
                     IsVisible="{Binding FileTypeAssociationVisible}"
+                    IsEnabled="{Binding EnableNonGameRunningControls}"
                     ToolTip.Tip="{ext:Locale MenuBar_File_FileTypeAssociationsToolTip}">
                     <MenuItem.Icon>
                         <i:Icon Value="{Binding FileTypeAssociationsIcon}" />
