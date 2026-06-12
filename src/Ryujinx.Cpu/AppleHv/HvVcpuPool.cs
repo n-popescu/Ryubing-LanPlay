@@ -1,3 +1,4 @@
+using Ryujinx.Common.Logging;
 using System;
 using System.Runtime.Versioning;
 using System.Threading;
@@ -18,6 +19,8 @@ namespace Ryujinx.Cpu.AppleHv
         // complicated because VCPUs can only be destroyed by the same thread that created them.
 
         private const int MaxActiveVcpus = 4;
+        private const int MaxReadyWaitMs = 250;
+        private const int ReadyPollIntervalMs = 1;
 
         public static readonly HvVcpuPool Instance = new();
 
@@ -30,10 +33,12 @@ namespace Ryujinx.Cpu.AppleHv
             _maxVcpus = (int)maxVcpuCount;
         }
 
-        public HvVcpu Create(HvAddressSpace addressSpace, IHvExecutionContext shadowContext, Action<IHvExecutionContext> swapContext)
+        public HvVcpu Create(
+            HvAddressSpace addressSpace,
+            IHvExecutionContext shadowContext,
+            Action<IHvExecutionContext> swapContext)
         {
             HvVcpu vcpu = CreateNew(addressSpace, shadowContext);
-            vcpu.NativeContext.Load(shadowContext);
             swapContext(vcpu.NativeContext);
             return vcpu;
         }
@@ -48,21 +53,18 @@ namespace Ryujinx.Cpu.AppleHv
         public void Return(HvVcpu vcpu, Action<IHvExecutionContext> swapContext)
         {
             if (vcpu.IsEphemeral)
-            {
                 Destroy(vcpu, swapContext);
-            }
         }
 
-        public HvVcpu Rent(HvAddressSpace addressSpace, IHvExecutionContext shadowContext, HvVcpu vcpu, Action<IHvExecutionContext> swapContext)
+        public HvVcpu Rent(
+            HvAddressSpace addressSpace,
+            IHvExecutionContext shadowContext,
+            HvVcpu vcpu,
+            Action<IHvExecutionContext> swapContext)
         {
             if (vcpu.IsEphemeral)
-            {
                 return Create(addressSpace, shadowContext, swapContext);
-            }
-            else
-            {
-                return vcpu;
-            }
+            return vcpu;
         }
 
         private unsafe HvVcpu CreateNew(HvAddressSpace addressSpace, IHvExecutionContext shadowContext)
@@ -73,19 +75,46 @@ namespace Ryujinx.Cpu.AppleHv
             // Create VCPU.
             HvVcpuExit* exitInfo = null;
             HvApi.hv_vcpu_create(out ulong vcpuHandle, ref exitInfo, nint.Zero).ThrowOnError();
-
-            // Enable FP and SIMD instructions.
-            HvApi.hv_vcpu_set_sys_reg(vcpuHandle, HvSysReg.CPACR_EL1, 0b11 << 20).ThrowOnError();
-
-            addressSpace.InitializeMmu(vcpuHandle);
-
             HvExecutionContextVcpu nativeContext = new(vcpuHandle);
 
+            if (!WaitForReady(nativeContext, vcpuHandle))
+            {
+                HvApi.hv_vcpu_destroy(vcpuHandle);
+                DecrementVcpuCount();
+                throw new InvalidOperationException(
+                    $"[AppleHv] vcpu 0x{vcpuHandle:X16} did not become ready within " +
+                    $"{MaxReadyWaitMs} ms after creation.  CPSR write never returned " +
+                    $"HV_SUCCESS.  Check Hypervisor entitlement and macOS version.");
+            }
+
+            HvApi.hv_vcpu_set_sys_reg(vcpuHandle, HvSysReg.CPACR_EL1, 0b11 << 20).ThrowOnError();
+            addressSpace.InitializeMmu(vcpuHandle);
+
+
             HvVcpu vcpu = new(vcpuHandle, exitInfo, shadowContext, nativeContext, isEphemeral);
-
             vcpu.EnableAndUpdateVTimer();
-
             return vcpu;
+        }
+
+        private static bool WaitForReady(HvExecutionContextVcpu context, ulong vcpuHandle)
+        {
+            if (context.IsVcpuReady)
+                return true;
+
+            int elapsed = 0;
+            while (elapsed < MaxReadyWaitMs)
+            {
+                Thread.Sleep(ReadyPollIntervalMs);
+                elapsed += ReadyPollIntervalMs;
+
+                if (context.IsVcpuReady)
+                    return true;
+            }
+
+            Logger.Error?.Print(LogClass.Cpu,
+                $"[AppleHv] WaitForReady timed out for vcpu 0x{vcpuHandle:X16} " +
+                $"after {elapsed} ms.");
+            return false;
         }
 
         private void DestroyVcpu(HvVcpu vcpu)
@@ -94,14 +123,7 @@ namespace Ryujinx.Cpu.AppleHv
             DecrementVcpuCount();
         }
 
-        private int IncrementVcpuCount()
-        {
-            return Interlocked.Increment(ref _totalVcpus);
-        }
-
-        private void DecrementVcpuCount()
-        {
-            Interlocked.Decrement(ref _totalVcpus);
-        }
+        private int IncrementVcpuCount() => Interlocked.Increment(ref _totalVcpus);
+        private void DecrementVcpuCount() => Interlocked.Decrement(ref _totalVcpus);
     }
 }

@@ -13,15 +13,13 @@ namespace Ryujinx.Cpu.AppleHv
     {
         private static readonly MemoryBlock _setSimdFpRegFuncMem;
         private delegate HvResult SetSimdFpReg(ulong vcpu, HvSimdFPReg reg, in V128 value, nint funcPtr);
-        private static readonly SetSimdFpReg _setSimdFpReg;
+        private static readonly SetSimdFpReg? _setSimdFpReg;
         private static readonly nint _setSimdFpRegNativePtr;
 
-        public static bool AggressiveMode { get; set; } = false;
-        private bool _earlyBootPhase = true;
+        public static bool AggressiveMode { get; set; }
 
         public ulong ThreadUid { get; set; }
 
-        // Seriously, why build break
         private readonly ulong[] _x = new ulong[32];
         private readonly V128[] _v = new V128[32];
 
@@ -34,9 +32,25 @@ namespace Ryujinx.Cpu.AppleHv
         private ulong _fpsr;
         private ulong _pstateRaw;
 
+        private int _owningThreadId;
+        private volatile bool _vcpuReady;
+
+        private volatile PendingRegWrite? _pendingWrite;
+
+        private sealed class PendingRegWrite
+        {
+            public enum Kind { Reg, SysReg }
+            public Kind RegKind;
+            public HvReg Reg;
+            public HvSysReg SysReg;
+            public ulong Value;
+            public ManualResetEventSlim Done = new ManualResetEventSlim(false);
+            public HvResult Result;
+        }
+
         private long _fallbackCount;
         private long _lastWarningTicks;
-        private const long WarningCooldownTicks = 500_000_000; // 0.5 seconds
+        private const long WarningCooldownTicks = 500_000_000; // 0.5 s
 
         private readonly ulong _vcpu;
         private int _interruptRequested;
@@ -56,10 +70,10 @@ namespace Ryujinx.Cpu.AppleHv
                 _setSimdFpRegNativePtr = NativeLibrary.GetExport(hvLibHandle, nameof(HvApi.hv_vcpu_set_simd_fp_reg));
             }
         }
-
         public HvExecutionContextVcpu(ulong vcpu)
         {
             _vcpu = vcpu;
+            _owningThreadId = Thread.CurrentThread.ManagedThreadId;
             Reset();
         }
 
@@ -67,23 +81,104 @@ namespace Ryujinx.Cpu.AppleHv
         {
             lock (_registerLock)
             {
-                _pstateRaw = 0x80000000UL;
-                _pc = 0;
-                _elrEl1 = 0;
-                _esrEl1 = 0;
-                _tpidrEl0 = 0;
-                _tpidrroEl0 = 0;
-                _fpcr = 0;
-                _fpsr = 0;
+                _vcpuReady = false;
+
+                _pstateRaw    = 0x80000000UL;
+                _pc           = 0;
+                _elrEl1       = 0;
+                _esrEl1       = 0;
+                _tpidrEl0     = 0;
+                _tpidrroEl0   = 0;
+                _fpcr         = 0;
+                _fpsr         = 0;
+                _fallbackCount = 0;
+                _lastWarningTicks = 0;
+                _interruptRequested = 0;
+                _pendingWrite = null;
 
                 Array.Clear(_x, 0, _x.Length);
                 Array.Clear(_v, 0, _v.Length);
 
-                _fallbackCount = 0;
-                _lastWarningTicks = 0;
-                _interruptRequested = 0;
-                _earlyBootPhase = true;
+                _owningThreadId = Thread.CurrentThread.ManagedThreadId;
+
+                
+                HvResult res = HvResult.BadArgument;
+                for (int attempt = 0; attempt < 10; attempt++)
+                {
+                    res = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.CPSR, _pstateRaw);
+                    if (res == HvResult.Success)
+                        break;
+                    if (res != HvResult.BadArgument)
+                        break;
+                    Thread.Sleep(Math.Min(1 << attempt, 16));
+                }
+
+                if (res == HvResult.Success)
+                {
+                    _vcpuReady = true;
+                }
+                else
+                {
+                    
+                    Logger.Error?.Print(LogClass.Cpu,
+                        $"[AppleHv] hv_vcpu_set_reg(CPSR) failed during Reset() with {res}. " +
+                        $"Vcpu=0x{_vcpu:X16}. The vcpu will not be usable until this succeeds.");
+                }
             }
+        }
+
+      
+        private bool OnOwningThread()
+            => Thread.CurrentThread.ManagedThreadId == _owningThreadId;
+
+
+        private bool TryDispatchWrite(HvReg reg, ulong value, out HvResult result)
+        {
+            if (OnOwningThread()) { result = HvResult.Success; return false; }
+
+            var pw = new PendingRegWrite
+            {
+                RegKind = PendingRegWrite.Kind.Reg,
+                Reg     = reg,
+                Value   = value,
+            };
+
+            while (Interlocked.CompareExchange(ref _pendingWrite, pw, null) != null)
+                Thread.SpinWait(20);
+
+            pw.Done.Wait();
+            result = pw.Result;
+            return true;
+        }
+
+        private bool TryDispatchSysWrite(HvSysReg reg, ulong value, out HvResult result)
+        {
+            if (OnOwningThread()) { result = HvResult.Success; return false; }
+
+            var pw = new PendingRegWrite
+            {
+                RegKind = PendingRegWrite.Kind.SysReg,
+                SysReg  = reg,
+                Value   = value,
+            };
+            while (Interlocked.CompareExchange(ref _pendingWrite, pw, null) != null)
+                Thread.SpinWait(20);
+
+            pw.Done.Wait();
+            result = pw.Result;
+            return true;
+        }
+
+        public void DrainPendingWrite()
+        {
+            PendingRegWrite? pw = Interlocked.Exchange(ref _pendingWrite, null);
+            if (pw == null) return;
+
+            pw.Result = pw.RegKind == PendingRegWrite.Kind.Reg
+                ? HvApi.hv_vcpu_set_reg    (_vcpu, pw.Reg,    pw.Value)
+                : HvApi.hv_vcpu_set_sys_reg(_vcpu, pw.SysReg, pw.Value);
+
+            pw.Done.Set();
         }
 
         private void LogHvWarning(string operation, string regName, string extra = "")
@@ -93,12 +188,25 @@ namespace Ryujinx.Cpu.AppleHv
             long now = DateTime.UtcNow.Ticks;
             if (now - _lastWarningTicks <= WarningCooldownTicks) return;
 
-            string msg = $"[AppleHv] BadArgument on {operation} {regName} | PC=0x{_pc:X16}";
+            ulong currentPc = GetPcUnsafe();
+            string msg = $"[AppleHv] BadArgument on {operation} {regName} | PC=0x{currentPc:X16}";
             if (!string.IsNullOrEmpty(extra)) msg += $" | {extra}";
-            msg += $" | Total: {Interlocked.Read(ref _fallbackCount)}";
-
+            msg += $" | Total fallbacks: {Interlocked.Read(ref _fallbackCount)}";
             Logger.Warning?.Print(LogClass.Cpu, msg);
             _lastWarningTicks = now;
+        }
+
+        private ulong GetPcUnsafe()
+        {
+            try
+            {
+                HvApi.hv_vcpu_get_reg(_vcpu, HvReg.PC, out ulong pc);
+                return pc;
+            }
+            catch (Exception)
+            {
+                return _pc;
+            }
         }
 
         public ulong Pc
@@ -137,6 +245,8 @@ namespace Ryujinx.Cpu.AppleHv
             {
                 lock (_registerLock)
                 {
+                    if (!_vcpuReady) return (uint)_pstateRaw;
+
                     HvResult res = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.CPSR, out ulong val);
                     if (res == HvResult.BadArgument)
                     {
@@ -153,6 +263,9 @@ namespace Ryujinx.Cpu.AppleHv
             {
                 lock (_registerLock)
                 {
+                    _pstateRaw = value;
+                    if (!_vcpuReady) return;
+
                     HvResult res = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.CPSR, value);
                     if (res == HvResult.BadArgument)
                     {
@@ -160,7 +273,6 @@ namespace Ryujinx.Cpu.AppleHv
                         LogHvWarning("Set", "CPSR (Pstate)", $"value=0x{value:X}");
                     }
                     else res.ThrowOnError();
-                    _pstateRaw = value;
                 }
             }
         }
@@ -181,6 +293,9 @@ namespace Ryujinx.Cpu.AppleHv
         {
             lock (_registerLock)
             {
+                if (!_vcpuReady)
+                    return index < 32 ? _x[index] : 0;
+
                 ulong value;
                 string regName = index == 31 ? "SP_EL0" : $"X{index}";
 
@@ -199,11 +314,6 @@ namespace Ryujinx.Cpu.AppleHv
 
                 if ((uint)index > 30) return 0;
 
-                if (index == 0 && _earlyBootPhase && _pc == 0)
-                {
-                    return _x[0];
-                }
-
                 HvResult resX = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.X0 + (uint)index, out value);
                 if (resX == HvResult.BadArgument)
                 {
@@ -220,33 +330,53 @@ namespace Ryujinx.Cpu.AppleHv
         {
             lock (_registerLock)
             {
+                if ((uint)index < 32) _x[index] = value;
+
+                if (!_vcpuReady) return;
+
                 string regName = index == 31 ? "SP_EL0" : $"X{index}";
 
                 if (index == 31)
                 {
+                    if (TryDispatchSysWrite(HvSysReg.SP_EL0, value, out HvResult dispatched))
+                    {
+                        if (dispatched == HvResult.BadArgument)
+                        {
+                            Interlocked.Increment(ref _fallbackCount);
+                            LogHvWarning("SetX(dispatch)", regName, $"value=0x{value:X16}");
+                        }
+                        else dispatched.ThrowOnError();
+                        return;
+                    }
+
                     HvResult res = HvApi.hv_vcpu_set_sys_reg(_vcpu, HvSysReg.SP_EL0, value);
                     if (res == HvResult.BadArgument)
                     {
                         Interlocked.Increment(ref _fallbackCount);
                         LogHvWarning("SetX", regName, $"value=0x{value:X16}");
-                        _x[31] = value;
-                        return;
                     }
-                    res.ThrowOnError();
-                    _x[31] = value;
+                    else res.ThrowOnError();
                 }
                 else if ((uint)index <= 30)
                 {
+                    if (TryDispatchWrite(HvReg.X0 + (uint)index, value, out HvResult dispatched))
+                    {
+                        if (dispatched == HvResult.BadArgument)
+                        {
+                            Interlocked.Increment(ref _fallbackCount);
+                            LogHvWarning("SetX(dispatch)", regName, $"value=0x{value:X16}");
+                        }
+                        else dispatched.ThrowOnError();
+                        return;
+                    }
+
                     HvResult res = HvApi.hv_vcpu_set_reg(_vcpu, HvReg.X0 + (uint)index, value);
                     if (res == HvResult.BadArgument)
                     {
                         Interlocked.Increment(ref _fallbackCount);
                         LogHvWarning("SetX", regName, $"value=0x{value:X16}");
-                        _x[index] = value;
-                        return;
                     }
-                    res.ThrowOnError();
-                    _x[index] = value;
+                    else res.ThrowOnError();
                 }
             }
         }
@@ -256,6 +386,7 @@ namespace Ryujinx.Cpu.AppleHv
             lock (_registerLock)
             {
                 if ((uint)index > 31) return default;
+                if (!_vcpuReady) return _v[index];
 
                 HvResult res = HvApi.hv_vcpu_get_simd_fp_reg(_vcpu, HvSimdFPReg.Q0 + (uint)index, out HvSimdFPUchar16 val);
                 if (res == HvResult.BadArgument)
@@ -275,21 +406,27 @@ namespace Ryujinx.Cpu.AppleHv
             {
                 if ((uint)index > 31) return;
 
+                _v[index] = value;
+
+                if (!_vcpuReady) return;
+
+                if (_setSimdFpReg == null || _setSimdFpRegNativePtr == nint.Zero)
+                    return;
+
                 HvResult res = _setSimdFpReg(_vcpu, HvSimdFPReg.Q0 + (uint)index, value, _setSimdFpRegNativePtr);
                 if (res == HvResult.BadArgument)
                 {
                     Interlocked.Increment(ref _fallbackCount);
-                    LogHvWarning("SetV", $"Q{index}");
-                    _v[index] = value;
-                    return;
+                    LogHvWarning("SetV", $"Q{index}", $"value={value}");
                 }
-                res.ThrowOnError();
-                _v[index] = value;
+                else res.ThrowOnError();
             }
         }
 
         private ulong GetRegCached(HvReg reg, ref ulong cached, string name)
         {
+            if (!_vcpuReady) return cached;
+
             HvResult res = HvApi.hv_vcpu_get_reg(_vcpu, reg, out ulong val);
             if (res == HvResult.BadArgument)
             {
@@ -303,20 +440,34 @@ namespace Ryujinx.Cpu.AppleHv
 
         private void SetRegCached(HvReg reg, ulong value, ref ulong cached, string name)
         {
+            cached = value;
+            if (!_vcpuReady) return;
+
+            if (TryDispatchWrite(reg, value, out HvResult dispatched))
+            {
+                if (dispatched == HvResult.BadArgument)
+                {
+                    Interlocked.Increment(ref _fallbackCount);
+                    LogHvWarning("SetReg(dispatch)", name, $"value=0x{value:X16}");
+                }
+                else dispatched.ThrowOnError();
+                return;
+            }
+
             HvResult res = HvApi.hv_vcpu_set_reg(_vcpu, reg, value);
             if (res == HvResult.BadArgument)
             {
                 Interlocked.Increment(ref _fallbackCount);
                 LogHvWarning("SetReg", name, $"value=0x{value:X16}");
-                cached = value;
                 return;
             }
             res.ThrowOnError();
-            cached = value;
         }
 
         private ulong GetSysRegCached(HvSysReg reg, ref ulong cached, string name)
         {
+            if (!_vcpuReady) return cached;
+
             HvResult res = HvApi.hv_vcpu_get_sys_reg(_vcpu, reg, out ulong val);
             if (res == HvResult.BadArgument)
             {
@@ -330,19 +481,32 @@ namespace Ryujinx.Cpu.AppleHv
 
         private void SetSysRegCached(HvSysReg reg, ulong value, ref ulong cached, string name)
         {
+            cached = value;
+            if (!_vcpuReady) return;
+
+            if (TryDispatchSysWrite(reg, value, out HvResult dispatched))
+            {
+                if (dispatched == HvResult.BadArgument)
+                {
+                    Interlocked.Increment(ref _fallbackCount);
+                    LogHvWarning("SetSysReg(dispatch)", name, $"value=0x{value:X16}");
+                }
+                else dispatched.ThrowOnError();
+                return;
+            }
+
             HvResult res = HvApi.hv_vcpu_set_sys_reg(_vcpu, reg, value);
             if (res == HvResult.BadArgument)
             {
                 Interlocked.Increment(ref _fallbackCount);
                 LogHvWarning("SetSysReg", name, $"value=0x{value:X16}");
-                cached = value;
                 return;
             }
             res.ThrowOnError();
-            cached = value;
         }
 
         public long GetFallbackCount() => Interlocked.Read(ref _fallbackCount);
+        public bool IsVcpuReady => _vcpuReady;
 
         public void RequestInterrupt()
         {

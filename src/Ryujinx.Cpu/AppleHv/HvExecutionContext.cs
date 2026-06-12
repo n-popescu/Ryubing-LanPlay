@@ -73,7 +73,6 @@ namespace Ryujinx.Cpu.AppleHv
         private readonly ExceptionCallbacks _exceptionCallbacks;
         private int _interruptRequested;
 
-        // GPU Sync control
         private int _syncCounter;
         private int _strongSyncCounter;
 
@@ -87,31 +86,29 @@ namespace Ryujinx.Cpu.AppleHv
         }
 
         public ulong GetX(int index) => _impl.GetX(index);
-        public void SetX(int index, ulong value) => _impl.SetX(index, value);
+        public void SetX(int index, ulong v) => _impl.SetX(index, v);
         public V128 GetV(int index) => _impl.GetV(index);
-        public void SetV(int index, V128 value) => _impl.SetV(index, value);
+        public void SetV(int index, V128 v) => _impl.SetV(index, v);
 
         private void InterruptHandler() => _exceptionCallbacks.InterruptCallback?.Invoke(this);
         private void BreakHandler(ulong address, int imm) => _exceptionCallbacks.BreakCallback?.Invoke(this, address, imm);
         private void StepHandler() => _exceptionCallbacks.StepCallback?.Invoke(this);
         private void SupervisorCallHandler(ulong address, int imm) => _exceptionCallbacks.SupervisorCallback?.Invoke(this, address, imm);
-        private void UndefinedHandler(ulong address, int opCode) => _exceptionCallbacks.UndefinedCallback?.Invoke(this, address, opCode);
 
         public void RequestInterrupt()
         {
-            if (Interlocked.Exchange(ref _interruptRequested, 1) == 0 && _impl is HvExecutionContextVcpu impl)
+            if (Interlocked.Exchange(ref _interruptRequested, 1) == 0 &&
+                _impl is HvExecutionContextVcpu impl)
+            {
                 impl.RequestInterrupt();
+            }
         }
 
         private bool GetAndClearInterruptRequested()
-        {
-            return Interlocked.Exchange(ref _interruptRequested, 0) != 0;
-        }
+            => Interlocked.Exchange(ref _interruptRequested, 0) != 0;
 
         public void RequestDebugStep()
-        {
-            Interlocked.Exchange(ref _shouldStep, 1);
-        }
+            => Interlocked.Exchange(ref _shouldStep, 1);
 
         public ulong DebugPc
         {
@@ -135,30 +132,31 @@ namespace Ryujinx.Cpu.AppleHv
         public unsafe void Execute(HvMemoryManager memoryManager, ulong address)
         {
             HvVcpu vcpu = HvVcpuPool.Instance.Create(memoryManager.AddressSpace, _shadowContext, SwapContext);
-            HvApi.hv_vcpu_set_reg(vcpu.Handle, HvReg.PC, address).ThrowOnError();
+            SetVcpuReg(vcpu.Handle, HvReg.PC, address);
 
             _syncCounter = 0;
             _strongSyncCounter = 0;
 
             while (Running)
             {
+                DrainIfVcpu(vcpu);
+
                 if (Interlocked.CompareExchange(ref _shouldStep, 0, 1) == 1)
                 {
                     uint currentEl = Pstate & ~((uint)ExceptionLevel.PstateMask);
                     if (currentEl == (uint)ExceptionLevel.EL1h)
                     {
-                        HvApi.hv_vcpu_get_sys_reg(vcpu.Handle, HvSysReg.SPSR_EL1, out ulong spsr).ThrowOnError();
+                        GetVcpuSysReg(vcpu.Handle, HvSysReg.SPSR_EL1, out ulong spsr);
                         spsr |= (1U << 21);
-                        HvApi.hv_vcpu_set_sys_reg(vcpu.Handle, HvSysReg.SPSR_EL1, spsr);
+                        SetVcpuSysReg(vcpu.Handle, HvSysReg.SPSR_EL1, spsr);
                     }
                     else
                     {
                         Pstate |= (1U << 21);
                     }
-                    HvApi.hv_vcpu_set_sys_reg(vcpu.Handle, HvSysReg.MDSCR_EL1, 1);
+                    SetVcpuSysReg(vcpu.Handle, HvSysReg.MDSCR_EL1, 1);
                 }
 
-                // Adaptive GPU synchronization to prevent 0 FPS
                 if (++_syncCounter % 12 == 0)
                 {
                     TryGpuSync();
@@ -175,10 +173,11 @@ namespace Ryujinx.Cpu.AppleHv
                     ExceptionClass hvEc = (ExceptionClass)(hvEsr >> 26);
 
                     if (hvEc != ExceptionClass.HvcAarch64)
-                        throw new Exception($"Unhandled exception from guest kernel with ESR 0x{hvEsr:X} ({hvEc}).");
+                        throw new Exception(
+                            $"Unhandled exception from guest kernel with ESR 0x{hvEsr:X} ({hvEc}).");
 
                     address = SynchronousException(memoryManager, ref vcpu);
-                    HvApi.hv_vcpu_set_reg(vcpu.Handle, HvReg.PC, address).ThrowOnError();
+                    SetVcpuReg(vcpu.Handle, HvReg.PC, address);
                 }
                 else if (reason is HvExitReason.Canceled or HvExitReason.VTimerActivated)
                 {
@@ -187,6 +186,7 @@ namespace Ryujinx.Cpu.AppleHv
                         ReturnToPool(vcpu);
                         InterruptHandler();
                         vcpu = RentFromPool(memoryManager.AddressSpace, vcpu);
+                        DrainIfVcpu(vcpu);
                     }
 
                     if (reason == HvExitReason.VTimerActivated)
@@ -204,31 +204,41 @@ namespace Ryujinx.Cpu.AppleHv
             HvVcpuPool.Instance.Destroy(vcpu, SwapContext);
         }
 
+        private static void SetVcpuReg(ulong handle, HvReg reg, ulong value)
+            => HvApi.hv_vcpu_set_reg(handle, reg, value).ThrowOnError();
+
+        private static void GetVcpuSysReg(ulong handle, HvSysReg reg, out ulong value)
+            => HvApi.hv_vcpu_get_sys_reg(handle, reg, out value).ThrowOnError();
+
+        private static void SetVcpuSysReg(ulong handle, HvSysReg reg, ulong value)
+            => HvApi.hv_vcpu_set_sys_reg(handle, reg, value).ThrowOnError();
+
+        private static void DrainIfVcpu(HvVcpu vcpu)
+        {
+            if (vcpu.NativeContext is HvExecutionContextVcpu ctx)
+                ctx.DrainPendingWrite();
+        }
+
         private void TryGpuSync()
         {
             try
             {
                 Thread.Yield();
-
                 if (++_strongSyncCounter % 6 == 0)
-                {
                     Thread.Yield();
-                }
             }
             catch (Exception ex)
             {
                 if (_strongSyncCounter % 100 == 0)
-                {
                     Logger.Warning?.Print(LogClass.Gpu, $"[AppleHv] GPU sync issue: {ex.Message}");
-                }
             }
         }
 
         private ulong SynchronousException(HvMemoryManager memoryManager, ref HvVcpu vcpu)
         {
             ulong vcpuHandle = vcpu.Handle;
-            HvApi.hv_vcpu_get_sys_reg(vcpuHandle, HvSysReg.ELR_EL1, out ulong elr).ThrowOnError();
-            HvApi.hv_vcpu_get_sys_reg(vcpuHandle, HvSysReg.ESR_EL1, out ulong esr).ThrowOnError();
+            GetVcpuSysReg(vcpuHandle, HvSysReg.ELR_EL1, out ulong elr);
+            GetVcpuSysReg(vcpuHandle, HvSysReg.ESR_EL1, out ulong esr);
 
             ExceptionClass ec = (ExceptionClass)((uint)esr >> 26);
 
@@ -240,31 +250,34 @@ namespace Ryujinx.Cpu.AppleHv
 
                 case ExceptionClass.TrappedMsrMrsSystem:
                     InstructionTrap((uint)esr);
-                    HvApi.hv_vcpu_set_sys_reg(vcpuHandle, HvSysReg.ELR_EL1, elr + 4UL).ThrowOnError();
+                    SetVcpuSysReg(vcpuHandle, HvSysReg.ELR_EL1, elr + 4UL);
                     break;
 
                 case ExceptionClass.SvcAarch64:
                     ReturnToPool(vcpu);
                     ushort id = (ushort)esr;
                     SupervisorCallHandler(elr - 4UL, id);
-                    Thread.Yield();                    // Helps with Vulkan + Hypervisor stability
+                    Thread.Yield();
                     vcpu = RentFromPool(memoryManager.AddressSpace, vcpu);
+                    DrainIfVcpu(vcpu);
                     break;
 
                 case ExceptionClass.SoftwareStepLowerEl:
-                    HvApi.hv_vcpu_get_sys_reg(vcpuHandle, HvSysReg.SPSR_EL1, out ulong spsr).ThrowOnError();
+                    GetVcpuSysReg(vcpuHandle, HvSysReg.SPSR_EL1, out ulong spsr);
                     spsr &= ~((ulong)(1 << 21));
-                    HvApi.hv_vcpu_set_sys_reg(vcpuHandle, HvSysReg.SPSR_EL1, spsr).ThrowOnError();
-                    HvApi.hv_vcpu_set_sys_reg(vcpuHandle, HvSysReg.MDSCR_EL1, 0);
+                    SetVcpuSysReg(vcpuHandle, HvSysReg.SPSR_EL1, spsr);
+                    SetVcpuSysReg(vcpuHandle, HvSysReg.MDSCR_EL1, 0);
                     ReturnToPool(vcpu);
                     StepHandler();
                     vcpu = RentFromPool(memoryManager.AddressSpace, vcpu);
+                    DrainIfVcpu(vcpu);
                     break;
 
                 case ExceptionClass.BrkAarch64:
                     ReturnToPool(vcpu);
                     BreakHandler(elr, (ushort)esr);
                     vcpu = RentFromPool(memoryManager.AddressSpace, vcpu);
+                    DrainIfVcpu(vcpu);
                     break;
 
                 default:
@@ -279,9 +292,9 @@ namespace Ryujinx.Cpu.AppleHv
 
         private static void DataAbort(MemoryTracking tracking, ulong vcpu, uint esr)
         {
-            bool write = (esr & (1u << 6)) != 0;
+            bool write = (esr & (1u << 6))  != 0;
             bool farValid = (esr & (1u << 10)) == 0;
-            int accessSizeLog2 = (int)((esr >> 22) & 3);
+            int  accessSizeLog2 = (int)((esr >> 22) & 3);
 
             if (farValid)
             {
@@ -291,12 +304,14 @@ namespace Ryujinx.Cpu.AppleHv
                 if (!tracking.VirtualMemoryEvent(far, size, write))
                 {
                     string rw = write ? "write" : "read";
-                    throw new Exception($"Unhandled invalid memory access at VA 0x{far:X} with size 0x{size:X} ({rw}).");
+                    throw new Exception(
+                        $"Unhandled invalid memory access at VA 0x{far:X} with size 0x{size:X} ({rw}).");
                 }
             }
             else
             {
-                throw new Exception($"Unhandled invalid memory access at unknown VA with ESR 0x{esr:X}.");
+                throw new Exception(
+                    $"Unhandled invalid memory access at unknown VA with ESR 0x{esr:X}.");
             }
         }
 
@@ -332,19 +347,13 @@ namespace Ryujinx.Cpu.AppleHv
         }
 
         private void ReturnToPool(HvVcpu vcpu)
-        {
-            HvVcpuPool.Instance.Return(vcpu, SwapContext);
-        }
+            => HvVcpuPool.Instance.Return(vcpu, SwapContext);
 
         private HvVcpu RentFromPool(HvAddressSpace addressSpace, HvVcpu vcpu)
-        {
-            return HvVcpuPool.Instance.Rent(addressSpace, _shadowContext, vcpu, SwapContext);
-        }
+            => HvVcpuPool.Instance.Rent(addressSpace, _shadowContext, vcpu, SwapContext);
 
         private void SwapContext(IHvExecutionContext newContext)
-        {
-            _impl = newContext;
-        }
+            => _impl = newContext;
 
         public void Dispose() { }
     }
