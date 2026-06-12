@@ -17,6 +17,7 @@ namespace Ryujinx.Cpu.AppleHv
         private static readonly nint _setSimdFpRegNativePtr;
 
         public static bool AggressiveMode { get; set; } = false;
+        private bool _earlyBootPhase = true;
 
         public ulong ThreadUid { get; set; }
 
@@ -81,9 +82,7 @@ namespace Ryujinx.Cpu.AppleHv
                 _fallbackCount = 0;
                 _lastWarningTicks = 0;
                 _interruptRequested = 0;
-
-                Thread.Sleep(1);
-                HvApi.hv_vcpu_set_reg(_vcpu, HvReg.CPSR, _pstateRaw);
+                _earlyBootPhase = true;
             }
         }
 
@@ -94,27 +93,12 @@ namespace Ryujinx.Cpu.AppleHv
             long now = DateTime.UtcNow.Ticks;
             if (now - _lastWarningTicks <= WarningCooldownTicks) return;
 
-            ulong currentPc = GetPcUnsafe();
-
-            string msg = $"[AppleHv] BadArgument on {operation} {regName} | PC=0x{currentPc:X16}";
+            string msg = $"[AppleHv] BadArgument on {operation} {regName} | PC=0x{_pc:X16}";
             if (!string.IsNullOrEmpty(extra)) msg += $" | {extra}";
-            msg += $" | Total fallbacks: {Interlocked.Read(ref _fallbackCount)}";
+            msg += $" | Total: {Interlocked.Read(ref _fallbackCount)}";
 
             Logger.Warning?.Print(LogClass.Cpu, msg);
             _lastWarningTicks = now;
-        }
-
-        private ulong GetPcUnsafe()
-        {
-            try
-            {
-                HvApi.hv_vcpu_get_reg(_vcpu, HvReg.PC, out ulong pc);
-                return pc;
-            }
-            catch
-            {
-                return _pc;
-            }
         }
 
         public ulong Pc
@@ -215,6 +199,11 @@ namespace Ryujinx.Cpu.AppleHv
 
                 if ((uint)index > 30) return 0;
 
+                if (index == 0 && _earlyBootPhase && _pc == 0)
+                {
+                    return _x[0];
+                }
+
                 HvResult resX = HvApi.hv_vcpu_get_reg(_vcpu, HvReg.X0 + (uint)index, out value);
                 if (resX == HvResult.BadArgument)
                 {
@@ -290,7 +279,7 @@ namespace Ryujinx.Cpu.AppleHv
                 if (res == HvResult.BadArgument)
                 {
                     Interlocked.Increment(ref _fallbackCount);
-                    LogHvWarning("SetV", $"Q{index}", $"value={value}");
+                    LogHvWarning("SetV", $"Q{index}");
                     _v[index] = value;
                     return;
                 }
