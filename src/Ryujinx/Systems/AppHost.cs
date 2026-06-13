@@ -818,7 +818,7 @@ namespace Ryujinx.Ava.Systems
 
                     if (!Device.LoadCart(ApplicationPath, romFsFiles[0]))
                     {
-                        await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Error_LoadUnpackedApplicationFailed));
+                        await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Error_NoUnpackedApplicationFoundInFolder));
                         Device.Dispose();
 
                         cts.Cancel();
@@ -830,7 +830,7 @@ namespace Ryujinx.Ava.Systems
                     Logger.Info?.Print(LogClass.Application, "Loading as cart WITHOUT RomFS.");
                     if (!Device.LoadCart(ApplicationPath))
                     {
-                        await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Error_LoadUnpackedApplicationFailed));
+                        await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Error_NoUnpackedApplicationFoundInFolder));
                         Device.Dispose();
                         cts.Cancel();
                         throw new OperationCanceledException(cts.Token);

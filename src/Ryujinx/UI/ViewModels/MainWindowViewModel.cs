@@ -218,7 +218,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             LocaleManager.Instance.PropertyChanged += (sender, args) =>
                 {
-                    RefreshFileTypeToggle();
+                    RefreshFileTypeAssociationToggle();
                 };
 
             if (Program.PreviewerDetached)
@@ -938,14 +938,14 @@ namespace Ryujinx.Ava.UI.ViewModels
             return false;
         }
 
-        public bool FileTypeAssociationVisible
+        public bool FileTypeAssociationsVisible
         {
             get => FileAssociationHelper.IsTypeAssociationSupported;
         }
 
-        private void RefreshFileTypeToggle()
+        private void RefreshFileTypeAssociationToggle()
             {
-                OnPropertyChanged(nameof(FileTypeAssociationMenuHeader));
+                OnPropertyChanged(nameof(FileTypeAssociationsMenuHeader));
                 OnPropertyChanged(nameof(FileTypeAssociationsIcon));
             }
 
@@ -959,12 +959,12 @@ namespace Ryujinx.Ava.UI.ViewModels
                 if (_areMimeTypesRegistered != value)
                 {
                     _areMimeTypesRegistered = value;
-                    RefreshFileTypeToggle();
+                    RefreshFileTypeAssociationToggle();
                 }
             }
         }
 
-        public string FileTypeAssociationMenuHeader =>
+        public string FileTypeAssociationsMenuHeader =>
             AreMimeTypesRegistered
                 ? LocaleManager.Instance[LocaleKeys.MenuBar_File_RemoveFileTypeAssociationsButton]
                 : LocaleManager.Instance[LocaleKeys.MenuBar_File_AssociateFileTypesButton];

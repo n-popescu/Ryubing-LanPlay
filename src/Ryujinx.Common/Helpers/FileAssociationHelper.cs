@@ -24,8 +24,8 @@ namespace Ryujinx.Common.Helper
 
         public static bool IsTypeAssociationSupported => (OperatingSystem.IsLinux() || OperatingSystem.IsWindows());
 
-        // NOTE: On macOS, automatic file associations have very limited effect due to Launch Services caching.
-        // Users should manually set the default app: Right-click a file > Get Info > "Open with:" > Ryujinx > "Change All...".
+        // NOTE: On macOS, users have a more robust file association system (via Right-Click > Get Info > "Open with:" > Ryujinx > "Change All...)
+        // Custom file association isn't strictly necessary and will not provide any additional benefit to macOS users.
 
         public static bool AreMimeTypesRegistered
         {

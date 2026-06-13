@@ -26,7 +26,7 @@
       }
     },
     {
-      "ID": "LoadUnpackedApplicationFailed",
+      "ID": "NoUnpackedApplicationFoundInFolder",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",

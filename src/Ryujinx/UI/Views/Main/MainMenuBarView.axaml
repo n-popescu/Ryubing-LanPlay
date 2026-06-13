@@ -61,11 +61,11 @@
                     Command="{Binding OpenScreenshotsFolder}"
                     Header="{ext:Locale MenuBar_File_OpenScreenshotsFolderButton}"
                     Icon="{ext:Icon fa-solid fa-folder-closed}" />
-                <Separator IsVisible="{Binding FileTypeAssociationVisible}" />
+                <Separator IsVisible="{Binding FileTypeAssociationsVisible}" />
                 <MenuItem
                     Command="{Binding ToggleFileTypeAssociationsCommand}"
-                    Header="{Binding FileTypeAssociationMenuHeader}"
-                    IsVisible="{Binding FileTypeAssociationVisible}"
+                    Header="{Binding FileTypeAssociationsMenuHeader}"
+                    IsVisible="{Binding FileTypeAssociationsVisible}"
                     IsEnabled="{Binding EnableNonGameRunningControls}"
                     ToolTip.Tip="{ext:Locale MenuBar_File_FileTypeAssociationsToolTip}">
                     <MenuItem.Icon>
