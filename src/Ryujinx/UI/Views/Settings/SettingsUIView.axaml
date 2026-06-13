@@ -41,7 +41,7 @@
                             Opacity="{Binding PanelOpacity}"
                             IsChecked="{Binding StartGamesInFullscreen, Mode=TwoWay}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{ext:Locale MenuBar_Options_StartGamesInFullscreenCheckboxLabel}" />
+                                <TextBlock Text="{ext:Locale Settings_Interface_StartGamesInFullscreenCheckboxLabel}" />
                                 <TextBlock Classes="globalConfigMarker" IsVisible="{Binding IsGameTitleNotNull}" />
                             </StackPanel>
                         </CheckBox>
@@ -50,7 +50,7 @@
                             Opacity="{Binding PanelOpacity}"
                             IsChecked="{Binding StartGamesWithoutUi, Mode=TwoWay}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{ext:Locale MenuBar_Options_StartGamesWithoutUICheckboxLabel}" />
+                                <TextBlock Text="{ext:Locale Settings_Interface_StartGamesWithoutUICheckboxLabel}" />
                                 <TextBlock Classes="globalConfigMarker" IsVisible="{Binding IsGameTitleNotNull}" />
                             </StackPanel>
                         </CheckBox>
