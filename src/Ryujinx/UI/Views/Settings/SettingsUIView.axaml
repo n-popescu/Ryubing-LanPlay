@@ -39,6 +39,24 @@
                         <CheckBox
                             IsEnabled="{Binding !IsGameTitleNotNull}"
                             Opacity="{Binding PanelOpacity}"
+                            IsChecked="{Binding StartGamesInFullscreen, Mode=TwoWay}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{ext:Locale MenuBar_Options_StartGamesInFullscreenCheckboxLabel}" />
+                                <TextBlock Classes="globalConfigMarker" IsVisible="{Binding IsGameTitleNotNull}" />
+                            </StackPanel>
+                        </CheckBox>
+                        <CheckBox
+                            IsEnabled="{Binding !IsGameTitleNotNull}"
+                            Opacity="{Binding PanelOpacity}"
+                            IsChecked="{Binding StartGamesWithoutUi, Mode=TwoWay}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{ext:Locale MenuBar_Options_StartGamesWithoutUICheckboxLabel}" />
+                                <TextBlock Classes="globalConfigMarker" IsVisible="{Binding IsGameTitleNotNull}" />
+                            </StackPanel>
+                        </CheckBox>
+                        <CheckBox
+                            IsEnabled="{Binding !IsGameTitleNotNull}"
+                            Opacity="{Binding PanelOpacity}"
                             IsChecked="{Binding RememberWindowState}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{ext:Locale SettingsTabGeneralRememberWindowState}" />
