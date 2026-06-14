@@ -1,3 +1,4 @@
+using Avalonia.Controls.Platform;
 using Gommon;
 using Humanizer;
 using MsgPack;
@@ -1091,14 +1092,38 @@ namespace Ryujinx.Ava.Systems.PlayReport
 
         private static FormattedValue NSMBUDRPC(SparseMultiValue values)
         {
-            if (values.Matched.TryGetValue("WorldNo", out Value world) && values.Matched.TryGetValue("CourseNo", out Value course))
+            if (values.Matched.TryGetValue("WorldNo", out Value world) && values.Matched.TryGetValue("CourseNo", out Value course) | values.Matched.TryGetValue("GameModeType", out Value gamemode))
             {
-                return $"Last played: Course {world}-{course}";
+                if (gamemode.ToString() == "0")
+                {
+                    return $"Last played: Course {world}-{course}{LevelNameMario(world.ToString(), course.ToString())}";
+                }
+                else if (gamemode.ToString() == "1")
+                {
+                    return $"Last played: Course {world}-{course}{LevelNameLuigi(world.ToString(), course.ToString())}";
+                }
+                else
+                {
+                    return "At the main menu. Probably";
+                }
+
             }
 
             if (values.Matched.TryGetValue("RlId", out Value RlId) | values.Matched.TryGetValue("TotalPlayTime", out Value TotalPlayTime))
             {
                 return "At the main menu";
+            }
+
+            static string LevelNameMario(string world, string course)
+            {
+                string worldname = world;
+                return $" - {worldname} Mario!";
+            }
+            
+            static string LevelNameLuigi(string world, string course)
+            {
+                string worldname = world;
+                return $" - {worldname} Luigi!";
             }
             
             return "";

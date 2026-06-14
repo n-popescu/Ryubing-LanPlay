@@ -136,7 +136,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 "0100ea80032ea000",
                 spec => spec
                     .WithDescription("based on world map return info.")
-                    .AddSparseMultiValueFormatter(["WorldNo", "CourseNo", "RlId", "TotalPlayTime"], NSMBUDRPC)
+                    .AddSparseMultiValueFormatter(["WorldNo", "CourseNo", "RlId", "TotalPlayTime", "GameModeType"], NSMBUDRPC)
                 )
         );
 
