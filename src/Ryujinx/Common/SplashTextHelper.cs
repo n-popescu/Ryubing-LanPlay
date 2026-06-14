@@ -43,15 +43,9 @@ namespace Ryujinx.Common
         {
             try
             {
-                foreach (string uri in EmbeddedResources.GetAllAvailableResources("Ryujinx/Assets/Splashes", ".json"))
-                {
-                    string data;
-                    string path = uri[..^".json".Length];
-                    path = path.Replace('.', '/');
-                    path = path.Append(".json");
-                    data = EmbeddedResources.ReadAllText(path);
-                    s_splashJson = JsonSerializer.Deserialize<SplashLocales>(data);
-                }
+                string data;
+                data = EmbeddedResources.ReadAllText("Ryujinx/Assets/Splashes/Splashes.json");
+                s_splashJson = JsonSerializer.Deserialize<SplashLocales>(data);
                 return s_splashJson.Locales[ConfigurationState.Instance.UI.LanguageCode.Value].GetRandomElement();
             }
             catch
