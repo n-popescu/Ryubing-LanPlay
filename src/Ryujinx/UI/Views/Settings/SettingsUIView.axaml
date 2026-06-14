@@ -48,7 +48,8 @@
                         <CheckBox
                             IsEnabled="{Binding !IsGameTitleNotNull}"
                             Opacity="{Binding PanelOpacity}"
-                            IsChecked="{Binding StartGamesWithoutUi, Mode=TwoWay}">
+                            IsChecked="{Binding StartGamesWithoutUi, Mode=TwoWay}"
+                            ToolTip.Tip="{ext:Locale Settings_Interface_StartGamesWithoutUICheckboxLabelToolTip}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{ext:Locale Settings_Interface_StartGamesWithoutUICheckboxLabel}" />
                                 <TextBlock Classes="globalConfigMarker" IsVisible="{Binding IsGameTitleNotNull}" />

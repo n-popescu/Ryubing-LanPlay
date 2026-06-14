@@ -49,6 +49,31 @@
         "zh_CN": "启动游戏时隐藏界面",
         "zh_TW": "啟動遊戲時隱藏介面"
       }
+    },
+    {
+      "ID": "StartGamesWithoutUICheckboxLabelToolTip",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Automatically hides Ryujinx's UI whenever a game launches. While in-game, press F4 to show the UI.",
+        "es_ES": "",
+        "fr_FR": "Masque automatiquement l'interface de Ryujinx au lancement d'un jeu. En jeu, appuyez sur F4 pour afficher l'interface.",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "Автоматически скрывает интерфейс Ryujinx при запуске игры. Во время игры нажмите F4, чтобы показать интерфейс.",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
     }
   ]
 }
