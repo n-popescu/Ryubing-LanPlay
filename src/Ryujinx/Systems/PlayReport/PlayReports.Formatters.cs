@@ -1095,15 +1095,31 @@ namespace Ryujinx.Ava.Systems.PlayReport
             {
                 if (gamemode.ToString() == "0")
                 {
-                    return $"Last played: Course {world}-{course}{LevelNameMario(world.ToString(), course.ToString())}";
+                    return GMMario(world.ToString(), course.ToString());
                 }
                 else if (gamemode.ToString() == "1")
                 {
-                    return $"Last played: Course {world}-{course}{LevelNameLuigi(world.ToString(), course.ToString())}";
+                    return $"{GMLuigi(world.ToString(), course.ToString())}";
+                }
+                else if (gamemode.ToString() == "2")
+                {
+                    return "Playing boost rush";
+                }
+                else if (gamemode.ToString() == "3")
+                {
+                    return "Playing challenges";
+                }
+                else if (gamemode.ToString() == "4")
+                {
+                    return "Playing coin battle (Battling)";
+                }
+                else if (gamemode.ToString() == "5")
+                {
+                    return "Just finished editing a coin battle map";
                 }
                 else
                 {
-                    return "At the main menu. Probably";
+                    return "Just did something";
                 }
 
             }
@@ -1113,16 +1129,16 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 return "At the main menu";
             }
 
-            static string LevelNameMario(string world, string course)
+            static string GMMario(string world, string course)
             {
                 string worldname = world;
-                return $" - {worldname} Mario!";
+                return $"Last played: Course {world}-{course} - {worldname} Mario!";
             }
             
-            static string LevelNameLuigi(string world, string course)
+            static string GMLuigi(string world, string course)
             {
                 string worldname = world;
-                return $" - {worldname} Luigi!";
+                return $"Last played: Course {world}-{course} - {worldname} Luigi!";
             }
             
             return "";
