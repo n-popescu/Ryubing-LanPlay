@@ -1,10 +1,12 @@
 using Gommon;
 using Humanizer;
 using MsgPack;
+using Ryujinx.Common;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace Ryujinx.Ava.Systems.PlayReport
 {
@@ -1093,29 +1095,31 @@ namespace Ryujinx.Ava.Systems.PlayReport
         {
             if (values.Matched.TryGetValue("WorldNo", out Value world) && values.Matched.TryGetValue("CourseNo", out Value course) | values.Matched.TryGetValue("GameModeType", out Value gamemode))
             {
+                return $"{GetRPCText(world.ToString(), course.ToString(), gamemode.ToString())}";
+                
                 if (gamemode.ToString() == "0")
                 {
-                    return GMMario(world.ToString(), course.ToString());
+                    return $"Last played: Course {GetRPCWorld(world.ToString(), course.ToString(), gamemode.ToString())}";
                 }
                 else if (gamemode.ToString() == "1")
                 {
-                    return $"{GMLuigi(world.ToString(), course.ToString())}";
+                    return $"Luigi mode";
                 }
                 else if (gamemode.ToString() == "2")
                 {
-                    return "Playing boost rush";
+                    return "Last played: Boost Rush";
                 }
                 else if (gamemode.ToString() == "3")
                 {
-                    return "Playing challenges";
+                    return "Last played: Challenges";
                 }
                 else if (gamemode.ToString() == "4")
                 {
-                    return "Playing coin battle (Battling)";
+                    return "Last played: Coin Battle";
                 }
                 else if (gamemode.ToString() == "5")
                 {
-                    return "Just finished editing a coin battle map";
+                    return "Last played: Coin Battle Editor";
                 }
                 else
                 {
@@ -1128,40 +1132,48 @@ namespace Ryujinx.Ava.Systems.PlayReport
             {
                 return "At the main menu";
             }
-
-            static string GMMario(string world, string course)
+            
+            static string GetRPCText(string  world, string course,  string gamemode)
             {
-                string worldname = world;
-                return $"Last played: Course {world}-{course} - {worldname} Mario!"; 
-                // Tower course = 21, Castle course = 23,Haunted Mansion/ship = 20
-                // Tower course 2 (rock candy) = 22
-                // Peach castle 1 = 42, Peach final battle = 43
-                // airship = 37, jungle beetles = 17
-                // Glacier seals = 16, water leaf = 15
-                // desert ice = 14, acorn squid = 13
-                // all other course numbers are to be considered a hazard
-            }
-            
-            // order = gamemode > world > course
-            
-            // Boost mode has no consistent way to determine which pack it is on. Default to just playing boost mode
-            // The same applies to challenge mode. default to playing challenge mode
-            
-            // Coin battle uses the same content as base game, so we can append its 8 additional courses to the end of the mario list, even though the courses themselves have no names
-
-            
-            static string GMLuigi(string world, string course)
-            {
-                string worldname = world;
-                return $"Last played: Course {world}-{course} - {worldname} Luigi!";
+                try
+                {
+                    NSMBUDStruct output;
+                    string data;
+                    data = EmbeddedResources.ReadAllText("Ryujinx/Assets/Splashes/Splashes.json");
+                    output = JsonSerializer.Deserialize<NSMBUDStruct>(data);
+                    return output.levelnames[];
+                }
+                catch
+                {
+                    return "Panik!";
+                }
             }
 
-            static string AssembleRPCString(string world, string course, string gamemode)
+            private struct NSMBUDStruct
             {
-                return "";
+                public Dictionary<string, Dictionary<string, string>> levelnames {get; set;}
             }
+
+            
+            static string MakeRPCText(string world, string course, string gamemode)
+            {
+                
+                return $"";
+            }
+            
+
             
             return "";
         }
     }
 }
+
+// order = gamemode > world > course
+
+// Tower course = 21, Castle course = 23,Haunted Mansion/ship = 20
+// Tower course 2 (rock candy) = 22
+// Peach castle 1 = 42, Peach final battle = 43
+// airship = 37, jungle beetles = 17
+// Glacier seals = 16, water leaf = 15
+// desert ice = 14, acorn squid = 13
+// all other course numbers are to be considered a hazard
