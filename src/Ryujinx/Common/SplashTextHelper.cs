@@ -36,16 +36,6 @@ namespace Ryujinx.Common
 
             return $"{s_finalSplash}";
         }
-
-        public static string GetTitleSplash()
-        {
-            if (OperatingSystem.IsMacOS())
-            {
-                return "";
-            }
-
-            return $" - {GetSplash()}";
-        }
         
         private static SplashLocales s_splashJson;
 
