@@ -7,7 +7,6 @@ using System.Text.Json;
 
 namespace Ryujinx.Common
 {
-    // My code is crappy and I know it. Props to VewDev for assisting me in these shenanigans. - Awesomeangotti
     public class SplashTextHelper
     {
         public static void PrintSplash()
