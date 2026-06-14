@@ -1093,7 +1093,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
         {
             if (values.Matched.TryGetValue("WorldNo", out Value world) && values.Matched.TryGetValue("CourseNo", out Value course))
             {
-                return $"Just played course {world}-{course}";
+                return $"Last played: Course {world}-{course}";
             }
 
             if (values.Matched.TryGetValue("RlId", out Value RlId) | values.Matched.TryGetValue("TotalPlayTime", out Value TotalPlayTime))
