@@ -1084,9 +1084,13 @@ namespace Ryujinx.Ava.Systems.PlayReport
             // Fountain Level should be kept consistant throughout code, so I basically made sure of it
 =======
             // Fountain Level should be kept consistent throughout code, so I basically made sure of it
+<<<<<<< HEAD
 >>>>>>> 218bc53b2 (Fix Spelling in Comment)
             return $"Looking after {"Mii".ToQuantity(miiCount)}, with an fountain level of {fountainLevel}";
 >>>>>>> 757924d66 (Added comment to LTD Status)
+=======
+            return $"Looking after {"Mii".ToQuantity(miiCount)}, with a fountain level of {fountainLevel}";
+>>>>>>> 1aba69111 (Fix: Text in RPC and PlayReports)
         }
         
         private static FormattedValue AnimalCrossingNewHorizons_AppCommon(SingleValue value)

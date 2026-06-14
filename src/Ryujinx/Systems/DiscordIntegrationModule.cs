@@ -46,7 +46,11 @@ namespace Ryujinx.Ava.Systems
                     LargeImageText = TruncateToByteLength(_description)
                 },
                 Details = "Main Menu",
+<<<<<<< HEAD
                 State = "Idling",
+=======
+                State = "Waiting",
+>>>>>>> 1aba69111 (Fix: Text in RPC and PlayReports)
                 Timestamps = EmulatorStartedAt
             };
 
