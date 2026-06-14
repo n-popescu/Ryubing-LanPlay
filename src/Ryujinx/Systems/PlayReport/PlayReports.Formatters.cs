@@ -1132,13 +1132,26 @@ namespace Ryujinx.Ava.Systems.PlayReport
             static string GMMario(string world, string course)
             {
                 string worldname = world;
-                return $"Last played: Course {world}-{course} - {worldname} Mario!";
+                return $"Last played: Course {world}-{course} - {worldname} Mario!"; 
+                // Tower course = 21, Castle course = 23,Haunted Mansion/ship = 20
+                // Tower course 2 (rock candy) = 22
+                // Peach castle 1 = 42, Peach final battle = 43
+                // airship = 37, jungle beetles = 17
+                // Glacier seals = 16, water leaf = 15
+                // desert ice = 14, acorn squid = 13
+                // all other course numbers are to be considered a hazard
             }
+
             
             static string GMLuigi(string world, string course)
             {
                 string worldname = world;
                 return $"Last played: Course {world}-{course} - {worldname} Luigi!";
+            }
+
+            static string AssembleRPCString(string world, string course, string gamemode)
+            {
+                return "";
             }
             
             return "";
