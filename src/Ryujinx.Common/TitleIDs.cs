@@ -147,6 +147,7 @@ namespace Ryujinx.Common
             "0100c1f0051b6000", // Donkey Kong Country: Tropical Freeze
             "0100ed000d390000", // Dr. Kawashima's Brain Training
             "010067b017588000", // Endless Ocean Luminous
+            "01003da010e8a000", // Miitopia
             "01006b5012b32000", // Part Time UFO
             "0100704000B3A000", // Snipperclips
             "01006a800016e000", // Super Smash Bros. Ultimate
@@ -210,7 +211,6 @@ namespace Ryujinx.Common
             "010013c00e930000", // Hollow Knight: Silksong
             "010085500130a000", // Lego City: Undercover
             "010073c01af34000", // LEGO Horizon Adventures
-            "01003da010e8a000", // Miitopia
             "0100d71004694000", // Minecraft
             "01007430037f6000", // Monopoly
             "0100853015e86000", // No Man's Sky
