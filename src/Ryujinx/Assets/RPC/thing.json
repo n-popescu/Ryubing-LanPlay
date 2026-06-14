@@ -1,5 +1,4 @@
 {
-  "levelnames": {
     "mario": {
       "1": {
         "1": "Acorn Plains Way",
@@ -214,5 +213,4 @@
         "9": "Flying Squirrel Ovation"
       }
     }
-  }
 }

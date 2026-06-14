@@ -1095,11 +1095,73 @@ namespace Ryujinx.Ava.Systems.PlayReport
         {
             if (values.Matched.TryGetValue("WorldNo", out Value world) && values.Matched.TryGetValue("CourseNo", out Value course) | values.Matched.TryGetValue("GameModeType", out Value gamemode))
             {
-                return $"{GetRPCText(world.ToString(), course.ToString(), gamemode.ToString())}";
+                string worldstr = world.ToString();
+                string coursestr = course.ToString();
+                string gamemodestr = gamemode.ToString();
                 
+                
+                {
+                    Dictionary<string, Dictionary<string, Dictionary<string, string>>> output;
+                    string data;
+                    data = EmbeddedResources.ReadAllText("Ryujinx/Assets/RPC/thing.json");
+                    Console.Write($"Asset 'loaded'"); // OK FUTURE ME. IT FAILS TO LOAD THE ASSET. THE REST WORKS
+                    output = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(data);
+                    Console.Write($"Deserialized");
+                    string outputloc = output["mario"]["1"]["1"];
+                    //string outputloc = output[morl(gamemodestr)][worldstr][coursestr];
+                }
+
+                {
+                    //Console.Write(e.ToString());
+                    return $"Last Played: {othergamemode(gamemodestr)}";
+                }
+            }
+            
+            if (values.Matched.TryGetValue("RlId", out Value RlId) | values.Matched.TryGetValue("TotalPlayTime", out Value TotalPlayTime))
+            {
+                return "At the main menu";
+            }
+
+            static string morl(string? gamemode) => gamemode switch
+            {
+                "0" => "mario",
+                "1" => "luigi",
+                "4" => "mario",
+                "5" => "mario",
+                _ => gamemode
+            };
+            
+            static string othergamemode(string? gamemode) => gamemode switch
+            {
+                "2" => "Boost Rush",
+                "3" => "Challenges",
+                "4" => "Coin Battle",
+                "5" => "Coin Battle Editor",
+                _ => "OH FUCK"
+            };
+            
+            return "";
+            
+        }
+    
+    }
+
+}
+
+// order = gamemode > world > course
+
+// Tower course = 21, Castle course = 23,Haunted Mansion/ship = 20
+// Tower course 2 (rock candy) = 22
+// Peach castle 1 = 42, Peach final battle = 43
+// airship = 37, jungle beetles = 17
+// Glacier seals = 16, water leaf = 15
+// desert ice = 14, acorn squid = 13
+// all other course numbers are to be considered a hazard
+
+/*
+
                 if (gamemode.ToString() == "0")
                 {
-                    return $"Last played: Course {GetRPCWorld(world.ToString(), course.ToString(), gamemode.ToString())}";
                 }
                 else if (gamemode.ToString() == "1")
                 {
@@ -1125,55 +1187,4 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 {
                     return "Just did something";
                 }
-
-            }
-
-            if (values.Matched.TryGetValue("RlId", out Value RlId) | values.Matched.TryGetValue("TotalPlayTime", out Value TotalPlayTime))
-            {
-                return "At the main menu";
-            }
-            
-            static string GetRPCText(string  world, string course,  string gamemode)
-            {
-                try
-                {
-                    NSMBUDStruct output;
-                    string data;
-                    data = EmbeddedResources.ReadAllText("Ryujinx/Assets/Splashes/Splashes.json");
-                    output = JsonSerializer.Deserialize<NSMBUDStruct>(data);
-                    return output.levelnames[];
-                }
-                catch
-                {
-                    return "Panik!";
-                }
-            }
-
-            private struct NSMBUDStruct
-            {
-                public Dictionary<string, Dictionary<string, string>> levelnames {get; set;}
-            }
-
-            
-            static string MakeRPCText(string world, string course, string gamemode)
-            {
-                
-                return $"";
-            }
-            
-
-            
-            return "";
-        }
-    }
-}
-
-// order = gamemode > world > course
-
-// Tower course = 21, Castle course = 23,Haunted Mansion/ship = 20
-// Tower course 2 (rock candy) = 22
-// Peach castle 1 = 42, Peach final battle = 43
-// airship = 37, jungle beetles = 17
-// Glacier seals = 16, water leaf = 15
-// desert ice = 14, acorn squid = 13
-// all other course numbers are to be considered a hazard
+*/
