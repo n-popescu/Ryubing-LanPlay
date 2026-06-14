@@ -1141,6 +1141,8 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 // desert ice = 14, acorn squid = 13
                 // all other course numbers are to be considered a hazard
             }
+            
+            // order = gamemode > world > course
 
             
             static string GMLuigi(string world, string course)

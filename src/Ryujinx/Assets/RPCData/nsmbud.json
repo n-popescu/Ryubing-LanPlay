@@ -1,0 +1,112 @@
+{
+  "levelnames": {
+    "mario": {
+      "1": {
+        "1": "Acorn Plains Way",
+        "2": "Tilted Tunnel",
+        "21": "Crushing-Cogs Tower",
+        "3": "Yoshi Hill",
+        "4": "Mushroom Heights",
+        "5": "Rise of the Piranha Plants",
+        "23": "Lemmy's Swingback Castle",
+        "13": "Blooper's Secret Lair"
+      },
+      "2": {
+        "1": "Stone-Eye Zone",
+        "2": "Perilous Pokey Cave",
+        "3": "Fire Snake Cavern",
+        "21": "Stoneslide Tower",
+        "4": "Spike's Spouting Sands",
+        "5": "Dry Desert Mushrooms",
+        "6": "Blooming Lakitus",
+        "23": "Morton's Compactor Castle",
+        "14": "Piranha Plants on Ice"
+      },
+      "3": {
+        "1": "Waterspout Beach",
+        "2": "Tropical Refresher",
+        "21": "Giant Skewer Tower",
+        "20": "Haunted Shipwreck",
+        "3": "Above the Cheep Cheep Seas",
+        "4": "Urchin Shoals",
+        "5": "Dragoneel's Undersea Grotto",
+        "23": "Larry's Torpedo Castle",
+        "15": "Skyward Stalk"
+      },
+      "4": {
+        "1": "Spinning-Star Sky",
+        "2": "Cooligan Fields",
+        "21": "Freezing-Rain Tower",
+        "3": "Prickly Goombas!",
+        "4": "Scaling the Mountainside",
+        "5": "Icicle Caverns",
+        "20": "Swaying Ghost House",
+        "23": "Wendy's Shifting Castle",
+        "16": "Fliprus Lake"
+      },
+      "5": {
+        "37": "The Mighty Cannonship",
+        "1": "Jungle of the Giants",
+        "2": "Bridge over Poisoned Waters",
+        "3": "Bramball Woods",
+        "21": "Snake Block Tower",
+        "20": "Which-Way Labyrinth",
+        "4": "Painted Swampland",
+        "5": "Deepsea Ruins",
+        "6": "Seesaw Bridge",
+        "7": "Wiggler Stampede",
+        "23": "Iggy's Volcanic Castle",
+        "17": "Flight of the Para-Beetles"
+      },
+      "6": {
+        "1": "Fuzzy Clifftop",
+        "2": "Porcupuffer Falls",
+        "21": "Grinding-Stone Tower",
+        "3": "Wadlewing's Nest",
+        "4": "Light Blocks, Dark Tower",
+        "5": "Walking Piranha Plants!",
+        "6": "Thrilling Spine Coaster",
+        "22": "Screwtop Tower",
+        "7": "Shifting-Floor Cave",
+        "23": "Roy's Conveyor Castle"
+      },
+      "7": {
+        "1": "Land of Flying Blocks",
+        "2": "Seesaw Shrooms",
+        "3": "Switchback Hill",
+        "21": "Slide Lift Tower",
+        "20": "Spinning Spirit House",
+        "4": "Bouncy Cloud Boomerangs",
+        "5": "A Quick Dip in the Sky",
+        "6": "Snaking above Mist Valley",
+        "23": "Ludwig's Clockwork Castle",
+        "37": "Boarding the Airship"
+        
+      },
+      "8": {
+        "1": "Meteor Moat",
+        "2": "Magma-River Cruise",
+        "3": "Rising Tides of Lava",
+        "4": "firefall Cliffs",
+        "42": "Red-Hot Elevator Ride",
+        "43": "The Final Battle"
+      },
+      "9": {
+        "1": "Spine-Tingling Spine Coaster",
+        "2": "Run for It",
+        "3": "Swim for Your Life!",
+        "4": "Hammerswing Caverns",
+        "5": "Spinning Platforms of Doom",
+        "6": "Fire Bar Cliffs",
+        "7": "Lakitu! Lakitu! Lakitu!",
+        "8": "Pendulum Castle",
+        "9": "Follow That Shell!"
+      }
+    },
+    "luigi": [],
+    "boost": [],
+    "challenge": [],
+    "coin": [],
+    "editor": []
+  }
+}
