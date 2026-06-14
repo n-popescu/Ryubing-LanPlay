@@ -1143,6 +1143,11 @@ namespace Ryujinx.Ava.Systems.PlayReport
             }
             
             // order = gamemode > world > course
+            
+            // Boost mode has no consistent way to determine which pack it is on. Default to just playing boost mode
+            // The same applies to challenge mode. default to playing challenge mode
+            
+            // Coin battle uses the same content as base game, so we can append its 8 additional courses to the end of the mario list, even though the courses themselves have no names
 
             
             static string GMLuigi(string world, string course)

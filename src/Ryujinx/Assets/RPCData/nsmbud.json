@@ -101,6 +101,16 @@
         "7": "Lakitu! Lakitu! Lakitu!",
         "8": "Pendulum Castle",
         "9": "Follow That Shell!"
+      },
+      "11": {
+        "1": "",
+        "2": "",
+        "3": "",
+        "4": "",
+        "5": "",
+        "6": "",
+        "7": "",
+        "8": ""
       }
     },
     "luigi": {
@@ -203,10 +213,6 @@
         "8": "Impossible Pendulums",
         "9": "Flying Squirrel Ovation"
       }
-    },
-    "boost": [],
-    "challenge": [],
-    "coin": [],
-    "editor": []
+    }
   }
 }
