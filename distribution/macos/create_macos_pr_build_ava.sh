@@ -113,6 +113,7 @@ fi
 
 # Package it into a disk image.
 dotnet tool install --global DotnetPackaging.Tool
+export PATH="$PATH:$HOME/.dotnet/tools"
 
 DMG_FOLDER="$OUTPUT_DIR/dmg"
 BACKGROUND_FOLDER="$DMG_FOLDER/.background"
