@@ -3,7 +3,7 @@
 set -e
 
 if [ "$#" -lt 8 ]; then
-    echo "usage <BASE_DIR> <TEMP_DIRECTORY> <OUTPUT_DIRECTORY> <ENTITLEMENTS_FILE_PATH> <VERSION> <SOURCE_REVISION_ID> <CONFIGURATION> <CANARY>"
+    echo "usage <BASE_DIRECTORY> <TEMP_DIRECTORY> <OUTPUT_DIRECTORY> <ENTITLEMENTS_FILE_PATH> <VERSION> <SOURCE_REVISION_ID> <CONFIGURATION> <CANARY>"
     exit 1
 fi
 
@@ -11,7 +11,7 @@ mkdir -p "$1"
 mkdir -p "$2"
 mkdir -p "$3"
 
-BASE_DIR=$(readlink -f "$1")
+BASE_DIRECTORY=$(readlink -f "$1")
 TEMP_DIRECTORY=$(readlink -f "$2")
 OUTPUT_DIRECTORY=$(readlink -f "$3")
 ENTITLEMENTS_FILE_PATH=$(readlink -f "$4")
@@ -22,7 +22,7 @@ CANARY=$8
 
 if [[ "$(uname)" == "Darwin" ]]; then
     echo "Clearing xattr on all dot undercsore files"
-    find "$BASE_DIR" -type f -name "._*" -exec sh -c '
+    find "$BASE_DIRECTORY" -type f -name "._*" -exec sh -c '
     for f; do
         dir=$(dirname "$f")
         base=$(basename "$f")
@@ -62,7 +62,7 @@ rm -rf "$TEMP_DIRECTORY/publish_x64/libarmeilleure-jitsupport.dylib"
 # TODO: remove this once done
 rm -rf "$TEMP_DIRECTORY/publish_arm64/libsoundio.dylib"
 
-pushd "$BASE_DIR/distribution/macos"
+pushd "$BASE_DIRECTORY/distribution/macos"
 ./create_app_bundle.sh "$TEMP_DIRECTORY/publish_x64" "$TEMP_DIRECTORY/output_x64" "$ENTITLEMENTS_FILE_PATH"
 ./create_app_bundle.sh "$TEMP_DIRECTORY/publish_arm64" "$TEMP_DIRECTORY/output_arm64" "$ENTITLEMENTS_FILE_PATH"
 popd
@@ -75,7 +75,7 @@ cp -R "$ARM64_APP_BUNDLE" "$UNIVERSAL_APP_BUNDLE"
 rm "$UNIVERSAL_APP_BUNDLE/$EXECUTABLE_SUB_PATH"
 
 # Make its libraries universal
-python3 "$BASE_DIR/distribution/macos/construct_universal_dylib.py" "$ARM64_APP_BUNDLE" "$X64_APP_BUNDLE" "$UNIVERSAL_APP_BUNDLE" "**/*.dylib"
+python3 "$BASE_DIRECTORY/distribution/macos/construct_universal_dylib.py" "$ARM64_APP_BUNDLE" "$X64_APP_BUNDLE" "$UNIVERSAL_APP_BUNDLE" "**/*.dylib"
 
 if ! [ -x "$(command -v lipo)" ];
 then
@@ -121,21 +121,21 @@ echo "Packaging .dmg"
 dotnet tool install --global DotnetPackaging.Tool
 export PATH="$PATH:$HOME/.dotnet/tools"
 
-DMG_FOLDER="$OUTPUT_DIR/dmg"
+DMG_FOLDER="$OUTPUT_DIRECTORY/dmg"
 BACKGROUND_FOLDER="$DMG_FOLDER/.background"
 
 mkdir "$DMG_FOLDER"
 mkdir "$BACKGROUND_FOLDER"
 
 cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
-cp "$BASE_DIR/distribution/macos/Ryujinx_DMG.png" "$BACKGROUND_FOLDER/Background.png"
+cp "$BASE_DIRECTORY/distribution/macos/Ryujinx_DMG.png" "$BACKGROUND_FOLDER/Background.png"
 
 dotnetpackager dmg from-directory \
 --directory "$DMG_FOLDER" \
---output "$OUTPUT_DIR/$RELEASE_DMG_FILE_NAME" \
+--output "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME" \
 --application-name "Ryujinx" \
 --version "$VERSION+$SOURCE_REVISION_ID" \
---icon "$BASE_DIR/distribution/misc/Logo.png" \
+--icon "$BASE_DIRECTORY/distribution/misc/Logo.png" \
 --with-default-layout
 
 # ... And sign it again. Thanks, Apple.
@@ -151,10 +151,10 @@ then
     # NOTE: Currently require https://github.com/indygreg/apple-platform-rs/pull/44 to work on other OSes.
     # cargo install --git "https://github.com/marysaka/apple-platform-rs" --branch "fix/adhoc-app-bundle" apple-codesign --bin "rcodesign"
     echo "Using rcodesign for ad-hoc signing"
-    rcodesign sign "$OUTPUT_DIR/$RELEASE_DMG_FILE_NAME"
+    rcodesign sign "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 else
     echo "Using codesign for ad-hoc signing"
-    codesign -f -s - "$OUTPUT_DIR/$RELEASE_DMG_FILE_NAME"
+    codesign -f -s - "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 fi
 
 echo "Done"
