@@ -128,10 +128,12 @@ mkdir "$BACKGROUND_FOLDER"
 cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
 cp "$BASE_DIR/distribution/macos/Ryujinx_DMG.png" "$BACKGROUND_FOLDER/Background.png"
 
-dotnetpackager dmg \
---input "$DMG_FOLDER" \
+dotnetpackager dmg from-directory \
+--directory "$DMG_FOLDER" \
 --output "$OUTPUT_DIR/$RELEASE_DMG_FILE_NAME" \
---app-name "Ryujinx"
+--app-name "Ryujinx" \
+--icon "$BASE_DIR/distribution/macos/Ryujinx.icns" \
+--with-default-layout
 
 # ... And sign it again. Thanks, Apple.
 if ! [ -x "$(command -v codesign)" ];
