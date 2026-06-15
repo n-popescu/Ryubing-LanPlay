@@ -14,7 +14,7 @@ mkdir "$APP_BUNDLE_DIRECTORY/Contents/Frameworks"
 mkdir "$APP_BUNDLE_DIRECTORY/Contents/MacOS"
 mkdir "$APP_BUNDLE_DIRECTORY/Contents/Resources"
 
-# Copy executable and nsure executable can be executed
+# Copy executable and ensure executable can be executed
 cp "$PUBLISH_DIRECTORY/Ryujinx" "$APP_BUNDLE_DIRECTORY/Contents/MacOS/Ryujinx"
 chmod u+x "$APP_BUNDLE_DIRECTORY/Contents/MacOS/Ryujinx"
 

@@ -31,7 +31,10 @@ if [[ "$(uname)" == "Darwin" ]]; then
     ' sh {} +
 fi
 
-RELEASE_TAR_FILE_NAME=ryujinx-$CONFIGURATION-$VERSION+$SOURCE_REVISION_ID-macos_universal.app.tar
+RELEASE_FILE_NAME="ryujinx-$CONFIGURATION-$VERSION+$SOURCE_REVISION_ID-macos_universal"
+RELEASE_APP_FILE_NAME="$RELEASE_FILE_NAME.app"
+RELEASE_DMG_FILE_NAME="$RELEASE_FILE_NAME.dmg"
+RELEASE_TAR_FILE_NAME="$RELEASE_FILE_NAME.tar"
 
 ARM64_APP_BUNDLE="$TEMP_DIRECTORY/output_arm64/Ryujinx.app"
 X64_APP_BUNDLE="$TEMP_DIRECTORY/output_x64/Ryujinx.app"
@@ -48,10 +51,10 @@ dotnet build -c "$CONFIGURATION" src/Ryujinx
 dotnet publish -c "$CONFIGURATION" -r osx-arm64 -o "$TEMP_DIRECTORY/publish_arm64" "${DOTNET_COMMON_ARGS[@]}" src/Ryujinx
 dotnet publish -c "$CONFIGURATION" -r osx-x64 -o "$TEMP_DIRECTORY/publish_x64" "${DOTNET_COMMON_ARGS[@]}" src/Ryujinx
 
-# Get rid of the support library for ARMeilleure for x64 (that's only for arm64)
+# Get rid of the support library for ARMeilleure for x64 (that's only for arm64).
 rm -rf "$TEMP_DIRECTORY/publish_x64/libarmeilleure-jitsupport.dylib"
 
-# Get rid of libsoundio from arm64 builds as we don't have a arm64 variant
+# Get rid of libsoundio from arm64 builds as we don't have a arm64 variant.
 # TODO: remove this once done
 rm -rf "$TEMP_DIRECTORY/publish_arm64/libsoundio.dylib"
 
@@ -63,11 +66,11 @@ popd
 rm -rf "$UNIVERSAL_APP_BUNDLE"
 mkdir -p "$OUTPUT_DIRECTORY"
 
-# Let's copy one of the two different app bundle and remove the executable
+# Let's copy one of the two different app bundle and remove the executable.
 cp -R "$ARM64_APP_BUNDLE" "$UNIVERSAL_APP_BUNDLE"
 rm "$UNIVERSAL_APP_BUNDLE/$EXECUTABLE_SUB_PATH"
 
-# Make its libraries universal
+# Make its libraries universal.
 python3 "$BASE_DIR/distribution/macos/construct_universal_dylib.py" "$ARM64_APP_BUNDLE" "$X64_APP_BUNDLE" "$UNIVERSAL_APP_BUNDLE" "**/*.dylib"
 
 if ! [ -x "$(command -v lipo)" ];
@@ -82,15 +85,15 @@ else
     LIPO=lipo
 fi
 
-# Make the executable universal
+# Make the executable universal.
 $LIPO "$ARM64_APP_BUNDLE/$EXECUTABLE_SUB_PATH" "$X64_APP_BUNDLE/$EXECUTABLE_SUB_PATH" -output "$UNIVERSAL_APP_BUNDLE/$EXECUTABLE_SUB_PATH" -create
 
-# Patch up the Info.plist to have appropriate version
+# Patch up the Info.plist to have appropriate version.
 sed -r -i.bck "s/\%\%RYUJINX_BUILD_VERSION\%\%/$VERSION/g;" "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist"
 sed -r -i.bck "s/\%\%RYUJINX_BUILD_GIT_HASH\%\%/$SOURCE_REVISION_ID/g;" "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist"
 rm "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist.bck"
 
-# Now sign it
+# Now sign it.
 if ! [ -x "$(command -v codesign)" ];
 then
     if ! [ -x "$(command -v rcodesign)" ];
@@ -108,13 +111,31 @@ else
     codesign --entitlements "$ENTITLEMENTS_FILE_PATH" -f -s - "$UNIVERSAL_APP_BUNDLE"
 fi
 
-echo "Creating archive"
-pushd "$OUTPUT_DIRECTORY"
-tar --exclude "Ryujinx.app/Contents/MacOS/Ryujinx" -cvf "$RELEASE_TAR_FILE_NAME" Ryujinx.app 1> /dev/null
-python3 "$BASE_DIR/distribution/misc/add_tar_exec.py" "$RELEASE_TAR_FILE_NAME" "Ryujinx.app/Contents/MacOS/Ryujinx" "Ryujinx.app/Contents/MacOS/Ryujinx"
-gzip -9 < "$RELEASE_TAR_FILE_NAME" > "$RELEASE_TAR_FILE_NAME.gz"
-rm "$RELEASE_TAR_FILE_NAME"
+# Package it into a disk image.
+dotnet tool install --global DotnetPackaging.Tool
 
-popd
+dotnetpackager dmg \
+--input "$PUBLISH_DIR" \
+--output "$OUTPUT_DIR/$RELEASE_DMG_FILE_NAME" \
+--background-image "$BASE_DIR/distribution/macos/Ryujinx_DMG.png" \
+--app-name "Ryujinx"
+
+# ... And sign it again. Thanks, Apple.
+if ! [ -x "$(command -v codesign)" ];
+then
+    if ! [ -x "$(command -v rcodesign)" ];
+    then
+        echo "Cannot find rcodesign on your system, please install rcodesign."
+        exit 1
+    fi
+
+    # NOTE: Currently require https://github.com/indygreg/apple-platform-rs/pull/44 to work on other OSes.
+    # cargo install --git "https://github.com/marysaka/apple-platform-rs" --branch "fix/adhoc-app-bundle" apple-codesign --bin "rcodesign"
+    echo "Using rcodesign for ad-hoc signing"
+    rcodesign sign "$OUTPUT_DIR/$RELEASE_DMG_FILE_NAME"
+else
+    echo "Using codesign for ad-hoc signing"
+    codesign -f -s - "$OUTPUT_DIR/$RELEASE_DMG_FILE_NAME"
+fi
 
 echo "Done"
