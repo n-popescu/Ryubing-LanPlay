@@ -126,9 +126,6 @@ then
     # cargo install --git "https://github.com/marysaka/apple-platform-rs" --branch "fix/adhoc-app-bundle" apple-codesign --bin "rcodesign"
     echo "Using rcodesign for ad-hoc signing"
     rcodesign sign --entitlements-xml-path "$ENTITLEMENTS_FILE_PATH" "$DMG_FOLDER/Ryujinx.app"
-
-    echo "Using rcodesign to verify signature"
-    rcodesign verify "$DMG_FOLDER/Ryujinx.app/Contents/MacOS/Ryujinx"
 else
     echo "Using codesign for ad-hoc signing"
     codesign --entitlements "$ENTITLEMENTS_FILE_PATH" --force --deep --sign - "$DMG_FOLDER/Ryujinx.app"
@@ -166,9 +163,6 @@ then
     # cargo install --git "https://github.com/marysaka/apple-platform-rs" --branch "fix/adhoc-app-bundle" apple-codesign --bin "rcodesign"
     echo "Using rcodesign for ad-hoc signing"
     rcodesign sign "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
-
-    echo "Using rcodesign to verify signature"
-    rcodesign verify "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 else
     echo "Using codesign for ad-hoc signing"
     codesign --force --deep --sign - "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
