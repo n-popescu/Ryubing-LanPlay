@@ -127,8 +127,9 @@ cp "$BASE_DIR/distribution/macos/Ryujinx_DMG.png" "$BACKGROUND_FOLDER/Background
 dotnetpackager dmg from-directory \
 --directory "$DMG_FOLDER" \
 --output "$OUTPUT_DIR/$RELEASE_DMG_FILE_NAME" \
---app-name "Ryujinx" \
---icon "$BASE_DIR/distribution/macos/Ryujinx.icns" \
+--application-name "Ryujinx" \
+--version "$VERSION+$SOURCE_REVISION_ID" \
+--icon "$BASE_DIR/distribution/misc/Logo.png" \
 --with-default-layout
 
 # ... And sign it again. Thanks, Apple.
