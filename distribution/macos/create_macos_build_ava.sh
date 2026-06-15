@@ -138,23 +138,4 @@ dotnetpackager dmg from-directory \
 --icon "$BASE_DIRECTORY/distribution/macos/Ryujinx_DMG_Icon.png" \
 --with-default-layout
 
-# ... And sign it again. Thanks, Apple.
-echo "Signing .dmg"
-if ! [ -x "$(command -v codesign)" ];
-then
-    if ! [ -x "$(command -v rcodesign)" ];
-    then
-        echo "Cannot find rcodesign on your system, please install rcodesign."
-        exit 1
-    fi
-
-    # NOTE: Currently require https://github.com/indygreg/apple-platform-rs/pull/44 to work on other OSes.
-    # cargo install --git "https://github.com/marysaka/apple-platform-rs" --branch "fix/adhoc-app-bundle" apple-codesign --bin "rcodesign"
-    echo "Using rcodesign for ad-hoc signing"
-    rcodesign sign "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
-else
-    echo "Using codesign for ad-hoc signing"
-    codesign -f -s - "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
-fi
-
 echo "Done"
