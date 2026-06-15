@@ -1099,20 +1099,17 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 string coursestr = course.ToString();
                 string gamemodestr = gamemode.ToString();
                 
-                
+                try
                 {
                     Dictionary<string, Dictionary<string, Dictionary<string, string>>> output;
                     string data;
-                    data = EmbeddedResources.ReadAllText("Ryujinx/Assets/RPC/thing.json");
-                    Console.Write($"Asset 'loaded'"); // OK FUTURE ME. IT FAILS TO LOAD THE ASSET. THE REST WORKS
+                    data = EmbeddedResources.ReadAllText("Ryujinx/Assets/RPCData/nsmbud.json");
                     output = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(data);
-                    Console.Write($"Deserialized");
-                    string outputloc = output["mario"]["1"]["1"];
-                    //string outputloc = output[morl(gamemodestr)][worldstr][coursestr];
+                    string outputloc = output[morl(gamemodestr)][worldstr][coursestr];
+                    return outputloc;
                 }
-
+                catch
                 {
-                    //Console.Write(e.ToString());
                     return $"Last Played: {othergamemode(gamemodestr)}";
                 }
             }
