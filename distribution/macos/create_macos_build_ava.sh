@@ -169,5 +169,6 @@ else
 
     echo "Using codesign to verify signature"
     spctl -a -vv "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
+fi
 
 echo "Done"
