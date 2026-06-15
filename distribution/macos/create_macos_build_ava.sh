@@ -97,8 +97,19 @@ sed -r -i.bck "s/\%\%RYUJINX_BUILD_VERSION\%\%/$VERSION/g;" "$UNIVERSAL_APP_BUND
 sed -r -i.bck "s/\%\%RYUJINX_BUILD_GIT_HASH\%\%/$SOURCE_REVISION_ID/g;" "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist"
 rm "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist.bck"
 
+# Set up staging.
+echo "\nStaging directory for packaging"
+DMG_FOLDER="$OUTPUT_DIRECTORY/dmg"
+BACKGROUND_FOLDER="$DMG_FOLDER/.background"
+
+mkdir "$DMG_FOLDER"
+mkdir "$BACKGROUND_FOLDER"
+
+cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
+cp "$BASE_DIRECTORY/distribution/macos/Ryujinx_DMG_Background.png" "$BACKGROUND_FOLDER/Background.png"
+
 # Now sign it.
-echo "Signing .app"
+echo "\nSigning .app"
 if ! [ -x "$(command -v codesign)" ];
 then
     if ! [ -x "$(command -v rcodesign)" ];
@@ -110,25 +121,22 @@ then
     # NOTE: Currently require https://github.com/indygreg/apple-platform-rs/pull/44 to work on other OSes.
     # cargo install --git "https://github.com/marysaka/apple-platform-rs" --branch "fix/adhoc-app-bundle" apple-codesign --bin "rcodesign"
     echo "Using rcodesign for ad-hoc signing"
-    rcodesign sign --entitlements-xml-path "$ENTITLEMENTS_FILE_PATH" "$UNIVERSAL_APP_BUNDLE"
+    rcodesign sign --entitlements-xml-path "$ENTITLEMENTS_FILE_PATH" "$DMG_FOLDER/Ryujinx.app"
+
+    echo "Using rcodesign to verify signature"
+    rcodesign verify "$DMG_FOLDER/Ryujinx.app"
 else
     echo "Using codesign for ad-hoc signing"
-    codesign --entitlements "$ENTITLEMENTS_FILE_PATH" -f -s - "$UNIVERSAL_APP_BUNDLE"
+    codesign --entitlements "$ENTITLEMENTS_FILE_PATH" --force --deep --sign - "$DMG_FOLDER/Ryujinx.app"
+    
+    echo "Using codesign to verify signature"
+    spctl -a -vv "$DMG_FOLDER/Ryujinx.app"
 fi
 
 # Package it into a disk image.
-echo "Packaging .dmg"
+echo "\nPackaging .dmg"
 dotnet tool install --global DotnetPackaging.Tool
 export PATH="$PATH:$HOME/.dotnet/tools"
-
-DMG_FOLDER="$OUTPUT_DIRECTORY/dmg"
-BACKGROUND_FOLDER="$DMG_FOLDER/.background"
-
-mkdir "$DMG_FOLDER"
-mkdir "$BACKGROUND_FOLDER"
-
-cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
-cp "$BASE_DIRECTORY/distribution/macos/Ryujinx_DMG_Background.png" "$BACKGROUND_FOLDER/Background.png"
 
 dotnetpackager dmg from-directory \
 --directory "$DMG_FOLDER" \
@@ -137,5 +145,30 @@ dotnetpackager dmg from-directory \
 --version "$VERSION+$SOURCE_REVISION_ID" \
 --icon "$BASE_DIRECTORY/distribution/macos/Ryujinx_DMG_Icon.png" \
 --with-default-layout
+
+# ... And sign it again. Thanks, Apple.
+echo "\nSigning .dmg"
+if ! [ -x "$(command -v codesign)" ];
+then
+    if ! [ -x "$(command -v rcodesign)" ];
+    then
+        echo "Cannot find rcodesign on your system, please install rcodesign."
+        exit 1
+    fi
+
+    # NOTE: Currently require https://github.com/indygreg/apple-platform-rs/pull/44 to work on other OSes.
+    # cargo install --git "https://github.com/marysaka/apple-platform-rs" --branch "fix/adhoc-app-bundle" apple-codesign --bin "rcodesign"
+    echo "Using rcodesign for ad-hoc signing"
+    rcodesign sign "$DMG_FOLDER/Ryujinx.app"
+
+    echo "Using rcodesign to verify signature"
+    rcodesign verify "$DMG_FOLDER/Ryujinx.app"
+else
+    echo "Using codesign for ad-hoc signing"
+    codesign --force --deep --sign - "$DMG_FOLDER/Ryujinx.app"
+
+    echo "Using codesign to verify signature"
+    spctl -a -vv "$DMG_FOLDER/Ryujinx.app"
+fi
 
 echo "Done"
