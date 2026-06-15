@@ -115,13 +115,31 @@ else
     codesign --entitlements "$ENTITLEMENTS_FILE_PATH" -f -s - "$UNIVERSAL_APP_BUNDLE"
 fi
 
-echo "Creating archive"
-pushd "$OUTPUT_DIRECTORY"
-tar --exclude "Ryujinx.app/Contents/MacOS/Ryujinx" -cvf "$RELEASE_TAR_FILE_NAME" Ryujinx.app 1> /dev/null
-python3 "$BASE_DIR/distribution/misc/add_tar_exec.py" "$RELEASE_TAR_FILE_NAME" "Ryujinx.app/Contents/MacOS/Ryujinx" "Ryujinx.app/Contents/MacOS/Ryujinx"
-gzip -9 < "$RELEASE_TAR_FILE_NAME" > "$RELEASE_TAR_FILE_NAME.gz"
-rm "$RELEASE_TAR_FILE_NAME"
+# Package it into a disk image.
+dotnet tool install --global DotnetPackaging.Tool
 
-popd
+dotnetpackager dmg \
+--input "$PUBLISH_DIR" \
+--output "$OUTPUT_DIR/$RELEASE_DMG_FILE_NAME" \
+--background-image "$BASE_DIR/distribution/macos/Ryujinx_DMG.png" \
+--app-name "Ryujinx"
+
+# ... And sign it again. Thanks, Apple.
+if ! [ -x "$(command -v codesign)" ];
+then
+    if ! [ -x "$(command -v rcodesign)" ];
+    then
+        echo "Cannot find rcodesign on your system, please install rcodesign."
+        exit 1
+    fi
+
+    # NOTE: Currently require https://github.com/indygreg/apple-platform-rs/pull/44 to work on other OSes.
+    # cargo install --git "https://github.com/marysaka/apple-platform-rs" --branch "fix/adhoc-app-bundle" apple-codesign --bin "rcodesign"
+    echo "Using rcodesign for ad-hoc signing"
+    rcodesign sign "$OUTPUT_DIR/$RELEASE_DMG_FILE_NAME"
+else
+    echo "Using codesign for ad-hoc signing"
+    codesign -f -s - "$OUTPUT_DIR/$RELEASE_DMG_FILE_NAME"
+fi
 
 echo "Done"
