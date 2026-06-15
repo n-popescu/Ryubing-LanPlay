@@ -1106,7 +1106,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
                     data = EmbeddedResources.ReadAllText("Ryujinx/Assets/RPCData/nsmbud.json");
                     output = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(data);
                     string outputloc = output[morl(gamemodestr)][worldstr][coursestr];
-                    return outputloc;
+                    return $"Last Played: Course {worldstr}-{specialmapnames(coursestr)} | {outputloc}";
                 }
                 catch
                 {
@@ -1134,7 +1134,33 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 "3" => "Challenges",
                 "4" => "Coin Battle",
                 "5" => "Coin Battle Editor",
-                _ => "OH FUCK"
+                _ => ""
+            };
+
+            static string specialmapnames(string? course) => course switch
+            {
+                "1" => course,
+                "2" => course,
+                "3" => course,
+                "4" => course,
+                "5" => course,
+                "6" => course,
+                "7" => course,
+                "8" => course,
+                "9" => course,
+                "13" => "Shortcut",
+                "14" => "Shortcut",
+                "15" => "Shortcut",
+                "16" => "Shortcut",
+                "17" => "Shortcut",
+                "20" => "Ghost",
+                "21" => "Tower",
+                "22" => "Tower",
+                "23" => "Castle",
+                "37" => "Airship",
+                "42" => "Castle",
+                "43" => "Castle",
+                _ => "Hazard"
             };
             
             return "";
