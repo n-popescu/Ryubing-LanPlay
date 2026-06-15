@@ -97,7 +97,8 @@ sed -r -i.bck "s/\%\%RYUJINX_BUILD_VERSION\%\%/$VERSION/g;" "$UNIVERSAL_APP_BUND
 sed -r -i.bck "s/\%\%RYUJINX_BUILD_GIT_HASH\%\%/$SOURCE_REVISION_ID/g;" "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist"
 rm "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist.bck"
 
-# Now sign it
+# Now sign it.
+echo "Signing .app"
 if ! [ -x "$(command -v codesign)" ];
 then
     if ! [ -x "$(command -v rcodesign)" ];
@@ -116,6 +117,7 @@ else
 fi
 
 # Package it into a disk image.
+echo "Packaging .dmg"
 dotnet tool install --global DotnetPackaging.Tool
 export PATH="$PATH:$HOME/.dotnet/tools"
 
@@ -137,6 +139,7 @@ dotnetpackager dmg from-directory \
 --with-default-layout
 
 # ... And sign it again. Thanks, Apple.
+echo "Signing .dmg"
 if ! [ -x "$(command -v codesign)" ];
 then
     if ! [ -x "$(command -v rcodesign)" ];
