@@ -1105,12 +1105,12 @@ namespace Ryujinx.Ava.Systems.PlayReport
                     string data;
                     data = EmbeddedResources.ReadAllText("Ryujinx/Assets/RPCData/nsmbud.json");
                     output = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(data);
-                    string outputloc = output[morl(gamemodestr)][worldstr][coursestr];
-                    return $"Last Played: Course {worldstr}-{specialmapnames(coursestr)} | {outputloc}";
+                    string outputloc = output[MorL(gamemodestr)][worldstr][coursestr];
+                    return $"Last Played: Course {worldstr}-{SpecialMapNames(coursestr)} | {outputloc}";
                 }
                 catch
                 {
-                    return $"Last Played: {othergamemode(gamemodestr)}";
+                    return $"Last Played: {OtherGameMode(gamemodestr)}";
                 }
             }
             
@@ -1119,7 +1119,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 return "At the main menu";
             }
 
-            static string morl(string? gamemode) => gamemode switch
+            static string MorL(string? gamemode) => gamemode switch
             {
                 "0" => "mario",
                 "1" => "luigi",
@@ -1128,7 +1128,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 _ => gamemode
             };
             
-            static string othergamemode(string? gamemode) => gamemode switch
+            static string OtherGameMode(string? gamemode) => gamemode switch
             {
                 "2" => "Boost Rush",
                 "3" => "Challenges",
@@ -1137,7 +1137,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 _ => ""
             };
 
-            static string specialmapnames(string? course) => course switch
+            static string SpecialMapNames(string? course) => course switch
             {
                 "1" => course,
                 "2" => course,
