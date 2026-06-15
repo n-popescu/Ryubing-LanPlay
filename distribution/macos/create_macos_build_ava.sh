@@ -124,7 +124,7 @@ BACKGROUND_FOLDER="$DMG_FOLDER/.background"
 mkdir "$DMG_FOLDER"
 mkdir "$BACKGROUND_FOLDER"
 
-cp "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
+cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
 cp "$BASE_DIR/distribution/macos/Ryujinx_DMG.png" "$BACKGROUND_FOLDER/Background.png"
 
 dotnetpackager dmg \
