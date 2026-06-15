@@ -1163,6 +1163,15 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 _ => "Hazard"
             };
             
+            // For future reference
+            // Tower course = 21, Castle course = 23,Haunted Mansion/ship = 20
+            // Tower course 2 (rock candy) = 22
+            // Peach castle 1 = 42, Peach final battle = 43
+            // airship = 37, jungle beetles = 17
+            // Glacier seals = 16, water leaf = 15
+            // desert ice = 14, acorn squid = 13
+            // all other course numbers are to be considered a hazard
+            
             return "";
             
         }
@@ -1170,44 +1179,3 @@ namespace Ryujinx.Ava.Systems.PlayReport
     }
 
 }
-
-// order = gamemode > world > course
-
-// Tower course = 21, Castle course = 23,Haunted Mansion/ship = 20
-// Tower course 2 (rock candy) = 22
-// Peach castle 1 = 42, Peach final battle = 43
-// airship = 37, jungle beetles = 17
-// Glacier seals = 16, water leaf = 15
-// desert ice = 14, acorn squid = 13
-// all other course numbers are to be considered a hazard
-
-/*
-
-                if (gamemode.ToString() == "0")
-                {
-                }
-                else if (gamemode.ToString() == "1")
-                {
-                    return $"Luigi mode";
-                }
-                else if (gamemode.ToString() == "2")
-                {
-                    return "Last played: Boost Rush";
-                }
-                else if (gamemode.ToString() == "3")
-                {
-                    return "Last played: Challenges";
-                }
-                else if (gamemode.ToString() == "4")
-                {
-                    return "Last played: Coin Battle";
-                }
-                else if (gamemode.ToString() == "5")
-                {
-                    return "Last played: Coin Battle Editor";
-                }
-                else
-                {
-                    return "Just did something";
-                }
-*/
