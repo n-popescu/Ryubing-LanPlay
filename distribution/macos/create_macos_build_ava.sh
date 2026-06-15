@@ -118,10 +118,18 @@ fi
 # Package it into a disk image.
 dotnet tool install --global DotnetPackaging.Tool
 
+DMG_FOLDER="$OUTPUT_DIR/dmg"
+BACKGROUND_FOLDER="$DMG_FOLDER/.background"
+
+mkdir "$DMG_FOLDER"
+mkdir "$BACKGROUND_FOLDER"
+
+cp "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
+cp "$BASE_DIR/distribution/macos/Ryujinx_DMG.png" "$BACKGROUND_FOLDER/Background.png"
+
 dotnetpackager dmg \
---input "$PUBLISH_DIR" \
+--input "$DMG_FOLDER" \
 --output "$OUTPUT_DIR/$RELEASE_DMG_FILE_NAME" \
---background-image "$BASE_DIR/distribution/macos/Ryujinx_DMG.png" \
 --app-name "Ryujinx"
 
 # ... And sign it again. Thanks, Apple.
