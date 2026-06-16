@@ -19,14 +19,23 @@ VERSION=$5
 SOURCE_REVISION_ID=$6
 CONFIGURATION=$7
 
+echo "Clearing xattr on all dot undercsore files"
 if [[ "$(uname)" == "Darwin" ]]; then
-    echo "Clearing xattr on all dot undercsore files"
     find "$BASE_DIRECTORY" -type f -name "._*" -exec sh -c '
     for f; do
         dir=$(dirname "$f")
         base=$(basename "$f")
         orig="$dir/${base#._}"
         [ -f "$orig" ] && xattr -c "$orig" || true
+    done
+    ' sh {} +
+else
+    find "$BASE_DIRECTORY" -type f -name "._*" -exec sh -c '
+    for f; do
+        dir=$(dirname "$f")
+        base=$(basename "$f")
+        orig="$dir/${base#._}"
+        [ -f "$orig" ] && setfattr -x "$orig" || true
     done
     ' sh {} +
 fi

@@ -191,6 +191,9 @@ jobs:
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
 
+      - name: Install attr
+        run: sudo apt install attr
+
       - name: Publish macOS Ryujinx
         run: |
           bash distribution/macos/create_macos_pr_build_ava.sh . publish_tmp publish ./distribution/macos/entitlements.xml "${{ steps.version_info.outputs.result }}" "${{ steps.version_info.outputs.git_short_hash }}" "${{ matrix.configuration }}" "-p:ExtraDefineConstants=DISABLE_UPDATER"
