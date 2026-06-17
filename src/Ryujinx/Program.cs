@@ -437,9 +437,6 @@ namespace Ryujinx.Ava
 
         internal static void PrintSystemInfo()
         {
-            string data;
-            data = EmbeddedResources.ReadAllText("Ryujinx/Assets/RPCData/nsmbud.json");
-            Console.WriteLine(data);
             Logger.Notice.Print(LogClass.Application,  "   ___                 __    _              ");
             Logger.Notice.Print(LogClass.Application, @"  / _ \  __ __ __ __  / /   (_)  ___   ___ _");
             Logger.Notice.Print(LogClass.Application, @" / , _/ / // // // / / _ \ / /  / _ \ / _ `/");

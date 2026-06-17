@@ -1133,12 +1133,16 @@ namespace Ryujinx.Ava.Systems.PlayReport
                     string data;
                     data = EmbeddedResources.ReadAllText("Ryujinx/Assets/RPCData/nsmbud.json");
                     output = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(data);
+                    if (SpecialMapNames(coursestr) == "Hazard")
+                    {
+                        return $"Last Played: Course {worldstr}-Hazard";
+                    }
                     string outputloc = output[MorL(gamemodestr)][worldstr][coursestr];
                     return $"Last Played: Course {worldstr}-{SpecialMapNames(coursestr)} | {outputloc}";
                 }
                 catch
                 {
-                    return $"Last Played: {OtherGameMode(gamemodestr)}";
+                    return $"Last Played: Something unaccounted for";
                 }
             }
             

@@ -139,7 +139,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 .AddSparseMultiValueFormatter(["gold", "secret", "stage"], MiitopiaRPC)
             )
             .AddSpec(
-                "0100ea80032ea000",
+                "0100ea80032ea000", // New Super Mario Bros U Deluxe 
                 spec => spec
                     .WithDescription("based on world map return info.")
                     .AddSparseMultiValueFormatter(["WorldNo", "CourseNo", "RlId", "TotalPlayTime", "GameModeType"], NSMBUDRPC)
