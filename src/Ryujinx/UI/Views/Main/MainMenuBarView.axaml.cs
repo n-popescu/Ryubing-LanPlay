@@ -36,7 +36,6 @@ namespace Ryujinx.Ava.UI.Views.Main
 
             ToggleFileTypesMenuItem.ItemsSource = GenerateToggleFileTypeItems();
             ChangeLanguageMenuItem.ItemsSource = GenerateLanguageMenuItems();
-
             MiiAppletMenuItem.Command = Commands.Create(OpenMiiApplet);
             CloseRyujinxMenuItem.Command = Commands.Create(() => Window?.Close());
             OpenSettingsMenuItem.Command = Commands.Create(OpenSettings);
@@ -44,8 +43,6 @@ namespace Ryujinx.Ava.UI.Views.Main
             ResumeEmulationMenuItem.Command = Commands.Create(() => ViewModel.AppHost?.Resume());
             StopEmulationMenuItem.Command = Commands.Create(() => ViewModel.AppHost?.ShowExitPrompt().OrCompleted());
             RestartEmulationMenuItem.Command = Commands.Create(() => ViewModel.RestartEmulation());
-            InstallFileTypesMenuItem.Command = Commands.Create(InstallFileTypes);
-            UninstallFileTypesMenuItem.Command = Commands.Create(UninstallFileTypes);
             XciTrimmerMenuItem.Command = Commands.Create(XciTrimmerView.Show);
             AboutWindowMenuItem.Command = Commands.Create(AboutView.Show);
             CompatibilityListMenuItem.Command = Commands.Create(() => CompatibilityListWindow.Show());
@@ -77,6 +74,7 @@ namespace Ryujinx.Ava.UI.Views.Main
                 .Select(it =>
                     new CheckBox
                     {
+                        Margin = new Thickness(10, 0, 0, 0),
                         Content = $".{it.FileName}",
                         IsChecked = it.FileType.GetConfigValue(ConfigurationState.Instance.UI.ShownFileTypes),
                         Command = Commands.Create(() => Window.ToggleFileType(it.FileName))
@@ -98,8 +96,7 @@ namespace Ryujinx.Ava.UI.Views.Main
 
                 MenuItem menuItem = new()
                 {
-                    Padding = new Thickness(15, 0, 0, 0),
-                    Margin = new Thickness(3, 0, 3, 0),
+                    Padding = new Thickness(10, 0, 0, 0),
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     Header = code == currentLanguageCode ? $"{languageName}  ✔" : languageName,
                     Command = Commands.Create(() => MainWindowViewModel.ChangeLanguage(code))
@@ -187,24 +184,6 @@ namespace Ryujinx.Ava.UI.Views.Main
             if (sender is MenuItem)
                 ViewModel.HasSkylander = ViewModel.AppHost.Device.System.HasSkylander(out _);
                 ViewModel.ShowSkylanderActions = string.Equals(ViewModel.AppHost.Device.Processes.ActiveApplication.ProgramIdText.ToUpper(), "0100CCC0002E6000");
-        }
-
-        private async Task InstallFileTypes()
-        {
-            ViewModel.AreMimeTypesRegistered = FileAssociationHelper.Install();
-            if (ViewModel.AreMimeTypesRegistered)
-                await ContentDialogHelper.CreateInfoDialog(LocaleManager.Instance[LocaleKeys.DialogInstallFileTypesSuccessMessage], string.Empty, LocaleManager.Instance[LocaleKeys.InputDialogOk], string.Empty, string.Empty);
-            else
-                await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.DialogInstallFileTypesErrorMessage]);
-        }
-
-        private async Task UninstallFileTypes()
-        {
-            ViewModel.AreMimeTypesRegistered = !FileAssociationHelper.Uninstall();
-            if (!ViewModel.AreMimeTypesRegistered)
-                await ContentDialogHelper.CreateInfoDialog(LocaleManager.Instance[LocaleKeys.DialogUninstallFileTypesSuccessMessage], string.Empty, LocaleManager.Instance[LocaleKeys.InputDialogOk], string.Empty, string.Empty);
-            else
-                await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.DialogUninstallFileTypesErrorMessage]);
         }
 
         private void ChangeWindowSize(string resolution)

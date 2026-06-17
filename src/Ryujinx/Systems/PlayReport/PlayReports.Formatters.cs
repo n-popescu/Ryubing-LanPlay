@@ -1071,7 +1071,6 @@ namespace Ryujinx.Ava.Systems.PlayReport
 
             _ => FormattedValue.ForceReset
         };
-
         private static FormattedValue TomodachiLifeLTD_Status(SingleValue value)
         {
             MessagePackObject messagePackObject = value.Matched.PackedValue;
@@ -1079,8 +1078,9 @@ namespace Ryujinx.Ava.Systems.PlayReport
             
             int miiCount = messagePackObjectDictionary["MiiNum"].AsInt32();
             int fountainLevel = messagePackObjectDictionary["FountainLevel"].AsInt32();
-            
-            return $"Looking after {"Mii".ToQuantity(miiCount)}, with an island level of {fountainLevel}";
+
+            // Fountain Level should be kept consistent throughout code, so I basically made sure of it
+            return $"Looking after {"Mii".ToQuantity(miiCount)}, with a fountain level of {fountainLevel}";
         }
         
         private static FormattedValue AnimalCrossingNewHorizons_AppCommon(SingleValue value)
@@ -1089,6 +1089,34 @@ namespace Ryujinx.Ava.Systems.PlayReport
             MessagePackObjectDictionary messagePackObjectDictionary = messagePackObject.AsDictionary();
 
             return $"Living on {messagePackObjectDictionary["LandName"].AsString()} Island";
+        }
+
+        private static FormattedValue MiitopiaRPC(SparseMultiValue values)
+        {
+            if (values.Matched.TryGetValue("gold", out Value gold) && values.Matched.TryGetValue("stage", out Value location))
+            {
+                return $"{LocFinal(location.ToString())} with {gold} gold";
+            }
+
+            if (values.Matched.TryGetValue("secret", out Value secret)) // Yes "secret" is unused, but it only appears in the MII selector.
+            {
+                return $"In the MII selector";
+            }
+            
+            return $"At the main menu";
+            
+            static string LocFinal(string? location) => location switch
+            {
+                "0" => "Somewhere in Miitopia",
+                "1" => "Wandering around Greenhorne",
+                "2" => "Trodding through Neksdor",
+                "3" => "Exploring The Realm of the Fey",
+                "4" => "Burning their feet at Karkaton",
+                "5" => "Soaring in the skies of Miitopia",
+                "6" => "Fighting up The Sky Scraper",
+                "7" => "Traveling Miitopia",
+                _ => "Wandering"
+            };
         }
 
         private static FormattedValue NSMBUDRPC(SparseMultiValue values)
@@ -1175,7 +1203,5 @@ namespace Ryujinx.Ava.Systems.PlayReport
             return "";
             
         }
-    
     }
-
 }
