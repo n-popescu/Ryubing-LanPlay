@@ -7,7 +7,7 @@
     mc:Ignorable="d"
     xmlns:viewModels="clr-namespace:Ryujinx.Ava.UI.ViewModels"
     xmlns:controls="clr-namespace:Ryujinx.Ava.UI.Controls"
-    xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+    xmlns:i="clr-namespace:Optris.Icons.Avalonia;assembly=Optris.Icons.Avalonia"
     xmlns:common="clr-namespace:Ryujinx.Common;assembly=Ryujinx.Common"
     xmlns:renderDocApi="clr-namespace:Ryujinx.Graphics.RenderDocApi;assembly=Ryujinx.Graphics.RenderDocApi"
     x:DataType="viewModels:MainWindowViewModel"
