@@ -4594,7 +4594,7 @@
         "ru_RU": null,
         "sv_SE": null,
         "th_TH": "คูณ 2",
-        "tr_TR": "2x",
+        "tr_TR": null,
         "uk_UA": "",
         "zh_CN": null,
         "zh_TW": "2 倍"
@@ -4619,7 +4619,7 @@
         "ru_RU": null,
         "sv_SE": null,
         "th_TH": "คูณ 4",
-        "tr_TR": "4x",
+        "tr_TR": null,
         "uk_UA": "",
         "zh_CN": null,
         "zh_TW": "4 倍"
@@ -4644,7 +4644,7 @@
         "ru_RU": null,
         "sv_SE": null,
         "th_TH": "คูณ 8",
-        "tr_TR": "8x",
+        "tr_TR": null,
         "uk_UA": "",
         "zh_CN": null,
         "zh_TW": "8 倍"
@@ -4669,7 +4669,7 @@
         "ru_RU": null,
         "sv_SE": null,
         "th_TH": "คูณ 16",
-        "tr_TR": "16x",
+        "tr_TR": null,
         "uk_UA": "",
         "zh_CN": null,
         "zh_TW": "16 倍"
@@ -4769,7 +4769,7 @@
         "ru_RU": null,
         "sv_SE": null,
         "th_TH": "คูณ 2 (1440p/2160p)",
-        "tr_TR": "2x (1440p/2160p)",
+        "tr_TR": null,
         "uk_UA": "",
         "zh_CN": "2 倍 (1440p/2160p)",
         "zh_TW": "2 倍 (1440p/2160p)"
@@ -4794,7 +4794,7 @@
         "ru_RU": null,
         "sv_SE": null,
         "th_TH": "คูณ 3 (2160p/3240p)",
-        "tr_TR": "3x (2160p/3240p)",
+        "tr_TR": null,
         "uk_UA": "",
         "zh_CN": "3 倍 (2160p/3240p)",
         "zh_TW": "3 倍 (2160p/3240p)"
@@ -8266,6 +8266,8 @@
         "no_NO": "Veiledning",
         "pl_PL": "",
         "pt_BR": "Guia",
+        "ru_RU": "",
+        "sv_SE": "",
         "th_TH": "คู่มือ",
         "tr_TR": "Rehber",
         "uk_UA": "Меню",
