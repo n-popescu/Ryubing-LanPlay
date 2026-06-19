@@ -115,7 +115,7 @@ echo "Staging directory for packaging"
 cp "$BASE_DIRECTORY/distribution/macos/DMG_ASSETS/DMG_Structure.tar.gz" "$OUTPUT_DIRECTORY/DMG_Structure.tar.gz"
 tar -xf "$OUTPUT_DIRECTORY/DMG_Structure.tar.gz"
 DMG_FOLDER="$OUTPUT_DIRECTORY/DMG Structure"
-cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
+cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER"
 
 # Now sign it.
 echo ""
