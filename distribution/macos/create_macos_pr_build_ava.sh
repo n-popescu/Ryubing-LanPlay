@@ -87,11 +87,11 @@ python3 "$BASE_DIRECTORY/distribution/macos/construct_universal_dylib.py" "$ARM6
 
 if ! [ -x "$(command -v lipo)" ];
 then
-    if ! [ -x "$(command -v llvm-lipo-17)" ];
+    if ! [ -x "$(command -v llvm-lipo-22)" ];
     then
         LIPO=llvm-lipo
     else
-        LIPO=llvm-lipo-17
+        LIPO=llvm-lipo-22
     fi
 else
     LIPO=lipo
