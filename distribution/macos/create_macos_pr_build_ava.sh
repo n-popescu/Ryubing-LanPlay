@@ -107,14 +107,12 @@ rm "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist.bck"
 # Set up staging.
 echo ""
 echo "Staging directory for packaging"
-DMG_FOLDER="$OUTPUT_DIRECTORY/dmg"
-BACKGROUND_FOLDER="$DMG_FOLDER/.background"
 
-mkdir "$DMG_FOLDER"
-mkdir "$BACKGROUND_FOLDER"
-
+cp "$BASE_DIRECTORY/distribution/macos/DMG_ASSETS/DMG_Structure.tar.gz" "$OUTPUT_DIRECTORY/DMG_Structure.tar.gz"
+tar -xf "$OUTPUT_DIRECTORY/DMG_Structure.tar.gz"
+DMG_FOLDER="$OUTPUT_DIRECTORY/DMG\ Structure"
+rm -r "$DMG_FOLDER/Ryujinx.app"
 cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
-cp "$BASE_DIRECTORY/distribution/macos/Ryujinx_DMG_Background.png" "$BACKGROUND_FOLDER/Background.png"
 
 # Now sign it.
 echo ""
@@ -150,8 +148,6 @@ dotnetpackager dmg from-directory \
 --output "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME" \
 --application-name "Ryujinx" \
 --version "$VERSION+$SOURCE_REVISION_ID" \
---icon "$BASE_DIRECTORY/distribution/macos/Ryujinx_DMG_Icon.png" \
---with-default-layout
 
 # ... And sign it again. Thanks, Apple.
 echo ""
