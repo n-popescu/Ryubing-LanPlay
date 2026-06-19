@@ -62,7 +62,7 @@ dotnet build -c "$CONFIGURATION" src/Ryujinx
 dotnet publish -c "$CONFIGURATION" -r osx-arm64 -o "$TEMP_DIRECTORY/publish_arm64" "${DOTNET_COMMON_ARGS[@]}" src/Ryujinx
 dotnet publish -c "$CONFIGURATION" -r osx-x64 -o "$TEMP_DIRECTORY/publish_x64" "${DOTNET_COMMON_ARGS[@]}" src/Ryujinx
 
-# Get rid of the support library for ARMeilleure for x64 (that's only for arm64)
+# Get rid of the support library for ARMeilleure for x64 (that's only for arm64).
 # Removing this line to potentially resolve https://github.com/Ryubing/Issues/issues/433 without killing KosmicKrisp
 # rm -rf "$TEMP_DIRECTORY/publish_x64/libarmeilleure-jitsupport.dylib"
 
@@ -87,11 +87,11 @@ python3 "$BASE_DIRECTORY/distribution/macos/construct_universal_dylib.py" "$ARM6
 
 if ! [ -x "$(command -v lipo)" ];
 then
-    if ! [ -x "$(command -v llvm-lipo-22)" ];
+    if ! [ -x "$(command -v llvm-lipo-17)" ];
     then
         LIPO=llvm-lipo
     else
-        LIPO=llvm-lipo-22
+        LIPO=llvm-lipo-17
     fi
 else
     LIPO=lipo
