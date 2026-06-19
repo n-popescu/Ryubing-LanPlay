@@ -127,7 +127,7 @@ then
     # NOTE: Currently require https://github.com/indygreg/apple-platform-rs/pull/44 to work on other OSes.
     # cargo install --git "https://github.com/marysaka/apple-platform-rs" --branch "fix/adhoc-app-bundle" apple-codesign --bin "rcodesign"
     echo "Using rcodesign for ad-hoc signing"
-    rcodesign sign --entitlements-xml-path "$ENTITLEMENTS_FILE_PATH" "$DMG_FOLDER/Ryujinx.app"
+    rcodesign sign --entitlements-xml-path "$ENTITLEMENTS_FILE_PATH" "$DMG_FOLDER/Ryujinx.app/Contents/MacOS/Ryujinx"
 else
     echo "Using codesign for ad-hoc signing"
     codesign --entitlements "$ENTITLEMENTS_FILE_PATH" --force --deep --sign - "$DMG_FOLDER/Ryujinx.app"
