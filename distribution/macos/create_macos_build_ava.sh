@@ -142,8 +142,13 @@ fi
 # Package it into a disk image.
 echo ""
 echo "Packaging .dmg"
+
 dd if=/dev/zero of="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" bs=1M count=100
 mkfs.hfsplus -v "Ryujinx" "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
+sudo mount -o loop "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" ./mnt
+sudo cp -r -a "$DMG_FOLDER". ./mnt/
+sudo umount ./mnt
+
 dmg dmg -c lzma "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 rm -f "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
 
