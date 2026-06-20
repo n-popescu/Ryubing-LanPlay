@@ -25,45 +25,27 @@ namespace Ryujinx.Ava.UI.Helpers
             
             if (isProcessing)
             {
-                // Failed
                 if (app.ProcessingOutcome is not OperationOutcome.Successful
                     and not OperationOutcome.Undetermined)
                 {
-                    return Symbol.Alert;
+                    return Symbol.Important;
                 }
 
-                // Success
-                if (app.PercentageProgress >= 100)
-                {
-                    return Symbol.Checkmark;
-                }
-
-                // Waiting / queued
-                if (app.PercentageProgress == 0)
-                {
-                    return Symbol.Dismiss;
-                }
-
-                // Currently working
                 return Symbol.Sync;
             }
 
-            // Error state
             if (app.ProcessingOutcome is not OperationOutcome.Successful
                 and not OperationOutcome.Undetermined)
                 return Symbol.Important;
 
-            // Partial (both trimmable & untrimmable)
             if (app.Trimmable && app.Untrimmable)
                 return Symbol.Repair;
 
-            // File is currently untrimmed
             if (app.Trimmable)
-                return Symbol.Dismiss;
+                return Symbol.Cut;
 
-            // File is currently trimmed
             if (app.Untrimmable)
-                return Symbol.Checkmark; // ✔
+                return Symbol.Checkmark;
 
             return default(Symbol);
         }
