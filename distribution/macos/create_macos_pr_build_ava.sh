@@ -108,10 +108,11 @@ rm "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist.bck"
 echo ""
 echo "Staging directory for packaging"
 
-cp "$BASE_DIRECTORY/distribution/macos/DMG_ASSETS/DMG_Structure.tar.gz" "$OUTPUT_DIRECTORY/DMG_Structure.tar.gz"
-tar -xf "$OUTPUT_DIRECTORY/DMG_Structure.tar.gz"
-DMG_FOLDER="$OUTPUT_DIRECTORY/DMG_Structure"
-cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER"
+DMG_FOLDER="$OUTPUT_DIRECTORY/dmg"
+mkdir "$DMG_FOLDER"
+
+tar -xzf "$BASE_DIRECTORY/distribution/macos/DMG_ASSETS/DMG_Structure.tar.gz" -C "$DMG_FOLDER"
+cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
 
 # Now sign it.
 echo ""
