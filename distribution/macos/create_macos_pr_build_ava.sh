@@ -63,8 +63,7 @@ dotnet publish -c "$CONFIGURATION" -r osx-arm64 -o "$TEMP_DIRECTORY/publish_arm6
 dotnet publish -c "$CONFIGURATION" -r osx-x64 -o "$TEMP_DIRECTORY/publish_x64" "${DOTNET_COMMON_ARGS[@]}" src/Ryujinx
 
 # Get rid of the support library for ARMeilleure for x64 (that's only for arm64).
-# Removing this line to potentially resolve https://github.com/Ryubing/Issues/issues/433 without killing KosmicKrisp
-# rm -rf "$TEMP_DIRECTORY/publish_x64/libarmeilleure-jitsupport.dylib"
+rm -rf "$TEMP_DIRECTORY/publish_x64/libarmeilleure-jitsupport.dylib"
 
 # Get rid of libsoundio from arm64 builds as we don't have a arm64 variant.
 # TODO: remove this once done
