@@ -111,8 +111,7 @@ echo "Staging directory for packaging"
 DMG_FOLDER="$OUTPUT_DIRECTORY/dmg"
 mkdir "$DMG_FOLDER"
 
-tar -xzf "$BASE_DIRECTORY/distribution/macos/DMG_ASSETS/DMG_Structure.tar.gz" -C "$OUTPUT_DIRECTORY"
-mv "$OUTPUT_DIRECTORY/DMG_Structure/" "$DMG_FOLDER"
+tar -xzf "$BASE_DIRECTORY/distribution/macos/DMG_ASSETS/DMG_Structure.tar.gz" -C "$DMG_FOLDER" --strip-components=1
 cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
 
 # Now sign it.
@@ -141,6 +140,7 @@ echo ""
 echo "Packaging .dmg"
 genisoimage -D -V "Ryujinx" -no-pad -r -apple -o "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$DMG_FOLDER/"
 dmg dmg -c lzma "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
+rm -f "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
 
 # ... And sign it again. Thanks, Apple.
 echo ""
