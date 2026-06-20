@@ -172,6 +172,19 @@ jobs:
           rm apple-codesign.tar.gz
           sudo mv rcodesign /usr/bin/rcodesign
 
+      - name: Install attr
+        run: sudo apt install attr
+
+      - name: Install genisoimage
+        run: sudo apt install genisoimage dmg2img
+
+      - name: Install libdmg-hfsplus
+        run: |
+          sudo apt install build-essential cmake zlib1g-dev libbz2-dev
+          git clone https://github.com/hamstergene/libdmg-hfsplus.git
+          cd libdmg-hfsplus && cmake . && make
+          sudo cp libdmg-hfsplus/dmg/dmg /usr/local/bin/
+      
       - name: Get version info
         id: version_info
         run: |
@@ -190,9 +203,6 @@ jobs:
           path: |
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
-
-      - name: Install attr
-        run: sudo apt install attr
 
       - name: Publish macOS Ryujinx
         run: |
