@@ -526,9 +526,9 @@ ProcessingMode.Untrimming => string.Format(
             {
                 return SortingField switch
                 {
-                    SortField.Name => LocaleManager.Instance[LocaleKeys.CommonSort_Name],
-                    SortField.Saved => LocaleManager.Instance[LocaleKeys.CommonSort_SortbySpaceSavings],
-                    SortField.Status => LocaleManager.Instance[LocaleKeys.CommonSort_SortByTrimStatus],
+                    SortField.Name => LocaleManager.Instance[LocaleKeys.Common_Sort_Name],
+                    SortField.Saved => LocaleManager.Instance[LocaleKeys.Common_Sort_SortbySpaceSavings],
+                    SortField.Status => LocaleManager.Instance[LocaleKeys.Common_Sort_SortByTrimStatus],
                     _ => string.Empty,
                 };
             }

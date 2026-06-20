@@ -9,7 +9,7 @@ namespace Ryujinx.Ava.UI.Helpers
         {
             public string LocalizedText => opOutcome switch
             {
-                OperationOutcome.NoTrimNecessary => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimNotRequiredMessage],
+                OperationOutcome.NoTrimNecessary => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_NoTrimNecessaryMessage],
                 OperationOutcome.NoUntrimPossible => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_NoUntrimPossibleMessage],
                 OperationOutcome.ReadOnlyFileCannotFix => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_ReadOnlyFileCannotFixMessage],
                 OperationOutcome.FreeSpaceCheckFailed => LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_FreeSpaceCheckFailedMessage],
