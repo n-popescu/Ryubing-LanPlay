@@ -144,14 +144,8 @@ fi
 # Package it into a disk image.
 echo ""
 echo "Packaging .dmg"
-dotnet tool install --global DotnetPackaging.Tool
-export PATH="$PATH:$HOME/.dotnet/tools"
-
-dotnetpackager dmg from-directory \
---directory "$DMG_FOLDER" \
---output "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME" \
---application-name "Ryujinx" \
---version "$VERSION+$SOURCE_REVISION_ID" \
+genisoimage -D -V "Ryujinx" -no-pad -r -apple -o "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$DMG_FOLDER/"
+dmg "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 
 # ... And sign it again. Thanks, Apple.
 echo ""
