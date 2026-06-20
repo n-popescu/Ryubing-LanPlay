@@ -129,8 +129,6 @@ then
         exit 1
     fi
 
-    # NOTE: Currently require https://github.com/indygreg/apple-platform-rs/pull/44 to work on other OSes.
-    # cargo install --git "https://github.com/marysaka/apple-platform-rs" --branch "fix/adhoc-app-bundle" apple-codesign --bin "rcodesign"
     echo "Using rcodesign for ad-hoc signing"
     rcodesign sign --entitlements-xml-path "$ENTITLEMENTS_FILE_PATH" "$DMG_FOLDER/Ryujinx.app"
 else
@@ -145,7 +143,7 @@ fi
 echo ""
 echo "Packaging .dmg"
 genisoimage -D -V "Ryujinx" -no-pad -r -apple -o "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$DMG_FOLDER/"
-dmg --lzma "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
+dmg dmg -c lzma "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 
 # ... And sign it again. Thanks, Apple.
 echo ""
@@ -158,8 +156,6 @@ then
         exit 1
     fi
 
-    # NOTE: Currently require https://github.com/indygreg/apple-platform-rs/pull/44 to work on other OSes.
-    # cargo install --git "https://github.com/marysaka/apple-platform-rs" --branch "fix/adhoc-app-bundle" apple-codesign --bin "rcodesign"
     echo "Using rcodesign for ad-hoc signing"
     rcodesign sign "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 else
