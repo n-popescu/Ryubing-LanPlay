@@ -116,7 +116,7 @@ DMG_FOLDER="$OUTPUT_DIRECTORY/dmg"
 mkdir "$DMG_FOLDER"
 
 tar -xzf "$BASE_DIRECTORY/distribution/macos/DMG_ASSETS/DMG_Structure.tar.gz" -C "$OUTPUT_DIRECTORY"
-mv "$OUTPUT_DIRECTORY/DMG_Structure" "$DMG_FOLDER"
+mv "$OUTPUT_DIRECTORY/DMG_Structure/" "$DMG_FOLDER"
 cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
 
 # Now sign it.
