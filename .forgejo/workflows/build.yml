@@ -175,9 +175,9 @@ jobs:
       - name: Install attr
         run: sudo apt-get install -y attr
 
-      - name: Install genisoimage
-        run: sudo apt-get install -y genisoimage dmg2img
-
+      - name: Install hfsprogs
+        run: sudo apt-get install -y hfsprogs
+      
       - name: Install libdmg-hfsplus
         run: |
           sudo apt-get install -y cmake
