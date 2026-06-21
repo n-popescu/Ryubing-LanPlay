@@ -5,7 +5,7 @@ namespace Ryujinx.Tests.Unicorn
 {
     public class UnicornAArch64 : IDisposable
     {
-        internal readonly UnicornEngine.Unicorn Uc;
+        private readonly UnicornEngine.Unicorn _uc;
         private bool _isDisposed;
 
         public IndexedProperty<int, ulong> X => new(GetX, SetX);
@@ -14,38 +14,38 @@ namespace Ryujinx.Tests.Unicorn
 
         public ulong LR
         {
-            get => GetRegister(Arm64.UC_ARM64_REG_LR);
-            set => SetRegister(Arm64.UC_ARM64_REG_LR, value);
+            get => GetRegister(RegArm64.Lr);
+            set => SetRegister(RegArm64.Lr, value);
         }
 
         public ulong SP
         {
-            get => GetRegister(Arm64.UC_ARM64_REG_SP);
-            set => SetRegister(Arm64.UC_ARM64_REG_SP, value);
+            get => GetRegister(RegArm64.Sp);
+            set => SetRegister(RegArm64.Sp, value);
         }
 
         public ulong PC
         {
-            get => GetRegister(Arm64.UC_ARM64_REG_PC);
-            set => SetRegister(Arm64.UC_ARM64_REG_PC, value);
+            get => GetRegister(RegArm64.Pc);
+            set => SetRegister(RegArm64.Pc, value);
         }
 
         public uint Pstate
         {
-            get => (uint)GetRegister(Arm64.UC_ARM64_REG_PSTATE);
-            set => SetRegister(Arm64.UC_ARM64_REG_PSTATE, value);
+            get => (uint)GetRegister(RegArm64.Pstate);
+            set => SetRegister(RegArm64.Pstate, value);
         }
 
         public int Fpcr
         {
-            get => (int)GetRegister(Arm64.UC_ARM64_REG_FPCR);
-            set => SetRegister(Arm64.UC_ARM64_REG_FPCR, (uint)value);
+            get => (int)GetRegister(RegArm64.Fpcr);
+            set => SetRegister(RegArm64.Fpcr, (uint)value);
         }
 
         public int Fpsr
         {
-            get => (int)GetRegister(Arm64.UC_ARM64_REG_FPSR);
-            set => SetRegister(Arm64.UC_ARM64_REG_FPSR, (uint)value);
+            get => (int)GetRegister(RegArm64.Fpsr);
+            set => SetRegister(RegArm64.Fpsr, (uint)value);
         }
 
         public bool OverflowFlag
@@ -74,9 +74,11 @@ namespace Ryujinx.Tests.Unicorn
 
         public UnicornAArch64()
         {
-            Uc = new UnicornEngine.Unicorn(Common.UC_ARCH_ARM64, Common.UC_MODE_LITTLE_ENDIAN);
+            _uc = new UnicornEngine.Unicorn();
+            _uc.Open(UcArch.Arm64, UcMode.LittleEndian);
+            _uc.SetCpuModel(CpuArm64.Arm64A57);
 
-            SetRegister(Arm64.UC_ARM64_REG_CPACR_EL1, 0x00300000);
+            SetRegister(RegArm64.CpacrEl1, 0x00300000);
         }
 
         ~UnicornAArch64()
@@ -94,7 +96,7 @@ namespace Ryujinx.Tests.Unicorn
         {
             if (!_isDisposed)
             {
-                Uc.Close();
+                _uc.Close();
                 _isDisposed = true;
             }
         }
@@ -102,7 +104,7 @@ namespace Ryujinx.Tests.Unicorn
         public void RunForCount(ulong count)
         {
             // FIXME: untilAddr should be 0xFFFFFFFFFFFFFFFFul
-            Uc.EmuStart((long)this.PC, -1, 0, (long)count);
+            _uc.StartEmulation((nint)this.PC, -1, 0, count);
         }
 
         public void Step()
@@ -110,75 +112,75 @@ namespace Ryujinx.Tests.Unicorn
             RunForCount(1);
         }
 
-        private static readonly int[] _xRegisters =
+        private static readonly RegArm64[] _xRegisters =
         [
-            Arm64.UC_ARM64_REG_X0,
-            Arm64.UC_ARM64_REG_X1,
-            Arm64.UC_ARM64_REG_X2,
-            Arm64.UC_ARM64_REG_X3,
-            Arm64.UC_ARM64_REG_X4,
-            Arm64.UC_ARM64_REG_X5,
-            Arm64.UC_ARM64_REG_X6,
-            Arm64.UC_ARM64_REG_X7,
-            Arm64.UC_ARM64_REG_X8,
-            Arm64.UC_ARM64_REG_X9,
-            Arm64.UC_ARM64_REG_X10,
-            Arm64.UC_ARM64_REG_X11,
-            Arm64.UC_ARM64_REG_X12,
-            Arm64.UC_ARM64_REG_X13,
-            Arm64.UC_ARM64_REG_X14,
-            Arm64.UC_ARM64_REG_X15,
-            Arm64.UC_ARM64_REG_X16,
-            Arm64.UC_ARM64_REG_X17,
-            Arm64.UC_ARM64_REG_X18,
-            Arm64.UC_ARM64_REG_X19,
-            Arm64.UC_ARM64_REG_X20,
-            Arm64.UC_ARM64_REG_X21,
-            Arm64.UC_ARM64_REG_X22,
-            Arm64.UC_ARM64_REG_X23,
-            Arm64.UC_ARM64_REG_X24,
-            Arm64.UC_ARM64_REG_X25,
-            Arm64.UC_ARM64_REG_X26,
-            Arm64.UC_ARM64_REG_X27,
-            Arm64.UC_ARM64_REG_X28,
-            Arm64.UC_ARM64_REG_X29,
-            Arm64.UC_ARM64_REG_X30
+            RegArm64.X0,
+            RegArm64.X1,
+            RegArm64.X2,
+            RegArm64.X3,
+            RegArm64.X4,
+            RegArm64.X5,
+            RegArm64.X6,
+            RegArm64.X7,
+            RegArm64.X8,
+            RegArm64.X9,
+            RegArm64.X10,
+            RegArm64.X11,
+            RegArm64.X12,
+            RegArm64.X13,
+            RegArm64.X14,
+            RegArm64.X15,
+            RegArm64.X16,
+            RegArm64.X17,
+            RegArm64.X18,
+            RegArm64.X19,
+            RegArm64.X20,
+            RegArm64.X21,
+            RegArm64.X22,
+            RegArm64.X23,
+            RegArm64.X24,
+            RegArm64.X25,
+            RegArm64.X26,
+            RegArm64.X27,
+            RegArm64.X28,
+            RegArm64.X29,
+            RegArm64.X30
         ];
 
-        private static readonly int[] _qRegisters =
+        private static readonly RegArm64[] _qRegisters =
         [
-            Arm64.UC_ARM64_REG_Q0,
-            Arm64.UC_ARM64_REG_Q1,
-            Arm64.UC_ARM64_REG_Q2,
-            Arm64.UC_ARM64_REG_Q3,
-            Arm64.UC_ARM64_REG_Q4,
-            Arm64.UC_ARM64_REG_Q5,
-            Arm64.UC_ARM64_REG_Q6,
-            Arm64.UC_ARM64_REG_Q7,
-            Arm64.UC_ARM64_REG_Q8,
-            Arm64.UC_ARM64_REG_Q9,
-            Arm64.UC_ARM64_REG_Q10,
-            Arm64.UC_ARM64_REG_Q11,
-            Arm64.UC_ARM64_REG_Q12,
-            Arm64.UC_ARM64_REG_Q13,
-            Arm64.UC_ARM64_REG_Q14,
-            Arm64.UC_ARM64_REG_Q15,
-            Arm64.UC_ARM64_REG_Q16,
-            Arm64.UC_ARM64_REG_Q17,
-            Arm64.UC_ARM64_REG_Q18,
-            Arm64.UC_ARM64_REG_Q19,
-            Arm64.UC_ARM64_REG_Q20,
-            Arm64.UC_ARM64_REG_Q21,
-            Arm64.UC_ARM64_REG_Q22,
-            Arm64.UC_ARM64_REG_Q23,
-            Arm64.UC_ARM64_REG_Q24,
-            Arm64.UC_ARM64_REG_Q25,
-            Arm64.UC_ARM64_REG_Q26,
-            Arm64.UC_ARM64_REG_Q27,
-            Arm64.UC_ARM64_REG_Q28,
-            Arm64.UC_ARM64_REG_Q29,
-            Arm64.UC_ARM64_REG_Q30,
-            Arm64.UC_ARM64_REG_Q31
+            RegArm64.Q0,
+            RegArm64.Q1,
+            RegArm64.Q2,
+            RegArm64.Q3,
+            RegArm64.Q4,
+            RegArm64.Q5,
+            RegArm64.Q6,
+            RegArm64.Q7,
+            RegArm64.Q8,
+            RegArm64.Q9,
+            RegArm64.Q10,
+            RegArm64.Q11,
+            RegArm64.Q12,
+            RegArm64.Q13,
+            RegArm64.Q14,
+            RegArm64.Q15,
+            RegArm64.Q16,
+            RegArm64.Q17,
+            RegArm64.Q18,
+            RegArm64.Q19,
+            RegArm64.Q20,
+            RegArm64.Q21,
+            RegArm64.Q22,
+            RegArm64.Q23,
+            RegArm64.Q24,
+            RegArm64.Q25,
+            RegArm64.Q26,
+            RegArm64.Q27,
+            RegArm64.Q28,
+            RegArm64.Q29,
+            RegArm64.Q30,
+            RegArm64.Q31
         ];
 
         public ulong GetX(int index)
@@ -221,45 +223,43 @@ namespace Ryujinx.Tests.Unicorn
             SetVector(_qRegisters[index], value);
         }
 
-        private ulong GetRegister(int register)
+        private ulong GetRegister(RegArm64 register)
         {
             byte[] data = new byte[8];
 
-            Uc.RegRead(register, data);
+            _uc.RegRead(register, data);
 
-            return BitConverter.ToUInt64(data, 0);
+            return BitConverter.ToUInt64(data);
         }
 
-        private void SetRegister(int register, ulong value)
+        private void SetRegister(RegArm64 register, ulong value)
         {
             byte[] data = BitConverter.GetBytes(value);
 
-            Uc.RegWrite(register, data);
+            _uc.RegWrite(register, data);
         }
 
-        private SimdValue GetVector(int register)
+        private SimdValue GetVector(RegArm64 register)
         {
             byte[] data = new byte[16];
 
-            Uc.RegRead(register, data);
+            _uc.RegRead(register, data);
 
             return new SimdValue(data);
         }
 
-        private void SetVector(int register, SimdValue value)
+        private void SetVector(RegArm64 register, SimdValue value)
         {
             byte[] data = value.ToArray();
 
-            Uc.RegWrite(register, data);
+            _uc.RegWrite(register, data);
         }
 
         public byte[] MemoryRead(ulong address, ulong size)
         {
-            byte[] value = new byte[size];
+            _uc.MemRead((nint)address, size, out Span<byte> value);
 
-            Uc.MemRead((long)address, value);
-
-            return value;
+            return value.ToArray();
         }
 
         public byte MemoryRead8(ulong address) => MemoryRead(address, 1)[0];
@@ -269,7 +269,7 @@ namespace Ryujinx.Tests.Unicorn
 
         public void MemoryWrite(ulong address, byte[] value)
         {
-            Uc.MemWrite((long)address, value);
+            _uc.MemWrite((nint)address, value);
         }
 
         public void MemoryWrite8(ulong address, byte value) => MemoryWrite(address, [value]);
@@ -280,19 +280,19 @@ namespace Ryujinx.Tests.Unicorn
         public void MemoryWrite64(ulong address, long value) => MemoryWrite(address, BitConverter.GetBytes(value));
         public void MemoryWrite64(ulong address, ulong value) => MemoryWrite(address, BitConverter.GetBytes(value));
 
-        public void MemoryMap(ulong address, ulong size, MemoryPermission permissions)
+        public void MemoryMap(ulong address, ulong size, UcProtection permissions)
         {
-            Uc.MemMap((long)address, (long)size, (int)permissions);
+            _uc.MemMap((nint)address, size, permissions);
         }
 
         public void MemoryUnmap(ulong address, ulong size)
         {
-            Uc.MemUnmap((long)address, (long)size);
+            _uc.MemUnmap((nint)address, size);
         }
 
-        public void MemoryProtect(ulong address, ulong size, MemoryPermission permissions)
+        public void MemoryProtect(ulong address, ulong size, UcProtection permissions)
         {
-            Uc.MemProtect((long)address, (long)size, (int)permissions);
+            _uc.MemProtect((nint)address, size, permissions);
         }
     }
 }

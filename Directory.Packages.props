@@ -62,6 +62,6 @@
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.9" />
     <PackageVersion Include="SPB" Version="0.0.4-build32" />
     <PackageVersion Include="System.IO.Hashing" Version="9.0.15" />
-    <PackageVersion Include="UnicornEngine.Unicorn" Version="2.1.0" />
+    <PackageVersion Include="UnicornEngine" Version="1.0.0-rc93" />
   </ItemGroup>
 </Project>

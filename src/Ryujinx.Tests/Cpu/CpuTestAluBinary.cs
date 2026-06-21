@@ -79,7 +79,7 @@ namespace Ryujinx.Tests.Cpu
             Assert.That(result == test.Results[size]);
         }
 
-        [Test, Pairwise, Description("CRC32X <Wd>, <Wn>, <Xm>"), Ignore("Unicorn fails.")]
+        [Test, Pairwise, Description("CRC32X <Wd>, <Wn>, <Xm>")]
         public void Crc32x([Values(0u, 31u)] uint rd,
                            [Values(1u, 31u)] uint rn,
                            [Values(2u, 31u)] uint rm,
@@ -99,7 +99,7 @@ namespace Ryujinx.Tests.Cpu
             CompareAgainstUnicorn();
         }
 
-        [Test, Pairwise, Description("CRC32W <Wd>, <Wn>, <Wm>"), Ignore("Unicorn fails.")]
+        [Test, Pairwise, Description("CRC32W <Wd>, <Wn>, <Wm>")]
         public void Crc32w([Values(0u, 31u)] uint rd,
                            [Values(1u, 31u)] uint rn,
                            [Values(2u, 31u)] uint rm,
@@ -117,7 +117,7 @@ namespace Ryujinx.Tests.Cpu
             CompareAgainstUnicorn();
         }
 
-        [Test, Pairwise, Description("CRC32H <Wd>, <Wn>, <Wm>"), Ignore("Unicorn fails.")]
+        [Test, Pairwise, Description("CRC32H <Wd>, <Wn>, <Wm>")]
         public void Crc32h([Values(0u, 31u)] uint rd,
                            [Values(1u, 31u)] uint rn,
                            [Values(2u, 31u)] uint rm,
@@ -135,7 +135,7 @@ namespace Ryujinx.Tests.Cpu
             CompareAgainstUnicorn();
         }
 
-        [Test, Pairwise, Description("CRC32B <Wd>, <Wn>, <Wm>"), Ignore("Unicorn fails.")]
+        [Test, Pairwise, Description("CRC32B <Wd>, <Wn>, <Wm>")]
         public void Crc32b([Values(0u, 31u)] uint rd,
                            [Values(1u, 31u)] uint rn,
                            [Values(2u, 31u)] uint rm,
