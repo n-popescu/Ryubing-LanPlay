@@ -20,7 +20,7 @@ SOURCE_REVISION_ID=$6
 CONFIGURATION=$7
 CANARY=$8
 
-echo "Clearing xattr on all dot undercsore files"
+echo "Clearing xattr on all dot underscore files"
 if [[ "$(uname)" == "Darwin" ]]; then
     find "$BASE_DIRECTORY" -type f -name "._*" -exec sh -c '
     for f; do
@@ -145,11 +145,12 @@ echo "Packaging .dmg"
 
 dd if=/dev/zero of="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" bs=1M count=100
 mkfs.hfsplus -v "Ryujinx" "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
-MOUNTED_DMG="/mnt/dmg"
-sudo mkdir "$MOUNTED_DMG"
-sudo mount -o loop "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$MOUNTED_DMG"
-sudo cp -r -a "$DMG_FOLDER/." "$MOUNTED_DMG"
-sudo umount "$MOUNTED_DMG"
+MOUNTED_DMG="$OUTPUT_DIRECTORY/dmg_mount"
+mkdir "$MOUNTED_DMG"
+mount -t hfsplus -o loop "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$MOUNTED_DMG"
+cp -r -a "$DMG_FOLDER/." "$MOUNTED_DMG"
+umount "$MOUNTED_DMG"
+rm -r "$MOUNTED_DMG"
 
 dmg dmg -c lzma "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 rm -f "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
