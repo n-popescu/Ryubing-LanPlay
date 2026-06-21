@@ -143,17 +143,21 @@ fi
 echo ""
 echo "Packaging .dmg"
 
-dd if=/dev/zero of="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" bs=1M count=100
-mkfs.hfsplus -v "Ryujinx" "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
+UNCOMPRESSED_DMG="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
+COMPRESSED_DMG="$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 MOUNTED_DMG="$OUTPUT_DIRECTORY/dmg_mount"
+
+dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=100
+mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
+
 mkdir "$MOUNTED_DMG"
-sudo mount -t hfsplus -o loop "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$MOUNTED_DMG"
+sudo mount -t hfsplus -o loop "$UNCOMPRESSED_DMG" "$MOUNTED_DMG"
 sudo cp -r -a "$DMG_FOLDER/." "$MOUNTED_DMG"
 sudo umount "$MOUNTED_DMG"
 rm -r "$MOUNTED_DMG"
 
-dmg dmg -c lzma "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
-rm -f "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
+dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
+rm -f "$UNCOMPRESSED_DMG"
 
 # ... And sign it again. Thanks, Apple.
 echo ""
@@ -167,13 +171,13 @@ then
     fi
 
     echo "Using rcodesign for ad-hoc signing"
-    rcodesign sign "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
+    rcodesign sign "$COMPRESSED_DMG"
 else
     echo "Using codesign for ad-hoc signing"
-    codesign --force --deep --sign - "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
+    codesign --force --deep --sign - "$COMPRESSED_DMG"
 
     echo "Using codesign to verify signature"
-    spctl -a -vv "$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
+    spctl -a -vv "$COMPRESSED_DMG"
 fi
 
 echo "Done"
