@@ -147,9 +147,9 @@ dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=100
 mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
 
 mkdir "$MOUNTED_DMG"
-sudo mount -t hfsplus -o loop "$UNCOMPRESSED_DMG" "$MOUNTED_DMG"
-sudo cp -r -a "$DMG_FOLDER/." "$MOUNTED_DMG"
-sudo umount "$MOUNTED_DMG"
+eval "sudo mount -t hfsplus -o loop "$UNCOMPRESSED_DMG" "$MOUNTED_DMG""
+eval "sudo cp -r -a "$DMG_FOLDER/." "$MOUNTED_DMG""
+eval "sudo umount "$MOUNTED_DMG""
 rm -r "$MOUNTED_DMG"
 
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
