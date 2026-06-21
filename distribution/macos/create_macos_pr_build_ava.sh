@@ -146,11 +146,11 @@ MOUNTED_DMG="$OUTPUT_DIRECTORY/dmg_mount"
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=100
 mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
 
-mkdir "$MOUNTED_DMG"
-eval "sudo mount -t hfsplus -o loop "$UNCOMPRESSED_DMG" "$MOUNTED_DMG""
-eval "sudo cp -r -a "$DMG_FOLDER/." "$MOUNTED_DMG""
-eval "sudo umount "$MOUNTED_DMG""
-rm -r "$MOUNTED_DMG"
+mkdir "$OUTPUT_DIRECTORY/dmg_mount"
+sudo mount -t hfsplus -o loop "$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME" "$OUTPUT_DIRECTORY/dmg_mount"
+sudo cp -r -a "$OUTPUT_DIRECTORY/dmg/" "$OUTPUT_DIRECTORY/dmg_mount"
+sudo umount "$OUTPUT_DIRECTORY/dmg_mount"
+rm -r "$OUTPUT_DIRECTORY/dmg"
 
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 rm -f "$UNCOMPRESSED_DMG"
