@@ -33,8 +33,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             Status
         }
 
-        private const string _FileExtXCI = "XCI";
-
+        private const string _fileExtXCI = "XCI";
         private readonly Ryujinx.Common.Logging.XCIFileTrimmerLog _logger;
         private ApplicationLibrary ApplicationLibrary => _mainWindowViewModel.ApplicationLibrary;
         private Optional<XCITrimmerFileModel> _processingApplication = null;
@@ -60,7 +59,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         private void LoadXCIApplications()
         {
             IEnumerable<ApplicationData> apps = ApplicationLibrary.Applications.Items
-                .Where(app => app.FileExtension == _FileExtXCI);
+                .Where(app => app.FileExtension == _fileExtXCI);
 
             foreach (ApplicationData xciApp in apps)
                 AddOrUpdateXCITrimmerFile(CreateXCITrimmerFile(xciApp.Path));
@@ -68,11 +67,9 @@ namespace Ryujinx.Ava.UI.ViewModels
             ApplicationsChanged();
         }
 
-        private XCITrimmerFileModel CreateXCITrimmerFile(
-            string path,
-            OperationOutcome operationOutcome = OperationOutcome.Undetermined)
+        private XCITrimmerFileModel CreateXCITrimmerFile(string path, OperationOutcome operationOutcome = OperationOutcome.Undetermined)
         {
-            ApplicationData xciApp = ApplicationLibrary.Applications.Items.First(app => app.FileExtension == _FileExtXCI && app.Path == path);
+            ApplicationData xciApp = ApplicationLibrary.Applications.Items.First(app => app.FileExtension == _fileExtXCI && app.Path == path);
             return XCITrimmerFileModel.FromApplicationData(xciApp, _logger) with { ProcessingOutcome = operationOutcome };
         }
 
@@ -94,8 +91,8 @@ namespace Ryujinx.Ava.UI.ViewModels
             SortAndFilter();
         }
 
-public bool AnySelected =>
-    _selectedXCIFiles.Count > 0;
+        public bool AnySelected =>
+            _selectedXCIFiles.Count > 0;
 
         private void SortingChanged()
         {
@@ -130,31 +127,31 @@ public bool AnySelected =>
             SortAndFilter();
         }
 
-private void SelectionChanged(bool displayedChanged = true)
-{
-    OnPropertyChanged(nameof(Status));
-    OnPropertyChanged(nameof(CanTrim));
-    OnPropertyChanged(nameof(CanUntrim));
-    OnPropertyChanged(nameof(SelectedXCIFiles));
-OnPropertyChanged(nameof(AnySelected));
-    OnPropertyChanged(nameof(SelectToggleText));
+        private void SelectionChanged(bool displayedChanged = true)
+        {
+            OnPropertyChanged(nameof(Status));
+            OnPropertyChanged(nameof(CanTrim));
+            OnPropertyChanged(nameof(CanUntrim));
+            OnPropertyChanged(nameof(SelectedXCIFiles));
+            OnPropertyChanged(nameof(AnySelected));
+            OnPropertyChanged(nameof(SelectToggleText));
 
-    if (displayedChanged)
-        OnPropertyChanged(nameof(SelectedDisplayedXCIFiles));
-}
+            if (displayedChanged)
+                OnPropertyChanged(nameof(SelectedDisplayedXCIFiles));
+        }
 
-public void ToggleSelect()
-{
-    if (AnySelected)
-        DeselectAll();
-    else
-        SelectAll();
-}
-        
-public string SelectToggleText =>
-    AnySelected
-        ? LocaleManager.Instance[LocaleKeys.XCITrimmer_ClearSelectionButton]
-        : LocaleManager.Instance[LocaleKeys.XCITrimmer_SelectAllButton];
+        public void ToggleSelect()
+        {
+            if (AnySelected)
+                DeselectAll();
+            else
+                SelectAll();
+        }
+                
+        public string SelectToggleText =>
+            AnySelected
+                ? LocaleManager.Instance[LocaleKeys.XCITrimmer_ClearSelectionButton]
+                : LocaleManager.Instance[LocaleKeys.XCITrimmer_SelectAllButton];
 
         private void ProcessingChanged()
         {
@@ -191,12 +188,12 @@ public string SelectToggleText =>
                     )).ToList();
 
                 _processingTotal = toProcess.Count;
-_processingCurrent = 0;
+                _processingCurrent = 0;
 
-Dispatcher.UIThread.Post(() =>
-{
-    OnPropertyChanged(nameof(Status));
-});
+                Dispatcher.UIThread.Post(() =>
+                {
+                    OnPropertyChanged(nameof(Status));
+                });
 
                 List<XCITrimmerFileModel> viewsSaved = DisplayedXCIFiles.ToList();
 
@@ -264,19 +261,19 @@ Dispatcher.UIThread.Post(() =>
                     {
                         _displayedXCIFiles.AddOrReplaceMatching(_allXCIFiles, viewsSaved);
 
-Processing = false;
-ApplicationsChanged();
+                        Processing = false;
+                        ApplicationsChanged();
 
-_selectedXCIFiles.Clear();
+                        _selectedXCIFiles.Clear();
 
-foreach (var processed in toProcess)
-{
-    var updated = _allXCIFiles.FirstOrDefault(x => x.Path == processed.Path);
-    if (updated != null)
-        _selectedXCIFiles.Add(updated);
-}
+                        foreach (var processed in toProcess)
+                        {
+                            var updated = _allXCIFiles.FirstOrDefault(x => x.Path == processed.Path);
+                            if (updated != null)
+                                _selectedXCIFiles.Add(updated);
+                        }
 
-SelectionChanged();
+                        SelectionChanged();
                     });
                 }
             })
@@ -322,9 +319,9 @@ SelectionChanged();
                         result = x.PotentialSavingsB.CompareTo(y.PotentialSavingsB);
                         break;
                             case SortField.Status:
-            // Trimmed first (CurrentSavingsB > 0)
-            result = x.CurrentSavingsB.CompareTo(y.CurrentSavingsB);
-            break;
+
+                    result = x.CurrentSavingsB.CompareTo(y.CurrentSavingsB);
+                    break;
                 }
 
                 if (!_viewModel.SortingAscending)
@@ -479,15 +476,15 @@ SelectionChanged();
                 {
                     return _processingMode switch
                     {
-ProcessingMode.Trimming => string.Format(
-    LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusTrimmingLabel],
-    _processingCurrent,
-    _processingTotal),
+                        ProcessingMode.Trimming => string.Format(
+                            LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusTrimmingLabel],
+                            _processingCurrent,
+                            _processingTotal),
 
-ProcessingMode.Untrimming => string.Format(
-    LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusUntrimmingLabel],
-    _processingCurrent,
-    _processingTotal),
+                        ProcessingMode.Untrimming => string.Format(
+                            LocaleManager.Instance[LocaleKeys.XCITrimmer_StatusUntrimmingLabel],
+                            _processingCurrent,
+                            _processingTotal),
                         _ => string.Empty
                     };
                 }
@@ -526,9 +523,9 @@ ProcessingMode.Untrimming => string.Format(
             {
                 return SortingField switch
                 {
-                    SortField.Name => LocaleManager.Instance[LocaleKeys.Common_Sort_Name],
-                    SortField.Saved => LocaleManager.Instance[LocaleKeys.Common_Sort_SortbySpaceSavings],
-                    SortField.Status => LocaleManager.Instance[LocaleKeys.Common_Sort_SortByTrimStatus],
+                    SortField.Name => LocaleManager.Instance[LocaleKeys.Common_Sort_NameLabel],
+                    SortField.Saved => LocaleManager.Instance[LocaleKeys.Common_Sort_SavingsLabel],
+                    SortField.Status => LocaleManager.Instance[LocaleKeys.Common_Sort_TrimStatusLabel],
                     _ => string.Empty,
                 };
             }
@@ -554,9 +551,7 @@ ProcessingMode.Untrimming => string.Format(
             get => _sortField == SortField.Saved;
         }
 
-public bool IsSortedByStatus => _sortField == SortField.Status;
-
-
+        public bool IsSortedByStatus => _sortField == SortField.Status;
 
         public AvaloniaList<XCITrimmerFileModel> SelectedXCIFiles
         {
@@ -582,14 +577,16 @@ public bool IsSortedByStatus => _sortField == SortField.Status;
         {
             get
             {
-return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_SavingsLabel], AllXCIFiles.Sum(xci => xci.PotentialSavingsB / BytesPerMb));            }
+                return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_MBLabel], AllXCIFiles.Sum(xci => xci.PotentialSavingsB / BytesPerMb));            
+            }
         }
 
         public string ActualSavings
         {
             get
             {
-return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_SavingsLabel], AllXCIFiles.Sum(xci => xci.CurrentSavingsB / BytesPerMb));            }
+                return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_MBLabel], AllXCIFiles.Sum(xci => xci.CurrentSavingsB / BytesPerMb));            
+            }
         }
 
         public string SavingsDifference
@@ -600,7 +597,7 @@ return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_SavingsLabel],
                 long actualSavings = AllXCIFiles.Sum(xci => xci.CurrentSavingsB);
                 long differenceMb = (potentialSavings - actualSavings) / BytesPerMb;
 
-                 return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_CanStillSaveMB], differenceMb);
+                 return string.Format(LocaleManager.Instance[LocaleKeys.XCITrimmer_MBLabel], differenceMb);
             }
         }
 

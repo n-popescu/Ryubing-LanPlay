@@ -792,7 +792,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 {
                     ApplicationSort.Favorite => LocaleManager.Instance[LocaleKeys.CommonFavorite],
                     ApplicationSort.TitleId => LocaleManager.Instance[LocaleKeys.DlcManagerTableHeadingTitleIdLabel],
-                    ApplicationSort.Title => LocaleManager.Instance[LocaleKeys.Common_Sort_Name],
+                    ApplicationSort.Title => LocaleManager.Instance[LocaleKeys.Common_Sort_NameLabel],
                     ApplicationSort.Developer => LocaleManager.Instance[LocaleKeys.GameListSortDeveloper],
                     ApplicationSort.LastPlayed => LocaleManager.Instance[LocaleKeys.GameListSortLastPlayed],
                     ApplicationSort.TotalTimePlayed => LocaleManager.Instance[LocaleKeys.GameListSortTimePlayed],
@@ -1937,13 +1937,13 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             if (version != null)
             {
-                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_FirmwareVersion, version.VersionString);
+                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_FirmwareVersionLabel, version.VersionString);
 
                 hasApplet = version.Major > 3;
             }
             else
             {
-                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_FirmwareVersion, "NaN");
+                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_FirmwareVersionLabel, "NaN");
             }
 
             IsAppletMenuActive = hasApplet;
@@ -2366,7 +2366,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                         Dispatcher.UIThread.Post(() =>
                         {
                             StatusBarProgressStatusText =
-                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_TrimmingXCI,
+                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_TrimmingXCILabel,
                                     Path.GetFileNameWithoutExtension(filename));
                             StatusBarProgressStatusVisible = true;
                             StatusBarProgressMaximum = 1;

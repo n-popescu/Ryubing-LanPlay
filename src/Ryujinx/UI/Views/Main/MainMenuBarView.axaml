@@ -163,7 +163,7 @@
                     IsEnabled="{Binding HasSkylander}" />
                 <MenuItem 
                     Command="{Binding SimulateWakeUpMessage}" 
-                    Header="{ext:Locale MenuBarOptionsSimulateWakeUpMessage}" 
+                    Header="{ext:Locale MenuBar_Actions_SimulateWakeUpMessageButton}" 
                     Icon="{ext:Icon fa-solid fa-sun}" 
                     InputGesture="Ctrl + M" />
                 <Separator />

@@ -326,31 +326,6 @@
       }
     },
     {
-      "ID": "MenuBarOptionsSimulateWakeUpMessage",
-      "Translations": {
-        "ar_SA": "محاكاة رسالة الاستيقاظ",
-        "de_DE": "Aufwachnachricht simulieren",
-        "el_GR": "Προσομοίωση Μηνύματος Αφύπνισης",
-        "en_US": "Simulate Wake-Up Message",
-        "es_ES": "Simular Mensaje de Reactivación",
-        "fr_FR": "Simuler un Message de Réveil",
-        "he_IL": "דמה הודעת השכמה",
-        "it_IT": "Simula messaggio di risveglio",
-        "ja_JP": "スリープ復帰メッセージをシミュレート",
-        "ko_KR": "절전 모드 해제 메시지 시뮬레이션",
-        "no_NO": "Simuler oppvåknings-melding",
-        "pl_PL": "Symuluj wiadomość wybudzania",
-        "pt_BR": "Simular Mensagem de Acordar o Console",
-        "ru_RU": "Имитировать сообщение пробуждения",
-        "sv_SE": "Simulera uppvakningsmeddelande",
-        "th_TH": "จำลองการปลุกอุปกรณ์ให้ทำงาน",
-        "tr_TR": "Uyandırma Mesajı Simüle Et",
-        "uk_UA": "Симулювати повідомлення про пробудження",
-        "zh_CN": "模拟唤醒消息",
-        "zh_TW": "模擬喚醒訊息"
-      }
-    },
-    {
       "ID": "MenuBarView",
       "Translations": {
         "ar_SA": "_عرض",

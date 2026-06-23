@@ -333,7 +333,7 @@
                 Margin="5, 0, 0, 0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Text="{ext:Locale StatusBar_FirmwareVersion}" />
+                Text="{ext:Locale StatusBar_FirmwareVersionLabel}" />
         </StackPanel>
     </Grid>
 </UserControl>

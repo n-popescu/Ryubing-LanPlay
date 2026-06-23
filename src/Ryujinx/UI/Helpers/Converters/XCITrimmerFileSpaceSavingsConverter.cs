@@ -42,7 +42,6 @@ namespace Ryujinx.Ava.UI.Helpers
             }
             else if (potentialSavings > 0)
             {
-                // Show potential savings before trimming
                 mbValue = (potentialSavings / BytesPerMB).CoerceAtLeast(0);
                 percentage = (potentialSavings / (double)originalSize) * 100;
             }
@@ -58,12 +57,12 @@ namespace Ryujinx.Ava.UI.Helpers
             if (app.CurrentSavingsB < app.PotentialSavingsB)
             {
                 return LocaleManager.Instance.UpdateAndGetDynamicValue(
-                    LocaleKeys.XCITrimmer_SaveLabel, mb, roundedPercentage);
+                    LocaleKeys.XCITrimmer_CalculatedSavingsLabel, mb, roundedPercentage);
             }
             else
             {
                 return LocaleManager.Instance.UpdateAndGetDynamicValue(
-                    LocaleKeys.XCITrimmer_SavedLabel, mb, roundedPercentage);
+                    LocaleKeys.XCITrimmer_CalculatedSavingsLabel, mb, roundedPercentage);
             }
         }
 

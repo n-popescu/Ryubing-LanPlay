@@ -33,7 +33,7 @@
                           HorizontalContentAlignment="Left"
                           MinWidth="100">
                     <ComboBoxItem
-                        Content="{ext:Locale Common_Sort_Name}" />
+                        Content="{ext:Locale Common_Sort_NameLabel}" />
                     <ComboBoxItem
                         Content="{ext:Locale Size}" />
                     <ComboBox.Styles>

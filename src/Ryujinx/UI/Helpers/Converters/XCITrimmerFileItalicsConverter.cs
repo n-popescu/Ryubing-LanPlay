@@ -19,7 +19,6 @@ namespace Ryujinx.Ava.UI.Helpers
             if (value is not XCITrimmerFileModel app)
                 return FontStyle.Normal;
 
-            // Untrimmed files → Italic
             if (app.Trimmable && !app.Untrimmable)
                 return FontStyle.Italic;
 

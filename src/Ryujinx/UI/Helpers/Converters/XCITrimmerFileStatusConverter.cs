@@ -19,20 +19,12 @@ namespace Ryujinx.Ava.UI.Helpers
                 return BindingOperations.DoNothing;
 
             if (value is not XCITrimmerFileModel app)
-                return default(Symbol); // no icon
+                return default(Symbol);
             
             bool isProcessing = app.PercentageProgress != null;
             
             if (isProcessing)
-            {
-                if (app.ProcessingOutcome is not OperationOutcome.Successful
-                    and not OperationOutcome.Undetermined)
-                {
-                    return Symbol.Important;
-                }
-
                 return Symbol.Sync;
-            }
 
             if (app.ProcessingOutcome is not OperationOutcome.Successful
                 and not OperationOutcome.Undetermined)

@@ -1,6 +1,81 @@
 {
   "Locales": [
     {
+      "ID": "NameLabel",
+      "Translations": {
+        "ar_SA": "الاسم",
+        "de_DE": "",
+        "el_GR": "Όνομα",
+        "en_US": "Name",
+        "es_ES": "Nombre",
+        "fr_FR": "Nom",
+        "he_IL": "שם",
+        "it_IT": "Nome",
+        "ja_JP": "名称",
+        "ko_KR": "이름",
+        "no_NO": "Navn",
+        "pl_PL": "Nazwa",
+        "pt_BR": "Nome",
+        "ru_RU": "Название",
+        "sv_SE": "Namn",
+        "th_TH": "ชื่อ",
+        "tr_TR": "İsim",
+        "uk_UA": "Назва",
+        "zh_CN": "名称",
+        "zh_TW": "名稱"
+      }
+    },
+    {
+      "ID": "SavingsLabel",
+      "Translations": {
+        "ar_SA": "التوفير",
+        "de_DE": "Einsparung",
+        "el_GR": "Εξοικονόμηση",
+        "en_US": "Savings",
+        "es_ES": "Ahorro",
+        "fr_FR": "Économies",
+        "he_IL": "חיסכון",
+        "it_IT": "Risparmio",
+        "ja_JP": "節約",
+        "ko_KR": "절약",
+        "no_NO": "Besparelse",
+        "pl_PL": "Oszczędność",
+        "pt_BR": "Economia",
+        "ru_RU": "Экономия",
+        "sv_SE": "Besparing",
+        "th_TH": "การประหยัด",
+        "tr_TR": "Tasarruf",
+        "uk_UA": "Економія",
+        "zh_CN": "节省",
+        "zh_TW": "節省"
+      }
+    },
+    {
+      "ID": "TrimStatusLabel",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Trim Status",
+        "es_ES": "Estado del recorte",
+        "fr_FR": "État de réduction",
+        "he_IL": "",
+        "it_IT": "Stato della riduzione",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "Статус обрезки",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "Статус обрізки",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
       "ID": "OrderAscending",
       "Translations": {
         "ar_SA": "تصاعدي",
@@ -48,81 +123,6 @@
         "uk_UA": "За спаданням",
         "zh_CN": "降序",
         "zh_TW": "從大到小"
-      }
-    },
-    {
-      "ID": "Name",
-      "Translations": {
-        "ar_SA": "الاسم",
-        "de_DE": "",
-        "el_GR": "Όνομα",
-        "en_US": "Name",
-        "es_ES": "Nombre",
-        "fr_FR": "Nom",
-        "he_IL": "שם",
-        "it_IT": "Nome",
-        "ja_JP": "名称",
-        "ko_KR": "이름",
-        "no_NO": "Navn",
-        "pl_PL": "Nazwa",
-        "pt_BR": "Nome",
-        "ru_RU": "Название",
-        "sv_SE": "Namn",
-        "th_TH": "ชื่อ",
-        "tr_TR": "İsim",
-        "uk_UA": "Назва",
-        "zh_CN": "名称",
-        "zh_TW": "名稱"
-      }
-    },
-    {
-      "ID": "SortbySpaceSavings",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Space Savings",
-        "es_ES": "Ahorro de Espacio",
-        "fr_FR": "Économies de disque dur",
-        "he_IL": "",
-        "it_IT": "Spazio risparmiato",
-        "ja_JP": "",
-        "ko_KR": "공간 절약",
-        "no_NO": "Plassbesparelser",
-        "pl_PL": "",
-        "pt_BR": "Economia de Espaço",
-        "ru_RU": "Экономия места на диске",
-        "sv_SE": "Utrymmesbesparning",
-        "th_TH": "ลดการใช้พื้นที่",
-        "tr_TR": "",
-        "uk_UA": "Економія місця",
-        "zh_CN": "节省空间",
-        "zh_TW": "節省的儲存空間"
-      }
-    },
-    {
-      "ID": "SortByTrimStatus",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Untrimmed/Trimmed",
-        "es_ES": "Ahorro de Espacio",
-        "fr_FR": "Économies de disque dur",
-        "he_IL": "",
-        "it_IT": "Spazio risparmiato",
-        "ja_JP": "",
-        "ko_KR": "공간 절약",
-        "no_NO": "Plassbesparelser",
-        "pl_PL": "",
-        "pt_BR": "Economia de Espaço",
-        "ru_RU": "Экономия места на диске",
-        "sv_SE": "Utrymmesbesparning",
-        "th_TH": "ลดการใช้พื้นที่",
-        "tr_TR": "",
-        "uk_UA": "Економія місця",
-        "zh_CN": "节省空间",
-        "zh_TW": "節省的儲存空間"
       }
     }
   ]

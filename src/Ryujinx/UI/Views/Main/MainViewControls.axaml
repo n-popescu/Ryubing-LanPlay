@@ -95,7 +95,7 @@
                                 Tag="Favorite" />
                             <RadioButton
                                 Checked="Sort_Checked"
-                                Content="{ext:Locale Common_Sort_Name}"
+                                Content="{ext:Locale Common_Sort_NameLabel}"
                                 GroupName="Sort"
                                 IsChecked="{Binding IsSortedByTitle, Mode=OneTime}"
                                 Tag="Title" />

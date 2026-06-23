@@ -19,10 +19,10 @@ namespace Ryujinx.Ava.UI.Views.Dialog
         }
 
         private void ToggleSelect(object sender, RoutedEventArgs e)
-{
-    if (DataContext is XCITrimmerViewModel vm)
-        vm.ToggleSelect();
-}
+        {
+            if (DataContext is XCITrimmerViewModel vm)
+                vm.ToggleSelect();
+        }
 
         public static async Task Show()
         {
