@@ -22,9 +22,6 @@ namespace Ryujinx.Graphics.Vulkan.MoltenVK
             if (!File.Exists(icdPath))
                 throw new FileNotFoundException("MoltenVK ICD JSON not found", icdPath);
 
-            Logger.Notice.Print(LogClass.Application,
-                $"MVKInitialization.Initialize() called, VK_DRIVER_FILES will be set to: {icdPath}");
-
             Environment.SetEnvironmentVariable("VK_DRIVER_FILES", icdPath);
 
             Console.WriteLine($"[MVKInit] VK_DRIVER_FILES just set to: {Environment.GetEnvironmentVariable("VK_DRIVER_FILES")}");

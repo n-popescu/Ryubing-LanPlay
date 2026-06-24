@@ -982,9 +982,6 @@ namespace Ryujinx.Ava.Systems
 
             if (ConfigurationState.Instance.Graphics.GraphicsBackend.Value == GraphicsBackend.Vulkan)
             {
-                Logger.Notice.Print(LogClass.Application,
-                    $"TranslationLayer at init: {ConfigurationState.Instance.Graphics.TranslationLayer.Value}");
-
                 // MoltenVK is required for any device running < macOS 26, even Intel and AMD vendors.
                 // KosmicKrisp, a Vulkan conformant implementation running on top of Metal 4, requires macOS 26.
                 if (OperatingSystem.IsMacOS())
@@ -1005,11 +1002,6 @@ namespace Ryujinx.Ava.Systems
                     ((EmbeddedWindowVulkan)RendererHost.EmbeddedWindow).CreateSurface,
                     VulkanHelper.GetRequiredInstanceExtensions,
                     ConfigurationState.Instance.Graphics.PreferredGpu.Value);
-
-                Logger.Notice.Print(LogClass.Application,
-                    $"TranslationLayer just set to: {ConfigurationState.Instance.Graphics.TranslationLayer.Value}");
-
-                Console.WriteLine($"VK_DRIVER_FILES post-init: {Environment.GetEnvironmentVariable("VK_DRIVER_FILES")}");
             }
             else
             {

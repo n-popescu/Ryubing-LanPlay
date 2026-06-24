@@ -17,9 +17,6 @@ namespace Ryujinx.Graphics.Vulkan.KosmicKrisp
             if (!File.Exists(icdPath))
                 throw new FileNotFoundException("KosmicKrisp ICD JSON not found", icdPath);
 
-            Logger.Notice.Print(LogClass.Application,
-                $"KKInitialization.Initialize() called, VK_DRIVER_FILES will be set to: {icdPath}");
-
             Environment.SetEnvironmentVariable("VK_DRIVER_FILES", icdPath);
 
             Console.WriteLine($"[KKInit] VK_DRIVER_FILES just set to: {Environment.GetEnvironmentVariable("VK_DRIVER_FILES")}");
