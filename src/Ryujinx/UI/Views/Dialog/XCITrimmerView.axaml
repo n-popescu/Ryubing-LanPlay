@@ -86,6 +86,7 @@
                                 Width="15"
                                 Height="15"
                                 FontSize="15"
+                                FlowDirection="LeftToRight"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Symbol="{Binding Converter={x:Static helpers:XCITrimmerFileStatusConverter.Instance}}">
@@ -109,8 +110,7 @@
                                 MaxLines="2"
                                 TextWrapping="Wrap"
                                 TextTrimming="CharacterEllipsis"
-                                Text="{Binding Name}"
-                                FontStyle="{Binding ., Converter={x:Static helpers:XCITrimmerFileItalicsConverter.Instance}}" />
+                                Text="{Binding Name}" />
                             <Grid
                                 Grid.Column="2"
                                 MinWidth="120"
@@ -127,10 +127,10 @@
                                     Value="{Binding PercentageProgress}" />
                                 <TextBlock
                                     Margin="10,0,10,0"
+                                    FlowDirection="LeftToRight"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     MaxLines="1"
-                                    FontStyle="{Binding ., Converter={x:Static helpers:XCITrimmerFileItalicsConverter.Instance}}"
                                     IsVisible="{Binding !$parent[UserControl].DataContext.Processing}"
                                     Text="{Binding ., Converter={x:Static helpers:XCITrimmerFileSpaceSavingsConverter.Instance}}" />
                             </Grid>
@@ -139,12 +139,12 @@
                 </ListBox.DataTemplates>
             </ListBox>
         </Border>
-        <StackPanel Grid.Row="3" Margin="0,0,0,20" Spacing="5" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+        <StackPanel Grid.Row="3" Margin="0,0,0,20" Spacing="5" FlowDirection="LeftToRight" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
             <TextBlock Classes="h1" HorizontalAlignment="Center" VerticalAlignment="Center" MaxLines="1" Text="{ext:Locale XCITrimmer_SavedLabel}" />
             <TextBlock Classes="h1" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Regular" MaxLines="1" Text="{Binding ActualSavings}" />
             <TextBlock Classes="h1" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Regular" MaxLines="1" Text="•" />
             <TextBlock Classes="h1" HorizontalAlignment="Center" VerticalAlignment="Center" MaxLines="1" Text="{ext:Locale XCITrimmer_RemainingLabel}" />
-            <TextBlock Classes="h1" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Regular" FontStyle="Italic" MaxLines="1" Text="{Binding SavingsDifference}" />
+            <TextBlock Classes="h1" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Regular" MaxLines="1" Text="{Binding SavingsDifference}" />
         </StackPanel>
         <Panel Grid.Row="4" Margin="0,10,0,0" HorizontalAlignment="Stretch">
             <Grid ColumnDefinitions="*,Auto">

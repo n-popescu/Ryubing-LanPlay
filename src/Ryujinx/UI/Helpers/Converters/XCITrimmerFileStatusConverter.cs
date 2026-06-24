@@ -28,18 +28,18 @@ namespace Ryujinx.Ava.UI.Helpers
 
             if (app.ProcessingOutcome is not OperationOutcome.Successful
                 and not OperationOutcome.Undetermined)
-                return Symbol.Important;
+                return Symbol.ImportantFilled;
 
             if (app.Trimmable && app.Untrimmable)
                 return Symbol.Repair;
 
             if (app.Trimmable)
-                return Symbol.Cut;
+                return Symbol.Clear;
 
             if (app.Untrimmable)
                 return Symbol.Checkmark;
 
-            return default(Symbol);
+            return Symbol.Help;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
