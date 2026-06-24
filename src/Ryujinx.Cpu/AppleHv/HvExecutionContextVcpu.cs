@@ -44,7 +44,7 @@ namespace Ryujinx.Cpu.AppleHv
         static HvExecutionContextVcpu()
         {
             _setSimdFpRegFuncMem = new MemoryBlock(MemoryBlock.GetPageSize());
-            _setSimdFpRegFuncMem.Write(0, 0x3DC00040u); // LDR Q0,
+            _setSimdFpRegFuncMem.Write(0, 0x3DC00040u); // LDR Q0, [X2]
             _setSimdFpRegFuncMem.Write(4, 0xD61F0060u); // BR X3
             _setSimdFpRegFuncMem.Reprotect(0, _setSimdFpRegFuncMem.Size, MemoryPermission.ReadAndExecute);
 

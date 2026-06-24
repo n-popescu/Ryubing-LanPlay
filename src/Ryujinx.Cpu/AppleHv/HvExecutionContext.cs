@@ -113,6 +113,7 @@ namespace Ryujinx.Cpu.AppleHv
         private void SupervisorCallHandler(ulong address, int imm) => _exceptionCallbacks.SupervisorCallback?.Invoke(this, address, imm);
         private void UndefinedHandler(ulong address, int opCode) => _exceptionCallbacks.UndefinedCallback?.Invoke(this, address, opCode);
 
+        /// <inheritdoc/>
         public void RequestInterrupt()
         {
             if (Interlocked.Exchange(ref _interruptRequested, 1) == 0 && _impl is HvExecutionContextVcpu impl)
