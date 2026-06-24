@@ -29,7 +29,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         public enum SortField
         {
             Name,
-            Saved,
+            Savings,
             Status
         }
 
@@ -98,7 +98,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             OnPropertiesChanged(
                 nameof(IsSortedByName),
-                nameof(IsSortedBySaved),
+                nameof(IsSortedBySavings),
                 nameof(IsSortedByStatus),
                 nameof(SortingAscending),
                 nameof(SortingField),
@@ -315,7 +315,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     case SortField.Name:
                         result = x.Name.CompareTo(y.Name);
                         break;
-                    case SortField.Saved:
+                    case SortField.Savings:
                         result = x.PotentialSavingsB.CompareTo(y.PotentialSavingsB);
                         break;
                             case SortField.Status:
@@ -524,7 +524,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 return SortingField switch
                 {
                     SortField.Name => LocaleManager.Instance[LocaleKeys.Common_Sort_NameLabel],
-                    SortField.Saved => LocaleManager.Instance[LocaleKeys.Common_Sort_SavingsLabel],
+                    SortField.Savings => LocaleManager.Instance[LocaleKeys.Common_Sort_SavingsLabel],
                     SortField.Status => LocaleManager.Instance[LocaleKeys.Common_Sort_TrimStatusLabel],
                     _ => string.Empty,
                 };
@@ -546,9 +546,9 @@ namespace Ryujinx.Ava.UI.ViewModels
             get => _sortField == SortField.Name;
         }
 
-        public bool IsSortedBySaved
+        public bool IsSortedBySavings
         {
-            get => _sortField == SortField.Saved;
+            get => _sortField == SortField.Savings;
         }
 
         public bool IsSortedByStatus => _sortField == SortField.Status;
