@@ -11,6 +11,7 @@ namespace Ryujinx.Cpu.AppleHv
     [SupportedOSPlatform("macos")]
     class HvExecutionContext : IExecutionContext
     {
+        /// <inheritdoc/>
         public ulong Pc
         {
             get
@@ -22,38 +23,45 @@ namespace Ryujinx.Cpu.AppleHv
             }
         }
 
+        /// <inheritdoc/>
         public long TpidrEl0
         {
             get => _impl.TpidrEl0;
             set => _impl.TpidrEl0 = value;
         }
 
+        /// <inheritdoc/>
         public long TpidrroEl0
         {
             get => _impl.TpidrroEl0;
             set => _impl.TpidrroEl0 = value;
         }
 
+        /// <inheritdoc/>
         public uint Pstate
         {
             get => _impl.Pstate;
             set => _impl.Pstate = value;
         }
 
+        /// <inheritdoc/>
         public uint Fpcr
         {
             get => _impl.Fpcr;
             set => _impl.Fpcr = value;
         }
 
+        /// <inheritdoc/>
         public uint Fpsr
         {
             get => _impl.Fpsr;
             set => _impl.Fpsr = value;
         }
 
+        /// <inheritdoc/>
         public ulong ThreadUid { get; set; }
 
+        /// <inheritdoc/>
         public bool IsAarch32
         {
             get => false;
@@ -64,6 +72,7 @@ namespace Ryujinx.Cpu.AppleHv
             }
         }
 
+        /// <inheritdoc/>
         public bool Running { get; private set; }
 
         private readonly ICounter _counter;
@@ -86,9 +95,16 @@ namespace Ryujinx.Cpu.AppleHv
             Running = true;
         }
 
+        /// <inheritdoc/>
         public ulong GetX(int index) => _impl.GetX(index);
+
+        /// <inheritdoc/>
         public void SetX(int index, ulong value) => _impl.SetX(index, value);
+
+        /// <inheritdoc/>
         public V128 GetV(int index) => _impl.GetV(index);
+
+        /// <inheritdoc/>
         public void SetV(int index, V128 value) => _impl.SetV(index, value);
 
         private void InterruptHandler() => _exceptionCallbacks.InterruptCallback?.Invoke(this);
@@ -108,11 +124,13 @@ namespace Ryujinx.Cpu.AppleHv
             return Interlocked.Exchange(ref _interruptRequested, 0) != 0;
         }
 
+        /// <inheritdoc/>
         public void RequestDebugStep()
         {
             Interlocked.Exchange(ref _shouldStep, 1);
         }
 
+        /// <inheritdoc/>
         public ulong DebugPc
         {
             get => Pc;
@@ -126,6 +144,7 @@ namespace Ryujinx.Cpu.AppleHv
             }
         }
 
+        /// <inheritdoc/>
         public void StopRunning()
         {
             Running = false;
@@ -192,6 +211,8 @@ namespace Ryujinx.Cpu.AppleHv
                     if (reason == HvExitReason.VTimerActivated)
                     {
                         vcpu.EnableAndUpdateVTimer();
+
+                        // Unmask VTimer interrupts.
                         HvApi.hv_vcpu_set_vtimer_mask(vcpu.Handle, false).ThrowOnError();
                     }
                 }
@@ -271,7 +292,10 @@ namespace Ryujinx.Cpu.AppleHv
                     throw new Exception($"Unhandled guest exception {ec}.");
             }
 
+            // Make sure we will continue running at EL0.
             if (memoryManager.AddressSpace.GetAndClearUserTlbInvalidationPending())
+
+                // TODO: Invalidate only the range that was modified?
                 return HvAddressSpace.KernelRegionTlbiEretAddress;
 
             return HvAddressSpace.KernelRegionEretAddress;
@@ -307,6 +331,7 @@ namespace Ryujinx.Cpu.AppleHv
 
             if (read)
             {
+                // Op0 Op2 Op1 CRn 00000 CRm
                 switch ((esr >> 1) & 0x1ffe0f)
                 {
                     case 0b11_000_011_1110_00000_0000: // CNTFRQ_EL0

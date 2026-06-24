@@ -21,7 +21,6 @@ namespace Ryujinx.Cpu.AppleHv
 
         public ulong ThreadUid { get; set; }
 
-        // Seriously, why build break
         private readonly ulong[] _x = new ulong[32];
         private readonly V128[] _v = new V128[32];
 
@@ -45,8 +44,8 @@ namespace Ryujinx.Cpu.AppleHv
         static HvExecutionContextVcpu()
         {
             _setSimdFpRegFuncMem = new MemoryBlock(MemoryBlock.GetPageSize());
-            _setSimdFpRegFuncMem.Write(0, 0x3DC00040u);
-            _setSimdFpRegFuncMem.Write(4, 0xD61F0060u);
+            _setSimdFpRegFuncMem.Write(0, 0x3DC00040u); // LDR Q0,
+            _setSimdFpRegFuncMem.Write(4, 0xD61F0060u); // BR X3
             _setSimdFpRegFuncMem.Reprotect(0, _setSimdFpRegFuncMem.Size, MemoryPermission.ReadAndExecute);
 
             _setSimdFpReg = Marshal.GetDelegateForFunctionPointer<SetSimdFpReg>(_setSimdFpRegFuncMem.Pointer);
