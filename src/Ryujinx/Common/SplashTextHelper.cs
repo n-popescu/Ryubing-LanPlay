@@ -44,7 +44,7 @@ namespace Ryujinx.Common
             try
             {
                 string data;
-                data = EmbeddedResources.ReadAllText("Ryujinx/Assets/Splashes/Splashes.json");
+                data = EmbeddedResources.ReadAllText("Ryujinx/Assets/Splashes.json");
                 s_splashJson = JsonSerializer.Deserialize<SplashLocales>(data);
                 return s_splashJson.Locales[ConfigurationState.Instance.UI.LanguageCode.Value].GetRandomElement();
             }
