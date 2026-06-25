@@ -43,7 +43,7 @@ namespace Ryujinx.Cpu.AppleHv
 
         static HvExecutionContextVcpu()
         {
-            // .NET does not support passing vectors by value, so we need to pass a pointer and use a native			
+            // .NET does not support passing vectors by value, so we need to pass a pointer and use a native
             // function to load the value into a vector register.
             _setSimdFpRegFuncMem = new MemoryBlock(MemoryBlock.GetPageSize());
             _setSimdFpRegFuncMem.Write(0, 0x3DC00040u); // LDR Q0, [X2]
