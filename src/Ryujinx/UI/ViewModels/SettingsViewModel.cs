@@ -375,7 +375,6 @@ namespace Ryujinx.Ava.UI.ViewModels
             {
                 field = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(IsVulkanSelected));
             }
         }
 

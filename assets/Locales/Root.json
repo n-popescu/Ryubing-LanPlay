@@ -4226,56 +4226,6 @@
       }
     },
     {
-      "ID": "SettingsTabGraphicsEnableKosmicKrisp",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Enable KosmicKrisp (macOS 26+)",
-        "es_ES": "",
-        "fr_FR": "",
-        "he_IL": "",
-        "it_IT": "",
-        "ja_JP": "",
-        "ko_KR": "",
-        "no_NO": "",
-        "pl_PL": "",
-        "pt_BR": "",
-        "ru_RU": "",
-        "sv_SE": "",
-        "th_TH": "",
-        "tr_TR": "",
-        "uk_UA": "",
-        "zh_CN": "",
-        "zh_TW": ""
-      }
-    },
-    {
-      "ID": "SettingsTabGraphicsEnableKosmicKrispTooltip",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Enables the KosmicKrisp Vulkan-on-Metal translation layer, which is baked into Mesa 26.0+.\n\nOverrides MoltenVK.",
-        "es_ES": "",
-        "fr_FR": "",
-        "he_IL": "",
-        "it_IT": "",
-        "ja_JP": "",
-        "ko_KR": "",
-        "no_NO": "",
-        "pl_PL": "",
-        "pt_BR": "",
-        "ru_RU": "",
-        "sv_SE": "",
-        "th_TH": "",
-        "tr_TR": "",
-        "uk_UA": "",
-        "zh_CN": "",
-        "zh_TW": ""
-      }
-    },
-    {
       "ID": "SettingsTabGraphicsEnableShaderCache",
       "Translations": {
         "ar_SA": "تفعيل ذاكرة المظللات المؤقتة",
@@ -16381,7 +16331,7 @@
         "ar_SA": "",
         "de_DE": "",
         "el_GR": "",
-        "en_US": "Select the translation layer that will be used with Vulkan on macOS.",
+        "en_US": "MoltenVK is a Vulkan Portability implementation, enabling Vulkan applications to run on macOS.\n\nKosmicKrisp is a Vulkan (1.3) conformant Vulkan-on-Metal driver and the eventual successor to MoltenVK.\n\nKosmicKrisp is not yet feature-complete, meaning that games *may* not render correctly or possibly even crash.\n\nUse MoltenVK if unsure.",
         "es_ES": "",
         "fr_FR": "",
         "he_IL": "",

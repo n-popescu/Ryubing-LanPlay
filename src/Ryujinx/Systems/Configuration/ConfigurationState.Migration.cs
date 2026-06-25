@@ -545,7 +545,13 @@ namespace Ryujinx.Ava.Systems.Configuration
                 }),
                 (72, static cff => cff.GCLowLatency = false),
                 // skip 73
-                (74, static cff => cff.TranslationLayer = TranslationLayer.MoltenVK)
+                (74, static cff =>
+                {
+                    if (OperatingSystem.IsMacOS())
+                        if (cff.GraphicsBackend is GraphicsBackend.OpenGl)
+                            cff.GraphicsBackend = GraphicsBackend.Vulkan;
+                    cff.TranslationLayer = TranslationLayer.MoltenVK;
+                })
             );
     }
 }
