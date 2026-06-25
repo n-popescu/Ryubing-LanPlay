@@ -226,6 +226,8 @@ namespace Ryujinx.Cpu.AppleHv
             HvVcpuPool.Instance.Destroy(vcpu, SwapContext);
         }
 
+        // TryGpuSync() is called periodically in the main Execute() loop. The "syncing" value can be tuned based on gameplay results.
+        // This feature it to be followed-up and further completed in a future PR.
         private void TryGpuSync()
         {
             try
@@ -269,7 +271,7 @@ namespace Ryujinx.Cpu.AppleHv
                     ReturnToPool(vcpu);
                     ushort id = (ushort)esr;
                     SupervisorCallHandler(elr - 4UL, id);
-                    Thread.Yield();                    // Helps with Vulkan + Hypervisor stability
+                    Thread.Yield(); // MoltenVK causes extremely frequent SVC exits, and HVF handles them in a busy loop. Hypervisor.Framework accelerates the guest CPU, and without periodic yielding/flushing, MoltenVK's presentation queue can starve, causing permanent 0 FPS deadlock.
                     vcpu = RentFromPool(memoryManager.AddressSpace, vcpu);
                     break;
 
