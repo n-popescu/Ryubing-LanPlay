@@ -5,6 +5,8 @@ using Ryujinx.Common.Logging;
 using Ryujinx.Graphics.GAL;
 using Ryujinx.Graphics.Shader;
 using Ryujinx.Graphics.Shader.Translation;
+using Ryujinx.Graphics.Vulkan.KosmicKrisp;
+using Ryujinx.Graphics.Vulkan.MoltenVK;
 using Ryujinx.Graphics.Vulkan.Queries;
 using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.EXT;
@@ -82,6 +84,7 @@ namespace Ryujinx.Graphics.Vulkan
         private readonly Func<Instance, Vk, SurfaceKHR> _getSurface;
         private readonly Func<string[]> _getRequiredExtensions;
         private readonly string _preferredGpuId;
+        public TranslationLayer _translationLayer;
 
         private int[] _pdReservedBindings;
         private readonly static int[] _pdReservedBindingsNvn = [3, 18, 21, 36, 30];
@@ -111,15 +114,30 @@ namespace Ryujinx.Graphics.Vulkan
 
         public event EventHandler<ScreenCaptureImageInfo> ScreenCaptured;
 
-        public VulkanRenderer(Vk api, Func<Instance, Vk, SurfaceKHR> getSurface, Func<string[]> requiredExtensionsFunc, string preferredGpuId)
+        public VulkanRenderer(Vk api, Func<Instance, Vk, SurfaceKHR> getSurface, Func<string[]> requiredExtensionsFunc, string preferredGpuId, TranslationLayer translationLayer)
         {
             _getSurface = getSurface;
             _getRequiredExtensions = requiredExtensionsFunc;
             _preferredGpuId = preferredGpuId;
+            _translationLayer = translationLayer;
             Api = api;
             Shaders = [];
             Textures = [];
             Samplers = [];
+
+            // MoltenVK is required for any device running < macOS 26, even Intel and AMD vendors.
+            // KosmicKrisp, a Vulkan conformant implementation running on top of Metal 4, requires macOS 26.
+            if (OperatingSystem.IsMacOS())
+            {
+                if (translationLayer == TranslationLayer.MoltenVK)
+                {
+                    MVKInitialization.Initialize();
+                }
+                if (translationLayer == TranslationLayer.KosmicKrisp)
+                {
+                    KKInitialization.Initialize();
+                }
+            }
 
             SupportsMTL31 = OperatingSystem.IsMacOSVersionAtLeast(14);
         }

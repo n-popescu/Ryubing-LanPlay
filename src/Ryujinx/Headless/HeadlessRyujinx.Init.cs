@@ -13,8 +13,6 @@ using Ryujinx.Cpu;
 using Ryujinx.Graphics.GAL;
 using Ryujinx.Graphics.OpenGL;
 using Ryujinx.Graphics.Vulkan;
-using Ryujinx.Graphics.Vulkan.KosmicKrisp;
-using Ryujinx.Graphics.Vulkan.MoltenVK;
 using Ryujinx.HLE;
 using Ryujinx.Input;
 using Ryujinx.Input.SDL3;
@@ -187,20 +185,6 @@ namespace Ryujinx.Headless
         {
             if (options.GraphicsBackend == GraphicsBackend.Vulkan && window is VulkanWindow vulkanWindow)
             {
-                // MoltenVK is required for any device running < macOS 26, even Intel and AMD vendors.
-                // KosmicKrisp, a Vulkan conformant implementation running on top of Metal 4, requires macOS 26.
-                if (OperatingSystem.IsMacOS())
-                {
-                    if (options.TranslationLayer == TranslationLayer.MoltenVK)
-                    {
-                        MVKInitialization.Initialize();
-                    }
-                    else if (options.TranslationLayer == TranslationLayer.KosmicKrisp)
-                    {
-                        KKInitialization.Initialize();
-                    }
-                }
-                
                 string preferredGpuId = string.Empty;
                 Vk api = VulkanSpbApi.GetApiFromSpb();
 
@@ -223,7 +207,8 @@ namespace Ryujinx.Headless
                     api,
                     (instance, vk) => new SurfaceKHR((ulong)vulkanWindow.CreateWindowSurface(instance.Handle)),
                     VulkanWindow.GetRequiredInstanceExtensions,
-                    preferredGpuId);
+                    preferredGpuId,
+                    TranslationLayer.MoltenVK);
             }
 
             return new OpenGLRenderer();
