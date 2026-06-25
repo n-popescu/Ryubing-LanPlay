@@ -1119,7 +1119,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
             };
         }
 
-        private static FormattedValue NSMBUDRPC(SparseMultiValue values)
+        private static FormattedValue NsmbudRpc(SparseMultiValue values)
         {
             if (values.Matched.TryGetValue("WorldNo", out Value world) && values.Matched.TryGetValue("CourseNo", out Value course) | values.Matched.TryGetValue("GameModeType", out Value gamemode))
             {
@@ -1137,12 +1137,12 @@ namespace Ryujinx.Ava.Systems.PlayReport
                     {
                         return $"Last Played: Course {worldstr}-Hazard";
                     }
-                    string outputloc = output[MorL(gamemodestr)][worldstr][coursestr];
+                    string outputloc = output[MarioOrLuigiGamemode(gamemodestr)][worldstr][coursestr];
                     return $"Last Played: Course {worldstr}-{SpecialMapNames(coursestr)} | {outputloc}";
                 }
                 catch
                 {
-                    return $"Last Played: Something unaccounted for";
+                    return FormattedValue.ForceReset;
                 }
             }
             
@@ -1151,7 +1151,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 return "At the main menu";
             }
 
-            static string MorL(string? gamemode) => gamemode switch
+            static string MarioOrLuigiGamemode(string? gamemode) => gamemode switch
             {
                 "0" => "mario",
                 "1" => "luigi",
