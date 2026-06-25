@@ -1125,6 +1125,7 @@ namespace Ryujinx.Ava.Systems.PlayReport
             {
                 string worldstr = world.ToString();
                 string coursestr = course.ToString();
+                int courseint = Int32.Parse(coursestr);
                 string gamemodestr = gamemode.ToString();
                 
                 try
@@ -1133,12 +1134,12 @@ namespace Ryujinx.Ava.Systems.PlayReport
                     string data;
                     data = EmbeddedResources.ReadAllText("Ryujinx/Assets/RPCData/nsmbud.json");
                     output = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(data);
-                    if (SpecialMapNames(coursestr) == "Hazard")
+                    if (SpecialMapNames(courseint) == "Hazard")
                     {
                         return $"Last Played: Course {worldstr}-Hazard";
                     }
                     string outputloc = output[MarioOrLuigiGamemode(gamemodestr)][worldstr][coursestr];
-                    return $"Last Played: Course {worldstr}-{SpecialMapNames(coursestr)} | {outputloc}";
+                    return $"Last Played: Course {worldstr}-{SpecialMapNames(courseint)} | {outputloc}";
                 }
                 catch
                 {
@@ -1169,29 +1170,21 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 _ => ""
             };
 
-            static string SpecialMapNames(string? course) => course switch
+            static string SpecialMapNames(int? course) => course switch
             {
-                "1" => course,
-                "2" => course,
-                "3" => course,
-                "4" => course,
-                "5" => course,
-                "6" => course,
-                "7" => course,
-                "8" => course,
-                "9" => course,
-                "13" => "Shortcut",
-                "14" => "Shortcut",
-                "15" => "Shortcut",
-                "16" => "Shortcut",
-                "17" => "Shortcut",
-                "20" => "Ghost",
-                "21" => "Tower",
-                "22" => "Tower",
-                "23" => "Castle",
-                "37" => "Airship",
-                "42" => "Castle",
-                "43" => "Castle",
+                >= 1 and <= 9 => course.ToString(),
+                13 => "Shortcut",
+                14 => "Shortcut",
+                15 => "Shortcut",
+                16 => "Shortcut",
+                17 => "Shortcut",
+                20 => "Ghost",
+                21 => "Tower",
+                22 => "Tower",
+                23 => "Castle",
+                37 => "Airship",
+                42 => "Castle",
+                43 => "Castle",
                 _ => "Hazard"
             };
             
