@@ -141,7 +141,6 @@
     <None Remove="Assets\Icons\Controller_JoyConPair.svg" />
     <None Remove="Assets\Icons\Controller_JoyConRight.svg" />
     <None Remove="Assets\Icons\Controller_ProCon.svg" />
-    <None Remove="Assets\PlayReports\nsmbud.json" />
   </ItemGroup>
 
   <ItemGroup>
