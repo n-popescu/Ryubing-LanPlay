@@ -148,17 +148,18 @@ hformat -l "Ryujinx" "$UNCOMPRESSED_DMG_SHORT"
 
 hmount "$UNCOMPRESSED_DMG_SHORT"
 
-find "$DMG_FOLDER" -type f |
+find "$DMG_FOLDER" -type f ! -name '._*' |
 sed "s|^$DMG_FOLDER/||" |
-awk -v SOURCE="$DMG_FOLDER" -v TARGET="$UNCOMPRESSED_DMG_SHORT" -F/ '
+awk -v SOURCE="$(realpath "$DMG_FOLDER")" -v TARGET="$UNCOMPRESSED_DMG_SHORT" -F/ '
 {
     path = ""
     for (i = 1; i < NF; i++) {
         path = (path ? path ":" : "") $i
         print "hmkdir \":" TARGET ":" path "\" 2>/dev/null || :"
     }
+
     hfs_subpath = gensub(/\//, ":", "g", $0)
-    print "hcopy \"$(cd " SOURCE " && pwd)/" $0 "\" \":" TARGET ":" hfs_subpath "\""
+    print "hcopy \"" SOURCE "/" $0 "\" \":" TARGET ":" hfs_subpath "\""
 }' |
 tee /dev/stderr |
 sh -e
