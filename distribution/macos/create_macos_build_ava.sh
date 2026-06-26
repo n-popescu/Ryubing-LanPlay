@@ -145,15 +145,13 @@ echo "Packaging .dmg"
 
 UNCOMPRESSED_DMG="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
 COMPRESSED_DMG="$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
-MOUNTED_DMG="dmg_mount"
 
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=100
 mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
 
-mkdir "$MOUNTED_DMG"
-sudo mount -t hfsplus -o loop "$UNCOMPRESSED_DMG" "$MOUNTED_DMG"
-sudo cp -r -a "$DMG_FOLDER/" "$MOUNTED_DMG"
-sudo umount "$MOUNTED_DMG"
+hpmount "$UNCOMPRESSED_DMG"
+hcopy -r "$DMG_FOLDER/" :
+humount "$UNCOMPRESSED_DMG"
 rm -r "$DMG_FOLDER"
 
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
