@@ -33,7 +33,7 @@
                             PointerPressed="DeviceRow_OnPointerPressed"
                             Cursor="Hand"
                             IsEnabled="{Binding !IsDisabledByOtherPlayer}">
-                            <Grid ColumnDefinitions="Auto,*,Auto">
+                            <Grid ColumnDefinitions="Auto,*,200">
                                 <CheckBox
                                     Grid.Column="0"
                                     IsChecked="{Binding IsAssigned}"
@@ -50,16 +50,22 @@
                                     <TextBlock
                                         Opacity="0.6"
                                         FontSize="12"
-                                        Text="{Binding BoundProfileName}"
-                                        IsVisible="{Binding HasBoundProfileName}" />
+                                        IsVisible="{Binding HasBoundProfileName}">
+                                        <Run Text="{ext:Locale ControllerSettingsProfile}" />
+                                        <Run Text=":" />
+                                        <Run Text="{Binding BoundProfileName}" />
+                                    </TextBlock>
                                 </StackPanel>
                                 <TextBlock
                                     Grid.Column="2"
                                     VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
                                     Margin="10,0,0,0"
                                     Opacity="0.6"
                                     FontSize="12"
                                     Text="{Binding AssignedToPlayers}"
+                                    TextWrapping="Wrap"
+                                    MaxWidth="200"
                                     IsVisible="{Binding HasAssignedToPlayers}" />
                             </Grid>
                         </Border>

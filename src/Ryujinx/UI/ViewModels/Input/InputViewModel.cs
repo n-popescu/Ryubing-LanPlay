@@ -934,7 +934,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             if (!isAssigned)
             {
                 return assignedOtherPlayers != null && assignedOtherPlayers.Count > 0
-                    ? string.Join(", ", assignedOtherPlayers)
+                    ? string.Join(", ", assignedOtherPlayers.OrderBy(name => ExtractPlayerNumber(name)))
                     : null;
             }
 
@@ -946,8 +946,31 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             }
 
             return assignedOtherPlayers != null && assignedOtherPlayers.Count > 0
-                ? $"{currentPlayerName}, {string.Join(", ", assignedOtherPlayers)}"
+                ? $"{currentPlayerName}, {string.Join(", ", assignedOtherPlayers.OrderBy(name => ExtractPlayerNumber(name)))}"
                 : currentPlayerName;
+        }
+
+        private int ExtractPlayerNumber(string playerName)
+        {
+            // Extract the numeric suffix from player names like "Player 1", "Player 2", etc.
+            // If no number is found, return 0 to sort such names first.
+            if (string.IsNullOrWhiteSpace(playerName))
+            {
+                return 0;
+            }
+
+            // Find the last space and try to parse the number after it
+            int lastSpace = playerName.LastIndexOf(' ');
+            if (lastSpace >= 0 && lastSpace < playerName.Length - 1)
+            {
+                string numberPart = playerName[(lastSpace + 1)..];
+                if (int.TryParse(numberPart, out int number))
+                {
+                    return number;
+                }
+            }
+
+            return 0;
         }
 
         private PlayerInputAssignment GetEditedPlayerInputAssignment()
