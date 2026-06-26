@@ -53,25 +53,26 @@ namespace Ryujinx.Input.SDL3
         // Some of the code was translated from https://github.com/MIZUSHIKI/JoyShockLibrary-plus-HDRumble
         private bool WriteNintendoHdRumble(VibrationValue left, VibrationValue right)
         {
-            // Clamping should be done for LRA safety.
-            int leftLowAmp = EncodeLowAmp(left.AmplitudeLow) + 0x80;
+            int leftLowAmp = EncodeLowAmp(left.AmplitudeLow);
             int leftLowFreq = EncodeLowFreq(left.FrequencyLow) + (leftLowAmp >> 8);
             int leftHighFreq = EncodeHighFreq(left.FrequencyHigh);
             int leftHighAmp = EncodeHighAmp(left.AmplitudeHigh) + (leftHighFreq >> 8);
                 
-            int rightLowAmp = EncodeLowAmp(right.AmplitudeLow) + 0x80;
+            int rightLowAmp = EncodeLowAmp(right.AmplitudeLow);
             int rightLowFreq = EncodeLowFreq(right.FrequencyLow) + (rightLowAmp >> 8);
-            int rightHighFreq = EncodeHighFreq(left.FrequencyHigh);
+            int rightHighFreq = EncodeHighFreq(right.FrequencyHigh);
             int rightHighAmp = EncodeHighAmp(right.AmplitudeHigh) + (rightHighFreq >> 8);
             
             _buffer[0] = 0x10;
-            _buffer[1] = (byte)((++_globalCount) & 0xF);
-
+            _buffer[1] = (byte)((_globalCount++) & 0xF);
+            
+            // Left LRA
             _buffer[2] = (byte)(leftLowFreq & 0xFF);
             _buffer[3] = (byte)(leftHighAmp & 0xFF);
             _buffer[4] = (byte)(leftHighFreq & 0xFF);
             _buffer[5] = (byte)(leftLowAmp & 0xFF);
             
+            // Right LRA
             _buffer[6] = (byte)(rightLowFreq & 0xFF);
             _buffer[7] = (byte)(rightHighAmp & 0xFF);
             _buffer[8] = (byte)(rightHighFreq & 0xFF);
@@ -98,14 +99,12 @@ namespace Ryujinx.Input.SDL3
 
         private static int EncodeLowFreq(float lowFreq)
         {
-            float lf = Math.Clamp(lowFreq, 40.875885f, 626.286133f);
-            return (int) Math.Round((32 * Math.Log2(lf / 10)) - 0x40);
+            return (int)Math.Clamp(32 * Math.Log2(lowFreq * 0.1f) - 0x40, 81.75177f, 1252.572266f);
         }
 
         private static int EncodeHighFreq(float highFreq)
         {
-            float hf = Math.Clamp(highFreq, 81.75177f, 1252.572266f);
-            return (int) Math.Round(((32 * Math.Log2(hf / 10)) - 0x60) * 4);
+            return (int)Math.Clamp(32 * Math.Log2(highFreq * 0.1f) - 0x60, 81.75177f, 1252.572266f);
         }
 
         private static int EncodeLowAmp(float rawAmp)
@@ -113,23 +112,20 @@ namespace Ryujinx.Input.SDL3
             double encodedAmp = 0;
 
             if (rawAmp is > 0 and < 0.012f)
-            {
                 encodedAmp = 1;
-            }
+            
             else if (rawAmp is >= 0.012f and < 0.112f)
-            {
-                encodedAmp = Math.Round(4 * Math.Log2(rawAmp * 110f));
-            }
+                encodedAmp = 4 * Math.Log2(rawAmp * 110f);
+            
             else if (rawAmp is >= 0.112f and < 0.225f)
-            {
-                encodedAmp = Math.Round(16 * Math.Log2(rawAmp * 17f));
-            }
+                encodedAmp = 16 * Math.Log2(rawAmp * 17f);
+            
             else if (rawAmp is >= 0.225f and <= 1f)
-            {
-                encodedAmp = Math.Round(32 * Math.Log2(rawAmp * 8.7f));
-            }
-
-            return (int) (encodedAmp / 2) + 64;
+                encodedAmp = 32 * Math.Log2(rawAmp * 8.7f);
+            
+            encodedAmp = Math.Round((encodedAmp / 2.0) + 64.0);
+            encodedAmp = Math.Clamp(encodedAmp, 0.0, 100.2867);
+            return (int)Math.Round(encodedAmp);
         }
 
         private static int EncodeHighAmp(float rawAmp)
@@ -137,23 +133,20 @@ namespace Ryujinx.Input.SDL3
             double encodedAmp = 0;
 
             if (rawAmp is > 0 and < 0.012f)
-            {
                 encodedAmp = 1;
-            }
+            
             else if (rawAmp is >= 0.012f and < 0.112f)
-            {
-                encodedAmp = Math.Round(4 * Math.Log2(rawAmp * 110f));
-            }
+                encodedAmp = 4 * Math.Log2(rawAmp * 110f);
+            
             else if (rawAmp is >= 0.112f and < 0.225f)
-            {
-                encodedAmp = Math.Round(16 * Math.Log2(rawAmp * 17f));
-            }
+                encodedAmp = 16 * Math.Log2(rawAmp * 17f);
+            
             else if (rawAmp is >= 0.225f and <= 1f)
-            {
-                encodedAmp = Math.Round(32 * Math.Log2(rawAmp * 8.7f));
-            }
-
-            return (int) encodedAmp * 2;
+                encodedAmp = 32 * Math.Log2(rawAmp * 8.7f);
+            
+            encodedAmp = Math.Round(encodedAmp / 2.0);
+            encodedAmp = Math.Clamp(encodedAmp, 0.0, 100.2867);
+            return (int)encodedAmp;
         }
 
         public bool HdRumble(VibrationValue left, VibrationValue right)
@@ -176,14 +169,11 @@ namespace Ryujinx.Input.SDL3
             ulong currentTicks = SDL_GetTicks();
 
             // Ditch rumble if we haven't hit the poll-rate yet.
-            // https://docs.handheldlegend.com/s/progcc-3/doc/lag-comparison-aAR1mV3JLX
             if ((currentTicks - _lastWriteTicks) <= GetPollRate())
             {
                 return result;
             }
             
-            // Fun fact: Mario Kart 8 Deluxe sends rumble packets
-            // where the amplitude is zero, but the frequency isn't.
             result = SDL_hid_write(_hidHandle, data, length);
             if (result >= 0)
             {
@@ -241,6 +231,7 @@ namespace Ryujinx.Input.SDL3
             ulong pollRate = 0;
             if (_vendor is (ushort)HDRumbleSupportedVendor.Nintendo)
             {
+                // https://docs.handheldlegend.com/s/progcc-3/doc/lag-comparison-aAR1mV3JLX
                 pollRate = (ulong) 16.67;
                 if (_product is (ushort)HDRumbleSupportedProduct.ProController
                     && SDL_hid_get_device_info(_hidHandle)->bus_type == SDL_hid_bus_type.SDL_HID_API_BUS_USB)
@@ -271,7 +262,6 @@ namespace Ryujinx.Input.SDL3
     {
         // TODO: Currently, HD Rumble only supports the Pro Controller and JoyCons.
         //       We need to initialize and report to each device differently.
-        //       When this happens, we'll refactor this class to reflect it.
         
         // Nintendo Switch: 0x057e
         JoyconLeft = 0x2006,
