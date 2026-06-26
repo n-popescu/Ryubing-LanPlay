@@ -1079,29 +1079,23 @@ namespace Ryujinx.Input.HLE
 
         private void UpdateActiveGamepad()
         {
-            switch (_activeInputSource)
+            (_gamepad, _activeConfig, GamepadDriver) = _activeInputSource switch
             {
-                case DynamicInputSource.Keyboard:
-                    _gamepad = _keyboardGamepad;
-                    _activeConfig = _keyboardConfig;
-                    GamepadDriver = _keyboardDriver;
-                    break;
-                case DynamicInputSource.Controller:
-                    _controllerGamepad = _activeControllerIndex >= 0 && _activeControllerIndex < _assignedControllerGamepads.Count
+                DynamicInputSource.Keyboard => (_keyboardGamepad, _keyboardConfig, _keyboardDriver),
+                DynamicInputSource.Controller =>
+                (
+                    _activeControllerIndex >= 0 && _activeControllerIndex < _assignedControllerGamepads.Count
                         ? _assignedControllerGamepads[_activeControllerIndex]
-                        : _assignedControllerGamepads.FirstOrDefault();
-                    _gamepad = _controllerGamepad;
-                    _activeConfig = _activeControllerIndex >= 0 && _activeControllerIndex < _assignedControllerConfigs.Count
+                        : _assignedControllerGamepads.FirstOrDefault(),
+                    _activeControllerIndex >= 0 && _activeControllerIndex < _assignedControllerConfigs.Count
                         ? _assignedControllerConfigs[_activeControllerIndex]
-                        : _assignedControllerConfigs.FirstOrDefault();
-                    GamepadDriver = _controllerDriver;
-                    break;
-                default:
-                    _gamepad = null;
-                    _activeConfig = null;
-                    GamepadDriver = null;
-                    break;
-            }
+                        : _assignedControllerConfigs.FirstOrDefault(),
+                    _controllerDriver
+                ),
+                _ => (null, null, null)
+            };
+
+            _controllerGamepad = _gamepad;
         }
 
         private void UpdateControllerMotion(IGamepad gamepad, StandardControllerInputConfig controllerConfig)
