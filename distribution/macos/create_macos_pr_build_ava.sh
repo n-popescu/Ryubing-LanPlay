@@ -147,7 +147,19 @@ dd if=/dev/zero of="$UNCOMPRESSED_DMG_SHORT" bs=1M count=100
 hformat -l "Ryujinx" "$UNCOMPRESSED_DMG_SHORT"
 
 hmount "$UNCOMPRESSED_DMG_SHORT"
-hcopy -r "$DMG_FOLDER/" "$UNCOMPRESSED_DMG_SHORT":
+hcopy -m "$DMG_FOLDER/" "$UNCOMPRESSED_DMG_SHORT":
+
+find . -type f | sed 's|^\./||' | awk -F/ '
+{
+    path=""
+    for(i=1; i<NF; i++) {
+        path = (path ? path ":" : "") $i
+        print "hmkdir \":" path "\" 2>/dev/null"
+    }
+    target = (NF > 1 ? gensub(/\//, ":", "g", $0) : $0)
+    print "hcopy -m \"./" $0 "\" \":" target "\""
+}'
+
 humount "$UNCOMPRESSED_DMG_SHORT"
 rm -r "$DMG_FOLDER
 mv "$UNCOMPRESSED_DMG_SHORT" "$UNCOMPRESSED_DMG"
