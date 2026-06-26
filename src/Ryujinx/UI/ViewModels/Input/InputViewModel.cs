@@ -1381,11 +1381,12 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         private bool HasUnsavedChanges()
         {
-            return
-                (_allowDuplicateDeviceAssignment.HasValue &&
-                    _allowDuplicateDeviceAssignment.Value != GetSavedAllowDuplicateDeviceAssignment()) ||
-                !ConfigsMatch(GetSelectedDeviceConfig(), GetDisplayedInputConfig(GetPersistedInputConfig())) ||
-                !PlayerAssignmentsMatch(GetEditedPlayerInputAssignment(), GetPersistedPlayerInputAssignment());
+            bool duplicateDeviceAssignmentChanged = _allowDuplicateDeviceAssignment.HasValue &&
+                _allowDuplicateDeviceAssignment.Value != GetSavedAllowDuplicateDeviceAssignment();
+            bool configChanged = !ConfigsMatch(GetSelectedDeviceConfig(), GetDisplayedInputConfig(GetPersistedInputConfig()));
+            bool playerAssignmentsChanged = !PlayerAssignmentsMatch(GetEditedPlayerInputAssignment(), GetPersistedPlayerInputAssignment());
+
+            return duplicateDeviceAssignmentChanged || configChanged || playerAssignmentsChanged;
         }
 
         private static bool ConfigsMatch(InputConfig currentConfig, InputConfig otherConfig)
