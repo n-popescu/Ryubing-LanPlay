@@ -414,11 +414,17 @@ namespace Ryujinx.Input.HLE
                 return false;
             }
 
-            return oldConfig?.Motion == null ||
-                _leftMotionInput == null ||
-                (newConfig.ControllerType == ConfigControllerType.JoyconPair && _rightMotionInput == null) ||
-                oldConfig.Motion.EnableMotion != newConfig.Motion.EnableMotion ||
-                oldConfig.Motion.MotionBackend != newConfig.Motion.MotionBackend;
+            bool motionWasDisabled = oldConfig?.Motion == null;
+            bool leftMotionMissing = _leftMotionInput == null;
+            bool isJoyconPairNeedingRightMotion = newConfig.ControllerType == ConfigControllerType.JoyconPair && _rightMotionInput == null;
+            bool motionEnabledChanged = oldConfig.Motion.EnableMotion != newConfig.Motion.EnableMotion;
+            bool motionBackendChanged = oldConfig.Motion.MotionBackend != newConfig.Motion.MotionBackend;
+
+            return motionWasDisabled ||
+                   leftMotionMissing ||
+                   isJoyconPairNeedingRightMotion ||
+                   motionEnabledChanged ||
+                   motionBackendChanged;
         }
 
         public void Update()
