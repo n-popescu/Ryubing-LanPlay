@@ -161,9 +161,8 @@ awk -v SOURCE="$DMG_FOLDER" -v TARGET="$UNCOMPRESSED_DMG_SHORT" -F/ '
         path = (path ? path ":" : "") $i
         print "hmkdir \":" TARGET ":" path "\" 2>/dev/null || :"
     }
-
-    target = TARGET ":" gensub(/\//, ":", "g", $0)
-    print "hcopy \"" SOURCE "/" $0 "\" \":" target "\""
+    hfs_subpath = gensub(/\//, ":", "g", $0)
+    print "hcopy \"$(cd " SOURCE " && pwd)/" $0 "\" \":" TARGET ":" hfs_subpath "\""
 }' |
 tee /dev/stderr |
 sh -e
