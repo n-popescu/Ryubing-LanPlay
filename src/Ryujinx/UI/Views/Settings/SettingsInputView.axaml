@@ -41,6 +41,13 @@
                         <StackPanel
                             Orientation="Horizontal"
                             Spacing="10">
+                            <CheckBox
+                                ToolTip.Tip="{ext:Locale DockModeToggleTooltip}"
+                                MinWidth="0"
+                                IsChecked="{Binding EnableDockedMode}">
+                                <TextBlock
+                                    Text="{ext:Locale SettingsTabInputEnableDockedMode}" />
+                            </CheckBox>
                             <CheckBox                          
                                 ToolTip.Tip="{ext:Locale UseGlobalInputTooltip}"
                                 MinWidth="0"
@@ -54,13 +61,6 @@
                                 IsEnabled="{Binding ElementName=InputView, Path=ViewModel.ShowSettings}">
                                 <TextBlock
                                     Text="{ext:Locale ControllerSettingsDynamicInputSwap}" />
-                            </CheckBox>
-                            <CheckBox
-                                ToolTip.Tip="{ext:Locale DockModeToggleTooltip}"
-                                MinWidth="0"
-                                IsChecked="{Binding EnableDockedMode}">
-                                <TextBlock
-                                    Text="{ext:Locale SettingsTabInputEnableDockedMode}" />
                             </CheckBox>
                             <CheckBox
                                 ToolTip.Tip="{ext:Locale DirectKeyboardTooltip}"
