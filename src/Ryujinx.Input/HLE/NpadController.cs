@@ -1092,7 +1092,7 @@ namespace Ryujinx.Input.HLE
                         : _assignedControllerConfigs.FirstOrDefault(),
                     _controllerDriver
                 ),
-                _ => (null, null, null)
+                _ => ((IGamepad?)null, (InputConfig?)null, (IGamepadDriver?)null)
             };
 
             _controllerGamepad = _gamepad;
