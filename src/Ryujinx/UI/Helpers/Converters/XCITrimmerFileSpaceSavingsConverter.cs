@@ -11,7 +11,7 @@ namespace Ryujinx.Ava.UI.Helpers
 {
     internal class XCITrimmerFileSpaceSavingsConverter : IValueConverter
     {
-        private const long BytesPerMB = 1024 * 1024;
+        private const long _bytesPerMB = 1024 * 1024;
 
         public static readonly XCITrimmerFileSpaceSavingsConverter Instance = new();
 
@@ -37,12 +37,12 @@ namespace Ryujinx.Ava.UI.Helpers
 
             if (currentSavings > 0)
             {
-                mbValue = (currentSavings / BytesPerMB).CoerceAtLeast(0);
+                mbValue = (currentSavings / _bytesPerMB).CoerceAtLeast(0);
                 percentage = (currentSavings / (double)originalSize) * 100;
             }
             else if (potentialSavings > 0)
             {
-                mbValue = (potentialSavings / BytesPerMB).CoerceAtLeast(0);
+                mbValue = (potentialSavings / _bytesPerMB).CoerceAtLeast(0);
                 percentage = (potentialSavings / (double)originalSize) * 100;
             }
 
