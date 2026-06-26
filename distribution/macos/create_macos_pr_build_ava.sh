@@ -139,7 +139,7 @@ fi
 echo ""
 echo "Packaging .dmg"
 
-UNCOMPRESSED_DMG_SHORT="$OUTPUT_DIRECTORY/app.dmg" # hfsutils is old, max fle path length is 255.
+UNCOMPRESSED_DMG_SHORT="app.dmg" # hfsutils is old, max fle path length is 255.
 UNCOMPRESSED_DMG="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
 COMPRESSED_DMG="$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 
