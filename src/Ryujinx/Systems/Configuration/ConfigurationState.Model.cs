@@ -191,6 +191,11 @@ namespace Ryujinx.Ava.Systems.Configuration
             /// </summary>
             public ReactiveObject<bool> IsAscendingOrder { get; private set; }
 
+            /// <summary>
+            /// Show Dynamic Input Swap first-use warning
+            /// </summary>
+            public ReactiveObject<bool> ShowDynamicInputSwapWarning { get; private set; }
+
             public UISection()
             {
                 GuiColumns = new Columns();
@@ -210,6 +215,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 LanguageCode = new ReactiveObject<string>();
                 ShowConsole = new ReactiveObject<bool>();
                 ShowConsole.Event += static (_, e) => ConsoleHelper.SetConsoleWindowState(e.NewValue);
+                ShowDynamicInputSwapWarning = new ReactiveObject<bool>();
+                ShowDynamicInputSwapWarning.Value = true;
             }
         }
 

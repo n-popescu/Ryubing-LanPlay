@@ -162,7 +162,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                     isFirstDynamicInputSwapEnable &&
                     !_dynamicInputSwapFirstUseWarningShown &&
                     _isChangeTrackingActive &&
-                    _isLoaded;
+                    _isLoaded &&
+                    ConfigurationState.Instance.UI.ShowDynamicInputSwapWarning.Value;
 
                 _enableDynamicGamepadSwap = value;
 
@@ -206,9 +207,18 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         private async void ShowDynamicInputSwapFirstUseWarning()
         {
-            await ContentDialogHelper.CreateWarningDialog(
-                LocaleManager.Instance[LocaleKeys.DialogDynamicInputSwapFirstUseTitle],
-                LocaleManager.Instance[LocaleKeys.DialogDynamicInputSwapFirstUseMessage]);
+            string message = LocaleManager.Instance[LocaleKeys.DialogDynamicInputSwapDeviceAssignmentsHint];
+
+            CheckBoxDialogResult result = await ContentDialogHelper.CreateCheckBoxDialog(
+                LocaleManager.Instance[LocaleKeys.ControllerSettingsAssignedInputDevices],
+                message,
+                LocaleManager.Instance[LocaleKeys.DialogDontShowAgain],
+                false);
+
+            if (result.IsChecked)
+            {
+                ConfigurationState.Instance.UI.ShowDynamicInputSwapWarning.Value = false;
+            }
         }
 
         public bool AllowDuplicateDeviceAssignment
