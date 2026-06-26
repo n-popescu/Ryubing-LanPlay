@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static Ryujinx.Ava.Utilities.StorageProviderExtensions;
 
 namespace Ryujinx.Ava.UI.ViewModels
 {
@@ -148,7 +149,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public async Task Add()
         {
-            IReadOnlyList<IStorageFile> result = await _storageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            IReadOnlyList<IStorageFile> result = await CoreDumpable(() => _storageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 AllowMultiple = true,
                 FileTypeFilter = new List<FilePickerFileType>
@@ -160,7 +161,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                         MimeTypes = ["application/x-nx-nsp"],
                     },
                 },
-            });
+            }));
 
             int totalUpdatesAdded = 0;
             foreach (IStorageFile file in result)
@@ -187,7 +188,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         private Task<UserResult> ShowNewUpdatesAddedDialog(int numAdded)
         {
-            string msg = string.Format(LocaleManager.Instance[LocaleKeys.UpdateWindowUpdateAddedMessage], numAdded);
+            string msg = string.Format(LocaleManager.Instance[LocaleKeys.Dialog_ContentLoading_UpdatesAddedMessage], numAdded);
             return Dispatcher.UIThread.InvokeAsync(async () =>
                 await ContentDialogHelper.ShowTextDialog(
                     LocaleManager.Instance[LocaleKeys.DialogConfirmationTitle],

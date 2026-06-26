@@ -1,4 +1,4 @@
-﻿{
+{
   "Locales": [
     {
       "ID": "SettingsTabInputDirectMouseAccess",
@@ -171,258 +171,8 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": "使用低延迟垃圾回收器",
         "zh_TW": ""
-      }
-    },
-    {
-      "ID": "MenuBarFile",
-      "Translations": {
-        "ar_SA": "_ملف",
-        "de_DE": "_Datei",
-        "el_GR": "_Αρχείο",
-        "en_US": "_File",
-        "es_ES": "_Archivo",
-        "fr_FR": "_Fichier",
-        "he_IL": "_קובץ",
-        "it_IT": "_Archivio",
-        "ja_JP": "ファイル(_F)",
-        "ko_KR": "파일(_F)",
-        "no_NO": "_Fil",
-        "pl_PL": "_Plik",
-        "pt_BR": "_Arquivo",
-        "ru_RU": "_Файл",
-        "sv_SE": "_Arkiv",
-        "th_TH": "ไฟล์",
-        "tr_TR": "_Dosya",
-        "uk_UA": "_Файл",
-        "zh_CN": "文件(_F)",
-        "zh_TW": "檔案(_F)"
-      }
-    },
-    {
-      "ID": "MenuBarFileOpenFromFile",
-      "Translations": {
-        "ar_SA": "_تحميل التطبيق...",
-        "de_DE": "_Anwendung laden...",
-        "el_GR": "_Φόρτωση εφαρμογής...",
-        "en_US": "_Load Application...",
-        "es_ES": "_Cargar Aplicación...",
-        "fr_FR": "_Charger l’Application...",
-        "he_IL": "_טען יישום...",
-        "it_IT": "_Carica applicazione...",
-        "ja_JP": "アプリケーションをロード(_L)...",
-        "ko_KR": "앱 불러오기(_L)...",
-        "no_NO": "_Last inn program...",
-        "pl_PL": "_Załaduj aplikację...",
-        "pt_BR": "_Carregar aplicativo...",
-        "ru_RU": "_Загрузить приложение...",
-        "sv_SE": "_Läs in applikation...",
-        "th_TH": "_โหลดแอปพลิเคชัน...",
-        "tr_TR": "_Uygulamayı yükle...",
-        "uk_UA": "_Завантажити застосунок...",
-        "zh_CN": "加载应用程序(_L)...",
-        "zh_TW": "載入應用程式(_L)..."
-      }
-    },
-    {
-      "ID": "MenuBarFileOpenFromFileError",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "Keine Anwendungen in ausgewählter Datei gefunden.",
-        "el_GR": "",
-        "en_US": "No applications found in selected file.",
-        "es_ES": "No se encontraron aplicaciones en el archivo seleccionado.",
-        "fr_FR": "Aucune application trouvée dans le fichier sélectionné.",
-        "he_IL": "",
-        "it_IT": "Nessuna applicazione trovata nel file selezionato.",
-        "ja_JP": "",
-        "ko_KR": "선택한 파일에서 앱을 찾을 수 없습니다.",
-        "no_NO": "Ingen apper ble funnet i valgt fil.",
-        "pl_PL": "",
-        "pt_BR": "Nenhum aplicativo encontrado no arquivo selecionado.",
-        "ru_RU": "Приложений в выбранном файле не найдены",
-        "sv_SE": "Inga applikationer hittades i vald fil.",
-        "th_TH": "ไม่พบแอปพลิเคชั่นจากไฟล์ที่เลือก",
-        "tr_TR": "",
-        "uk_UA": "У вибраному файлі не знайдено жодних додатків.",
-        "zh_CN": "未发现应用",
-        "zh_TW": "未能從已選擇的檔案中找到應用程式。"
-      }
-    },
-    {
-      "ID": "MenuBarFileOpenUnpacked",
-      "Translations": {
-        "ar_SA": "تحميل لُعْبَة غير محزومة...",
-        "de_DE": "_Entpacktes Spiel laden...",
-        "el_GR": "_Φόρτωση Απακετάριστου Παιχνιδιού...",
-        "en_US": "Load _Unpacked Game...",
-        "es_ES": "Cargar Juego _Desempaquetado...",
-        "fr_FR": "Charger un Jeu Décompressé...",
-        "he_IL": "טען משחק _שאינו ארוז...",
-        "it_IT": "Carica gioco _estratto...",
-        "ja_JP": "_展開されたゲームをロード...",
-        "ko_KR": "압축 푼 게임 불러오기(_U)...",
-        "no_NO": "Last inn _upakket spill...",
-        "pl_PL": "Załaduj _rozpakowaną grę...",
-        "pt_BR": "Abrir Jogo _Extraído...",
-        "ru_RU": "Загрузить _распакованную игру...",
-        "sv_SE": "Läs in _uppackat spel...",
-        "th_TH": "โหลดเกมที่แตกไฟล์แล้ว...",
-        "tr_TR": "_Sıkıştırılmamış Oyun Yükle...",
-        "uk_UA": "Завантажити _розпаковану гру...",
-        "zh_CN": "加载解包后的游戏(_U)...",
-        "zh_TW": "載入未封裝的遊戲(_U)..."
-      }
-    },
-    {
-      "ID": "MenuBarFileLoadDlcFromFolder",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "DLC aus Ordner laden...",
-        "el_GR": "",
-        "en_US": "Load DLC...",
-        "es_ES": "Cargar DLC...",
-        "fr_FR": "Charger des DLC...",
-        "he_IL": "",
-        "it_IT": "Carica DLC...",
-        "ja_JP": "",
-        "ko_KR": "DLC 폴더에서 불러오기...",
-        "no_NO": "Last inn DLC...",
-        "pl_PL": "",
-        "pt_BR": "Carregar DLC...",
-        "ru_RU": "Загрузить DLC...",
-        "sv_SE": "Läs in DLC...",
-        "th_TH": "โหลด DLC...",
-        "tr_TR": "",
-        "uk_UA": "Завантажити DLC...",
-        "zh_CN": "加载 DLC...",
-        "zh_TW": "載入 DLC..."
-      }
-    },
-    {
-      "ID": "MenuBarFileLoadTitleUpdatesFromFolder",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "Titel-Updates aus Ordner laden...",
-        "el_GR": "",
-        "en_US": "Load Title Updates...",
-        "es_ES": "Cargar Actualizaciones de Títulos...",
-        "fr_FR": "Charger des Mises à Jour de Titres...",
-        "he_IL": "",
-        "it_IT": "Carica aggiornamenti...",
-        "ja_JP": "",
-        "ko_KR": "타이틀 업데이트 불러오기...",
-        "no_NO": "Last inn titteloppdateringer...",
-        "pl_PL": "",
-        "pt_BR": "Carregar Atualizações de Jogo...",
-        "ru_RU": "Загрузить обновления...",
-        "sv_SE": "Läs in titeluppdateringar...",
-        "th_TH": "โหลดไฟล์อัพเดต...",
-        "tr_TR": "",
-        "uk_UA": "Завантажити оновлення...",
-        "zh_CN": "加载游戏更新...",
-        "zh_TW": "載入遊戲更新..."
-      }
-    },
-    {
-      "ID": "MenuBarFileOpenEmuFolder",
-      "Translations": {
-        "ar_SA": "‫فتح مجلد Ryujinx",
-        "de_DE": "Ryujinx-Ordner öffnen",
-        "el_GR": "Άνοιγμα Φακέλου Ryujinx",
-        "en_US": "Open Ryujinx Folder",
-        "es_ES": "Abrir Carpeta de Ryujinx",
-        "fr_FR": "Ouvrir le Dossier Ryujinx",
-        "he_IL": "פתח את תיקיית ריוג'ינקס",
-        "it_IT": "Apri la cartella di Ryujinx",
-        "ja_JP": "Ryujinx フォルダを開く",
-        "ko_KR": "Ryujinx 폴더 열기",
-        "no_NO": "Åpne Ryujinx mappe",
-        "pl_PL": "Otwórz folder Ryujinx",
-        "pt_BR": "Abrir Pasta do Ryujinx",
-        "ru_RU": "Открыть папку Ryujinx",
-        "sv_SE": "Öppna Ryujinx-mapp",
-        "th_TH": "เปิดโฟลเดอร์ Ryujinx",
-        "tr_TR": "Ryujinx Klasörünü aç",
-        "uk_UA": "Відкрити теку Ryujinx",
-        "zh_CN": "打开 Ryujinx 系统目录",
-        "zh_TW": "開啟 Ryujinx 資料夾"
-      }
-    },
-    {
-      "ID": "MenuBarFileOpenScreenshotsFolder",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "Screenshots-Ordner öffnen",
-        "el_GR": "",
-        "en_US": "Open Screenshots Folder",
-        "es_ES": "Abrir Carpeta de Capturas de Pantalla",
-        "fr_FR": "Ouvrir le Dossier des Captures d’Écran",
-        "he_IL": "",
-        "it_IT": "Apri la cartella degli screenshots",
-        "ja_JP": "",
-        "ko_KR": "스크린샷 폴더 열기",
-        "no_NO": "Åpne Skjermbilde Mappen",
-        "pl_PL": "",
-        "pt_BR": "Abrir Pasta de Capturas de Tela",
-        "ru_RU": "Открыть папку снимков экрана",
-        "sv_SE": "Öppna skärmbildsmappen",
-        "th_TH": "เปิดโฟลเดอร์ที่เก็บภาพหน้าจอ",
-        "tr_TR": "",
-        "uk_UA": "Відкрити теку скріншотів",
-        "zh_CN": "打开截图文件夹",
-        "zh_TW": "開啟螢幕擷取畫面資料夾"
-      }
-    },
-    {
-      "ID": "MenuBarFileOpenLogsFolder",
-      "Translations": {
-        "ar_SA": "فتح مجلد السجلات",
-        "de_DE": "Logs-Ordner öffnen",
-        "el_GR": "Άνοιγμα Φακέλου Καταγραφής",
-        "en_US": "Open Logs Folder",
-        "es_ES": "Abrir Carpeta de Registros",
-        "fr_FR": "Ouvrir le Dossier des Journaux",
-        "he_IL": "פתח את תיקיית קבצי הלוג",
-        "it_IT": "Apri la cartella dei log",
-        "ja_JP": "ログフォルダを開く",
-        "ko_KR": "로그 폴더 열기",
-        "no_NO": "Åpne Logg mappen",
-        "pl_PL": "Otwórz folder plików dziennika zdarzeń",
-        "pt_BR": "Abrir Pasta de _Logs",
-        "ru_RU": "Открыть папку журналов",
-        "sv_SE": "Öppna loggmapp",
-        "th_TH": "เปิดโฟลเดอร์ Logs",
-        "tr_TR": "Logs Klasörünü aç",
-        "uk_UA": "Відкрити теку журналів змін",
-        "zh_CN": "打开日志目录",
-        "zh_TW": "開啟日誌資料夾"
-      }
-    },
-    {
-      "ID": "MenuBarFileExit",
-      "Translations": {
-        "ar_SA": "_خروج",
-        "de_DE": "_Beenden",
-        "el_GR": "_Έξοδος",
-        "en_US": "_Exit",
-        "es_ES": "_Salir",
-        "fr_FR": "_Quitter",
-        "he_IL": "_יציאה",
-        "it_IT": "_Esci",
-        "ja_JP": "終了(_E)",
-        "ko_KR": "종료(_E)",
-        "no_NO": "_Avslutt",
-        "pl_PL": "_Wyjdź",
-        "pt_BR": "_Sair",
-        "ru_RU": "_Выйти",
-        "sv_SE": "_Avsluta",
-        "th_TH": "_ออก",
-        "tr_TR": "_Çıkış",
-        "uk_UA": "_Вихід",
-        "zh_CN": "退出(_E)",
-        "zh_TW": "結束(_E)"
       }
     },
     {
@@ -1653,26 +1403,26 @@
     {
       "ID": "GameListContextMenuManageTitleUpdates",
       "Translations": {
-        "ar_SA": "إدارة تحديثات اللُعبة",
-        "de_DE": "Verwalte Spiel-Updates",
-        "el_GR": "Διαχείριση Ενημερώσεων Παιχνιδιού",
-        "en_US": "Manage Title Updates",
-        "es_ES": "Gestionar Actualizaciones del Juego",
-        "fr_FR": "Gérer les Mises à Jour du Titre",
-        "he_IL": "מנהל עדכוני משחקים",
-        "it_IT": "Gestisci aggiornamenti del gioco",
+        "ar_SA": "إدارة التحديثات",
+        "de_DE": "Updates verwalten",
+        "el_GR": "Διαχείριση ενημερώσεων",
+        "en_US": "Manage Updates",
+        "es_ES": "Gestionar Actualizaciones",
+        "fr_FR": "Gérer les Mises à Jour",
+        "he_IL": "ניהול עדכונים",
+        "it_IT": "Gestisci aggiornamenti",
         "ja_JP": "アップデートを管理",
-        "ko_KR": "타이틀 업데이트 관리",
-        "no_NO": "Administrer titteloppdateringer",
+        "ko_KR": "업데이트 관리",
+        "no_NO": "Administrer oppdateringer",
         "pl_PL": "Zarządzaj aktualizacjami",
-        "pt_BR": "Gerenciar Atualizações do Jogo",
+        "pt_BR": "Gerenciar atualizações",
         "ru_RU": "Управление обновлениями",
-        "sv_SE": "Hantera speluppdateringar",
-        "th_TH": "จัดการเวอร์ชั่นอัปเดต",
-        "tr_TR": "Oyun Güncellemelerini Yönet",
+        "sv_SE": "Hantera uppdateringar",
+        "th_TH": "จัดการการอัปเดต",
+        "tr_TR": "Güncellemeleri Yönet",
         "uk_UA": "Керування оновленнями",
-        "zh_CN": "管理游戏更新",
-        "zh_TW": "管理遊戲更新"
+        "zh_CN": "管理更新",
+        "zh_TW": "管理更新"
       }
     },
     {
@@ -6446,7 +6196,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": "将按键绑定重置为默认",
         "zh_TW": ""
       }
     },
@@ -9846,7 +9596,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": "开启 HD 震动",
         "zh_TW": ""
       }
     },
@@ -9871,7 +9621,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": "向控制器发送更多数据以获得更好的震动效果。\n\n目前仅支持任天堂官方的 Switch 控制器。\n\n如果你在使用 JoyCon 或 Pro 手柄，请保持开启状态。",
         "zh_TW": ""
       }
     },
@@ -10801,106 +10551,6 @@
       }
     },
     {
-      "ID": "DialogInstallFileTypesSuccessMessage",
-      "Translations": {
-        "ar_SA": "تم تثبيت أنواع الملفات بنجاح!",
-        "de_DE": "Dateitypen erfolgreich installiert!",
-        "el_GR": "Επιτυχής εγκατάσταση τύπων αρχείων!",
-        "en_US": "Successfully installed file types!",
-        "es_ES": "¡Tipos de archivos instalados con éxito!",
-        "fr_FR": "Types de fichiers installés avec succès !",
-        "he_IL": "סוגי קבצים הותקנו בהצלחה!",
-        "it_IT": "Tipi di file installati con successo!",
-        "ja_JP": "ファイル形式のインストールに成功しました!",
-        "ko_KR": "파일 형식을 성공적으로 설치했습니다!",
-        "no_NO": "Filtyper ble installert!",
-        "pl_PL": "Pomyślnie zainstalowano typy plików!",
-        "pt_BR": "Tipos de arquivo instalados com sucesso!",
-        "ru_RU": "Типы файлов успешно установлены!",
-        "sv_SE": "Filtyper har installerats!",
-        "th_TH": "ติดตั้งตามประเภทของไฟล์สำเร็จแล้ว!",
-        "tr_TR": "Dosya uzantıları başarıyla yüklendi!",
-        "uk_UA": "Успішно встановлено типи файлів!",
-        "zh_CN": "关联文件类型成功！",
-        "zh_TW": "成功安裝檔案類型!"
-      }
-    },
-    {
-      "ID": "DialogInstallFileTypesErrorMessage",
-      "Translations": {
-        "ar_SA": "فشل تثبيت أنواع الملفات.",
-        "de_DE": "Dateitypen konnten nicht installiert werden.",
-        "el_GR": "Απέτυχε η εγκατάσταση τύπων αρχείων.",
-        "en_US": "Failed to install file types.",
-        "es_ES": "No se pudo desinstalar los tipos de archivo.",
-        "fr_FR": "Échec de l'installation des types de fichiers.",
-        "he_IL": "נכשל בהתקנת סוגי קבצים.",
-        "it_IT": "Impossibile installare i tipi di file.",
-        "ja_JP": "ファイル形式のインストールに失敗しました.",
-        "ko_KR": "파일 형식을 설치하지 못했습니다.",
-        "no_NO": "Kunne ikke installere filtyper.",
-        "pl_PL": "Nie udało się zainstalować typów plików.",
-        "pt_BR": "Falha ao instalar tipos de arquivo.",
-        "ru_RU": "Не удалось установить типы файлов.",
-        "sv_SE": "Misslyckades med att installera filtyper.",
-        "th_TH": "ติดตั้งตามประเภทของไฟล์ไม่สำเร็จ",
-        "tr_TR": "Dosya uzantıları yükleme işlemi başarısız oldu.",
-        "uk_UA": "Не вдалося встановити типи файлів.",
-        "zh_CN": "关联文件类型失败！",
-        "zh_TW": "無法安裝檔案類型。"
-      }
-    },
-    {
-      "ID": "DialogUninstallFileTypesSuccessMessage",
-      "Translations": {
-        "ar_SA": "تم إلغاء تثبيت أنواع الملفات بنجاح!",
-        "de_DE": "Dateitypen erfolgreich deinstalliert!",
-        "el_GR": "Επιτυχής απεγκατάσταση τύπων αρχείων!",
-        "en_US": "Successfully uninstalled file types!",
-        "es_ES": "¡Tipos de archivos desinstalados con éxito!",
-        "fr_FR": "Types de fichiers désinstallés avec succès !",
-        "he_IL": "סוגי קבצים הוסרו בהצלחה!",
-        "it_IT": "Tipi di file disinstallati con successo!",
-        "ja_JP": "ファイル形式のアンインストールに成功しました!",
-        "ko_KR": "파일 형식이 성공적으로 제거되었습니다!",
-        "no_NO": "Filtyper ble avinstallert!",
-        "pl_PL": "Pomyślnie odinstalowano typy plików!",
-        "pt_BR": "Tipos de arquivo desinstalados com sucesso!",
-        "ru_RU": "Типы файлов успешно удалены!",
-        "sv_SE": "Filtyper avinstallerades!",
-        "th_TH": "ถอนการติดตั้งตามประเภทของไฟล์สำเร็จแล้ว!",
-        "tr_TR": "Dosya uzantıları başarıyla kaldırıldı!",
-        "uk_UA": "Успішно видалено типи файлів!",
-        "zh_CN": "成功解除文件类型关联！",
-        "zh_TW": "成功移除檔案類型!"
-      }
-    },
-    {
-      "ID": "DialogUninstallFileTypesErrorMessage",
-      "Translations": {
-        "ar_SA": "فشل إلغاء تثبيت أنواع الملفات.",
-        "de_DE": "Deinstallation der Dateitypen fehlgeschlagen.",
-        "el_GR": "Αποτυχία απεγκατάστασης τύπων αρχείων.",
-        "en_US": "Failed to uninstall file types.",
-        "es_ES": "No se pudo desinstalar los tipos de archivo.",
-        "fr_FR": "Échec de la désinstallation des types de fichiers.",
-        "he_IL": "נכשל בהסרת סוגי קבצים.",
-        "it_IT": "Disinstallazione dei tipi di file non riuscita.",
-        "ja_JP": "ファイル形式のアンインストールに失敗しました.",
-        "ko_KR": "파일 형식을 제거하지 못했습니다.",
-        "no_NO": "Kunne ikke avinstallere filtyper.",
-        "pl_PL": "Nie udało się odinstalować typów plików.",
-        "pt_BR": "Falha ao desinstalar tipos de arquivo.",
-        "ru_RU": "Не удалось удалить типы файлов.",
-        "sv_SE": "Misslyckades med att avinstallera filtyper.",
-        "th_TH": "ไม่สามารถถอนการติดตั้งตามประเภทของไฟล์ได้",
-        "tr_TR": "Dosya uzantıları kaldırma işlemi başarısız oldu.",
-        "uk_UA": "Не вдалося видалити типи файлів.",
-        "zh_CN": "解除文件类型关联失败！",
-        "zh_TW": "無法移除檔案類型。"
-      }
-    },
-    {
       "ID": "DialogOpenSettingsWindowLabel",
       "Translations": {
         "ar_SA": "فتح نافذة الإعدادات",
@@ -11696,7 +11346,7 @@
           "th_TH": "",
           "tr_TR": "",
           "uk_UA": "",
-          "zh_CN": "",
+          "zh_CN": "要将选定设备的按键绑定重置为默认值吗?",
           "zh_TW": ""
         }
       },
@@ -11721,7 +11371,7 @@
           "th_TH": "",
           "tr_TR": "",
           "uk_UA": "",
-          "zh_CN": "",
+          "zh_CN": "这是一个破坏性的操作,会覆盖此设备当前的绑定。",
           "zh_TW": ""
         }
       },
@@ -13051,31 +12701,6 @@
       }
     },
     {
-      "ID": "MenuBarOptionsChangeLanguage",
-      "Translations": {
-        "ar_SA": "تغيير اللغة",
-        "de_DE": "Sprache ändern",
-        "el_GR": "Αλλαξε γλώσσα",
-        "en_US": "Change Language",
-        "es_ES": "Cambiar Idioma",
-        "fr_FR": "Changer la Langue",
-        "he_IL": "החלף שפה",
-        "it_IT": "Cambia lingua",
-        "ja_JP": "言語を変更",
-        "ko_KR": "언어 변경",
-        "no_NO": "Endre språk",
-        "pl_PL": "Zmień język",
-        "pt_BR": "Mudar Idioma",
-        "ru_RU": "Сменить язык",
-        "sv_SE": "Byt språk",
-        "th_TH": "เปลี่ยนภาษา",
-        "tr_TR": "Dili Değiştir",
-        "uk_UA": "Змінити мову",
-        "zh_CN": "更改界面语言",
-        "zh_TW": "變更語言"
-      }
-    },
-    {
       "ID": "MenuBarShowFileTypes",
       "Translations": {
         "ar_SA": "إظهار أنواع الملفات",
@@ -13696,7 +13321,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": "将 CLR 的垃圾回收器设置为低延迟模式。\n\n这可能会减少卡顿,但会以性能为代价。\n\n不确定的话就保持关闭。",
         "zh_TW": ""
       }
     },
@@ -14976,31 +14601,6 @@
       }
     },
     {
-      "ID": "MenuBarOptionsShowConsole",
-      "Translations": {
-        "ar_SA": "عرض وحدة التحكم",
-        "de_DE": "Zeige Konsole",
-        "el_GR": "Εμφάνιση Κονσόλας",
-        "en_US": "Show Console",
-        "es_ES": "Mostrar Consola",
-        "fr_FR": "Afficher la Console",
-        "he_IL": "הצג שורת פקודות",
-        "it_IT": "Mostra console",
-        "ja_JP": "コンソールを表示",
-        "ko_KR": "콘솔 표시",
-        "no_NO": "Vis konsoll",
-        "pl_PL": "Pokaż Konsolę",
-        "pt_BR": "Exibir Console",
-        "ru_RU": "Показать консоль",
-        "sv_SE": "Visa konsoll",
-        "th_TH": "แสดง คอนโซล",
-        "tr_TR": "Konsol'u Göster",
-        "uk_UA": "Показати консоль",
-        "zh_CN": "显示控制台",
-        "zh_TW": "顯示控制台"
-      }
-    },
-    {
       "ID": "ShaderCachePurgeError",
       "Translations": {
         "ar_SA": "حدث خطأ أثناء تنظيف ذاكرة المظللات المؤقتة في {0}: {1}",
@@ -16223,106 +15823,6 @@
         "uk_UA": "Виберіть підтримуваний файл для відкриття",
         "zh_CN": "选择支持的游戏文件并加载",
         "zh_TW": "選取支援的檔案格式"
-      }
-    },
-    {
-      "ID": "LoadApplicationFromFileDialogTitle",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Choose a Switch compatible FILE to load",
-        "es_ES": "Elige un ARCHIVO compatible con Switch para cargar",
-        "fr_FR": "Choisissez un FICHIER compatible Switch à charger",
-        "he_IL": "",
-        "it_IT": "Scegli un FILE compatibile con Switch da caricare",
-        "ja_JP": "",
-        "ko_KR": "불러올 Switch 호환 파일을 선택",
-        "no_NO": "",
-        "pl_PL": "",
-        "pt_BR": "Escolha um ARQUIVO compatível com Switch para carregar",
-        "ru_RU": "Выберите ФАЙЛ, совместимый с Switch, для загрузки",
-        "sv_SE": "Välj en Switch-kompatibel FIL att läsa in",
-        "th_TH": "",
-        "tr_TR": "",
-        "uk_UA": "Виберіть ФАЙЛ, сумісний із Switch, для завантаження",
-        "zh_CN": "请选择要加载的 Switch 兼容文件",
-        "zh_TW": "請選擇要載入的 Switch 相容檔案"
-      }
-    },
-    {
-      "ID": "LoadUnpackedGameFromFolderDialogTitle",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Choose an UNPACKED Switch compatible application to load",
-        "es_ES": "Elige una aplicación DESEMPAQUETADA compatible con Switch para cargar",
-        "fr_FR": "Choisissez une application DÉCOMPRESSEÉE compatible avec Switch à charger",
-        "he_IL": "",
-        "it_IT": "Scegli un’applicazione DECOMPRESSA compatibile con Switch da caricare",
-        "ja_JP": "",
-        "ko_KR": "불러올 언팩된 Switch 호환 앱을 선택",
-        "no_NO": "",
-        "pl_PL": "",
-        "pt_BR": "Escolha um aplicativo DESCOMPACTADO compatível com Switch para carregar",
-        "ru_RU": "Выберите РАСПАКОВАННОЕ, совместимое с Switch, приложение для загрузки",
-        "sv_SE": "Välj en UPPACKAD Switch-kompatibel applikation att läsa in",
-        "th_TH": "",
-        "tr_TR": "",
-        "uk_UA": "Виберіть РОЗПАКОВАНИЙ сумісний із Switch додаток для завантаження",
-        "zh_CN": "请选择要加载的已解包的 Switch 兼容应用程序",
-        "zh_TW": "請選擇要載入的已解壓縮 Switch 相容應用程式"
-      }
-    },
-    {
-      "ID": "LoadTitleUpdatesFromFolderDialogTitle",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Choose one or more FOLDERS to bulk load title updates from",
-        "es_ES": "Elige una o más CARPETAS para cargar actualizaciones de título de forma masiva",
-        "fr_FR": "Choisissez un ou plusieurs DOSSIERS pour charger en masse des mises à jour de titres",
-        "he_IL": "",
-        "it_IT": "Scegli una o più CARTELLE da cui caricare in blocco gli aggiornamenti del titolo",
-        "ja_JP": "",
-        "ko_KR": "타이틀 업데이트를 대량으로 불러올 폴더를 하나 이상 선택",
-        "no_NO": "",
-        "pl_PL": "",
-        "pt_BR": "Escolha uma ou mais PASTAS para carregar atualizações de título em massa",
-        "ru_RU": "Выберите одну или несколько ПАПОК для массовой загрузки обновлений заголовков",
-        "sv_SE": "Välj en eller flera MAPPAR för att läsa in alla titeluppdateringar från",
-        "th_TH": "",
-        "tr_TR": "",
-        "uk_UA": "Виберіть одну або кілька ПАПОК для масового завантаження оновлень титулів",
-        "zh_CN": "请选择一个或多个文件夹来批量加载游戏更新",
-        "zh_TW": "請選擇一個或多個資料夾以批次載入遊戲更新"
-      }
-    },
-    {
-      "ID": "LoadDLCFromFolderDialogTitle",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "Choose one or more FOLDERS to bulk load DLC from",
-        "es_ES": "Elige una o más CARPETAS para cargar DLC de forma masiva",
-        "fr_FR": "Choisissez un ou plusieurs DOSSIERS pour charger en masse des DLC",
-        "he_IL": "",
-        "it_IT": "Scegli una o più CARTELLE da cui caricare DLC in blocco",
-        "ja_JP": "",
-        "ko_KR": "DLC를 대량으로 불러올 폴더를 하나 이상 선택",
-        "no_NO": "",
-        "pl_PL": "",
-        "pt_BR": "Escolha uma ou mais PASTAS para carregar DLC em massa",
-        "ru_RU": "Выберите одну или несколько ПАПОК для массовой загрузки DLC",
-        "sv_SE": "Välj en eller flera MAPPAR för att läsa in alla DLC från",
-        "th_TH": "",
-        "tr_TR": "",
-        "uk_UA": "Виберіть одну або кілька ПАПОК для масового завантаження DLC",
-        "zh_CN": "请选择一个或多个文件夹来批量加载 DLC",
-        "zh_TW": "請選擇一個或多個資料夾以批次載入 DLC"
       }
     },
     {
@@ -17676,31 +17176,6 @@
       }
     },
     {
-      "ID": "UpdateWindowUpdateAddedMessage",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "{0} new update(s) added",
-        "es_ES": "{0} nueva(s) actualización(es) agregada(s)",
-        "fr_FR": "{0} nouvelle(s) mise(s) à jour ajoutée(s)",
-        "he_IL": "",
-        "it_IT": "{0} nuovo/i aggiornamento/i aggiunto/i",
-        "ja_JP": "",
-        "ko_KR": "{0}개의 신규 업데이트가 추가됨",
-        "no_NO": "{0} ny(e) oppdatering(er) lagt til",
-        "pl_PL": "",
-        "pt_BR": "{0} nova(s) atualização(ões) adicionada(s)",
-        "ru_RU": "Добавлено {0} новых обновлений",
-        "sv_SE": "{0} nya uppdatering(ar) lades till",
-        "th_TH": "มีอัปเดตใหม่เข้ามา {0} รายการ",
-        "tr_TR": "",
-        "uk_UA": "{0} нових оновлень додано",
-        "zh_CN": "{0} 个更新被添加",
-        "zh_TW": "已加入 {0} 個遊戲更新"
-      }
-    },
-    {
       "ID": "UpdateWindowBundledContentNotice",
       "Translations": {
         "ar_SA": "",
@@ -17823,131 +17298,6 @@
         "uk_UA": "{0} DLC доступно",
         "zh_CN": "{0} 个 DLC",
         "zh_TW": "{0} 個可下載內容"
-      }
-    },
-    {
-      "ID": "DlcWindowDlcAddedMessage",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "{0} New Downloadable Content(s) Added",
-        "es_ES": "Se agregó/aron {0} nuevo(s) contenido(s) descargable(s)",
-        "fr_FR": "{0} nouveau(x) contenu(s) téléchargeable(s) ajouté(s)",
-        "he_IL": "",
-        "it_IT": "{0} nuovo/i DLC aggiunto/i",
-        "ja_JP": "",
-        "ko_KR": "{0}개의 새로운 내려받기 가능한 콘텐츠가 추가됨",
-        "no_NO": "{0} nytt nedlastbart innhold lagt til",
-        "pl_PL": "",
-        "pt_BR": "{0} novo(s) conteúdo(s) para download adicionado(s)",
-        "ru_RU": "Добавлено {0} новое/ых DLC",
-        "sv_SE": "{0} nya hämtningsbara innehåll lades till",
-        "th_TH": "มีเนื้อหาเสริมใหม่ {0} รายการ",
-        "tr_TR": "",
-        "uk_UA": "{0} нового завантажувального вмісту додано",
-        "zh_CN": "{0} 个 DLC 被添加",
-        "zh_TW": "已加入 {0} 個 DLC"
-      }
-    },
-    {
-      "ID": "AutoloadDlcAddedMessage",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "{0} New Downloadable Content(s) Added",
-        "es_ES": "Se agregó/aron {0} nuevo(s) contenido(s) descargable(s)",
-        "fr_FR": "{0} nouveau(x) contenu(s) téléchargeable(s) ajouté(s)",
-        "he_IL": "",
-        "it_IT": "{0} nuovo/i DLC aggiunto/i",
-        "ja_JP": "",
-        "ko_KR": "{0}개의 새로운 DLC가 추가됨",
-        "no_NO": "{0} nytt nedlastbart innhold lagt til",
-        "pl_PL": "",
-        "pt_BR": "{0} novo(s) conteúdo(s) para download adicionado(s)",
-        "ru_RU": "Добавлено {0} новое/ых DLC",
-        "sv_SE": "{0} nya hämtningsbara innehåll lades till",
-        "th_TH": "เพิ่มเนื้อหาเสริมดาวน์โหลดใหม่ {0} รายการ",
-        "tr_TR": "",
-        "uk_UA": "{0} нового завантажувального вмісту додано",
-        "zh_CN": "{0} 个 DLC 被添加",
-        "zh_TW": "已加入 {0} 個 DLC"
-      }
-    },
-    {
-      "ID": "AutoloadDlcRemovedMessage",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "{0} Missing Downloadable Content(s) Removed",
-        "es_ES": "Se eliminó/aron {0} contenido(s) descargable(s) faltante(s)",
-        "fr_FR": "{0} contenu(s) téléchargeable(s) manquant(s) supprimé(s)",
-        "he_IL": "",
-        "it_IT": "{0} DLC mancante/i rimosso/i",
-        "ja_JP": "",
-        "ko_KR": "{0}개의 내려받기 가능한 콘텐츠가 제거됨",
-        "no_NO": "{0} manglende nedlastbart innhold fjernet",
-        "pl_PL": "",
-        "pt_BR": "{0} conteúdo(s) para download ausente(s) removido(s)",
-        "ru_RU": "Убрано {0} отсутствующие/х DLC",
-        "sv_SE": "{0} saknade hämtningsbara innehåll togs bort",
-        "th_TH": "ลบเนื้อหาเสริมที่หายไปจำนวน {0} รายการ",
-        "tr_TR": "",
-        "uk_UA": "{0} відсутнього завантажувального вмісту видалено",
-        "zh_CN": "{0} 个失效的 DLC 已移除",
-        "zh_TW": "已刪除 {0} 個遺失的 DLC"
-      }
-    },
-    {
-      "ID": "AutoloadUpdateAddedMessage",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "{0} New Update(s) Added",
-        "es_ES": "Se agregó/aron {0} nueva(s) actualización(es)",
-        "fr_FR": "{0} nouvelle(s) mise(s) à jour ajoutée(s)",
-        "he_IL": "",
-        "it_IT": "{0} nuovo/i aggiornamento/i aggiunto/i",
-        "ja_JP": "",
-        "ko_KR": "{0}개의 신규 업데이트가 추가됨",
-        "no_NO": "{0} ny(e) oppdatering(er) lagt til",
-        "pl_PL": "",
-        "pt_BR": "{0} nova(s) atualização(ões) adicionada(s)",
-        "ru_RU": "Добавлено {0} новое/ых обновление/й",
-        "sv_SE": "{0} nya uppdatering(ar) lades till",
-        "th_TH": "เพิ่มการอัปเดตใหม่ {0} รายการ",
-        "tr_TR": "",
-        "uk_UA": "{0} нових оновлень додано",
-        "zh_CN": "{0} 个游戏更新被添加",
-        "zh_TW": "已加入 {0} 個遊戲更新"
-      }
-    },
-    {
-      "ID": "AutoloadUpdateRemovedMessage",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "",
-        "en_US": "{0} Missing Update(s) Removed",
-        "es_ES": "Se eliminó/aron {0} actualización(es) faltante(s)",
-        "fr_FR": "{0} mise(s) à jour manquante(s) supprimée(s)",
-        "he_IL": "",
-        "it_IT": "{0} aggiornamento/i mancante/i rimosso/i",
-        "ja_JP": "",
-        "ko_KR": "누락된 업데이트 {0}개 삭제",
-        "no_NO": "{0} manglende oppdatering(er) fjernet",
-        "pl_PL": "",
-        "pt_BR": "{0} atualização(ões) ausente(s) removida(s)",
-        "ru_RU": "Убрано {0} отсутствующие/х обновление/й",
-        "sv_SE": "{0} saknade uppdatering(ar) togs bort",
-        "th_TH": "ลบการอัปเดตที่หายไปจำนวน {0} รายการ",
-        "tr_TR": "",
-        "uk_UA": "{0} відсутніх оновлень видалено",
-        "zh_CN": "{0} 个失效的游戏更新已移除",
-        "zh_TW": "已刪除 {0} 個遺失的遊戲更新"
       }
     },
     {

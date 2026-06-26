@@ -98,6 +98,7 @@ namespace Ryujinx.Graphics.Vulkan
         internal bool IsIntelArc { get; private set; }
         internal bool IsQualcommProprietary { get; private set; }
         internal bool IsMoltenVk { get; private set; }
+        internal bool SupportsMTL31 { get; private set; }
         internal bool IsTBDR { get; private set; }
         internal bool IsSharedMemory { get; private set; }
 
@@ -123,6 +124,8 @@ namespace Ryujinx.Graphics.Vulkan
             // Any device running on MacOS is using MoltenVK, even Intel and AMD vendors.
             if (IsMoltenVk = OperatingSystem.IsMacOS())
                 MVKInitialization.Initialize();
+
+            SupportsMTL31 = OperatingSystem.IsMacOSVersionAtLeast(14);
         }
 
         public static VulkanRenderer Create(
@@ -436,7 +439,7 @@ namespace Ryujinx.Graphics.Vulkan
                 features2.Features.MultiViewport && !(IsMoltenVk && Vendor == Vendor.Amd), // Workaround for AMD on MoltenVK issue
                 featuresRobustness2.NullDescriptor || IsMoltenVk,
                 supportsPushDescriptors,
-                IsMoltenVk ? 16 : propertiesPushDescriptor.MaxPushDescriptors, // In case an old version of MoltenVK is used, apply a limit to prevent vertex explosions.
+                IsMoltenVk ? 16 : propertiesPushDescriptor.MaxPushDescriptors, // Prevents vertex explosions on MoltenVK.
                 featuresPrimitiveTopologyListRestart.PrimitiveTopologyListRestart,
                 featuresPrimitiveTopologyListRestart.PrimitiveTopologyPatchListRestart,
                 supportsTransformFeedback,

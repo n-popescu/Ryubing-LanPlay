@@ -818,8 +818,7 @@ namespace Ryujinx.Ava.Systems
 
                     if (!Device.LoadCart(ApplicationPath, romFsFiles[0]))
                     {
-                        await ContentDialogHelper.CreateErrorDialog(
-                            "Please specify an unpacked game directory with a valid exefs or NSO/NRO.");
+                        await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Error_NoUnpackedApplicationFoundInFolder));
                         Device.Dispose();
 
                         cts.Cancel();
@@ -831,8 +830,7 @@ namespace Ryujinx.Ava.Systems
                     Logger.Info?.Print(LogClass.Application, "Loading as cart WITHOUT RomFS.");
                     if (!Device.LoadCart(ApplicationPath))
                     {
-                        await ContentDialogHelper.CreateErrorDialog(
-                            "Please specify an unpacked game directory with a valid exefs or NSO/NRO.");
+                        await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.Error_NoUnpackedApplicationFoundInFolder));
                         Device.Dispose();
                         cts.Cancel();
                         throw new OperationCanceledException(cts.Token);
@@ -1094,10 +1092,10 @@ namespace Ryujinx.Ava.Systems
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                if (_viewModel.StartGamesInFullscreen)
+                if (_viewModel.StartGamesInFullscreen && _viewModel.WindowState is not WindowState.FullScreen)
                 {
-                    _viewModel.WindowState = WindowState.FullScreen;
-                    _viewModel.Window.TitleBar.ExtendsContentIntoTitleBar = true;
+                    // Use the view model toggle so decoration ordering matches user toggles.
+                    _viewModel.ToggleFullscreen();
                 }
 
                 if (_viewModel.WindowState is WindowState.FullScreen || _viewModel.StartGamesWithoutUi)

@@ -45,6 +45,10 @@
         <KeyBinding Gesture="Ctrl+Shift+R" Command="{Binding ReloadRenderDocApi}" />
         <KeyBinding Gesture="Ctrl+Shift+C" Command="{Binding ToggleCapture}" />
         <KeyBinding Gesture="Ctrl+M" Command="{Binding SimulateWakeUpMessage}" />
+        <KeyBinding Gesture="Cmd+O" Command="{Binding LoadApplicationFromFile}" />
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding LoadApplicationFromFile}" />
+        <KeyBinding Gesture="Cmd+Shift+O" Command="{Binding LoadUnpackedGameFromFolder}" />
+        <KeyBinding Gesture="Ctrl+Shift+O" Command="{Binding LoadUnpackedGameFromFolder}" />
     </Window.KeyBindings>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowDefinitions="*">
         <helpers:OffscreenTextBox IsEnabled="False" Opacity="0" Name="HiddenTextBox" IsHitTestVisible="False" IsTabStop="False" />
@@ -131,7 +135,7 @@
                         Grid.Column="1"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
-                        IsVisible="{Binding ShowLoadProgress}" RowDefinitions="Auto,Auto,Auto">
+                        IsVisible="{Binding ShowLoadProgress}" RowDefinitions="Auto,Auto,Auto,Auto">
                         <TextBlock
                             Grid.Row="0"
                             Margin="10"
@@ -173,6 +177,16 @@
                             FontSize="18"
                             IsVisible="{Binding ShowLoadProgress}"
                             Text="{Binding CacheLoadStatus}"
+                            TextAlignment="Start"
+                            MaxWidth="500" />
+                        <TextBlock
+                            Grid.Row="3"
+                            Margin="10"
+                            FontSize="14"
+                            FontStyle="Oblique"
+                            IsVisible="{Binding ShowLoadProgress}"
+                            Text="{Binding Splash}"
+                            Foreground="LightGray"
                             TextAlignment="Start"
                             MaxWidth="500" />
                     </Grid>
