@@ -18,10 +18,6 @@ using Ryujinx.Common.GraphicsDriver;
 using Ryujinx.Common.Logging;
 using Ryujinx.Common.SystemInterop;
 using Ryujinx.Common.Utilities;
-using Ryujinx.Graphics.RenderDocApi;
-using Ryujinx.Graphics.Vulkan.MoltenVK;
-using Ryujinx.Graphics.Vulkan.KosmicKrisp;
-using Ryujinx.Graphics.Vulkan.MoltenVK;
 using Ryujinx.Headless;
 using Ryujinx.SDL3.Common;
 using System;
@@ -360,6 +356,12 @@ namespace Ryujinx.Ava
             GlobalConfigurationPath ??= ConfigurationPath;
 
             UseHardwareAcceleration = ConfigurationState.Instance.EnableHardwareAcceleration;
+
+            // Change graphics backend from OpenGL to Vulkan on macOS
+            if (OperatingSystem.IsMacOS() && (ConfigurationState.Instance.Graphics.GraphicsBackend.Value == GraphicsBackend.OpenGl))
+            {
+                ConfigurationState.Instance.Graphics.GraphicsBackend.Value = GraphicsBackend.Vulkan;
+            }
 
             // Check if graphics backend was overridden
             if (CommandLineState.OverrideGraphicsBackend is not null)
