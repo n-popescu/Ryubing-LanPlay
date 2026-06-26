@@ -761,7 +761,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 ? PlayerInputDevices.ToDictionary(item => (item.DeviceType, item.Id))
                 : null;
 
-            Dictionary<(AssignedInputDeviceType Type, string Id), List<string>> deviceToOtherPlayers = GetOtherPlayerDeviceAssignments();
+            Dictionary<(AssignedInputDeviceType Type, string Id), List<string>> deviceToOtherAssignedPlayers = GetOtherPlayerDeviceAssignments();
 
             PlayerInputDevices.Clear();
 
@@ -784,7 +784,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                         assignedDevice.Id == deviceId)?.ProfileName);
 
                 // Find other players using this device
-                deviceToOtherPlayers.TryGetValue((assignedType, deviceId), out List<string> assignedOtherPlayers);
+                deviceToOtherAssignedPlayers.TryGetValue((assignedType, deviceId), out List<string> assignedOtherPlayers);
 
                 PlayerInputDevices.Add(new PlayerInputDeviceAssignmentItem
                 {
@@ -837,7 +837,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                     .Where(assignment => assignment != null && assignment.PlayerIndex != _playerId)
                     .Select(assignment => assignment.PlayerIndex))
                 .Distinct();
-            Dictionary<(AssignedInputDeviceType Type, string Id), List<string>> deviceToOtherPlayers = [];
+            Dictionary<(AssignedInputDeviceType Type, string Id), List<string>> deviceToOtherAssignedPlayers = [];
 
             foreach (PlayerIndex otherPlayer in otherPlayers)
             {
@@ -857,10 +857,10 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 foreach (AssignedInputDevice device in normalizedOtherAssignment.Devices)
                 {
                     var key = (device.Type, device.Id);
-                    if (!deviceToOtherPlayers.TryGetValue(key, out List<string> players))
+                    if (!deviceToOtherAssignedPlayers.TryGetValue(key, out List<string> players))
                     {
                         players = [];
-                        deviceToOtherPlayers[key] = players;
+                        deviceToOtherAssignedPlayers[key] = players;
                     }
 
                     if (!players.Contains(playerName))
@@ -870,16 +870,16 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 }
             }
 
-            return deviceToOtherPlayers;
+            return deviceToOtherAssignedPlayers;
         }
 
         private void RefreshPlayerInputDeviceAssignmentState()
         {
-            Dictionary<(AssignedInputDeviceType Type, string Id), List<string>> deviceToOtherPlayers = GetOtherPlayerDeviceAssignments();
+            Dictionary<(AssignedInputDeviceType Type, string Id), List<string>> deviceToOtherAssignedPlayers = GetOtherPlayerDeviceAssignments();
 
             foreach (PlayerInputDeviceAssignmentItem item in PlayerInputDevices)
             {
-                deviceToOtherPlayers.TryGetValue((item.AssignedType, item.Id), out List<string> assignedOtherPlayers);
+                deviceToOtherAssignedPlayers.TryGetValue((item.AssignedType, item.Id), out List<string> assignedOtherPlayers);
 
                 item.IsDisabledByOtherPlayer = IsDisabledByOtherPlayer(item.IsAssigned, assignedOtherPlayers);
 
