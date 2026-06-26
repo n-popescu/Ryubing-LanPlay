@@ -158,7 +158,7 @@ NF > 0 {
     }
     target = $0
     gsub(/\//, ":", target)
-    print "hcopy -m \"./" $0 "\" \":" target "\""
+    print "[ -f \"./" $0 "\" ] && hcopy -m \"./" $0 "\" \":" target "\" || true"
 }' | tee /dev/stderr | sh -e
 
 humount "$UNCOMPRESSED_DMG_SHORT"
