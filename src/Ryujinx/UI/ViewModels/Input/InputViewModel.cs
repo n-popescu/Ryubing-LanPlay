@@ -856,7 +856,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 foreach (AssignedInputDevice device in normalizedOtherAssignment.Devices)
                 {
-                    var key = (device.Type, device.Id);
+                    (AssignedInputDeviceType Type, string Id) key = (device.Type, device.Id);
                     if (!deviceToOtherAssignedPlayers.TryGetValue(key, out List<string> players))
                     {
                         players = [];
