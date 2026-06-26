@@ -240,7 +240,6 @@ namespace Ryujinx.Input.SDL3
                 }
             }
             
-            Logger.Debug?.PrintMsg(LogClass.Hid, $"POLL RATE: {pollRate}ms.");
             return pollRate;
         }
 
@@ -254,8 +253,8 @@ namespace Ryujinx.Input.SDL3
     public enum HDRumbleSupportedVendor : ushort
     {
         Nintendo = 0x057e,
-        // Valve = 0x28de,
-        // Sony = 0x054c
+        Valve = 0x28de,
+        Sony = 0x054c
     }
 
     public enum HDRumbleSupportedProduct : ushort
