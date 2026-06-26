@@ -154,7 +154,7 @@ hmount "$UNCOMPRESSED_DMG_SHORT"
 
 find "$DMG_FOLDER" -type f ! -name '._*' |
 sed "s|^$DMG_FOLDER/||" |
-awk -v SOURCE="$(realpath "$DMG_FOLDER")" -v TARGET="$UNCOMPRESSED_DMG_SHORT" -F/ '
+awk -v SOURCE="$DMG_FOLDER" -v TARGET="$UNCOMPRESSED_DMG_SHORT" -F/ '
 {
     path = ""
     for (i = 1; i < NF; i++) {
