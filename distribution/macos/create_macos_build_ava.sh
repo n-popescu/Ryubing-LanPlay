@@ -163,7 +163,7 @@ awk -v SOURCE="$DMG_FOLDER" -v TARGET="$UNCOMPRESSED_DMG_SHORT" -F/ '
     }
 
     target = TARGET ":" gensub(/\//, ":", "g", $0)
-    print "hcopy -m \"" SOURCE "/" $0 "\" \":" target "\""
+    print "hcopy \"" SOURCE "/" $0 "\" \":" target "\""
 }' |
 tee /dev/stderr |
 sh -e
