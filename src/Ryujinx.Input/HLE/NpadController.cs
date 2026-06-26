@@ -1223,7 +1223,6 @@ namespace Ryujinx.Input.HLE
             foreach (IGamepad controllerGamepad in _assignedControllerGamepads.Distinct())
             {
                 controllerGamepad?.Dispose();
->>>>>>> 80f12ef7f (Teach Npad about assigned devices)
             }
         }
     }

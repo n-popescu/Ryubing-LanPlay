@@ -57,6 +57,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         partial void OnProfileNameChanged(string value)
         {
             OnPropertyChanged(nameof(IsProfileLinked));
+            OnPropertyChanged(nameof(CanDeleteOrSaveProfile));
         }
 
         [ObservableProperty]
@@ -109,6 +110,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         public bool IsController => CurrentDeviceType == DeviceType.Controller;
         public bool IsKeyboard => CurrentDeviceType == DeviceType.Keyboard;
         public bool CanOpenAssignedDevices => ShowSettings && EnableDynamicGamepadSwap;
+        public bool CanDeleteOrSaveProfile => ShowSettings && !IsDefaultProfileName(ProfileName);
         public bool IsRight { get; set; }
         public bool IsLeft { get; set; }
         public bool HasLed => (SelectedGamepad?.Features & GamepadFeaturesFlag.Led) != 0;
@@ -1101,6 +1103,12 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             !string.IsNullOrWhiteSpace(ProfileName) &&
             string.Equals(ProfileName, GetBoundProfileNameForCurrentDevice(), StringComparison.Ordinal);
 
+        public bool IsProfileNameLinked(string profileName)
+        {
+            return !string.IsNullOrWhiteSpace(profileName) &&
+                   string.Equals(profileName, GetBoundProfileNameForCurrentDevice(), StringComparison.Ordinal);
+        }
+
         private void ReplaceBoundProfileName(string previousProfileName, string nextProfileName)
         {
             if (string.IsNullOrWhiteSpace(previousProfileName) ||
@@ -1140,7 +1148,10 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         {
             OnPropertyChanged(nameof(CanBindSelectedProfile));
             OnPropertyChanged(nameof(IsProfileLinked));
+            OnPropertyChanged(nameof(BoundProfileNameForCurrentDevice));
         }
+
+        public string BoundProfileNameForCurrentDevice => GetBoundProfileNameForCurrentDevice();
 
         public bool CanBindSelectedProfile =>
             ShowSettings &&
