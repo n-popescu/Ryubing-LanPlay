@@ -1654,6 +1654,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                     // Avalonia bug: setting a newly instanced ComboBox to 0
                     // causes the selected item to show up blank
                     // Workaround: set the box to 1 and then 0
+                    // See: https://github.com/AvaloniaUI/Avalonia/issues/4610
+                    //      https://github.com/AvaloniaUI/Avalonia/discussions/18834
                     if (controllerIndex == 0)
                     {
                         ApplyControllerSelection(1);
