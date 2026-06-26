@@ -149,7 +149,7 @@ COMPRESSED_DMG="$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=100
 mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
 
-hpmount "$UNCOMPRESSED_DMG"
+hmount "$UNCOMPRESSED_DMG"
 hcopy -r "$DMG_FOLDER/" :
 humount "$UNCOMPRESSED_DMG"
 rm -r "$DMG_FOLDER"

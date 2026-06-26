@@ -174,15 +174,11 @@ jobs:
 
       - name: Install attr
         run: sudo apt-get install -y attr
-
-      - name: Install hfsprogs
-        run: sudo apt-get install -y hfsprogs
-
-      - name: Install hfsutils
-        run: sudo apt-get install -y hfsutils
       
-      - name: Install libdmg-hfsplus
+      - name: Install hfsprogs, hfsutils, and libdmg-hfsplus
         run: |
+          sudo apt-get install -y hfsprogs
+          sudo apt-get install -y hfsutils
           sudo apt-get install -y cmake
           git clone https://github.com/mozilla/libdmg-hfsplus.git
           cd libdmg-hfsplus && cmake . && make && cd ..
