@@ -6,7 +6,6 @@ using FluentAvalonia.UI.Controls;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.UI.Models.Input;
 using Ryujinx.Ava.UI.ViewModels.Input;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Ryujinx.Ava.UI.Views.Input
@@ -26,11 +25,7 @@ namespace Ryujinx.Ava.UI.Views.Input
 
         public static async Task Show(InputViewModel viewModel)
         {
-            // Store original state to allow discarding changes
-            var originalAssignments = viewModel.PlayerInputDevices
-                .Select(item => new { item.Id, item.DeviceType, item.IsAssigned })
-                .ToList();
-            var originalAllowDuplicate = viewModel.AllowDuplicateDeviceAssignment;
+            InputViewModel.AssignedDevicesEditSnapshot originalState = viewModel.CreateAssignedDevicesEditSnapshot();
 
             AssignedDevicesInputView content = new(viewModel);
 
@@ -51,23 +46,7 @@ namespace Ryujinx.Ava.UI.Views.Input
             }
             else
             {
-                // Discard changes by reverting to original state
-                foreach (var original in originalAssignments)
-                {
-                    var item = viewModel.PlayerInputDevices.FirstOrDefault(d =>
-                        d.Id == original.Id && d.DeviceType == original.DeviceType);
-                    if (item != null && item.IsAssigned != original.IsAssigned)
-                    {
-                        // Use Toggle to revert, which will properly refresh state
-                        viewModel.ToggleAssignedPlayerInputDevice(item, original.IsAssigned);
-                    }
-                }
-                // Revert AllowDuplicateDeviceAssignment to original state
-                if (viewModel.AllowDuplicateDeviceAssignment != originalAllowDuplicate)
-                {
-                    viewModel.AllowDuplicateDeviceAssignment = originalAllowDuplicate;
-                }
-                viewModel.RefreshModifiedState();
+                viewModel.RestoreAssignedDevicesEditSnapshot(originalState);
             }
         }
 

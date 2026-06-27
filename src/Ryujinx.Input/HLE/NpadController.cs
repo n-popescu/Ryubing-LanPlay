@@ -769,7 +769,7 @@ namespace Ryujinx.Input.HLE
                 {
                     foreach (string gamepadId in gamepadDriver.GamepadsIds)
                     {
-                        if (gamepadId == assignedController.Id)
+                        if (string.Equals(gamepadId, assignedController.Id, StringComparison.Ordinal))
                         {
                             yield return assignedController;
                             break;
@@ -784,7 +784,7 @@ namespace Ryujinx.Input.HLE
             {
                 foreach (string gamepadId in gamepadDriver.GamepadsIds)
                 {
-                    if (gamepadId == config.Id)
+                    if (string.Equals(gamepadId, config.Id, StringComparison.Ordinal))
                     {
                         yield return new AssignedInputDevice
                         {
