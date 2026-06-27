@@ -143,36 +143,13 @@ fi
 echo ""
 echo "Packaging .dmg"
 
-UNCOMPRESSED_DMG_SHORT="app.dmg" # hfsutils is old, max fle path length is 255.
 UNCOMPRESSED_DMG="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
 COMPRESSED_DMG="$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 
-dd if=/dev/zero of="$UNCOMPRESSED_DMG_SHORT" bs=1M count=100
-hformat -l "Ryujinx" "$UNCOMPRESSED_DMG_SHORT"
-
-hmount "$UNCOMPRESSED_DMG_SHORT"
-
-find "$DMG_FOLDER" -type f ! -name '._*' |
-sed "s|^$DMG_FOLDER/||" |
-awk -v SOURCE="$DMG_FOLDER" -v TARGET="$UNCOMPRESSED_DMG_SHORT" -F/ '
-{
-    path = ""
-    for (i = 1; i < NF; i++) {
-        path = (path ? path ":" : "") $i
-        print "hmkdir \":" TARGET ":" path "\" 2>/dev/null || :"
-    }
-
-    hfs_subpath = gensub(/\//, ":", "g", $0)
-    print "hcopy \"" SOURCE "/" $0 "\" \":" TARGET ":" hfs_subpath "\""
-}' |
-tee /dev/stderr |
-sh -e
-
-humount "$UNCOMPRESSED_DMG_SHORT"
-rm -r "$DMG_FOLDER
-mv "$UNCOMPRESSED_DMG_SHORT" "$UNCOMPRESSED_DMG"
-
+dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=100
+genisoimage -D -V "Ryujinx" -no-pad -r -apple -file-mode 0777 -o $UNCOMPRESSED_DMG $DMG_FOLDER
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
+rm -r "$DMG_FOLDER"
 rm -f "$UNCOMPRESSED_DMG"
 
 # ... And sign it again. Thanks, Apple.
