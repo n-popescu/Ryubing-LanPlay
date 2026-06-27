@@ -74,7 +74,7 @@
     <!--<PackageVersion Include="Ryujinx.Audio.OpenAL.Dependencies" Version="1.21.0.1" />-->
     <PackageVersion Include="Ryujinx.Audio.OpenAL" Version="1.25.2" />
     <PackageVersion Include="Ryujinx.Graphics.Nvdec.Dependencies.AllArch" Version="6.1.4-build6" />
-    <PackageVersion Include="Ryujinx.Graphics.Vulkan.KosmicKrisp" Version="26.1.3-ryujinx.2" />
+    <PackageVersion Include="Ryujinx.Graphics.Vulkan.KosmicKrisp" Version="26.2.0-dev-ryujinx.4" />
     <PackageVersion Include="Ryujinx.Graphics.Vulkan.MoltenVK" Version="1.4.2-ryujinx.5" />
     <PackageVersion Include="Ryujinx.LibHac" Version="0.21.0-alpha.133" />
     <PackageVersion Include="Ryujinx.SDL3-CS" Version="2026.707.0" />
