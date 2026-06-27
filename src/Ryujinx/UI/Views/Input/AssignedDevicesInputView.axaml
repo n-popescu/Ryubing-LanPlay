@@ -33,7 +33,7 @@
                             PointerPressed="DeviceRow_OnPointerPressed"
                             Cursor="Hand"
                             IsEnabled="{Binding !IsDisabledByOtherPlayer}">
-                            <Grid ColumnDefinitions="Auto,*,200">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
                                 <CheckBox
                                     Grid.Column="0"
                                     IsChecked="{Binding IsAssigned}"
