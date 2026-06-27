@@ -66,7 +66,10 @@ namespace Ryujinx.Ava.UI.Views.Input
                 var textBlock = new TextBlock
                 {
                     Text = profileName,
-                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                    TextWrapping = TextWrapping.NoWrap,
+                    MaxWidth = 170
                 };
                 Grid.SetColumn(textBlock, 0);
 

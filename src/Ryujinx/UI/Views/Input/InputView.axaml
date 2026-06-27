@@ -101,11 +101,27 @@
                         Name="ProfileBox"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
+                        MaxHeight="32"
+                        Padding="8,0,44,0"
                         IsEnabled="{Binding ShowSettings}"
                         SelectedItem="{Binding ChosenProfile, Mode=TwoWay}"
                         SelectionChanged="ComboBox_SelectionChanged"
                         ItemsSource="{Binding ProfilesList}"
-                        Text="{Binding ProfileName, Mode=TwoWay}" />
+                        Text="{Binding ProfileName, Mode=TwoWay}">
+                        <ui:FAComboBox.Styles>
+                            <Style Selector="TextBlock">
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                <Setter Property="TextWrapping" Value="NoWrap" />
+                                <Setter Property="MaxLines" Value="1" />
+                                <Setter Property="MaxWidth" Value="170" />
+                            </Style>
+                            <Style Selector="TextBox">
+                                <Setter Property="TextWrapping" Value="NoWrap" />
+                                <Setter Property="MaxLines" Value="1" />
+                                <Setter Property="Padding" Value="0,0,36,0" />
+                            </Style>
+                        </ui:FAComboBox.Styles>
+                    </ui:FAComboBox>
                     <ui:SymbolIcon
                         Grid.Column="1"
                         Symbol="Link"

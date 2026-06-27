@@ -50,6 +50,10 @@
                                     <TextBlock
                                         Opacity="0.6"
                                         FontSize="12"
+                                        MaxWidth="160"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="NoWrap"
+                                        MaxLines="1"
                                         IsVisible="{Binding HasBoundProfileName}">
                                         <Run Text="{ext:Locale ControllerSettingsProfile}" />
                                         <Run Text=":" />
