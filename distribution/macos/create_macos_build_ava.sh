@@ -118,6 +118,9 @@ mkdir "$DMG_FOLDER"
 tar -xzf "$BASE_DIRECTORY/distribution/macos/DMG_ASSETS/DMG_Structure.tar.gz" -C "$DMG_FOLDER" --strip-components=1
 cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
 
+chmod -R 755 "$DMG_FOLDER/Ryujinx.app"
+chmod +x "$DMG_FOLDER/Ryujinx.app/Contents/MacOS/Ryujinx"
+
 # Now sign it.
 echo ""
 echo "Signing .app"
@@ -151,6 +154,8 @@ genisoimage -D -V "Ryujinx" -no-pad -r -apple -file-mode 0777 -o $UNCOMPRESSED_D
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 rm -r "$DMG_FOLDER"
 rm -f "$UNCOMPRESSED_DMG"
+
+chmod -R 755 "$COMPRESSED_DMG"
 
 # ... And sign it again. Thanks, Apple.
 echo ""
