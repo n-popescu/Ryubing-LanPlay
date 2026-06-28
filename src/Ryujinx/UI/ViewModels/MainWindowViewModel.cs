@@ -376,6 +376,26 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public bool CanScanAmiiboBinaries => AmiiboBinReader.HasAmiiboKeyFile;
 
+        [ObservableProperty] public partial string SkylanderButtonHeader { get; set; } = string.Empty;
+        [ObservableProperty] public partial bool SkylanderButtonEnabled { get; set; }
+        [ObservableProperty] public partial string SkylanderInputGesture { get; set; } = "Ctrl + S";
+
+        public RelayCommand ToggleSkylanderCommand { get; }
+
+        private async void ExecuteToggleSkylander()
+        {
+            if (!IsGameRunning) return;
+
+            if (HasSkylander)
+            {
+                await RemoveSkylander();
+            }
+            else
+            {
+                await OpenSkylanderWindow();
+            }
+        }
+
         public bool IsSkylanderRequested
         {
             get => field && _isGameRunning;
@@ -384,7 +404,21 @@ namespace Ryujinx.Ava.UI.ViewModels
                 field = value;
 
                 OnPropertyChanged();
+                UpdateSkylanderButton();
             }
+        }
+
+                private void UpdateSkylanderButton()
+        {
+            SkylanderButtonHeader = HasSkylander
+                ? LocaleManager.Instance[LocaleKeys.MenuBar_Actions_RemoveSkylanderButton]
+                : LocaleManager.Instance[LocaleKeys.MenuBar_Actions_ScanSkylanderButton];
+
+            SkylanderButtonEnabled = (HasSkylander || IsSkylanderRequested) && ShowSkylanderActions;
+            SkylanderInputGesture = HasSkylander ? "Ctrl + D" : "Ctrl + S";
+
+            OnPropertyChanged(nameof(SkylanderButtonHeader));
+            OnPropertyChanged(nameof(SkylanderButtonEnabled));
         }
 
         public bool HasSkylander
@@ -395,6 +429,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 field = value;
 
                 OnPropertyChanged();
+                UpdateSkylanderButton();
             }
         }
 
@@ -406,6 +441,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 field = value;
 
                 OnPropertyChanged();
+                UpdateSkylanderButton();
             }
         }
 
@@ -1496,7 +1532,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Title = LocaleManager.Instance[LocaleKeys.Dialog_Firmware_InstallFromFileFilePickerTitle],
                 FileTypeFilter = new List<FilePickerFileType>
                 {
-                    new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
+                    new(LocaleManager.Instance[LocaleKeys.Common_FilePicker_AllSupportedFormats])
                     {
                         Patterns = ["*.xci", "*.zip"],
                         AppleUniformTypeIdentifiers = ["com.ryujinx.xci", "public.zip-archive"],
@@ -1680,7 +1716,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Title = LocaleManager.Instance[LocaleKeys.Dialog_FileMenu_LoadApplicationFromFileFilePickerTitle],
                 FileTypeFilter = new List<FilePickerFileType>
                 {
-                    new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
+                    new(LocaleManager.Instance[LocaleKeys.Common_FilePicker_AllSupportedFormats])
                     {
                         Patterns = ["*.nsp", "*.xci", "*.nca", "*.nro", "*.nso"],
                         AppleUniformTypeIdentifiers =
@@ -2020,7 +2056,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                         Title = LocaleManager.Instance[LocaleKeys.Dialog_Amiibo_ScanAmiiboFromBinFilePickerTitle],
                         FileTypeFilter = new List<FilePickerFileType>
                         {
-                            new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
+                            new(LocaleManager.Instance[LocaleKeys.Common_FilePicker_AllSupportedFormats])
                             {
                                 Patterns = ["*.bin"],
                             }
@@ -2043,7 +2079,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     Title = LocaleManager.Instance[LocaleKeys.Dialog_Skylanders_ScanSkylanderFilePickerTitle],
                     FileTypeFilter = new List<FilePickerFileType>
                 {
-                    new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
+                    new(LocaleManager.Instance[LocaleKeys.Common_FilePicker_AllSupportedFormats])
                     {
                         Patterns = ["*.sky", "*.bin", "*.dmp", "*.dump"],
                     },
