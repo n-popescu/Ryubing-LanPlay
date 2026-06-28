@@ -451,10 +451,10 @@ namespace Ryujinx.Ava.UI.ViewModels
 
                     if (usageStringBuilder.Length == 0)
                     {
-                        usageStringBuilder.Append($"{LocaleManager.Instance[LocaleKeys.Unknown]}.");
+                        usageStringBuilder.Append($"{LocaleManager.Instance[LocaleKeys.Amiibo_UnknownLabel]}.");
                     }
 
-                    Usage = $"{LocaleManager.Instance[LocaleKeys.Usage]} {(writable ? $" ({LocaleManager.Instance[LocaleKeys.Writable]})" : string.Empty)} : {usageStringBuilder}";
+                    Usage = $"{LocaleManager.Instance[LocaleKeys.Amiibo_UsageLabel]} {(writable ? $" ({LocaleManager.Instance[LocaleKeys.Amiibo_WritableLabel]})" : string.Empty)} : {usageStringBuilder}";
                 }
             }
 
@@ -510,8 +510,8 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Logger.Error?.Print(LogClass.Application, $"Failed to request amiibo data: {exception}");
             }
 
-            await ContentDialogHelper.CreateInfoDialog(LocaleManager.Instance[LocaleKeys.DialogAmiiboApiTitle],
-                LocaleManager.Instance[LocaleKeys.DialogAmiiboApiFailFetchMessage],
+            await ContentDialogHelper.CreateInfoDialog(LocaleManager.Instance[LocaleKeys.Dialog_Amiibo_APITitle],
+                LocaleManager.Instance[LocaleKeys.Dialog_Amiibo_APIFailFetchMessage],
                 LocaleManager.Instance[LocaleKeys.InputDialogOk],
                 string.Empty,
                 LocaleManager.Instance[LocaleKeys.RyujinxInfo]);
@@ -560,8 +560,8 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         private static async Task ShowInfoDialog()
         {
-            await ContentDialogHelper.CreateInfoDialog(LocaleManager.Instance[LocaleKeys.DialogAmiiboApiTitle],
-                LocaleManager.Instance[LocaleKeys.DialogAmiiboApiConnectErrorMessage],
+            await ContentDialogHelper.CreateInfoDialog(LocaleManager.Instance[LocaleKeys.Dialog_Amiibo_APITitle],
+                LocaleManager.Instance[LocaleKeys.Dialog_Amiibo_APIConnectErrorMessage],
                 LocaleManager.Instance[LocaleKeys.InputDialogOk],
                 string.Empty,
                 LocaleManager.Instance[LocaleKeys.RyujinxInfo]);

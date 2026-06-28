@@ -33,14 +33,14 @@
                 ToolTip.Tip="{ext:WindowTitle Amiibo}" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0, 0, 0, 20">
                 <StackPanel Spacing="10" Orientation="Horizontal" HorizontalAlignment="Left">
-                    <TextBlock VerticalAlignment="Center" Text="{ext:Locale AmiiboSeriesLabel}" />
+                    <TextBlock VerticalAlignment="Center" Text="{ext:Locale Amiibo_SeriesLabel}" />
                     <ComboBox Margin="0, 8, 0, 0" SelectedIndex="{Binding SeriesSelectedIndex}" ItemsSource="{Binding AmiiboSeries}" MinWidth="100" />
                 </StackPanel>
             </StackPanel>
         </Grid>
         <Grid Name="NormalControls" ColumnDefinitions="*,*" Grid.Row="1" HorizontalAlignment="Stretch" >
             <StackPanel Spacing="10" Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock VerticalAlignment="Center" Text="{ext:Locale AmiiboSeriesLabel}" />
+                <TextBlock VerticalAlignment="Center" Text="{ext:Locale Amiibo_SeriesLabel}" />
                 <ComboBox SelectedIndex="{Binding SeriesSelectedIndex}" ItemsSource="{Binding AmiiboSeries}" MinWidth="100" />
             </StackPanel>
         </Grid>
@@ -71,24 +71,24 @@
         <Grid Grid.Row="3" ColumnDefinitions="Auto,Auto,*,Auto,Auto">
             <CheckBox Margin="10" Grid.Column="0" VerticalContentAlignment="Center" 
                       IsChecked="{Binding ShowAllAmiibo}"
-                      Content="{ext:Locale AmiiboOptionsShowAllLabel}" />
+                      Content="{ext:Locale Amiibo_ShowIncompatibleAmiiboLabel}" />
             <CheckBox HotKey="H" 
                       Margin="10" VerticalContentAlignment="Center" Grid.Column="1" 
                       IsChecked="{Binding UseRandomUuid}"
-                      Content="{ext:Locale AmiiboOptionsUsRandomTagLabel}" />
+                      Content="{ext:Locale Amiibo_UseRandomUuidTagLabel}" />
             <Button Grid.Column="3" 
                     IsEnabled="{Binding EnableScanning}" 
                     Width="80"
                     Name="ScanButton"
                     HotKey="Return"
-                    Content="{ext:Locale AmiiboScanButtonLabel}"
+                    Content="{ext:Locale Amiibo_ScanButton}"
                     Click="ScanButton_Click" />
             <Button Grid.Column="4" 
                     Margin="10,0" 
                     Width="80"
                     Name="CancelButton"
                     HotKey="Escape"
-                    Content="{ext:Locale InputDialogCancel}"
+                    Content="{ext:Locale Common_Buttons_Cancel}"
                     Click="CancelButton_Click" />
         </Grid>
     </Grid>

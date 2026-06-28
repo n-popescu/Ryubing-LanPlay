@@ -20,7 +20,7 @@ namespace Ryujinx.Ava.UI.Windows
             FlushControls.IsVisible = !ConfigurationState.Instance.ShowOldUI;
             NormalControls.IsVisible = ConfigurationState.Instance.ShowOldUI;
 
-            Title = RyujinxApp.FormatTitle(LocaleKeys.Amiibo);
+            Title = RyujinxApp.FormatTitle(LocaleKeys.Amiibo_WindowTitle);
         }
 
         public AmiiboWindow()
@@ -31,7 +31,7 @@ namespace Ryujinx.Ava.UI.Windows
 
             if (Program.PreviewerDetached)
             {
-                Title = RyujinxApp.FormatTitle(LocaleKeys.Amiibo);
+                Title = RyujinxApp.FormatTitle(LocaleKeys.Amiibo_WindowTitle);
             }
         }
 
