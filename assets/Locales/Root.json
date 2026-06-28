@@ -176,156 +176,6 @@
       }
     },
     {
-      "ID": "MenuBarOptions",
-      "Translations": {
-        "ar_SA": "_خيارات",
-        "de_DE": "_Optionen",
-        "el_GR": "_Επιλογές",
-        "en_US": "_Options",
-        "es_ES": "_Opciones",
-        "fr_FR": null,
-        "he_IL": "_אפשרויות",
-        "it_IT": "_Opzioni",
-        "ja_JP": "オプション(_O)",
-        "ko_KR": "옵션(_O)",
-        "no_NO": "_Alternativer",
-        "pl_PL": "_Opcje",
-        "pt_BR": "_Opções",
-        "ru_RU": "_Настройки",
-        "sv_SE": "_Inställningar",
-        "th_TH": "_ตัวเลือก",
-        "tr_TR": "_Seçenekler",
-        "uk_UA": "_Параметри",
-        "zh_CN": "选项(_O)",
-        "zh_TW": "選項(_O)"
-      }
-    },
-    {
-      "ID": "MenuBarOptionsToggleFullscreen",
-      "Translations": {
-        "ar_SA": "التبديل إلى وضع ملء الشاشة",
-        "de_DE": "Vollbild",
-        "el_GR": "Λειτουργία Πλήρους Οθόνης",
-        "en_US": "Toggle Fullscreen",
-        "es_ES": "Cambiar a Pantalla Completa.",
-        "fr_FR": "Basculer en Plein Écran",
-        "he_IL": "שנה מצב- מסך מלא",
-        "it_IT": "Schermo intero",
-        "ja_JP": "全画面切り替え",
-        "ko_KR": "전체 화면 전환",
-        "no_NO": "Fullskjermsvisning av/på",
-        "pl_PL": "Przełącz na tryb pełnoekranowy",
-        "pt_BR": "Mudar para Tela Cheia",
-        "ru_RU": "Переключить полноэкранный режим",
-        "sv_SE": "Växla helskärm",
-        "th_TH": "สลับเป็นโหมดเต็มหน้าจอ",
-        "tr_TR": "Tam Ekran Modunu Aç",
-        "uk_UA": "На весь екран",
-        "zh_CN": "切换全屏",
-        "zh_TW": "切換全螢幕模式"
-      }
-    },
-    {
-      "ID": "MenuBarOptionsStartGamesInFullscreen",
-      "Translations": {
-        "ar_SA": "ابدأ الألعاب في وضع ملء الشاشة",
-        "de_DE": "Spiele im Vollbildmodus starten",
-        "el_GR": "Εκκίνηση Παιχνιδιών σε Πλήρη Οθόνη",
-        "en_US": "Start Games in Fullscreen Mode",
-        "es_ES": "Iniciar Juegos en Pantalla Completa",
-        "fr_FR": "Démarrer les Jeux en Plein Écran",
-        "he_IL": "התחל משחקים במסך מלא",
-        "it_IT": "Avvia i giochi a schermo intero",
-        "ja_JP": "全画面モードでゲームを開始",
-        "ko_KR": "전체 화면 모드로 게임 시작",
-        "no_NO": "Start spill i Fullskjermmodus",
-        "pl_PL": "Uruchamiaj gry w trybie pełnoekranowym",
-        "pt_BR": "Iniciar Jogos em Tela Cheia",
-        "ru_RU": "Запускать игры в полноэкранном режиме",
-        "sv_SE": "Starta spel i helskärmsläge",
-        "th_TH": "เริ่มเกมในโหมดเต็มหน้าจอ",
-        "tr_TR": "Oyunları Tam Ekran Modunda Başlat",
-        "uk_UA": "Запускати ігри на весь екран",
-        "zh_CN": "全屏模式启动游戏",
-        "zh_TW": "使用全螢幕模式啟動遊戲"
-      }
-    },
-    {
-      "ID": "MenuBarOptionsStartGamesWithoutUI",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "Spiele ohne Benutzeroberfläche starten",
-        "el_GR": "",
-        "en_US": "Start Games with UI Hidden",
-        "es_ES": "Iniziar Juegos con la Interfaz Oculta",
-        "fr_FR": "Démarrer les Jeux avec l’Interface Cachée",
-        "he_IL": "",
-        "it_IT": "Avvia i giochi con l'interfaccia nascosta",
-        "ja_JP": "",
-        "ko_KR": "UI를 숨긴 상태에서 게임 시작",
-        "no_NO": "Start Spillet med UI Gjemt",
-        "pl_PL": "",
-        "pt_BR": "Iniciar Jogos Ocultando a Interface",
-        "ru_RU": "Запускать игры скрывая интерфейс",
-        "sv_SE": "Starta spel med dolt användargränssnitt",
-        "th_TH": "เริ่มเกมโดยซ่อน UI",
-        "tr_TR": "",
-        "uk_UA": "Запускати ігри з прихованим інтерфейсом",
-        "zh_CN": "启动游戏时隐藏 UI",
-        "zh_TW": "開啟遊戲時隱藏 UI"
-      }
-    },
-    {
-      "ID": "MenuBarOptionsSettings",
-      "Translations": {
-        "ar_SA": "_الإعدادات",
-        "de_DE": "_Einstellungen",
-        "el_GR": "_Ρυθμίσεις",
-        "en_US": "_Settings",
-        "es_ES": "_Configuración",
-        "fr_FR": "_Paramètres",
-        "he_IL": "_הגדרות",
-        "it_IT": "_Impostazioni",
-        "ja_JP": "設定(_S)",
-        "ko_KR": "설정(_S)",
-        "no_NO": "_Innstillinger",
-        "pl_PL": "_Ustawienia",
-        "pt_BR": "_Configurações",
-        "ru_RU": "_Параметры",
-        "sv_SE": "_Inställningar",
-        "th_TH": "_ตั้งค่า",
-        "tr_TR": "_Seçenekler",
-        "uk_UA": "_Налаштування",
-        "zh_CN": "设置(_S)",
-        "zh_TW": "設定(_S)"
-      }
-    },
-    {
-      "ID": "MenuBarOptionsManageUserProfiles",
-      "Translations": {
-        "ar_SA": "_ملفات المستخدمين",
-        "de_DE": "_Benutzerprofile",
-        "el_GR": "_Προφίλ Χρηστών",
-        "en_US": "_User Profiles",
-        "es_ES": "_Perfiles de Usuario",
-        "fr_FR": "_Profils d'Utilisateurs",
-        "he_IL": "_פרופילי משתמש",
-        "it_IT": "_Profili utent",
-        "ja_JP": "ユーザプロファイル(_M)",
-        "ko_KR": "사용자 프로필(_M)",
-        "no_NO": "_Brukerprofiler",
-        "pl_PL": "_Profile użytkowników",
-        "pt_BR": "_Perfis de usuário",
-        "ru_RU": "_Учётные записи",
-        "sv_SE": "_Användarprofiler",
-        "th_TH": "_โปรไฟล์ผู้ใช้งาน",
-        "tr_TR": "_Kullanıcı Profilleri",
-        "uk_UA": "_Профілі користувачів",
-        "zh_CN": "用户配置文件(_M)",
-        "zh_TW": "使用者設定檔(_M)"
-      }
-    },
-    {
       "ID": "MenuBarView",
       "Translations": {
         "ar_SA": "_عرض",
@@ -2126,56 +1976,6 @@
       }
     },
     {
-      "ID": "GameListContextMenuTrimXCI",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "XCI-Datei prüfen & trimmen",
-        "el_GR": "",
-        "en_US": "Check & Trim XCI File",
-        "es_ES": "Verificar & Recortar Archivo XCI",
-        "fr_FR": "Vérifier & Réduire le Fichier XCI",
-        "he_IL": "",
-        "it_IT": "Controlla & Riduci il File XCI",
-        "ja_JP": "",
-        "ko_KR": "XCI 파일 확인 & 트림",
-        "no_NO": "Kontroller & trim XCI-filen",
-        "pl_PL": "",
-        "pt_BR": "Verificar & Reduzir o Arquivo XCI",
-        "ru_RU": "Проверить & обрезать XCI файл",
-        "sv_SE": "Kontrollera & optimera XCI-fil",
-        "th_TH": "ตรวจสอบ & ลดขนาดไฟล์ XCI",
-        "tr_TR": "",
-        "uk_UA": "Перевірка & нарізка XCI Файлу",
-        "zh_CN": "检查并精简 XCI 文件",
-        "zh_TW": "檢查 & 修剪 XCI 檔案"
-      }
-    },
-    {
-      "ID": "GameListContextMenuTrimXCIToolTip",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "Trimmt und prüft die XCI-Datei um Speicherplatz zu sparen.",
-        "el_GR": "",
-        "en_US": "Check and Trim XCI File to Save Disk Space",
-        "es_ES": "Verificar y Recortar Archivo XCI para Ahorrar Espacio en Disco",
-        "fr_FR": "Vérifier et Réduire le Fichier XCI pour Économiser de l’Espace Disque",
-        "he_IL": "",
-        "it_IT": "Controlla e riduci la dimensione del file XCI per risparmiare spazio su disco",
-        "ja_JP": "",
-        "ko_KR": "디스크 공간을 절약하기 위해 XCI 파일 확인 및 트림",
-        "no_NO": "Kontroller og trimm XCI-filen for å spare diskplass",
-        "pl_PL": "",
-        "pt_BR": "Verifique e reduza o arquivo XCI para economizar espaço em disco",
-        "ru_RU": "Проверить и обрезать XCI файл для экономии места на диске",
-        "sv_SE": "Kontrollera och optimera XCI-fil för att spara diskutrymme",
-        "th_TH": "ตรวจสอบและลดขนาดไฟล์ XCI เพื่อประหยัดเนื้อที่เก็บข้อมูล",
-        "tr_TR": "",
-        "uk_UA": "Перевірити та обрізати XCI Файл задля збереження місця на диску",
-        "zh_CN": "检查并瘦身 XCI 文件以节约磁盘空间",
-        "zh_TW": "檢查及修剪 XCI 檔案以節省儲存空間"
-      }
-    },
-    {
       "ID": "StatusBarGamesLoaded",
       "Translations": {
         "ar_SA": "{0}/{1} لعبة تم تحميلها",
@@ -2198,31 +1998,6 @@
         "uk_UA": "{0}/{1} ігор завантажено",
         "zh_CN": "{0}/{1} 游戏加载完成",
         "zh_TW": "{0}/{1} 遊戲已載入"
-      }
-    },
-    {
-      "ID": "StatusBarXCIFileTrimming",
-      "Translations": {
-        "ar_SA": "",
-        "de_DE": "XCI-Datei trimmen: '{0}'",
-        "el_GR": "",
-        "en_US": "Trimming XCI File '{0}'",
-        "es_ES": "Recortando el Siguiente Archivo XCI: '{0}'",
-        "fr_FR": "Réduction du Fichier XCI '{0}'",
-        "he_IL": "",
-        "it_IT": "Riduzione della dimensione del file XCI '{0}'",
-        "ja_JP": "",
-        "ko_KR": "XCI 파일 '{0}' 트리밍",
-        "no_NO": "Trimming av XCI-filen '{0}'",
-        "pl_PL": "",
-        "pt_BR": "Reduzindo o Arquivo XCI '{0}'",
-        "ru_RU": "Обрезается XCI файл '{0}'",
-        "sv_SE": "Optimerar XCI-filen '{0}'",
-        "th_TH": "กำลังลดขนาดไฟล์ XCI '{0}'",
-        "tr_TR": "",
-        "uk_UA": "Обрізається XCI Файлів '{0}'",
-        "zh_CN": "正在瘦身 XCI 文件 '{0}'",
-        "zh_TW": "正在修剪 XCI 檔案 '{0}'"
       }
     },
     {
@@ -15398,31 +15173,6 @@
         "uk_UA": "Компіляція шейдерів",
         "zh_CN": "编译着色器中",
         "zh_TW": "正在編譯著色器"
-      }
-    },
-    {
-      "ID": "OpenFileDialogTitle",
-      "Translations": {
-        "ar_SA": "حدد ملف مدعوم لفتحه",
-        "de_DE": "Wähle eine unterstützte Datei",
-        "el_GR": "Επιλέξτε ένα υποστηριζόμενο αρχείο για άνοιγμα",
-        "en_US": "Select a supported file to open",
-        "es_ES": "Selecciona un archivo soportado para cargar",
-        "fr_FR": "Sélectionnez un fichier compatible à ouvrir",
-        "he_IL": "בחר קובץ נתמך לפתיחה",
-        "it_IT": "Seleziona un file supportato da aprire",
-        "ja_JP": "開くファイルを選択",
-        "ko_KR": "지원되는 파일을 선택하여 열기",
-        "no_NO": "Velg en støttet fil for å åpne",
-        "pl_PL": "Wybierz obsługiwany plik do otwarcia",
-        "pt_BR": "Selecione um arquivo suportado para abrir",
-        "ru_RU": "Выберите совместимый файл для открытия",
-        "sv_SE": "Välj en fil som stöds att öppna",
-        "th_TH": "เลือกไฟล์ที่สนับสนุนเพื่อเปิด",
-        "tr_TR": "Açmak için desteklenen bir dosya seçin",
-        "uk_UA": "Виберіть підтримуваний файл для відкриття",
-        "zh_CN": "选择支持的游戏文件并加载",
-        "zh_TW": "選取支援的檔案格式"
       }
     },
     {

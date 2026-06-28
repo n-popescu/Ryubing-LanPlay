@@ -2017,7 +2017,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(
                     new FilePickerOpenOptions
                     {
-                        Title = LocaleManager.Instance[LocaleKeys.OpenFileDialogTitle],
+                        Title = LocaleManager.Instance[LocaleKeys.Dialog_Amiibo_ScanAmiiboFromBinFilePickerTitle],
                         FileTypeFilter = new List<FilePickerFileType>
                         {
                             new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
@@ -2040,7 +2040,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(
                     new FilePickerOpenOptions
                 {
-                    Title = LocaleManager.Instance[LocaleKeys.OpenFileDialogTitle],
+                    Title = LocaleManager.Instance[LocaleKeys.Dialog_Skylanders_ScanSkylanderFilePickerTitle],
                     FileTypeFilter = new List<FilePickerFileType>
                 {
                     new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])

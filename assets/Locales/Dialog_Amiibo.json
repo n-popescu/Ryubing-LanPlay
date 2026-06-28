@@ -1,6 +1,31 @@
 {
   "Locales": [
     {
+      "ID": "ScanAmiiboFromBinFilePickerTitle",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Select a BIN file to scan Amiibo from",
+        "es_ES": "Selecciona un archivo BIN para escanear el Amiibo",
+        "fr_FR": "Sélectionnez un fichier BIN pour scanner le firmware",
+        "he_IL": "",
+        "it_IT": "Seleziona un file BIN da cui scansionare Amiibo",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "Selecione um arquivo BIN para escanear o Amiibo",
+        "ru_RU": "Выберите файл BIN для сканирования Amiibo",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "Виберіть файл BIN для сканування Amiibo",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
       "ID": "APITitle",
       "Translations": {
         "ar_SA": "أميبو API",
