@@ -417,8 +417,8 @@ namespace Ryujinx.Input.HLE
             bool motionWasDisabled = oldConfig?.Motion == null;
             bool leftMotionMissing = _leftMotionInput == null;
             bool isJoyconPairNeedingRightMotion = newConfig.ControllerType == ConfigControllerType.JoyconPair && _rightMotionInput == null;
-            bool motionEnabledChanged = !motionWasDisabled && oldConfig.Motion.EnableMotion != newConfig.Motion.EnableMotion;
-            bool motionBackendChanged = !motionWasDisabled && oldConfig.Motion.MotionBackend != newConfig.Motion.MotionBackend;
+            bool motionEnabledChanged = !motionWasDisabled && oldConfig?.Motion?.EnableMotion != newConfig.Motion.EnableMotion;
+            bool motionBackendChanged = !motionWasDisabled && oldConfig?.Motion?.MotionBackend != newConfig.Motion.MotionBackend;
 
             return motionWasDisabled ||
                    leftMotionMissing ||
