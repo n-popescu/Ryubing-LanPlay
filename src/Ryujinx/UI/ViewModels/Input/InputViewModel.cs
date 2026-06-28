@@ -207,7 +207,9 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         private async void ShowDynamicInputSwapFirstUseWarning()
         {
-            string message = LocaleManager.Instance[LocaleKeys.DialogDynamicInputSwapDeviceAssignmentsHint];
+            string message = LocaleManager.Instance.UpdateAndGetDynamicValue(
+                LocaleKeys.DialogDynamicInputSwapDeviceAssignmentsHint,
+                BuildDynamicInputSwapFirstUseAssignmentSummary());
 
             CheckBoxDialogResult result = await ContentDialogHelper.CreateCheckBoxDialog(
                 LocaleManager.Instance[LocaleKeys.ControllerSettingsAssignedInputDevices],
@@ -219,6 +221,15 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             {
                 ConfigurationState.Instance.UI.ShowDynamicInputSwapWarning.Value = false;
             }
+        }
+
+        private string BuildDynamicInputSwapFirstUseAssignmentSummary()
+        {
+            return string.Join(
+                Environment.NewLine,
+                PlayerInputDevices
+                    .Where(device => device.HasAssignedToPlayers)
+                    .Select(device => $"{device.Name} - {device.AssignedToPlayers}"));
         }
 
         public bool AllowDuplicateDeviceAssignment
