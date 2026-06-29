@@ -152,8 +152,7 @@ xorriso -outdev "$UNCOMPRESSED_DMG" \
   -padding 0 \
   -hfsplus on \
   -map "$DMG_FOLDER" / \
-  -chmod_r 0755 / -- \
-  -chown_r 0:0 / --
+  -chmod_r 0755 / --
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 rm -r "$DMG_FOLDER"
 rm -f "$UNCOMPRESSED_DMG"
