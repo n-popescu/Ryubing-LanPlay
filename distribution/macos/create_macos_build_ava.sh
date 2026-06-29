@@ -146,14 +146,13 @@ echo "Packaging .dmg"
 UNCOMPRESSED_DMG="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
 COMPRESSED_DMG="$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 
-dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=100
 xorriso -outdev "$UNCOMPRESSED_DMG" \
   -volid "Ryujinx" \
   -padding 0 \
   -hfsplus on \
   -map "$DMG_FOLDER" / \
   -chmod_r 0755 / -- \
-  -chown_r 0 0 / -- \
+  -chown_r 0 0 / --
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 rm -r "$DMG_FOLDER"
 rm -f "$UNCOMPRESSED_DMG"
