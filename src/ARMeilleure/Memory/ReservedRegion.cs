@@ -2,7 +2,7 @@ using System;
 
 namespace ARMeilleure.Memory
 {
-    public class ReservedRegion
+    public class ReservedRegion : IDisposable
     {
         public const int DefaultGranularity = 65536; // Mapping granularity in Windows.
 
@@ -13,7 +13,7 @@ namespace ARMeilleure.Memory
 
         private readonly ulong _maxSize;
         private readonly ulong _sizeGranularity;
-        private ulong _currentSize;
+        public ulong CurrentSize { get; private set; }
 
         public ReservedRegion(IJitMemoryAllocator allocator, ulong maxSize, ulong granularity = 0)
         {
@@ -26,7 +26,7 @@ namespace ARMeilleure.Memory
             Block = allocator.Reserve(maxSize);
             _maxSize = maxSize;
             _sizeGranularity = granularity;
-            _currentSize = 0;
+            CurrentSize = 0;
         }
 
         public void ExpandIfNeeded(ulong desiredSize)
@@ -36,17 +36,17 @@ namespace ARMeilleure.Memory
                 throw new OutOfMemoryException();
             }
 
-            if (desiredSize > _currentSize)
+            if (desiredSize > CurrentSize)
             {
                 // Lock, and then check again. We only want to commit once.
                 lock (this)
                 {
-                    if (desiredSize >= _currentSize)
+                    if (desiredSize >= CurrentSize)
                     {
-                        ulong overflowBytes = desiredSize - _currentSize;
+                        ulong overflowBytes = desiredSize - CurrentSize;
                         ulong moreToCommit = (((_sizeGranularity - 1) + overflowBytes) / _sizeGranularity) * _sizeGranularity; // Round up.
-                        Block.Commit(_currentSize, moreToCommit);
-                        _currentSize += moreToCommit;
+                        Block.Commit(CurrentSize, moreToCommit);
+                        CurrentSize += moreToCommit;
                     }
                 }
             }
