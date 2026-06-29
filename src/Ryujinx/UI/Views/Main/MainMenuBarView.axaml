@@ -150,7 +150,6 @@
                     AttachedToVisualTree="SkylanderMenuItem_AttachedToVisualTree"
                     Header="{Binding SkylanderButtonHeader}"
                     Icon="{ext:Icon fa-solid fa-dragon}"
-                    IsVisible="{Binding ShowSkylanderActions}"
                     InputGesture="Ctrl + S"
                     IsEnabled="{Binding SkylanderButtonEnabled}" />
                 <MenuItem 
