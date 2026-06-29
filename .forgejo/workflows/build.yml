@@ -175,7 +175,7 @@ jobs:
       - name: Install attr
         run: sudo apt-get install -y attr
       
-      - name: Install libdmg-hfsplus
+      - name: Install genisoimage and libdmg-hfsplus
         run: |
           sudo apt-get install -y genisoimage cmake
           git clone https://github.com/mozilla/libdmg-hfsplus.git
