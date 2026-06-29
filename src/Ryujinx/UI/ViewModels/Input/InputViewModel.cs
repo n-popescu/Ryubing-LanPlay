@@ -2061,8 +2061,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                     await File.WriteAllTextAsync(path, jsonString);
 
-                    LoadProfiles();
-                    SetSelectedProfileSilently(ProfileName);
                 }
                 else
                 {
