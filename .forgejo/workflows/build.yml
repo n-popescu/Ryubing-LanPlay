@@ -177,7 +177,7 @@ jobs:
       
       - name: Install genisoimage and libdmg-hfsplus
         run: |
-          sudo apt-get install -y enisoimage cmake
+          sudo apt-get install -y genisoimage cmake
           git clone https://github.com/mozilla/libdmg-hfsplus.git
           cd libdmg-hfsplus && cmake . && make && cd ..
           sudo mv libdmg-hfsplus/dmg/dmg /usr/local/bin/dmg
