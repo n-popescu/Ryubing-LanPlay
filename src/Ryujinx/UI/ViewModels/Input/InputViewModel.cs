@@ -2123,6 +2123,13 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 return; //If the input settings were not touched, then do nothing
             }
 
+            // Don't persist changes when editing the Default profile
+            if (IsDefaultProfileName(ProfileName))
+            {
+                IsModified = false;
+                return;
+            }
+
             IsModified = false;
 
             List<InputConfig> newConfig = [];
