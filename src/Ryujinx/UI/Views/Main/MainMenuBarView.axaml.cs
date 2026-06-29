@@ -178,9 +178,6 @@ namespace Ryujinx.Ava.UI.Views.Main
             {
                 ViewModel.IsSkylanderRequested = ViewModel.AppHost.Device.System.SearchingForSkylander(out _);
                 ViewModel.HasSkylander = ViewModel.AppHost.Device.System.HasSkylander(out _);
-                ViewModel.ShowSkylanderActions = string.Equals(
-                    ViewModel.AppHost.Device.Processes.ActiveApplication?.ProgramIdText?.ToUpper(), 
-                    "0100CCC0002E6000");
             }
         }
 

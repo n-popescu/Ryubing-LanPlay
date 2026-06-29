@@ -151,7 +151,7 @@
                     Header="{Binding SkylanderButtonHeader}"
                     Icon="{ext:Icon fa-solid fa-dragon}"
                     IsVisible="{Binding ShowSkylanderActions}"
-                    InputGesture="{Binding SkylanderInputGesture}"
+                    InputGesture="Ctrl + S"
                     IsEnabled="{Binding SkylanderButtonEnabled}" />
                 <MenuItem 
                     Command="{Binding SimulateWakeUpMessage}" 

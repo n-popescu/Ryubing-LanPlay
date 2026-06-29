@@ -160,11 +160,16 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         [ObservableProperty] public partial bool UpdateAvailable { get; set; }
 
+        [ObservableProperty] public partial string SkylanderButtonHeader { get; set; } = string.Empty;
+
+        [ObservableProperty] public partial bool SkylanderButtonEnabled { get; set; }
+
         public static AsyncRelayCommand UpdateCommand { get; } = Commands.Create(async () =>
         {
             if (Updater.CanUpdate(true))
                 await Updater.BeginUpdateAsync(true);
         });
+        public RelayCommand ToggleSkylanderCommand { get; }
 
         private bool _isGameRunning;
         private string _searchText;
@@ -233,6 +238,8 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Volume = ConfigurationState.Instance.System.AudioVolume;
                 CustomVSyncInterval = ConfigurationState.Instance.Graphics.CustomVSyncInterval.Value;
             }
+
+            ToggleSkylanderCommand = new RelayCommand(ExecuteToggleSkylander);
         }
 
         ~MainWindowViewModel()
@@ -376,12 +383,18 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public bool CanScanAmiiboBinaries => AmiiboBinReader.HasAmiiboKeyFile;
 
-        [ObservableProperty] public partial string SkylanderButtonHeader { get; set; } = string.Empty;
-        [ObservableProperty] public partial bool SkylanderButtonEnabled { get; set; }
-        [ObservableProperty] public partial string SkylanderInputGesture { get; set; } = "Ctrl + S";
+        private void UpdateSkylanderButton()
+        {
+            SkylanderButtonHeader = HasSkylander
+                ? LocaleManager.Instance[LocaleKeys.MenuBar_Actions_RemoveSkylanderButton]
+                : LocaleManager.Instance[LocaleKeys.MenuBar_Actions_ScanSkylanderButton];
 
-        public RelayCommand ToggleSkylanderCommand { get; }
+            SkylanderButtonEnabled = (HasSkylander || IsSkylanderRequested);
 
+            OnPropertyChanged(nameof(SkylanderButtonHeader));
+            OnPropertyChanged(nameof(SkylanderButtonEnabled));
+        }
+        
         private async void ExecuteToggleSkylander()
         {
             if (!IsGameRunning) return;
@@ -408,32 +421,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
-                private void UpdateSkylanderButton()
-        {
-            SkylanderButtonHeader = HasSkylander
-                ? LocaleManager.Instance[LocaleKeys.MenuBar_Actions_RemoveSkylanderButton]
-                : LocaleManager.Instance[LocaleKeys.MenuBar_Actions_ScanSkylanderButton];
-
-            SkylanderButtonEnabled = (HasSkylander || IsSkylanderRequested) && ShowSkylanderActions;
-            SkylanderInputGesture = HasSkylander ? "Ctrl + D" : "Ctrl + S";
-
-            OnPropertyChanged(nameof(SkylanderButtonHeader));
-            OnPropertyChanged(nameof(SkylanderButtonEnabled));
-        }
-
         public bool HasSkylander
-        {
-            get => field && _isGameRunning;
-            set
-            {
-                field = value;
-
-                OnPropertyChanged();
-                UpdateSkylanderButton();
-            }
-        }
-
-        public bool ShowSkylanderActions
         {
             get => field && _isGameRunning;
             set
