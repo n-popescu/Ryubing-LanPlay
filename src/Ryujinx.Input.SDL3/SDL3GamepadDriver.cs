@@ -179,18 +179,11 @@ namespace Ryujinx.Input.SDL3
 
             if (SDL_IsGamepad(joystickInstanceId))
             {
-                lock (_lock)
+                if (_gamepadsInstanceIdsMapping.ContainsKey(joystickInstanceId))
                 {
-                    // Check if this instance ID is already tracked in any of the dictionaries to prevent duplicates
-                    if (_gamepadsInstanceIdsMapping.ContainsKey(joystickInstanceId) ||
-                        _gamepadsIds.ContainsKey(joystickInstanceId) ||
-                        _joyConsIds.ContainsKey(joystickInstanceId) ||
-                        _linkedJoyConsIds.ContainsKey(joystickInstanceId))
-                    {
-                        // Sometimes a JoyStick connected event fires after the app starts even though it was connected before
-                        // so it is rejected to avoid doubling the entries.
-                        return;
-                    }
+                    // Sometimes a JoyStick connected event fires after the app starts even though it was connected before
+                    // so it is rejected to avoid doubling the entries.
+                    return;
                 }
 
                 string id = GenerateGamepadId(joystickInstanceId);
