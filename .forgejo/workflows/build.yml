@@ -175,9 +175,9 @@ jobs:
       - name: Install attr
         run: sudo apt-get install -y attr
       
-      - name: Install xorriso and libdmg-hfsplus
+      - name: Install genisoimage and libdmg-hfsplus
         run: |
-          sudo apt-get install -y xorriso cmake
+          sudo apt-get install -y enisoimage cmake
           git clone https://github.com/mozilla/libdmg-hfsplus.git
           cd libdmg-hfsplus && cmake . && make && cd ..
           sudo mv libdmg-hfsplus/dmg/dmg /usr/local/bin/dmg
