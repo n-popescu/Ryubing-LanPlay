@@ -117,6 +117,7 @@ mkdir "$DMG_FOLDER"
 
 tar -xzf "$BASE_DIRECTORY/distribution/macos/DMG_ASSETS/DMG_Structure.tar.gz" -C "$DMG_FOLDER" --strip-components=1
 cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
+find "$DMG_FOLDER" -type f -name '._*' -delete
 
 # Now sign it.
 echo ""
@@ -152,7 +153,7 @@ xorriso -outdev "$UNCOMPRESSED_DMG" \
   -hfsplus on \
   -map "$DMG_FOLDER" / \
   -chmod_r 0755 / -- \
-  -chown_r 0 0 / --
+  -chown_r 0:0 / --
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 rm -r "$DMG_FOLDER"
 rm -f "$UNCOMPRESSED_DMG"
