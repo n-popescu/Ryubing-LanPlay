@@ -146,6 +146,7 @@ echo "Packaging .dmg"
 UNCOMPRESSED_DMG="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
 COMPRESSED_DMG="$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 
+dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=100
 genisoimage -D -V "Ryujinx" \
     -hfs -part -no-pad -apple -uid 0 -gid 0 -dir-mode 0755 -file-mode 0755 \
     -o "$UNCOMPRESSED_DMG" "$DMG_FOLDER"
