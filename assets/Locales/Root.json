@@ -6301,6 +6301,31 @@
       }
     },
     {
+      "ID": "ControllerSettingsProfileWithColon",
+      "Translations": {
+        "ar_SA": "الملف الشخصي:",
+        "de_DE": "Profil:",
+        "el_GR": "Προφίλ:",
+        "en_US": "Profile:",
+        "es_ES": "Perfil:",
+        "fr_FR": "Profil:",
+        "he_IL": "פרופיל:",
+        "it_IT": "Profilo:",
+        "ja_JP": "プロファイル:",
+        "ko_KR": "프로필:",
+        "no_NO": "Profil:",
+        "pl_PL": "Profil:",
+        "pt_BR": "Perfil:",
+        "ru_RU": "Профиль:",
+        "sv_SE": "Profil:",
+        "th_TH": "โปรไฟล์:",
+        "tr_TR": "Profil:",
+        "uk_UA": "Профіль:",
+        "zh_CN": "配置文件:",
+        "zh_TW": "設定檔:"
+      }
+    },
+    {
       "ID": "ControllerSettingsProfileDefault",
       "Translations": {
         "ar_SA": "افتراضي",

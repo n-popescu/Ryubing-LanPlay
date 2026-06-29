@@ -80,8 +80,7 @@
                                         TextWrapping="NoWrap"
                                         MaxLines="1"
                                         IsVisible="{Binding HasBoundProfileName}">
-                                        <Run Text="{ext:Locale ControllerSettingsProfile}" />
-                                        <Run Text=": " />
+                                        <Run Text="{ext:Locale ControllerSettingsProfileWithColon}" />
                                         <Run Text="{Binding BoundProfileName}" />
                                     </TextBlock>
                                 </StackPanel>
