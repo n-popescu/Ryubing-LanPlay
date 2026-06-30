@@ -2116,18 +2116,14 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         public void Save()
         {
-
             if (!IsModified)
             {
                 return; //If the input settings were not touched, then do nothing
             }
 
-            // Don't persist changes when editing the Default profile
-            if (IsDefaultProfileName(ProfileName))
-            {
-                IsModified = false;
-                return;
-            }
+            // Don't persist profile changes when editing the Default profile
+            // However, player-level settings (Dynamic Input Swap, AllowDuplicateDeviceAssignment) should still be saved
+            bool isEditingDefaultProfile = IsDefaultProfileName(ProfileName);
 
             IsModified = false;
 
@@ -2148,21 +2144,44 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             newConfig.RemoveAll(static inputConfig => inputConfig == null);
             newAssignments.RemoveAll(static assignment => assignment == null);
 
-            if (Device == 0)
+            // Always save PlayerInputAssignment to persist player-level settings (Dynamic Input Swap, etc.)
+            // even when editing the Default profile
+            PlayerInputAssignment assignment = GetEditedPlayerInputAssignment();
+            int assignmentIndex = newAssignments.FindIndex(x => x.PlayerIndex == PlayerId);
+            if (assignmentIndex == -1)
+            {
+                newAssignments.Add(assignment);
+            }
+            else
+            {
+                newAssignments[assignmentIndex] = assignment;
+            }
+
+            if (!AllowDuplicateDeviceAssignment)
+            {
+                RemoveDuplicateDeviceAssignmentsForCurrentPlayer(newAssignments, assignment);
+            }
+
+            // Don't save InputConfig profile when editing Default profile
+            if (isEditingDefaultProfile)
+            {
+                // Skip InputConfig save
+            }
+            else if (Device == 0)
             {
                 newConfig.RemoveAll(inputConfig => inputConfig.PlayerIndex == PlayerId);
-                newAssignments.RemoveAll(assignment => assignment.PlayerIndex == PlayerId);
             }
             else
             {
                 InputConfig config = GetSelectedDeviceConfig();
-                PlayerInputAssignment assignment = GetEditedPlayerInputAssignment();
 
                 if (config == null)
                 {
                     IsModified = true;
                     return;
                 }
+
+                config.EnableDynamicGamepadSwap = EnableDynamicGamepadSwap;
 
                 int i = newConfig.FindIndex(x => x.PlayerIndex == PlayerId);
                 if (i == -1)
@@ -2172,21 +2191,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 else
                 {
                     newConfig[i] = config;
-                }
-
-                int assignmentIndex = newAssignments.FindIndex(x => x.PlayerIndex == PlayerId);
-                if (assignmentIndex == -1)
-                {
-                    newAssignments.Add(assignment);
-                }
-                else
-                {
-                    newAssignments[assignmentIndex] = assignment;
-                }
-
-                if (!AllowDuplicateDeviceAssignment)
-                {
-                    RemoveDuplicateDeviceAssignmentsForCurrentPlayer(newAssignments, assignment);
                 }
             }
 
