@@ -20,6 +20,15 @@ namespace ARMeilleure.Translation.Cache
             public uint UnwindData;
         }
 
+        private struct UnwindInfo
+        {
+            public byte VersionAndFlags;
+            public byte SizeOfProlog;
+            public byte CountOfUnwindCodes;
+            public byte FrameRegister;
+            public unsafe fixed ushort UnwindCodes[MaxUnwindCodesArraySize];
+        }
+        
         private unsafe struct InternalFunctionHandler
         {
             public InternalFunctionHandler(JitCache jitCache, nint workBufferPtr)
@@ -41,15 +50,6 @@ namespace ARMeilleure.Translation.Cache
             {
                 return JitUnwindWindows.FunctionTableHandler(_jitCache, _runtimeFunction, _unwindInfo,  controlPc,  context);
             }
-        }
-
-        private struct UnwindInfo
-        {
-            public byte VersionAndFlags;
-            public byte SizeOfProlog;
-            public byte CountOfUnwindCodes;
-            public byte FrameRegister;
-            public unsafe fixed ushort UnwindCodes[MaxUnwindCodesArraySize];
         }
 
         private enum UnwindOp

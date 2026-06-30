@@ -13,7 +13,7 @@ namespace ARMeilleure.Memory
 
         private readonly ulong _maxSize;
         private readonly ulong _sizeGranularity;
-        public ulong CurrentSize { get; private set; }
+        private ulong _currentSize;
 
         public ReservedRegion(IJitMemoryAllocator allocator, ulong maxSize, ulong granularity = 0)
         {
@@ -26,7 +26,7 @@ namespace ARMeilleure.Memory
             Block = allocator.Reserve(maxSize);
             _maxSize = maxSize;
             _sizeGranularity = granularity;
-            CurrentSize = 0;
+            _currentSize = 0;
         }
 
         public void ExpandIfNeeded(ulong desiredSize)
@@ -36,17 +36,17 @@ namespace ARMeilleure.Memory
                 throw new OutOfMemoryException();
             }
 
-            if (desiredSize > CurrentSize)
+            if (desiredSize > _currentSize)
             {
                 // Lock, and then check again. We only want to commit once.
                 lock (this)
                 {
-                    if (desiredSize >= CurrentSize)
+                    if (desiredSize >= _currentSize)
                     {
-                        ulong overflowBytes = desiredSize - CurrentSize;
+                        ulong overflowBytes = desiredSize - _currentSize;
                         ulong moreToCommit = (((_sizeGranularity - 1) + overflowBytes) / _sizeGranularity) * _sizeGranularity; // Round up.
-                        Block.Commit(CurrentSize, moreToCommit);
-                        CurrentSize += moreToCommit;
+                        Block.Commit(_currentSize, moreToCommit);
+                        _currentSize += moreToCommit;
                     }
                 }
             }
