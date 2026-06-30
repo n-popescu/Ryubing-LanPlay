@@ -2,6 +2,7 @@
 
 using ARMeilleure.CodeGen.Unwinding;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -85,7 +86,7 @@ namespace ARMeilleure.Translation.Cache
 
         private static readonly int _sizeOfRuntimeFunction;
         
-        private static readonly Dictionary<ulong, InternalFunctionHandler> _functionTableHandlers = new();
+        private static readonly ConcurrentDictionary<ulong, InternalFunctionHandler> _functionTableHandlers = new();
 
         static JitUnwindWindows()
         {
@@ -119,8 +120,8 @@ namespace ARMeilleure.Translation.Cache
             {
                 throw new InvalidOperationException("Failure installing function table callback.");
             }
-            
-            _functionTableHandlers.Add(codeCachePtr, handler);
+
+            _functionTableHandlers.TryAdd(codeCachePtr, handler);
         }
 
         public static void RemoveFunctionTableHandler(nint codeCachePointer)
@@ -139,7 +140,7 @@ namespace ARMeilleure.Translation.Cache
                 throw new InvalidOperationException("Failure removing function table callback.");
             }
             
-            _functionTableHandlers.Remove(codeCachePtr);
+            _functionTableHandlers.Remove(codeCachePtr, out _);
         }
 
         private static unsafe RuntimeFunction* FunctionTableHandler(JitCache jitCache, RuntimeFunction* runtimeFunction, UnwindInfo* unwindInfo, ulong controlPc, nint context)
