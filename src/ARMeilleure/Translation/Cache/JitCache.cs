@@ -228,7 +228,10 @@ namespace ARMeilleure.Translation.Cache
 
         public void Dispose()
         {
-            JitUnwindWindows.RemoveFunctionTableHandler(_jitRegions[0].Pointer);
+            if (OperatingSystem.IsWindows())
+            {
+                JitUnwindWindows.RemoveFunctionTableHandler(_jitRegions[0].Pointer);
+            }
 
             foreach (ReservedRegion jitRegion in _jitRegions)
             {
