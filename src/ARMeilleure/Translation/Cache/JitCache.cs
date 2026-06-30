@@ -146,7 +146,6 @@ namespace ARMeilleure.Translation.Cache
             codeSize = AlignCodeSize(codeSize);
 
             int allocOffset = _cacheAllocator.Allocate(codeSize);
-            int index;
 
             if (allocOffset >= 0)
             {
