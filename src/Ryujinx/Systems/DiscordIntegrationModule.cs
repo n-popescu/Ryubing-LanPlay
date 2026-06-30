@@ -9,7 +9,9 @@ using Ryujinx.Common.Logging;
 using Ryujinx.HLE;
 using Ryujinx.HLE.Loaders.Processes;
 using Ryujinx.Horizon;
+using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 
 namespace Ryujinx.Ava.Systems
 {
@@ -136,21 +138,22 @@ namespace Ryujinx.Ava.Systems
             if (!formattedValue.Handled)
                 return;
             
-            string State = "";
-            string Details = "";
+
             
             try // New format that attempts to deserialize json, and if it fails (using old method)...
             {
+                Dictionary<string, string> outDictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(formattedValue.FormattedString);
+                
                 _discordPresencePlaying.Details = TruncateToByteLength(
-                    Details.IsNullOrEmpty()
+                    outDictionary["Details"].IsNullOrEmpty()
                         ? $"Playing {_currentApp.Title}"
-                        : Details
+                        : outDictionary["Details"]
                 );
             
                 _discordPresencePlaying.State = TruncateToByteLength(
-                    State.IsNullOrEmpty()
+                    outDictionary["State"].IsNullOrEmpty()
                         ? $"Total play time: {ValueFormatUtils.FormatTimeSpan(_currentApp.TimePlayed)}"
-                        : State
+                        : outDictionary["State"]
                 );
 
             }
@@ -168,6 +171,14 @@ namespace Ryujinx.Ava.Systems
 
             _discordClient.SetPresence(_discordPresencePlaying);
             Logger.Info?.Print(LogClass.UI, "Updated Discord RPC based on a supported play report.");
+        }
+
+        public static string AssembleMultilineRpc(string line1 = "", string line2 = "")
+        {
+            Dictionary<string, string> rpcdict = new();
+            rpcdict.Add("Details", line1);
+            rpcdict.Add("State", line2);
+            return JsonSerializer.Serialize(rpcdict);
         }
 
         private static string TruncateToByteLength(string input)
