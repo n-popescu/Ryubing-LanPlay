@@ -72,6 +72,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         private bool _dynamicInputSwapFirstUseWarningShown;
         private bool? _allowDuplicateDeviceAssignment;
         private List<PlayerInputAssignment> _workingPlayerInputAssignments;
+        private string _originalProfileName; // Tracks profile name before editing for rename detection
 
         private static readonly InputConfigJsonSerializerContext _serializerContext = new(JsonHelper.GetDefaultSerializerOptions());
 
@@ -110,7 +111,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         public bool IsController => CurrentDeviceType == DeviceType.Controller;
         public bool IsKeyboard => CurrentDeviceType == DeviceType.Keyboard;
         public bool CanOpenAssignedDevices => ShowSettings && EnableDynamicGamepadSwap;
-        public bool CanDeleteOrSaveProfile => ShowSettings && !IsDefaultProfileName(ProfileName);
+        public bool CanDeleteOrSaveProfile => ShowSettings && !IsDefaultProfileName(ProfileName) && Device != 0;
+        public bool CanEditProfileName => !IsDefaultProfileName(ProfileName);
         public bool IsRight { get; set; }
         public bool IsLeft { get; set; }
         public bool HasLed => (SelectedGamepad?.Features & GamepadFeaturesFlag.Led) != 0;
@@ -123,12 +125,14 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             get;
             set
             {
-                // When you select a profile, the settings from the profile will be applied.
-                // To save the settings, you still need to click the apply button
                 field = value;
                 if (!_suppressProfileLoad)
                 {
                     LoadProfile();
+                }
+                if (value != null && ProfilesList.Contains(value))
+                {
+                    _originalProfileName = value;
                 }
                 OnPropertyChanged();
             }
@@ -401,7 +405,16 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 DeviceType selected = Devices[_device].Type;
 
-                if (selected != DeviceType.None)
+                if (selected == DeviceType.None)
+                {
+                    // When switching to disabled, reset profile to default
+                    string defaultProfile = GetCurrentProfileDefaultName();
+                    _suppressProfileLoad = true;
+                    ProfileName = defaultProfile;
+                    ChosenProfile = defaultProfile;
+                    _suppressProfileLoad = false;
+                }
+                else
                 {
                     if (_isLoaded)
                     {
@@ -417,6 +430,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 FindPairedDeviceInConfigFile();
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(SelectedDeviceItem));
+                OnPropertyChanged(nameof(CanDeleteOrSaveProfile));
                 NotifyChanges();
             }
         }
@@ -2006,9 +2020,12 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 LoadConfiguration(config, false);
 
-                //LoadDevice();  This line of code hard-links profiles to controllers, the commented line allows profiles to be applied to all controllers 
+                //LoadDevice();  This line of code hard-links profiles to controllers, the commented line allows profiles to be applied to all controllers
 
                 _isLoaded = true;
+
+                // Track the original profile name for rename detection
+                _originalProfileName = ProfileName;
 
                 RefreshProfileBindingState();
                 RefreshModifiedState();
@@ -2018,7 +2035,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         public async void SaveProfile()
         {
-
             if (Device == 0)
             {
                 return;
@@ -2041,28 +2057,43 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 if (validFileName)
                 {
+                    // Delete old profile file if renaming (but keep default profile)
+                    if (_originalProfileName != null && !string.Equals(ProfileName, _originalProfileName, StringComparison.Ordinal) && ProfilesList.Contains(_originalProfileName))
+                    {
+                        if (!IsDefaultProfileName(_originalProfileName))
+                        {
+                            string oldPath = GetProfilePath(_originalProfileName);
+                            if (File.Exists(oldPath))
+                            {
+                                File.Delete(oldPath);
+                                ProfilesList.Remove(_originalProfileName);
+                            }
+                            // Only update bindings when renaming from a non-default profile
+                            ReplaceBoundProfileName(_originalProfileName, ProfileName);
+                        }
+                    }
+
                     string path = GetProfilePath(ProfileName);
 
-                    InputConfig config = null;
-
-                    if (IsKeyboard)
-                    {
-                        config = (ConfigViewModel as KeyboardInputViewModel).Config.GetConfig();
-                    }
-                    else if (IsController)
-                    {
-                        config = (ConfigViewModel as ControllerInputViewModel).Config.GetConfig();
-                    }
+                    InputConfig config = IsKeyboard
+                        ? (ConfigViewModel as KeyboardInputViewModel)?.Config.GetConfig()
+                        : (ConfigViewModel as ControllerInputViewModel)?.Config.GetConfig();
 
                     if (config != null && _controller >= 0 && _controller < Controllers.Count)
                     {
                         config.ControllerType = Controllers[_controller].Type;
                     }
 
-                    string jsonString = JsonHelper.Serialize(config, _serializerContext.InputConfig);
+                    await File.WriteAllTextAsync(path, JsonHelper.Serialize(config, _serializerContext.InputConfig));
 
-                    await File.WriteAllTextAsync(path, jsonString);
+                    // Update profile list
+                    if (!ProfilesList.Contains(ProfileName))
+                    {
+                        ProfilesList.Add(ProfileName);
+                    }
 
+                    ChosenProfile = ProfileName;
+                    _originalProfileName = ProfileName;
                 }
                 else
                 {
@@ -2073,7 +2104,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
         public async void RemoveProfile()
         {
-            if (Device == 0 || ProfileName == GetCurrentProfileDefaultName() || ProfilesList.IndexOf(ProfileName) == -1)
+            if (ProfileName == GetCurrentProfileDefaultName() || ProfilesList.IndexOf(ProfileName) == -1)
             {
                 return;
             }
@@ -2122,9 +2153,10 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 return; //If the input settings were not touched, then do nothing
             }
 
-            // Don't persist profile changes when editing the Default profile
-            // However, player-level settings (Dynamic Input Swap, AllowDuplicateDeviceAssignment) should still be saved
-            bool isEditingDefaultProfile = IsDefaultProfileName(ProfileName);
+            // Don't persist profile changes when editing any profile (including Default)
+            // Profile changes should only be saved via SaveProfile button
+            // Player-level settings (Dynamic Input Swap, AllowDuplicateDeviceAssignment) should still be saved
+            bool isEditingProfile = !IsDefaultProfileName(ProfileName);
 
             IsModified = false;
 
@@ -2146,7 +2178,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             newAssignments.RemoveAll(static assignment => assignment == null);
 
             // Always save PlayerInputAssignment to persist player-level settings (Dynamic Input Swap, etc.)
-            // even when editing the Default profile
             PlayerInputAssignment assignment = GetEditedPlayerInputAssignment();
             int assignmentIndex = newAssignments.FindIndex(x => x.PlayerIndex == PlayerId);
             if (assignmentIndex == -1)
@@ -2163,10 +2194,11 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 RemoveDuplicateDeviceAssignmentsForCurrentPlayer(newAssignments, assignment);
             }
 
-            // Don't save InputConfig profile when editing Default profile
-            if (isEditingDefaultProfile)
+            // Don't save InputConfig when editing a profile - only save via SaveProfile button
+            // Only save InputConfig when editing Default profile (which is not a saved profile)
+            if (isEditingProfile)
             {
-                // Skip InputConfig save
+                // Skip InputConfig save - profile changes must be saved via SaveProfile button
             }
             else if (Device == 0)
             {
