@@ -173,11 +173,9 @@ namespace Ryujinx.Ava.Systems
             Logger.Info?.Print(LogClass.UI, "Updated Discord RPC based on a supported play report.");
         }
 
-        public static string AssembleMultilineRpc(string line1 = "", string line2 = "")
+        public static string PrepareMultilineRpcString(string line1 = "", string line2 = "")
         {
-            Dictionary<string, string> rpcdict = new();
-            rpcdict.Add("Details", line1);
-            rpcdict.Add("State", line2);
+            Dictionary<string, string> rpcdict = new() { { "Details", line1 }, {"State", line2} };
             return JsonSerializer.Serialize(rpcdict);
         }
 
