@@ -23,20 +23,20 @@ namespace ARMeilleure.Translation.Cache
             }
         }
         
-        private readonly int _blockSize;
-        private int _blockCount;
+        private readonly int _regionSize;
+        private int _regionCount;
 
         private readonly List<MemoryBlock> _blocks = [];
 
-        public CacheMemoryAllocator(int blockSize, int initialBlockCount = 1)
+        public CacheMemoryAllocator(int regionSize, int initialRegionCount = 1)
         {
-            _blockCount = 0;
-            _blockSize = blockSize;
+            _regionCount = 0;
+            _regionSize = regionSize;
             
-            for (; initialBlockCount > 0; initialBlockCount--)
+            for (; initialRegionCount > 0; initialRegionCount--)
             {
-                _blocks.Add(new MemoryBlock(_blockSize * _blockCount, _blockSize));
-                _blockCount++;
+                _blocks.Add(new MemoryBlock(_regionSize * _regionCount, _regionSize));
+                _regionCount++;
             }
         }
 
@@ -44,8 +44,8 @@ namespace ARMeilleure.Translation.Cache
         {
             for (; count > 0; count--)
             {
-                _blocks.Add(new MemoryBlock(_blockSize * _blockCount, _blockSize));
-                _blockCount++;
+                _blocks.Add(new MemoryBlock(_regionSize * _regionCount, _regionSize));
+                _regionCount++;
             }
         }
 
@@ -88,7 +88,7 @@ namespace ARMeilleure.Translation.Cache
             int endOffs = block.Offset + block.Size;
 
             // Don't merge blocks from different allocations
-            if (index < _blocks.Count && endOffs % _blockSize != 0)
+            if (index < _blocks.Count && endOffs % _regionSize != 0)
             {
                 MemoryBlock next = _blocks[index];
 
@@ -100,7 +100,7 @@ namespace ARMeilleure.Translation.Cache
             }
 
             // Don't merge blocks from different allocations
-            if (index > 0 && block.Offset % _blockSize != 0)
+            if (index > 0 && block.Offset % _regionSize != 0)
             {
                 MemoryBlock prev = _blocks[index - 1];
 
