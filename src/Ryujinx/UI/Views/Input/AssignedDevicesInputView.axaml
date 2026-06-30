@@ -79,6 +79,7 @@
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="NoWrap"
                                         MaxLines="1"
+                                        MaxWidth="180"
                                         IsVisible="{Binding HasBoundProfileName}">
                                         <Run Text="{ext:Locale ControllerSettingsProfileWithColon}" />
                                         <Run Text="{Binding BoundProfileName}" />
