@@ -1186,7 +1186,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         public bool CanBindSelectedProfile =>
             ShowSettings &&
             !string.IsNullOrWhiteSpace(ProfileName) &&
-            ProfilesList.Contains(ProfileName);
+            ProfilesList.Contains(ProfileName) &&
+            !IsProfileLinked;
 
         public void LinkCurrentProfileToCurrentDevice()
         {
