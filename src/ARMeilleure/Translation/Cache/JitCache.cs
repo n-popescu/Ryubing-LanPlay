@@ -119,6 +119,8 @@ namespace ARMeilleure.Translation.Cache
                         _cacheAllocator.Free(funcOffset, AlignCodeSize(entry.Size));
                         _cacheEntries.RemoveAt(entryIndex);
                     }
+
+                    return;
                 }
             }
         }
@@ -182,7 +184,7 @@ namespace ARMeilleure.Translation.Cache
             return _jitRegions[index];
         }
 
-        private int AlignCodeSize(int codeSize)
+        private static int AlignCodeSize(int codeSize)
         {
             return checked(codeSize + (CodeAlignment - 1)) & ~(CodeAlignment - 1);
         }
