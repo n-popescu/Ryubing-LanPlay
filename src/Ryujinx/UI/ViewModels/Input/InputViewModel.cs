@@ -1747,12 +1747,13 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 Devices.Clear();
                 Devices.Add((DeviceType.None, Disabled, LocaleManager.Instance[LocaleKeys.ControllerSettingsDeviceDisabled]));
 
-                
+                HashSet<(DeviceType Type, string Id)> addedDeviceIds = new();
+
                 foreach (string id in _mainWindow.InputManager.KeyboardDriver.GamepadsIds)
                 {
                     using IGamepad gamepad = _mainWindow.InputManager.KeyboardDriver.GetGamepad(id);
 
-                    if (gamepad != null)
+                    if (gamepad != null && addedDeviceIds.Add((DeviceType.Keyboard, id)))
                     {
                         Devices.Add((DeviceType.Keyboard, id, $"{GetShortGamepadName(gamepad.Name)}"));
                     }
@@ -1762,7 +1763,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 {
                     using IGamepad gamepad = _mainWindow.InputManager.GamepadDriver.GetGamepad(id);
 
-                    if (gamepad != null)
+                    if (gamepad != null && addedDeviceIds.Add((DeviceType.Controller, id)))
                     {
                         int controllerNumber = 0;
                         string name = GetUniqueGamepadName(gamepad, ref controllerNumber);
