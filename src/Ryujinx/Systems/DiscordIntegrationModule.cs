@@ -135,14 +135,35 @@ namespace Ryujinx.Ava.Systems
 
             if (!formattedValue.Handled)
                 return;
+            
+            string State = "";
+            string Details = "";
+            
+            try // New format that attempts to deserialize json, and if it fails (using old method)...
+            {
+                _discordPresencePlaying.Details = TruncateToByteLength(
+                    Details.IsNullOrEmpty()
+                        ? $"Playing {_currentApp.Title}"
+                        : Details
+                );
+            
+                _discordPresencePlaying.State = TruncateToByteLength(
+                    State.IsNullOrEmpty()
+                        ? $"Total play time: {ValueFormatUtils.FormatTimeSpan(_currentApp.TimePlayed)}"
+                        : State
+                );
 
-            _discordPresencePlaying.Details = TruncateToByteLength(
-                formattedValue.Reset
-                    ? $"Playing {_currentApp.Title}"
-                    : formattedValue.FormattedString
-            );
+            }
+            catch // Utilize original code
+            {
+                _discordPresencePlaying.Details = TruncateToByteLength(
+                    formattedValue.Reset
+                        ? $"Playing {_currentApp.Title}"
+                        : formattedValue.FormattedString
+                );
+            }
 
-            if (_discordClient.CurrentPresence.Details.Equals(_discordPresencePlaying.Details))
+            if (_discordClient.CurrentPresence.Details.Equals(_discordPresencePlaying.Details) && _discordClient.CurrentPresence.State.Equals(_discordPresencePlaying.State))
                 return; //don't trigger an update if the set presence Details are identical to current
 
             _discordClient.SetPresence(_discordPresencePlaying);
