@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using UnicornEngine;
 using UnicornEngine.Const;
@@ -137,6 +138,36 @@ namespace Ryujinx.Tests.Unicorn
         public void Step()
         {
             RunForCount(1);
+        }
+
+        public void SetExits(nint[] exits)
+        {
+            ulong exitCount = 0;
+
+            try
+            {
+                _uc.GetExitCount(out exitCount);
+            }
+            catch (UnicornEngineException e)
+            {
+                if (e.Error != UcError.Arg)
+                {
+                    throw;
+                }
+            }
+
+            if (exitCount > 0)
+            {
+                _uc.GetExits(out nint[] oldExits);
+
+                exits = exits.Concat(oldExits).ToArray();
+            }
+            else
+            {
+                _uc.EnableExits();
+            }
+
+            _uc.SetExits(exits);
         }
 
         private static readonly RegArm[] _xRegisters =

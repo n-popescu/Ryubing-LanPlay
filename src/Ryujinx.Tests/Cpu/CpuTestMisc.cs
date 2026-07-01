@@ -291,9 +291,12 @@ namespace Ryujinx.Tests.Cpu
             Assert.That(GetContext().GetV(0).As<double>(), Is.EqualTo(16d));
         }
 
-        [Test, Ignore("The Tester supports only one return point.")]
+        [Explicit]
+        [Test]
         public void MiscF([Range(0u, 92u, 1u)] uint a)
         {
+            SetExits([0x0000000000001034, 0x000000000000103C, 0x0000000000001044]);
+            
             static ulong Fn(uint n)
             {
                 ulong x = 0, y = 1, z;

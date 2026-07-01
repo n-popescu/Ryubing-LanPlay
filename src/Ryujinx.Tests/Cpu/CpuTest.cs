@@ -97,6 +97,11 @@ namespace Ryujinx.Tests.Cpu
             Setup();
         }
 
+        protected void SetExits(nint[] exits)
+        {
+            _unicornEmu.SetExits(exits);
+        }
+
         protected void Opcode(uint opcode)
         {
             _memory.Write(_currAddress, opcode);

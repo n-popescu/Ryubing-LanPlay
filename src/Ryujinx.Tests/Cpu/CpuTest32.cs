@@ -92,6 +92,11 @@ namespace Ryujinx.Tests.Cpu
             Teardown();
             Setup();
         }
+        
+        protected void SetExits(nint[] exits)
+        {
+            _unicornEmu.SetExits(exits);
+        }
 
         protected void Opcode(uint opcode)
         {
