@@ -143,15 +143,6 @@ namespace Ryujinx.Tests.Unicorn
         public void SetExits(nint[] exits)
         {
             _uc.EnableExits();
-            
-            _uc.GetExitCount(out ulong exitCount);
-
-            if (exitCount > 0)
-            {
-                _uc.GetExits(out nint[] oldExits);
-                
-                exits = exits.Concat(oldExits).ToArray();
-            }
 
             _uc.SetExits(exits);
         }
