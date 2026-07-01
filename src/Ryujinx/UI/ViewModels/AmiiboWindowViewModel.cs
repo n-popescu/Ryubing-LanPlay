@@ -22,6 +22,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+using Ryujinx.Ava.Systems.Configuration;
+
+
 namespace Ryujinx.Ava.UI.ViewModels
 {
     public partial class AmiiboWindowViewModel : BaseModel, IDisposable
@@ -136,6 +139,8 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
+        
+
         public int AmiiboSelectedIndex
         {
             get => _amiiboSelectedIndex;
@@ -150,6 +155,44 @@ namespace Ryujinx.Ava.UI.ViewModels
                 OnPropertyChanged();
             }
         }
+
+public bool PauseEmulationWhileOpen
+{
+    get => ConfigurationState.Instance.UI.PauseEmulationWhileAmiiboWindowOpen.Value;
+    set
+    {
+        ConfigurationState.Instance.UI.PauseEmulationWhileAmiiboWindowOpen.Value = value;
+        ConfigurationState.Instance.ToFileFormat().SaveConfig(Program.ConfigurationPath); // Force save
+        OnPropertyChanged();
+    }
+}
+
+private string _searchText = string.Empty;
+private bool _sortingAscending = true;
+
+public string SearchText
+{
+    get => _searchText;
+    set
+    {
+        _searchText = value;
+        FilterAmiibo();
+        OnPropertyChanged();
+    }
+}
+
+public string SortingFieldName => LocaleManager.Instance[LocaleKeys.Common_Sort_NameLabel];
+
+public bool SortingAscending
+{
+    get => _sortingAscending;
+    set
+    {
+        _sortingAscending = value;
+        FilterAmiibo();
+        OnPropertyChanged();
+    }
+}
 
         [ObservableProperty]
         public partial Bitmap AmiiboImage { get; set; }
@@ -166,14 +209,14 @@ namespace Ryujinx.Ava.UI.ViewModels
             {
                 _owner.ScannedAmiibo = AmiiboList[AmiiboSelectedIndex];
                 _owner.IsScanned = true;
-                _owner.Close();
+
             }
         }
 
         public void Cancel()
         {
             _owner.IsScanned = false;
-            _owner.Close();
+
         }
 
         public void Dispose()
@@ -317,40 +360,43 @@ namespace Ryujinx.Ava.UI.ViewModels
             _amiiboSeries.Clear();
             _amiibos.Clear();
 
-            for (int i = 0; i < _amiiboList.Count; i++)
+            foreach (var amiibo in _amiiboList)
             {
-                if (!_amiiboSeries.Contains(_amiiboList[i].AmiiboSeries))
+                if (!_amiiboSeries.Contains(amiibo.AmiiboSeries))
                 {
                     if (!ShowAllAmiibo)
                     {
-                        foreach (AmiiboApiGamesSwitch game in _amiiboList[i].GamesSwitch)
+                        bool compatible = amiibo.GamesSwitch.Any(game => game != null && game.GameId.Contains(TitleId));
+                        if (compatible)
                         {
-                            if (game != null)
-                            {
-                                if (game.GameId.Contains(TitleId))
-                                {
-                                    AmiiboSeries.Add(_amiiboList[i].AmiiboSeries);
-
-                                    break;
-                                }
-                            }
+                            _amiiboSeries.Add(amiibo.AmiiboSeries);
                         }
                     }
                     else
                     {
-                        AmiiboSeries.Add(_amiiboList[i].AmiiboSeries);
+                        _amiiboSeries.Add(amiibo.AmiiboSeries);
                     }
                 }
             }
 
-            if (LastScannedAmiiboId != string.Empty)
-            {
-                SelectLastScannedAmiibo();
-            }
-            else
+            if (ShowAllAmiibo && _amiiboSeries.Count > 0)
             {
                 SeriesSelectedIndex = 0;
             }
+            else if (LastScannedAmiiboId != string.Empty)
+            {
+                SelectLastScannedAmiibo();
+            }
+            else if (_amiiboSeries.Count > 0)
+            {
+                SeriesSelectedIndex = 0;
+            }
+            else
+            {
+                SeriesSelectedIndex = -1;
+            }
+
+            FilterAmiibo();
         }
 
         private void SelectLastScannedAmiibo()
@@ -360,103 +406,138 @@ namespace Ryujinx.Ava.UI.ViewModels
             SeriesSelectedIndex = AmiiboSeries.IndexOf(scanned.AmiiboSeries);
             AmiiboSelectedIndex = AmiiboList.IndexOf(scanned);
         }
+        
+// Update FilterAmiibo() method
+private void FilterAmiibo()
+{
+    _amiibos.Clear();
 
-        private void FilterAmiibo()
+    var query = _amiiboList.AsEnumerable();
+
+    // Series filter
+    if (_seriesSelectedIndex >= 0 && _seriesSelectedIndex < _amiiboSeries.Count)
+    {
+        string selectedSeries = _amiiboSeries[_seriesSelectedIndex];
+        query = query.Where(amiibo => amiibo.AmiiboSeries == selectedSeries);
+    }
+
+    // Name search filter
+    if (!string.IsNullOrWhiteSpace(_searchText))
+    {
+        query = query.Where(amiibo => 
+            amiibo.Name.Contains(_searchText, StringComparison.OrdinalIgnoreCase));
+    }
+
+    // Sort by Name
+    query = _sortingAscending 
+        ? query.OrderBy(amiibo => amiibo.Name)
+        : query.OrderByDescending(amiibo => amiibo.Name);
+
+    var sortedList = query.ToList();
+
+    foreach (var amiibo in sortedList)
+    {
+        if (!_showAllAmiibo)
         {
-            _amiibos.Clear();
+            bool compatible = amiibo.GamesSwitch.Any(game => 
+                game != null && game.GameId.Contains(TitleId));
 
-            List<AmiiboApi> amiiboSortedList;
-
-            // If no series selected, just display all available amiibos
-            if (_seriesSelectedIndex < 0)
-            {
-                amiiboSortedList = _amiiboList
-                    .OrderBy(amiibo => amiibo.AmiiboSeries)
-                    .ThenBy(x => x.Name)
-                    .ToList();
-            }
-            else
-            {
-                amiiboSortedList = _amiiboList
-                    .Where(amiibo => amiibo.AmiiboSeries == _amiiboSeries[SeriesSelectedIndex])
-                    .OrderBy(amiibo => amiibo.Name).ToList();
-            }
-
-            
-
-            for (int i = 0; i < amiiboSortedList.Count; i++)
-            {
-                if (!_amiibos.Contains(amiiboSortedList[i]))
-                {
-                    if (!_showAllAmiibo)
-                    {
-                        foreach (AmiiboApiGamesSwitch game in amiiboSortedList[i].GamesSwitch)
-                        {
-                            if (game != null)
-                            {
-                                if (game.GameId.Contains(TitleId))
-                                {
-                                    _amiibos.Add(amiiboSortedList[i]);
-
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        _amiibos.Add(amiiboSortedList[i]);
-                    }
-                }
-            }
-
-            AmiiboSelectedIndex = 0;
+            if (compatible)
+                _amiibos.Add(amiibo);
         }
+        else
+        {
+            _amiibos.Add(amiibo);
+        }
+    }
+
+    // Restore selection if possible
+    int restoredIndex = -1;
+    for (int i = 0; i < _amiibos.Count; i++)
+    {
+        if (_amiibos[i].GetId() == LastScannedAmiiboId)
+        {
+            restoredIndex = i;
+            break;
+        }
+    }
+
+    AmiiboSelectedIndex = restoredIndex != -1 
+        ? restoredIndex 
+        : (_amiibos.Count > 0 ? 0 : -1);
+}
+
+
+
+public enum AmiiboSortField
+{
+    Name,
+    
+}
+
+private AmiiboSortField _sortField = AmiiboSortField.Name;
+
+public AmiiboSortField SortingField
+{
+    get => _sortField;
+    set
+    {
+        _sortField = value;
+        FilterAmiibo();
+        OnPropertyChanged(nameof(SortingFieldName));
+        OnPropertyChanged(nameof(IsSortedByName));
+    }
+}
+
+
+public bool IsSortedByName => _sortField == AmiiboSortField.Name;
+
+   
+
+
+
 
         private void SetAmiiboDetails()
         {
             ResetAmiiboPreview();
-
             Usage = string.Empty;
 
             if (_amiiboSelectedIndex < 0 || _amiibos.Count < 1)
-            {
                 return;
-            }
 
             AmiiboApi selected = _amiibos[_amiiboSelectedIndex];
-
-            string imageUrl = _amiiboList.FirstOrDefault(amiibo => amiibo.Equals(selected)).Image;
+            string imageUrl = selected.Image;
 
             StringBuilder usageStringBuilder = new();
+            bool writable = false;
 
-            for (int i = 0; i < _amiiboList.Count; i++)
+            foreach (var game in selected.GamesSwitch)
             {
-                if (_amiiboList[i].Equals(selected))
+                if (game != null && game.GameId.Contains(TitleId))
                 {
-                    bool writable = false;
-
-                    foreach (AmiiboApiGamesSwitch item in _amiiboList[i].GamesSwitch)
+                    foreach (var usageItem in game.AmiiboUsage)
                     {
-                        if (item.GameId.Contains(TitleId))
-                        {
-                            foreach (AmiiboApiUsage usageItem in item.AmiiboUsage)
-                            {
-                                usageStringBuilder.Append($"{Environment.NewLine}- {usageItem.Usage.Replace("/", Environment.NewLine + "-")}");
-
-                                writable = usageItem.Write;
-                            }
-                        }
+                        usageStringBuilder.Append($"{Environment.NewLine}- {usageItem.Usage.Replace("/", Environment.NewLine + "-")}");
+                        if (usageItem.Write)
+                            writable = true;
                     }
-
-                    if (usageStringBuilder.Length == 0)
-                    {
-                        usageStringBuilder.Append($"{LocaleManager.Instance[LocaleKeys.Amiibo_UnknownLabel]}.");
-                    }
-
-                    Usage = $"{LocaleManager.Instance[LocaleKeys.Amiibo_UsageLabel]} {(writable ? $" ({LocaleManager.Instance[LocaleKeys.Amiibo_WritableLabel]})" : string.Empty)} : {usageStringBuilder}";
                 }
             }
+
+            string usageLabel = writable 
+                ? LocaleManager.Instance[LocaleKeys.Amiibo_WritableLabel]
+                : LocaleManager.Instance[LocaleKeys.Amiibo_UsageLabel];
+
+            if (usageStringBuilder.Length == 0)
+            {
+                usageStringBuilder.Append($"{Environment.NewLine}{LocaleManager.Instance[LocaleKeys.Amiibo_UnknownLabel]}");
+            }
+            else
+            {
+                usageStringBuilder.Replace(Environment.NewLine + "-", Environment.NewLine + Environment.NewLine + "-");
+            }
+
+            Usage = usageLabel + usageStringBuilder.ToString();
 
             _ = UpdateAmiiboPreview(imageUrl);
         }

@@ -405,7 +405,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
             else
             {
-                await OpenSkylanderWindow();
+                await ScanSkylander();
             }
         }
 
@@ -2057,7 +2057,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 }
             }
         }
-        public async Task OpenSkylanderWindow()
+        public async Task ScanSkylander()
         {
             if (AppHost.Device.System.SearchingForSkylander(out int deviceId))
             {

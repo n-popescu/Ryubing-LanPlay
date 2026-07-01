@@ -90,6 +90,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 SkipUserProfiles = System.SkipUserProfilesManager,
                 UseHypervisor = System.UseHypervisor,
                 GCLowLatency = System.GCLowLatency,
+                PauseEmulationWhileAmiiboWindowOpen = UI.PauseEmulationWhileAmiiboWindowOpen,
                 GuiColumns = new GuiColumns
                 {
                     FavColumn = UI.GuiColumns.FavColumn,
@@ -214,6 +215,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.EnableInternetAccess.Value = false;
             System.EnableFsIntegrityChecks.Value = true;
             System.FsGlobalAccessLogMode.Value = 0;
+            UI.PauseEmulationWhileAmiiboWindowOpen.Value = true;
             System.AudioBackend.Value = AudioBackend.SDL3;
             System.AudioVolume.Value = 1;
             System.MemoryManagerMode.Value = MemoryManagerMode.HostMappedUnsafe;

@@ -116,6 +116,8 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.UseHypervisor.Value = cff.UseHypervisor;
             System.GCLowLatency.Value = cff.GCLowLatency;
 
+UI.PauseEmulationWhileAmiiboWindowOpen.Value = cff.PauseEmulationWhileAmiiboWindowOpen;
+ 
             UI.GuiColumns.FavColumn.Value = shouldLoadFromFile ? cff.GuiColumns.FavColumn : UI.GuiColumns.FavColumn.Value;
             UI.GuiColumns.IconColumn.Value = shouldLoadFromFile ? cff.GuiColumns.IconColumn : UI.GuiColumns.IconColumn.Value;
             UI.GuiColumns.AppColumn.Value = shouldLoadFromFile ? cff.GuiColumns.AppColumn : UI.GuiColumns.AppColumn.Value;
