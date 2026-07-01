@@ -5,8 +5,7 @@ using Ryujinx.Common.Logging;
 using Ryujinx.Graphics.GAL;
 using Ryujinx.Graphics.Shader;
 using Ryujinx.Graphics.Shader.Translation;
-using Ryujinx.Graphics.Vulkan.KosmicKrisp;
-using Ryujinx.Graphics.Vulkan.MoltenVK;
+using Ryujinx.Graphics.Vulkan.Driver;
 using Ryujinx.Graphics.Vulkan.Queries;
 using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.EXT;
@@ -131,11 +130,11 @@ namespace Ryujinx.Graphics.Vulkan
             {
                 if (translationLayer == TranslationLayer.MoltenVK)
                 {
-                    MVKInitialization.Initialize();
+                    VulkanDriver.MoltenVK();
                 }
                 if (translationLayer == TranslationLayer.KosmicKrisp)
                 {
-                    KKInitialization.Initialize();
+                    VulkanDriver.KosmicKrisp();
                 }
             }
 
