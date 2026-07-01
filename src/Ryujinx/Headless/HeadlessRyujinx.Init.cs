@@ -208,7 +208,7 @@ namespace Ryujinx.Headless
                     (instance, vk) => new SurfaceKHR((ulong)vulkanWindow.CreateWindowSurface(instance.Handle)),
                     VulkanWindow.GetRequiredInstanceExtensions,
                     preferredGpuId,
-                    TranslationLayer.MoltenVK);
+                    options.TranslationLayer);
             }
 
             return new OpenGLRenderer();

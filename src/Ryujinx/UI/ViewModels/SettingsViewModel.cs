@@ -171,6 +171,8 @@ namespace Ryujinx.Ava.UI.ViewModels
         public bool IsOpenGLAvailable => !OperatingSystem.IsMacOS();
 
         public bool IsKosmicKrispAvailable => OperatingSystem.IsMacOSVersionAtLeast(15);
+        
+        public bool IsMacOS => OperatingSystem.IsMacOS();
 
         public bool EnableDiscordIntegration { get; set; }
         public bool ShowConfirmExit { get; set; }
@@ -362,7 +364,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             get;
             set
             {
-                field = value;
+                field = IsMacOS ? 0 : value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(IsVulkanSelected));
             }

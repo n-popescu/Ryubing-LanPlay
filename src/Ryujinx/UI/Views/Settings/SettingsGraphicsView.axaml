@@ -28,7 +28,7 @@
                 Spacing="10">
                 <TextBlock Classes="h1" Text="{ext:Locale SettingsTabGraphicsAPI}" />
                 <StackPanel Margin="10,0,0,0" Orientation="Vertical" Spacing="10">
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding IsOpenGLAvailable}">
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsMacOS}">
                         <TextBlock VerticalAlignment="Center"
                                 ToolTip.Tip="{ext:Locale SettingsTabGraphicsBackendTooltip}"
                                 Text="{ext:Locale SettingsTabGraphicsBackend}"
@@ -45,8 +45,7 @@
                                 Content="OpenGL" />
                         </ComboBox>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal"
-                                IsVisible="{Binding IsKosmicKrispAvailable}">
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding IsMacOS}">
                         <TextBlock VerticalAlignment="Center"
                                    ToolTip.Tip="{ext:Locale SettingsTabTranslationLayerTooltip}"
                                    Text="{ext:Locale SettingsTabTranslationLayer}"
@@ -58,6 +57,7 @@
                             <ComboBoxItem
                                 Content="MoltenVK" />
                             <ComboBoxItem
+                                IsEnabled="{Binding IsKosmicKrispAvailable}"
                                 Content="KosmicKrisp" />
                         </ComboBox>
                     </StackPanel>
