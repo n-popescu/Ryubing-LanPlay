@@ -76,7 +76,7 @@ jobs:
         run: dotnet build -c "${{ matrix.configuration }}" -p:Version="${{ steps.version_info.outputs.result }}" -p:SourceRevisionId="${{ steps.version_info.outputs.git_short_hash }}" -p:ExtraDefineConstants=DISABLE_UPDATER
 
       - name: Test
-        run: dotnet test --no-build -c "${{ matrix.configuration }} -v:q"
+        run: dotnet test --no-build -c "${{ matrix.configuration }}" -v:q
 
       - name: Test Detailed
         run: dotnet test --no-build -c "${{ matrix.configuration }}"
