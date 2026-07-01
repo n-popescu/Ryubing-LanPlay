@@ -45,8 +45,6 @@ namespace Ryujinx.Tests.Memory
         [Test]
         public void SingleRegion()
         {
-            Assert.True(false);
-            
             RegionHandle handle = _tracking.BeginTracking(0, PageSize, 0);
             (ulong address, ulong size)? readTrackingTriggered = null;
             handle.RegisterAction((address, size) =>
