@@ -383,31 +383,50 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public bool CanScanAmiiboBinaries => AmiiboBinReader.HasAmiiboKeyFile;
 
-        private void UpdateSkylanderButton()
-        {
-            SkylanderButtonHeader = HasSkylander
-                ? LocaleManager.Instance[LocaleKeys.MenuBar_Actions_RemoveSkylanderButton]
-                : LocaleManager.Instance[LocaleKeys.MenuBar_Actions_ScanSkylanderButton];
+        [RelayCommand]
+private void UpdateSkylanderButton()
+{
+    SkylanderButtonHeader = HasSkylander
+        ? LocaleManager.Instance[LocaleKeys.MenuBar_Actions_RemoveSkylanderButton]
+        : LocaleManager.Instance[LocaleKeys.MenuBar_Actions_ScanSkylanderButton];
 
-            SkylanderButtonEnabled = (HasSkylander || IsSkylanderRequested);
+    SkylanderButtonEnabled = HasSkylander || IsSkylanderRequested;
 
-            OnPropertyChanged(nameof(SkylanderButtonHeader));
-            OnPropertyChanged(nameof(SkylanderButtonEnabled));
-        }
+    OnPropertyChanged(nameof(SkylanderButtonHeader));
+    OnPropertyChanged(nameof(SkylanderButtonEnabled));
+
+    // Force UI refresh
+    Dispatcher.UIThread.Post(() =>
+    {
+        OnPropertyChanged(nameof(SkylanderButtonHeader));
+    }, DispatcherPriority.Render);
+}
         
-        private async void ExecuteToggleSkylander()
-        {
-            if (!IsGameRunning) return;
+private void UpdateSkylanderState()
+{
+    if (AppHost?.Device?.System == null) return;
 
-            if (HasSkylander)
-            {
-                await RemoveSkylander();
-            }
-            else
-            {
-                await ScanSkylander();
-            }
-        }
+    IsSkylanderRequested = AppHost.Device.System.SearchingForSkylander(out _);
+    HasSkylander = AppHost.Device.System.HasSkylander(out _);
+
+    UpdateSkylanderButton();
+}
+        private async void ExecuteToggleSkylander()
+{
+    if (!IsGameRunning) return;
+
+    if (HasSkylander)
+    {
+        await RemoveSkylander();
+    }
+    else
+    {
+        await ScanSkylander();
+    }
+
+    // Force immediate update
+    UpdateSkylanderState();
+}
 
         public bool IsSkylanderRequested
         {
@@ -2057,6 +2076,8 @@ namespace Ryujinx.Ava.UI.ViewModels
                 }
             }
         }
+
+        [RelayCommand]
         public async Task ScanSkylander()
         {
             if (AppHost.Device.System.SearchingForSkylander(out int deviceId))
@@ -2090,12 +2111,15 @@ namespace Ryujinx.Ava.UI.ViewModels
                         AppHost.Device.System.ScanSkylander(deviceId, data);
                     }
                 }
+                UpdateSkylanderButton();
             }
         }
 
+        [RelayCommand]
         public async Task RemoveSkylander()
         {
             AppHost.Device.System.RemoveSkylander();
+            UpdateSkylanderButton();
         }
 
         public void ReloadRenderDocApi()

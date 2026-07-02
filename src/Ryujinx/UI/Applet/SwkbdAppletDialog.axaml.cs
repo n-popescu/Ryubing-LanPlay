@@ -74,7 +74,9 @@ namespace Ryujinx.Ava.UI.Controls
 
             content._host = contentDialog;
             contentDialog.Title = title;
-            contentDialog.PrimaryButtonText = args.SubmitText;
+            contentDialog.PrimaryButtonText = string.IsNullOrWhiteSpace(args.SubmitText) 
+        ? LocaleManager.Instance[LocaleKeys.InputDialogOk] 
+        : args.SubmitText;
             contentDialog.IsPrimaryButtonEnabled = content._checkLength(content.Message.Length);
             contentDialog.SecondaryButtonText = string.Empty;
             contentDialog.CloseButtonText = LocaleManager.Instance[LocaleKeys.Common_Buttons_Cancel];

@@ -56,7 +56,7 @@
                 </DropDownButton.Flyout>
             </DropDownButton>
             <CheckBox Grid.Column="3" Margin="15,0,0,0" IsChecked="{Binding ShowAllAmiibo}">
-                <TextBlock Text="{ext:Locale Amiibo_ShowIncompatibleAmiiboLabel}" />
+                <TextBlock Text="{ext:Locale Amiibo_ShowAllAmiiboLabel}" />
             </CheckBox>
             <CheckBox Grid.Column="4" Margin="15,0,0,0" IsChecked="{Binding UseRandomUuid}" HotKey="H" ToolTip.Tip="{ext:Locale ControllerSettingsDynamicInputSwapTooltip}">
                 <TextBlock Text="{ext:Locale Amiibo_UseRandomUuidTagLabel}" />
@@ -96,7 +96,7 @@
             </DropDownButton>
 
             <CheckBox Grid.Column="2" Margin="15,0,0,0" IsChecked="{Binding ShowAllAmiibo}">
-                <TextBlock Text="{ext:Locale Amiibo_ShowIncompatibleAmiiboLabel}" />
+                <TextBlock Text="{ext:Locale Amiibo_ShowAllAmiiboLabel}" />
             </CheckBox>
 
             <CheckBox Grid.Column="3" Margin="15,0,0,0" IsChecked="{Binding UseRandomUuid}" HotKey="H" ToolTip.Tip="{ext:Locale ControllerSettingsDynamicInputSwapTooltip}">

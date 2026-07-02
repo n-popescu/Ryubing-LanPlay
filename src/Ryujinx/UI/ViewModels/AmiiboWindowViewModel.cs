@@ -22,7 +22,16 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+
+
+
 using Ryujinx.Ava.Systems.Configuration;
+
+using System.Threading;
+
+using Path = System.IO.Path;
+
+
 
 
 namespace Ryujinx.Ava.UI.ViewModels
@@ -47,6 +56,8 @@ namespace Ryujinx.Ava.UI.ViewModels
         private int _amiiboSelectedIndex;
         private int _seriesSelectedIndex;
         private bool _showAllAmiibo;
+
+        
 
         private static readonly AmiiboJsonSerializerContext _serializerContext = new(JsonHelper.GetDefaultSerializerOptions());
 
@@ -138,6 +149,8 @@ namespace Ryujinx.Ava.UI.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private CancellationTokenSource _imageCts = new();
 
         
 
@@ -355,49 +368,53 @@ public bool SortingAscending
             ParseAmiiboData();
         }
 
-        private void ParseAmiiboData()
+private void ParseAmiiboData()
+{
+    _amiiboSeries.Clear();
+
+    foreach (var amiibo in _amiiboList)
+    {
+        if (!_amiiboSeries.Contains(amiibo.AmiiboSeries))
         {
-            _amiiboSeries.Clear();
-            _amiibos.Clear();
-
-            foreach (var amiibo in _amiiboList)
+            if (_showAllAmiibo)
             {
-                if (!_amiiboSeries.Contains(amiibo.AmiiboSeries))
-                {
-                    if (!ShowAllAmiibo)
-                    {
-                        bool compatible = amiibo.GamesSwitch.Any(game => game != null && game.GameId.Contains(TitleId));
-                        if (compatible)
-                        {
-                            _amiiboSeries.Add(amiibo.AmiiboSeries);
-                        }
-                    }
-                    else
-                    {
-                        _amiiboSeries.Add(amiibo.AmiiboSeries);
-                    }
-                }
-            }
-
-            if (ShowAllAmiibo && _amiiboSeries.Count > 0)
-            {
-                SeriesSelectedIndex = 0;
-            }
-            else if (LastScannedAmiiboId != string.Empty)
-            {
-                SelectLastScannedAmiibo();
-            }
-            else if (_amiiboSeries.Count > 0)
-            {
-                SeriesSelectedIndex = 0;
+                // Show All mode: include all series
+                _amiiboSeries.Add(amiibo.AmiiboSeries);
             }
             else
             {
-                SeriesSelectedIndex = -1;
-            }
+                // Compatible mode: only include series that have at least one compatible Amiibo
+                bool hasCompatible = amiibo.GamesSwitch.Any(game => 
+                    game != null && game.GameId.Contains(TitleId));
 
-            FilterAmiibo();
+                if (hasCompatible)
+                {
+                    _amiiboSeries.Add(amiibo.AmiiboSeries);
+                }
+            }
         }
+    }
+
+    // Set initial selection
+    if (_showAllAmiibo)
+    {
+        SeriesSelectedIndex = -1; // no pre-selection when showing all
+    }
+    else if (LastScannedAmiiboId != string.Empty)
+    {
+        SelectLastScannedAmiibo();
+    }
+    else if (_amiiboSeries.Count > 0)
+    {
+        SeriesSelectedIndex = 0;
+    }
+    else
+    {
+        SeriesSelectedIndex = -1;
+    }
+
+    FilterAmiibo();
+}
 
         private void SelectLastScannedAmiibo()
         {
@@ -408,6 +425,8 @@ public bool SortingAscending
         }
         
 // Update FilterAmiibo() method
+
+
 private void FilterAmiibo()
 {
     _amiibos.Clear();
@@ -421,35 +440,27 @@ private void FilterAmiibo()
         query = query.Where(amiibo => amiibo.AmiiboSeries == selectedSeries);
     }
 
-    // Name search filter
+    // Name search filter - always applied if present
     if (!string.IsNullOrWhiteSpace(_searchText))
     {
         query = query.Where(amiibo => 
             amiibo.Name.Contains(_searchText, StringComparison.OrdinalIgnoreCase));
     }
 
+    // Compatibility filter
+    if (!_showAllAmiibo)
+    {
+        query = query.Where(amiibo => 
+            amiibo.GamesSwitch.Any(game => game != null && game.GameId.Contains(TitleId)));
+    }
+    // else: show all
+
     // Sort by Name
     query = _sortingAscending 
         ? query.OrderBy(amiibo => amiibo.Name)
         : query.OrderByDescending(amiibo => amiibo.Name);
 
-    var sortedList = query.ToList();
-
-    foreach (var amiibo in sortedList)
-    {
-        if (!_showAllAmiibo)
-        {
-            bool compatible = amiibo.GamesSwitch.Any(game => 
-                game != null && game.GameId.Contains(TitleId));
-
-            if (compatible)
-                _amiibos.Add(amiibo);
-        }
-        else
-        {
-            _amiibos.Add(amiibo);
-        }
-    }
+    _amiibos.AddRange(query);
 
     // Restore selection if possible
     int restoredIndex = -1;
@@ -465,6 +476,9 @@ private void FilterAmiibo()
     AmiiboSelectedIndex = restoredIndex != -1 
         ? restoredIndex 
         : (_amiibos.Count > 0 ? 0 : -1);
+
+    // Force refresh of image and details
+    SetAmiiboDetails();
 }
 
 
@@ -497,50 +511,52 @@ public bool IsSortedByName => _sortField == AmiiboSortField.Name;
 
 
 
-        private void SetAmiiboDetails()
+private void SetAmiiboDetails()
+{
+    ResetAmiiboPreview();
+    Usage = string.Empty;
+
+    if (_amiiboSelectedIndex < 0 || _amiibos.Count < 1)
+        return;
+
+    AmiiboApi selected = _amiibos[_amiiboSelectedIndex];
+    string imageUrl = selected.Image;
+
+    // Build usage text
+    StringBuilder usageStringBuilder = new();
+    bool writable = false;
+
+    foreach (var game in selected.GamesSwitch)
+    {
+        if (game != null && game.GameId.Contains(TitleId))
         {
-            ResetAmiiboPreview();
-            Usage = string.Empty;
-
-            if (_amiiboSelectedIndex < 0 || _amiibos.Count < 1)
-                return;
-
-            AmiiboApi selected = _amiibos[_amiiboSelectedIndex];
-            string imageUrl = selected.Image;
-
-            StringBuilder usageStringBuilder = new();
-            bool writable = false;
-
-            foreach (var game in selected.GamesSwitch)
+            foreach (var usageItem in game.AmiiboUsage)
             {
-                if (game != null && game.GameId.Contains(TitleId))
-                {
-                    foreach (var usageItem in game.AmiiboUsage)
-                    {
-                        usageStringBuilder.Append($"{Environment.NewLine}- {usageItem.Usage.Replace("/", Environment.NewLine + "-")}");
-                        if (usageItem.Write)
-                            writable = true;
-                    }
-                }
+                usageStringBuilder.Append($"{Environment.NewLine}- {usageItem.Usage.Replace("/", Environment.NewLine + "-")}");
+                if (usageItem.Write)
+                    writable = true;
             }
-
-            string usageLabel = writable 
-                ? LocaleManager.Instance[LocaleKeys.Amiibo_WritableLabel]
-                : LocaleManager.Instance[LocaleKeys.Amiibo_UsageLabel];
-
-            if (usageStringBuilder.Length == 0)
-            {
-                usageStringBuilder.Append($"{Environment.NewLine}{LocaleManager.Instance[LocaleKeys.Amiibo_UnknownLabel]}");
-            }
-            else
-            {
-                usageStringBuilder.Replace(Environment.NewLine + "-", Environment.NewLine + Environment.NewLine + "-");
-            }
-
-            Usage = usageLabel + usageStringBuilder.ToString();
-
-            _ = UpdateAmiiboPreview(imageUrl);
         }
+    }
+
+    string usageLabel = writable
+        ? LocaleManager.Instance[LocaleKeys.Amiibo_WritableLabel]
+        : LocaleManager.Instance[LocaleKeys.Amiibo_UsageLabel];
+
+    if (usageStringBuilder.Length == 0)
+    {
+        usageStringBuilder.Append($"{Environment.NewLine}{LocaleManager.Instance[LocaleKeys.Amiibo_UnknownLabel]}");
+    }
+    else
+    {
+        usageStringBuilder.Replace(Environment.NewLine + "-", Environment.NewLine + Environment.NewLine + "-");
+    }
+
+    Usage = usageLabel + usageStringBuilder.ToString();
+
+    // Load image safely
+    _ = UpdateAmiiboPreview(imageUrl);
+}
 
         private async Task<bool> NeedsUpdate(DateTime oldLastModified)
         {
@@ -605,30 +621,37 @@ public bool IsSortedByName => _sortField == AmiiboSortField.Name;
             Dispatcher.UIThread.Post(_owner.Close);
         }
 
-        private async Task UpdateAmiiboPreview(string imageUrl)
+private async Task UpdateAmiiboPreview(string imageUrl)
+{
+    _imageCts.Cancel();
+    _imageCts = new CancellationTokenSource();
+
+    try
+    {
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_imageCts.Token);
+
+        HttpResponseMessage response = await _httpClient.GetAsync(imageUrl, linkedCts.Token);
+
+        if (response.IsSuccessStatusCode)
         {
-            HttpResponseMessage response = await _httpClient.GetAsync(imageUrl);
+            byte[] bytes = await response.Content.ReadAsByteArrayAsync(linkedCts.Token);
 
-            if (response.IsSuccessStatusCode)
-            {
-                byte[] amiiboPreviewBytes = await response.Content.ReadAsByteArrayAsync();
-                using MemoryStream memoryStream = new(amiiboPreviewBytes);
+            using MemoryStream ms = new(bytes);
+            Bitmap bitmap = new(ms);
 
-                Bitmap bitmap = new(memoryStream);
+            double ratio = Math.Min(AmiiboImageSize / bitmap.Size.Width, AmiiboImageSize / bitmap.Size.Height);
+            int newWidth = (int)(bitmap.Size.Width * ratio);
+            int newHeight = (int)(bitmap.Size.Height * ratio);
 
-                double ratio = Math.Min(AmiiboImageSize / bitmap.Size.Width,
-                        AmiiboImageSize / bitmap.Size.Height);
-
-                int resizeHeight = (int)(bitmap.Size.Height * ratio);
-                int resizeWidth = (int)(bitmap.Size.Width * ratio);
-
-                AmiiboImage = bitmap.CreateScaledBitmap(new PixelSize(resizeWidth, resizeHeight));
-            }
-            else
-            {
-                Logger.Error?.Print(LogClass.Application, $"Failed to get amiibo preview. Response status code: {response.StatusCode}");
-            }
+            AmiiboImage = bitmap.CreateScaledBitmap(new PixelSize(newWidth, newHeight));
         }
+    }
+    catch (OperationCanceledException) { }
+    catch (Exception ex)
+    {
+        Logger.Error?.Print(LogClass.Application, $"Failed to load amiibo preview: {ex}");
+    }
+}
 
         private void ResetAmiiboPreview()
         {
