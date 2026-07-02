@@ -30,9 +30,9 @@
         <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" Name="FlushControls">
             <controls:RyujinxLogo Grid.Column="0" Margin="15,0,7,0" ToolTip.Tip="{ext:WindowTitle Amiibo_WindowTitle}" />
             <TextBox Grid.Column="1" 
-                Margin="0,5,0,5" 
+                Margin="0,5,0,7" 
                 Width="250"
-                Watermark="{ext:Locale Common_Search_SearchWatermark}"
+                Watermark="{ext:Locale Common_Search_SearchAmiiboWatermark}"
                 Text="{Binding SearchText}" />
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <ComboBox Margin="10,5,0,5" SelectedIndex="{Binding SeriesSelectedIndex}" ItemsSource="{Binding AmiiboSeries}" MinWidth="140" />
@@ -85,14 +85,14 @@
         <!-- UI NormalControls -->
         <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" Name="NormalControls">
             <TextBox Grid.Column="0" 
-                    Margin="15,5,0,5" 
-                    Width="240"
-                    Watermark="{ext:Locale Common_Search_SearchWatermark}"
+                    Margin="15,5,0,7" 
+                    Width="250"
+                    Watermark="{ext:Locale Common_Search_SearchAmiiboWatermark}"
                     Text="{Binding SearchText}" />
             <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <ComboBox Margin="10,5,0,5" SelectedIndex="{Binding SeriesSelectedIndex}" ItemsSource="{Binding AmiiboSeries}" MinWidth="140" />
             </StackPanel>
-             <DropDownButton Grid.Column="2" Margin="10,5,0,5" Content="{Binding SortingFieldName}">
+            <DropDownButton Grid.Column="2" Margin="10,5,0,5" Content="{Binding SortingFieldName}">
                 <DropDownButton.Flyout>
                     <Flyout Placement="Bottom">
                         <StackPanel Margin="0" HorizontalAlignment="Stretch" Orientation="Vertical">
