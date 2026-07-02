@@ -108,6 +108,7 @@ namespace Ryujinx.HLE.HOS.Services.Sdb.Pl
             // the font count here (e.g. 6) makes them reject the result and spin re-opening pl:u.
             context.ResponseData.Write(1);
             context.ResponseData.Write(loadedCount);
+            // context.ResponseData.Write((int)SharedFontType.Count);
 
             return ResultCode.Success;
         }
