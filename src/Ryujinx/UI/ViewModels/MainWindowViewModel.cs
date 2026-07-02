@@ -425,7 +425,6 @@ namespace Ryujinx.Ava.UI.ViewModels
                 await ScanSkylander();
             }
 
-            // Force immediate update
             UpdateSkylanderState();
         }
 
