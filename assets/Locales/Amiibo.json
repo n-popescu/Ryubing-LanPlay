@@ -76,7 +76,7 @@
       }
     },
     {
-      "ID": "UseRandomUuidTagLabel",
+      "ID": "UseRandomUuidLabel",
       "Translations": {
         "ar_SA": "استخدام UUID عشوائي",
         "de_DE": "Zufällige UUID verwenden",

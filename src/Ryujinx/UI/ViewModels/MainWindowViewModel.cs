@@ -169,7 +169,6 @@ namespace Ryujinx.Ava.UI.ViewModels
             if (Updater.CanUpdate(true))
                 await Updater.BeginUpdateAsync(true);
         });
-        public RelayCommand ToggleSkylanderCommand { get; }
 
         private bool _isGameRunning;
         private string _searchText;
@@ -208,6 +207,8 @@ namespace Ryujinx.Ava.UI.ViewModels
         public MainWindow Window { get; init; }
 
         internal AppHost AppHost { get; set; }
+
+        public RelayCommand ToggleSkylanderCommand { get; }
 
         public MainWindowViewModel()
         {
@@ -384,49 +385,49 @@ namespace Ryujinx.Ava.UI.ViewModels
         public bool CanScanAmiiboBinaries => AmiiboBinReader.HasAmiiboKeyFile;
 
         [RelayCommand]
-private void UpdateSkylanderButton()
-{
-    SkylanderButtonHeader = HasSkylander
-        ? LocaleManager.Instance[LocaleKeys.MenuBar_Actions_RemoveSkylanderButton]
-        : LocaleManager.Instance[LocaleKeys.MenuBar_Actions_ScanSkylanderButton];
+        private void UpdateSkylanderButton()
+        {
+            SkylanderButtonHeader = HasSkylander
+                ? LocaleManager.Instance[LocaleKeys.MenuBar_Actions_RemoveSkylanderButton]
+                : LocaleManager.Instance[LocaleKeys.MenuBar_Actions_ScanSkylanderButton];
 
-    SkylanderButtonEnabled = HasSkylander || IsSkylanderRequested;
+            SkylanderButtonEnabled = HasSkylander || IsSkylanderRequested;
 
-    OnPropertyChanged(nameof(SkylanderButtonHeader));
-    OnPropertyChanged(nameof(SkylanderButtonEnabled));
+            OnPropertyChanged(nameof(SkylanderButtonHeader));
+            OnPropertyChanged(nameof(SkylanderButtonEnabled));
 
-    // Force UI refresh
-    Dispatcher.UIThread.Post(() =>
-    {
-        OnPropertyChanged(nameof(SkylanderButtonHeader));
-    }, DispatcherPriority.Render);
-}
+            Dispatcher.UIThread.Post(() =>
+            {
+                OnPropertyChanged(nameof(SkylanderButtonHeader));
+            }, DispatcherPriority.Render);
+        }
         
-private void UpdateSkylanderState()
-{
-    if (AppHost?.Device?.System == null) return;
+        private void UpdateSkylanderState()
+        {
+            if (AppHost?.Device?.System == null) return;
 
-    IsSkylanderRequested = AppHost.Device.System.SearchingForSkylander(out _);
-    HasSkylander = AppHost.Device.System.HasSkylander(out _);
+            IsSkylanderRequested = AppHost.Device.System.SearchingForSkylander(out _);
+            HasSkylander = AppHost.Device.System.HasSkylander(out _);
 
-    UpdateSkylanderButton();
-}
+            UpdateSkylanderButton();
+        }
+
         private async void ExecuteToggleSkylander()
-{
-    if (!IsGameRunning) return;
+        {
+            if (!IsGameRunning) return;
 
-    if (HasSkylander)
-    {
-        await RemoveSkylander();
-    }
-    else
-    {
-        await ScanSkylander();
-    }
+            if (HasSkylander)
+            {
+                await RemoveSkylander();
+            }
+            else
+            {
+                await ScanSkylander();
+            }
 
-    // Force immediate update
-    UpdateSkylanderState();
-}
+            // Force immediate update
+            UpdateSkylanderState();
+        }
 
         public bool IsSkylanderRequested
         {

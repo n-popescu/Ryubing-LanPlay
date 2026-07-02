@@ -59,9 +59,9 @@
                 <TextBlock Text="{ext:Locale Amiibo_ShowAllAmiiboLabel}" />
             </CheckBox>
             <CheckBox Grid.Column="4" Margin="15,0,0,0" IsChecked="{Binding UseRandomUuid}" HotKey="H" ToolTip.Tip="{ext:Locale ControllerSettingsDynamicInputSwapTooltip}">
-                <TextBlock Text="{ext:Locale Amiibo_UseRandomUuidTagLabel}" />
+                <TextBlock Text="{ext:Locale Amiibo_UseRandomUuidLabel}" />
             </CheckBox>
-            <CheckBox Grid.Column="5" Margin="15,0,0,0" IsChecked="{Binding PauseEmulationWhileOpen}">
+            <CheckBox Grid.Column="5" Margin="15,0,0,0" IsChecked="{Binding PauseEmulationWhileAmiiboWindowOpen}">
     <TextBlock Text="Pause emulation while this window is open" />
 </CheckBox>
         </Grid>
@@ -100,9 +100,9 @@
             </CheckBox>
 
             <CheckBox Grid.Column="3" Margin="15,0,0,0" IsChecked="{Binding UseRandomUuid}" HotKey="H" ToolTip.Tip="{ext:Locale ControllerSettingsDynamicInputSwapTooltip}">
-                <TextBlock Text="{ext:Locale Amiibo_UseRandomUuidTagLabel}" />
+                <TextBlock Text="{ext:Locale Amiibo_UseRandomUuidLabel}" />
             </CheckBox>
-            <CheckBox Grid.Column="5" Margin="15,0,0,0" IsChecked="{Binding PauseEmulationWhileOpen}">
+            <CheckBox Grid.Column="5" Margin="15,0,0,0" IsChecked="{Binding PauseEmulationWhileAmiiboWindowOpen}">
     <TextBlock Text="Pause emulation while this window is open" />
 </CheckBox>
         </Grid>

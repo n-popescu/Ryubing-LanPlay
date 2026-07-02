@@ -223,7 +223,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 ShowDynamicInputSwapWarning = new ReactiveObject<bool>();
                 ShowDynamicInputSwapWarning.Value = true;
                 PauseEmulationWhileAmiiboWindowOpen = new ReactiveObject<bool>();
-                PauseEmulationWhileAmiiboWindowOpen.Value = true; // Default = true
+                PauseEmulationWhileAmiiboWindowOpen.Value = true;
             }
         }
 

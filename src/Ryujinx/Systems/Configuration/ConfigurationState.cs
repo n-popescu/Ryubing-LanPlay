@@ -90,7 +90,6 @@ namespace Ryujinx.Ava.Systems.Configuration
                 SkipUserProfiles = System.SkipUserProfilesManager,
                 UseHypervisor = System.UseHypervisor,
                 GCLowLatency = System.GCLowLatency,
-                PauseEmulationWhileAmiiboWindowOpen = UI.PauseEmulationWhileAmiiboWindowOpen,
                 GuiColumns = new GuiColumns
                 {
                     FavColumn = UI.GuiColumns.FavColumn,
@@ -159,6 +158,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 DebuggerSuspendOnStart = Debug.DebuggerSuspendOnStart,
                 ShowDirtyHacks = Hacks.ShowDirtyHacks,
                 DirtyHacks = Hacks.EnabledHacks.Select(it => it.Pack()).ToArray(),
+                PauseEmulationWhileAmiiboWindowOpen = UI.PauseEmulationWhileAmiiboWindowOpen,
             };
 
             return configurationFile;
@@ -215,7 +215,6 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.EnableInternetAccess.Value = false;
             System.EnableFsIntegrityChecks.Value = true;
             System.FsGlobalAccessLogMode.Value = 0;
-            UI.PauseEmulationWhileAmiiboWindowOpen.Value = true;
             System.AudioBackend.Value = AudioBackend.SDL3;
             System.AudioVolume.Value = 1;
             System.MemoryManagerMode.Value = MemoryManagerMode.HostMappedUnsafe;
@@ -264,6 +263,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             UI.WindowStartup.WindowPositionX.Value = 0;
             UI.WindowStartup.WindowPositionY.Value = 0;
             UI.WindowStartup.WindowMaximized.Value = false;
+            UI.PauseEmulationWhileAmiiboWindowOpen.Value = true;
             Hid.EnableKeyboard.Value = false;
             Hid.EnableMouse.Value = false;
             Hid.DisableInputWhenOutOfFocus.Value = false;

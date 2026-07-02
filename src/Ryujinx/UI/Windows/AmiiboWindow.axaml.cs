@@ -6,12 +6,10 @@ using Ryujinx.Ava.UI.ViewModels;
 using Avalonia.Controls;
 using System;
 
-
 namespace Ryujinx.Ava.UI.Windows
 {
     public partial class AmiiboWindow : StyleableAppWindow
     {
-        private bool _initialPauseState;
         public AmiiboWindow(bool showAll, string lastScannedAmiiboId, string titleId) : base(true, 40)
         {
             DataContext = ViewModel = new AmiiboWindowViewModel(this, lastScannedAmiiboId, titleId)
@@ -19,7 +17,6 @@ namespace Ryujinx.Ava.UI.Windows
                 ShowAllAmiibo = showAll,
             };
 
-        
             InitializeComponent();
 
             FlushControls.IsVisible = !ConfigurationState.Instance.ShowOldUI;
@@ -27,52 +24,43 @@ namespace Ryujinx.Ava.UI.Windows
 
             Title = RyujinxApp.FormatTitle(LocaleKeys.Amiibo_WindowTitle);
 
+            if (ViewModel.PauseEmulationWhileAmiiboWindowOpen && RyujinxApp.MainWindow?.ViewModel?.AppHost != null)
+            {
+                RyujinxApp.MainWindow.ViewModel.AppHost.Pause();
+            }
 
-        
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
 
-          // Initial pause if checkbox is on
-        if (ViewModel.PauseEmulationWhileOpen && RyujinxApp.MainWindow?.ViewModel?.AppHost != null)
+        }
+
+        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            RyujinxApp.MainWindow.ViewModel.AppHost.Pause();
+            if (e.PropertyName != nameof(ViewModel.PauseEmulationWhileAmiiboWindowOpen)) 
+                return;
+
+            var host = RyujinxApp.MainWindow?.ViewModel?.AppHost;
+            if (host == null) return;
+
+            if (ViewModel.PauseEmulationWhileAmiiboWindowOpen)
+                host.Pause();
+            else
+                host.Resume();
         }
 
-        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-
-        
-
-
-        }
-
-      private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName != nameof(ViewModel.PauseEmulationWhileOpen)) 
-            return;
-
-        var host = RyujinxApp.MainWindow?.ViewModel?.AppHost;
-        if (host == null) return;
-
-        if (ViewModel.PauseEmulationWhileOpen)
-            host.Pause();
-        else
-            host.Resume();
-    }
-
-    private void AlwaysResumeOnClose()
-    {
-        if (RyujinxApp.MainWindow?.ViewModel?.AppHost != null)
+        private void AlwaysResumeOnClose()
         {
-            RyujinxApp.MainWindow.ViewModel.AppHost.Resume();
+            if (RyujinxApp.MainWindow?.ViewModel?.AppHost != null)
+            {
+                RyujinxApp.MainWindow.ViewModel.AppHost.Resume();
+            }
         }
-    }
 
-
-
-protected override void OnClosed(EventArgs e)
-    {
-        ViewModel.PropertyChanged -= ViewModel_PropertyChanged;
-        AlwaysResumeOnClose();
-        base.OnClosed(e);
-    }
+        protected override void OnClosed(EventArgs e)
+        {
+            ViewModel.PropertyChanged -= ViewModel_PropertyChanged;
+            AlwaysResumeOnClose();
+            base.OnClosed(e);
+        }
 
         public AmiiboWindow()
         {
@@ -86,42 +74,41 @@ protected override void OnClosed(EventArgs e)
             }
         }
 
-public void Sort_Checked(object sender, RoutedEventArgs e)
-{
-    if (sender is RadioButton { Tag: string tag } && ViewModel != null)
-    {
-        if (Enum.TryParse<AmiiboWindowViewModel.AmiiboSortField>(tag, out var sortField))
+        public void Sort_Checked(object sender, RoutedEventArgs e)
         {
-            ViewModel.SortingField = sortField;
+            if (sender is RadioButton { Tag: string tag } && ViewModel != null)
+            {
+                if (Enum.TryParse<AmiiboWindowViewModel.AmiiboSortField>(tag, out var sortField))
+                {
+                    ViewModel.SortingField = sortField;
+                }
+            }
         }
-    }
-}
 
-public void Order_Checked(object sender, RoutedEventArgs e)
-{
-    if (sender is RadioButton { Tag: string tag } && ViewModel != null)
-    {
-        ViewModel.SortingAscending = tag == "Ascending";
-    }
-}
+        public void Order_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is RadioButton { Tag: string tag } && ViewModel != null)
+            {
+                ViewModel.SortingAscending = tag == "Ascending";
+            }
+        }
 
         public bool IsScanned { get; set; }
         public AmiiboApi ScannedAmiibo { get; set; }
         public AmiiboWindowViewModel ViewModel;
 
-// Make sure Scan also resumes
-private void ScanButton_Click(object sender, RoutedEventArgs e)
-    {
-       AlwaysResumeOnClose();
-        ViewModel.Scan();
-        Close();
-    }
+        private void ScanButton_Click(object sender, RoutedEventArgs e)
+        {
+            AlwaysResumeOnClose();
+            ViewModel.Scan();
+            Close();
+        }
 
-private void CancelButton_Click(object sender, RoutedEventArgs e)
-    {
-        AlwaysResumeOnClose();
-        ViewModel.Cancel();
-        Close();
-    }
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            AlwaysResumeOnClose();
+            ViewModel.Cancel();
+            Close();
+        }
     }
 }
