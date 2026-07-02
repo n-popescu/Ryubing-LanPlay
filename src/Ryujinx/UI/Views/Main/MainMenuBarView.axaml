@@ -137,7 +137,7 @@
                     InputGesture="Ctrl + A"
                     IsEnabled="{Binding IsAmiiboRequested}" />
                 <MenuItem
-                    Command="{Binding OpenBinFile}"
+                    Command="{Binding ScanAmiiboFromBin}"
                     AttachedToVisualTree="ScanBinAmiiboMenuItem_AttachedToVisualTree"
                     Header="{ext:Locale MenuBar_Actions_ScanAmiiboFromBinButton}"
                     Icon="{ext:Icon fa-solid fa-chess-rook}"

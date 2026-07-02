@@ -2054,26 +2054,42 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
-        public async Task OpenBinFile()
+        public async Task ScanAmiiboFromBin()
         {
-            if (AppHost.Device.System.SearchingForAmiibo(out _) && IsGameRunning)
-            {
-                Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(
-                    new FilePickerOpenOptions
-                    {
-                        Title = LocaleManager.Instance[LocaleKeys.Dialog_Amiibo_ScanAmiiboFromBinFilePickerTitle],
-                        FileTypeFilter = new List<FilePickerFileType>
-                        {
-                            new(LocaleManager.Instance[LocaleKeys.Common_FilePicker_AllSupportedFormats])
-                            {
-                                Patterns = ["*.bin"],
-                            }
-                        }
-                    });
+            bool shouldPause = ConfigurationState.Instance.UI.PauseEmulationWhileAmiiboWindowOpen.Value && IsGameRunning;
 
-                if (result.HasValue)
+            if (shouldPause && AppHost?.Device?.System != null)
+            {
+                AppHost?.Pause();
+            }
+            try
+            {
+                if (AppHost.Device.System.SearchingForAmiibo(out _) && IsGameRunning)
                 {
-                    AppHost.Device.System.ScanAmiiboFromBin(result.Value.Path.LocalPath);
+                    Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(
+                        new FilePickerOpenOptions
+                        {
+                            Title = LocaleManager.Instance[LocaleKeys.Dialog_Amiibo_ScanAmiiboFromBinFilePickerTitle],
+                            FileTypeFilter = new List<FilePickerFileType>
+                            {
+                                new(LocaleManager.Instance[LocaleKeys.Common_FilePicker_AllSupportedFormats])
+                                {
+                                    Patterns = ["*.bin"],
+                                }
+                            }
+                        });
+
+                    if (result.HasValue)
+                    {
+                        AppHost.Device.System.ScanAmiiboFromBin(result.Value.Path.LocalPath);
+                    }
+                }
+            }
+            finally
+            {
+                if (shouldPause && AppHost?.Device?.System != null)
+                {
+                    AppHost?.Resume();
                 }
             }
         }
