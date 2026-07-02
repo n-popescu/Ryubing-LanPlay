@@ -199,6 +199,7 @@ namespace Ryujinx.Common
             "0100744001588000", // Cars 3: Driven to Win
             "0100b41013c82000", // Cruis'n Blast
             "010085900337e000", // Death Squared
+            "0100a0d022a68000", // DELTARUNE
             "01001b300b9be000", // Diablo III: Eternal Collection
             "010027400cdc6000", // Divinity Original 2 - Definitive Edition
             "01008c8012920000", // Dying Light Platinum Edition
