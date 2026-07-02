@@ -5,6 +5,7 @@ using Ryujinx.Ava.Systems.Configuration;
 using Ryujinx.Ava.UI.ViewModels;
 using Avalonia.Controls;
 using System;
+using Avalonia.Controls.Primitives;
 
 namespace Ryujinx.Ava.UI.Windows
 {
@@ -32,6 +33,11 @@ namespace Ryujinx.Ava.UI.Windows
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
 
         }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+            {
+                FlyoutBase.ShowAttachedFlyout((Control)sender!);
+            }
 
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {

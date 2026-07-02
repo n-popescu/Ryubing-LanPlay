@@ -502,7 +502,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             if (usageStringBuilder.Length == 0)
             {
-                usageStringBuilder.Append($"{Environment.NewLine}{LocaleManager.Instance[LocaleKeys.Amiibo_UnknownLabel]}");
+                usageStringBuilder.Append(Environment.NewLine + Environment.NewLine + LocaleManager.Instance[LocaleKeys.Amiibo_UnknownLabel]);
             }
             else
             {
