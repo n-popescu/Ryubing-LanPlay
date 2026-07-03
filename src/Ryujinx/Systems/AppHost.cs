@@ -1198,7 +1198,13 @@ namespace Ryujinx.Ava.Systems
         {
             _viewModel.BackendText = RendererHost.Backend switch
             {
-                GraphicsBackend.Vulkan => "Vulkan",
+                GraphicsBackend.Vulkan when !OperatingSystem.IsMacOS() => "Vulkan",
+                GraphicsBackend.Vulkan => ConfigurationState.Instance.Graphics.TranslationLayer.Value switch
+                {
+                    TranslationLayer.MoltenVK => "MoltenVK",
+                    TranslationLayer.KosmicKrisp => "KosmicKrisp",
+                    _ => _viewModel.BackendText
+                },
                 GraphicsBackend.OpenGl => "OpenGL",
                 _ => throw new NotImplementedException()
             };
