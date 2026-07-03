@@ -5,7 +5,6 @@ using Ryujinx.Cpu.Jit;
 using Ryujinx.Memory;
 using Ryujinx.Tests.Unicorn;
 using System;
-using UnicornEngine.Const;
 using MemoryPermission = UnicornEngine.Const.UcProtection;
 
 namespace Ryujinx.Tests.Cpu
