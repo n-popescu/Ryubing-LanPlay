@@ -50,6 +50,7 @@ namespace Ryujinx.Common
                     return null;
                 }
             }
+            
             return _finalSplash;
         }
 
