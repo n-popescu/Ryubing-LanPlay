@@ -129,8 +129,8 @@
       "ID": "SizeChangedMessage",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
-        "el_GR": "XCI-Größe hat sich seit dem letzten Scan geändert. Stellen Sie sicher, dass die Datei nicht beschrieben wird, und versuchen Sie es erneut.",
+        "de_DE": "XCI-Größe hat sich seit dem letzten Scan geändert. Stellen Sie sicher, dass die Datei nicht beschrieben wird, und versuchen Sie es erneut.",
+        "el_GR": "",
         "en_US": "XCI size changed since last scan. Ensure the file is not being written to and try again.",
         "es_ES": "El tamaño de XCI ha cambiado desde que fue escaneado. Verifica que no se esté escribiendo al archivo y vuelve a intentarlo.",
 		    "fr_FR": "La taille de XCI a changé depuis son analyse. Vérifiez que le fichier n’est pas en cours d’écriture, puis réessayez.",
