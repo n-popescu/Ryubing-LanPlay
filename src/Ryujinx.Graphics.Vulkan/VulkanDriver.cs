@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Runtime.Versioning;
 
-namespace Ryujinx.Graphics.Vulkan.Driver
+namespace Ryujinx.Graphics.Vulkan
 {
     [SupportedOSPlatform("macos")]
     public static class VulkanDriver
