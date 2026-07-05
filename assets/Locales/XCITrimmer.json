@@ -4,7 +4,7 @@
       "ID": "StatusCountLabel",
       "Translations": {
         "ar_SA": "",
-        "de_DE": ""XCI ausgewählt: {0}/{1}",
+        "de_DE": "XCI ausgewählt: {0}/{1}",
         "el_GR": "",
         "en_US": "XCI Selected: {0}/{1}",
         "es_ES": "XCI Seleccionados: {0}/{1}",
