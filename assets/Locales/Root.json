@@ -704,7 +704,7 @@
       "ID": "GameListHeaderIcon",
       "Translations": {
         "ar_SA": "الأيقونة",
-        "de_DE": "",
+        "de_DE": "Icon",
         "el_GR": "Εικονίδιο",
         "en_US": "Icon",
         "es_ES": "Icono",
@@ -754,7 +754,7 @@
       "ID": "GameListHeaderVersion",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "",
+        "de_DE": "Version: {0}",
         "el_GR": "Έκδοση: {0}",
         "en_US": "Version: {0}",
         "es_ES": "Versión: {0}",
@@ -3854,7 +3854,7 @@
       "ID": "SettingsTabSystemEnablePptc",
       "Translations": {
         "ar_SA": "PPTC (ذاكرة التخزين المؤقت للترجمة المستمرة)",
-        "de_DE": "Profilierter persistenter Übersetzungs-Cache",
+        "de_DE": "PPTC (Profilierter persistenter Übersetzungs-Cache)",
         "el_GR": "Ενεργοποίηση PPTC (Profiled Persistent Translation Cache)",
         "en_US": "PPTC (Profiled Persistent Translation Cache)",
         "es_ES": "PPTC (Cache de Traducción de Perfil Persistente)",
@@ -8154,7 +8154,7 @@
       "ID": "GamepadLeftShoulder",
       "Translations": {
         "ar_SA": "زر الكتف الأيسر‫ L",
-        "de_DE": "Linke Schultertaste",
+        "de_DE": "Linke Schulter",
         "el_GR": "",
         "en_US": "Left Shoulder",
         "es_ES": "Botón Superior Izq.",
@@ -8179,7 +8179,7 @@
       "ID": "GamepadRightShoulder",
       "Translations": {
         "ar_SA": "زر الكتف الأيمن‫ R",
-        "de_DE": "Rechte Schultertaste",
+        "de_DE": "Rechte Schulter",
         "el_GR": "",
         "en_US": "Right Shoulder",
         "es_ES": "Botón Superior Derecho",
@@ -12454,7 +12454,7 @@
       "ID": "AboutRyujinxFormerMaintainersTitle",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Zuvor Entwickelt von::",
+        "de_DE": "Zuvor Entwickelt von:",
         "el_GR": "",
         "en_US": "Formerly Maintained By:",
         "es_ES": "Anteriormente Mantenido por:",
@@ -13629,7 +13629,7 @@
       "ID": "GalThreadingTooltip",
       "Translations": {
         "ar_SA": "ينفذ أوامر الواجهة الخلفية للرسومات على مسار ثاني.\n\nيعمل على تسريع عملية تجميع المظللات وتقليل التقطيع وتحسين الأداء على برامج تشغيل وحدة الرسوميات دون دعم المسارات المتعددة الخاصة بهم. أداء أفضل قليلا على برامج التشغيل ذات المسارات المتعددة.\n\nاضبط على تلقائي إذا لم تكن متأكدا.",
-        "de_DE": "Führt Grafik-Backend Befehle auf einem zweiten Thread aus.\n\nDies Beschleunigt die Shader-Kompilierung, reduziert Stottern und verbessert die Leistung auf GPU-Treibern ohne eigene Multithreading-Unterstützung. Geringfügig bessere Leistung bei Treibern mit Multithreading.\n\nIm Zweifelsfall auf auf AUTO stellen.",
+        "de_DE": "Führt Grafik-Backend Befehle auf einem zweiten Thread aus.\n\nDies Beschleunigt die Shader-Kompilierung, reduziert Stottern und verbessert die Leistung auf GPU-Treibern ohne eigene Multithreading-Unterstützung. Geringfügig bessere Leistung bei Treibern mit Multithreading.\n\nIm Zweifelsfall auf AUTO stellen.",
         "el_GR": "Εκτελεί εντολές γραφικών σε ένα δεύτερο νήμα. Επιτρέπει την πολυνηματική μεταγλώττιση Shader σε χρόνο εκτέλεσης, μειώνει το τρεμόπαιγμα και βελτιώνει την απόδοση των προγραμμάτων οδήγησης χωρίς τη δική τους υποστήριξη πολλαπλών νημάτων. Ποικίλες κορυφαίες επιδόσεις σε προγράμματα οδήγησης με multithreading. Μπορεί να χρειαστεί επανεκκίνηση του Ryujinx για να απενεργοποιήσετε σωστά την ενσωματωμένη λειτουργία πολλαπλών νημάτων του προγράμματος οδήγησης ή ίσως χρειαστεί να το κάνετε χειροκίνητα για να έχετε την καλύτερη απόδοση.",
         "en_US": "Executes graphics backend commands on a second thread.\n\nSpeeds up shader compilation, reduces stuttering, and improves performance on GPU drivers without multithreading support of their own. Slightly better performance on drivers with multithreading.\n\nSet to AUTO if unsure.",
         "es_ES": "Ejecuta los comandos del motor gráfico en un segundo hilo. Acelera la compilación de sombreadores, reduce los tirones, y mejora el rendimiento en controladores gráficos que no realicen su propio procesamiento con múltiples hilos. Rendimiento ligeramente superior en controladores gráficos que soporten múltiples hilos.\n\nSelecciona \"Auto\" si no sabes qué hacer.",
@@ -16829,7 +16829,7 @@
       "ID": "GameUpdateWindowHeading",
       "Translations": {
         "ar_SA": "إدارة التحديثات لـ {0} ({1})",
-        "de_DE": "Update verfügbar für {0} [{1}]",
+        "de_DE": "Update verwalten für {0} [{1}]",
         "el_GR": "{0} Update(s) available for {1} ({2})",
         "en_US": "Manage Updates for {0} ({1})",
         "es_ES": "Actualizaciones Disponibles para {0} [{1}]",
@@ -18079,7 +18079,7 @@
       "ID": "NetworkInterfaceTooltip",
       "Translations": {
         "ar_SA": "واجهة الشبكة مستخدمة لميزات LAN/LDN.\n\nبالاشتراك مع VPN أو XLink Kai ولعبة تدعم LAN، يمكن استخدامها لتزييف اتصال الشبكة نفسها عبر الإنترنت.\n\nاتركه على الافتراضي إذا لم تكن متأكدا.",
-        "de_DE": "Die für LAN/LDN-Funktionen verwendete Netzwerkschnittstelle.\n\nIn Verbindung mit einem VPN oder XLink Kai und einem Spiel mit LAN-Unterstützung kann eine Verbindung mit demselben Netzwerk über das Internet vorgetäuscht werden.\n\nIm Zweifelsfall auf DEFAULT belassen.",
+        "de_DE": "Die für LAN/LDN-Funktionen verwendete Netzwerkschnittstelle.\n\nIn Verbindung mit einem VPN oder XLink Kai und einem Spiel mit LAN-Unterstützung kann eine Verbindung mit demselben Netzwerk über das Internet vorgetäuscht werden.\n\nIm Zweifelsfall auf STANDARD belassen.",
         "el_GR": "",
         "en_US": "The network interface used for LAN/LDN features.\n\nIn conjunction with a VPN or XLink Kai and a game with LAN support, can be used to spoof a same-network connection over the Internet.\n\nLeave on DEFAULT if unsure.",
         "es_ES": "Interfaz de red usada para características LAN/LDN.\n\njunto con una VPN o XLink Kai y un juego con soporte LAN, puede usarse para suplantar una conexión de la misma red a través de Internet.\n\nDeje en DEFAULT si no está seguro.",
@@ -18254,7 +18254,7 @@
       "ID": "MultiplayerModeTooltip",
       "Translations": {
         "ar_SA": "تغيير وضع LDN متعدد اللاعبين.\n\nسوف يقوم ldn_mitm بتعديل وظيفة اللعب المحلية/اللاسلكية المحلية في الألعاب لتعمل كما لو كانت شبكة LAN، مما يسمح باتصالات الشبكة المحلية نفسها مع محاكيات ريوجينكس الأخرى وأجهزة نينتندو سويتش المخترقة التي تم تثبيت وحدة ldn_mitm عليها.\n\nيتطلب وضع اللاعبين المتعددين أن يكون جميع اللاعبين على نفس إصدار اللعبة (على سبيل المثال، يتعذر على الإصدار 13.0.1 من سوبر سماش برذرز ألتميت الاتصال بالإصدار 13.0.0).\n\nاتركه معطلا إذا لم تكن متأكدا.",
-        "de_DE": "Ändert den LDN-Mehrspielermodus.\n\nldn_mitm ändert die lokale drahtlose/lokale Spielfunktionalität in Spielen so, dass sie wie ein LAN funktioniert und lokale, netzwerkgleiche Verbindungen mit anderen Ryujinx-Instanzen und gehackten Nintendo Switch-Konsolen ermöglicht, auf denen das ldn_mitm-Modul installiert ist.\n\nMultiplayer erfordert, dass alle Spieler die gleiche Spielversion verwenden (d.h. Super Smash Bros. Ultimate v13.0.1 kann sich nicht mit v13.0.0 verbinden).\n\nIm Zweifelsfall auf DISABLED lassen.",
+        "de_DE": "Ändert den LDN-Mehrspielermodus.\n\nldn_mitm ändert die lokale drahtlose/lokale Spielfunktionalität in Spielen so, dass sie wie ein LAN funktioniert und lokale, netzwerkgleiche Verbindungen mit anderen Ryujinx-Instanzen und gehackten Nintendo Switch-Konsolen ermöglicht, auf denen das ldn_mitm-Modul installiert ist.\n\nMultiplayer erfordert, dass alle Spieler die gleiche Spielversion verwenden (d.h. Super Smash Bros. Ultimate v13.0.1 kann sich nicht mit v13.0.0 verbinden).\n\nIm Zweifelsfall auf DEAKTIVIERT lassen.",
         "el_GR": "",
         "en_US": "Change LDN multiplayer mode.\n\nldn_mitm will modify local wireless/local play functionality in games to function as if it were LAN, allowing for local, same-network connections with other Ryujinx instances and hacked Nintendo Switch consoles that have the ldn_mitm module installed.\n\nMultiplayer requires all players to be on the same game version (i.e. Super Smash Bros. Ultimate v13.0.1 can't connect to v13.0.0).\n\nLeave DISABLED if unsure.",
         "es_ES": "Cambiar modo LDN multijugador.\n\nldn_mitm modificará la funcionalidad local de juego inalámbrico para funcionar como si fuera LAN, permitiendo locales conexiones de la misma red con otras instancias de Ryujinx y consolas hackeadas de Nintendo Switch que tienen instalado el módulo ldn_mitm.\n\nMultijugador requiere que todos los jugadores estén en la misma versión del juego (por ejemplo, Super Smash Bros. Ultimate v13.0.1 no se puede conectar a v13.0.0).\n\nDejar DESACTIVADO si no está seguro.",
@@ -19054,7 +19054,7 @@
       "ID": "SettingsTabHotkeysTurboModeToolTip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Der Turbo-Modus Hotkey.\nKonfigurieren Sie das Verhalten des Turbo-Modus in den CPU-Einstellungen von Ryujinx.\n\nIm Zweifelsfall ungebunden lassen.",
+        "de_DE": "Der Turbo-Modus Hotkey.\nKonfigurieren Sie das Verhalten des Turbo-Modus in den CPU-Einstellungen von Ryujinx.\n\nIm Zweifelsfall Ungebunden lassen.",
         "el_GR": "",
         "en_US": "The Turbo mode hotkey.\nConfigure the behavior of Turbo mode in Ryujinx CPU settings.\n\nLeave Unbound if unsure.",
         "es_ES": "La tecla de acceso rápido del modo Turbo.\nConfigura el comportamiento del modo Turbo en los ajustes de CPU de Ryujinx.\n\nDejar sin asignar si no está seguro.",
@@ -19329,7 +19329,7 @@
       "ID": "CompatibilityListStats",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Statistiken",
+        "de_DE": "",
         "el_GR": "",
         "en_US": "Stats",
         "es_ES": null,
@@ -19829,7 +19829,7 @@
       "ID": "SettingsTabDebugEnableGDBStub",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "GDB Stub aktivieren",
+        "de_DE": "GDB-Stub aktivieren",
         "el_GR": "",
         "en_US": "Enable GDB Stub",
         "es_ES": "Activar Stub GDB",
@@ -19854,7 +19854,7 @@
       "ID": "SettingsTabDebugGDBStubToggleTooltip",
       "Translations": {
         "ar_SA": "",
-        "de_DE": "Aktiviert den GDB Stub, welcher debugging an der Anwendung ermöglicht. Nur für Entwicklerzwecke!",
+        "de_DE": "Aktiviert den GDB-Stub, welcher debugging an der Anwendung ermöglicht. Nur für Entwicklerzwecke!",
         "el_GR": "",
         "en_US": "Enables the GDB stub which makes it possible to debug the running application. For development use only!",
         "es_ES": "Activa el stub GDB, lo que permite depurar la aplicación en ejecución. ¡Solo para uso de desarrollo!",
