@@ -158,12 +158,12 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
-        public bool PauseEmulationWhileAmiiboWindowOpen
+        public bool PauseEmulationWhileScanningAmiibo
         {
-            get => ConfigurationState.Instance.UI.PauseEmulationWhileAmiiboWindowOpen.Value;
+            get => ConfigurationState.Instance.UI.PauseEmulationWhileScanningAmiibo.Value;
             set
             {
-                ConfigurationState.Instance.UI.PauseEmulationWhileAmiiboWindowOpen.Value = value;
+                ConfigurationState.Instance.UI.PauseEmulationWhileScanningAmiibo.Value = value;
                 ConfigurationState.Instance.ToFileFormat().SaveConfig(Program.ConfigurationPath);
                 OnPropertyChanged();
             }

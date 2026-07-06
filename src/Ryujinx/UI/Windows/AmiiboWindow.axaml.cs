@@ -26,7 +26,7 @@ namespace Ryujinx.Ava.UI.Windows
 
             Title = RyujinxApp.FormatTitle(LocaleKeys.Amiibo_WindowTitle);
 
-            if (ViewModel.PauseEmulationWhileAmiiboWindowOpen && RyujinxApp.MainWindow?.ViewModel?.AppHost != null)
+            if (ViewModel.PauseEmulationWhileScanningAmiibo && RyujinxApp.MainWindow?.ViewModel?.AppHost != null)
             {
                 RyujinxApp.MainWindow.ViewModel.AppHost.Pause();
             }
@@ -42,14 +42,14 @@ namespace Ryujinx.Ava.UI.Windows
 
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != nameof(ViewModel.PauseEmulationWhileAmiiboWindowOpen))
+            if (e.PropertyName != nameof(ViewModel.PauseEmulationWhileScanningAmiibo))
                 return;
 
             AppHost host = RyujinxApp.MainWindow?.ViewModel?.AppHost;
             if (host == null) 
                 return;
 
-            if (ViewModel.PauseEmulationWhileAmiiboWindowOpen)
+            if (ViewModel.PauseEmulationWhileScanningAmiibo)
                 host.Pause();
             else
                 host.Resume();

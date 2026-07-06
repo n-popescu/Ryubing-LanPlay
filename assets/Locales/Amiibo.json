@@ -101,7 +101,7 @@
       }
     },
     {
-      "ID": "PauseEmulationWhileWindowOpenLabel",
+      "ID": "PauseEmulationWhileScanningAmiibo",
       "Translations": {
         "ar_SA": "",
         "de_DE": "",

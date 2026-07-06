@@ -158,7 +158,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 DebuggerSuspendOnStart = Debug.DebuggerSuspendOnStart,
                 ShowDirtyHacks = Hacks.ShowDirtyHacks,
                 DirtyHacks = Hacks.EnabledHacks.Select(it => it.Pack()).ToArray(),
-                PauseEmulationWhileAmiiboWindowOpen = UI.PauseEmulationWhileAmiiboWindowOpen,
+                PauseEmulationWhileScanningAmiibo = UI.PauseEmulationWhileScanningAmiibo,
             };
 
             return configurationFile;
@@ -263,7 +263,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             UI.WindowStartup.WindowPositionX.Value = 0;
             UI.WindowStartup.WindowPositionY.Value = 0;
             UI.WindowStartup.WindowMaximized.Value = false;
-            UI.PauseEmulationWhileAmiiboWindowOpen.Value = true;
+            UI.PauseEmulationWhileScanningAmiibo.Value = true;
             Hid.EnableKeyboard.Value = false;
             Hid.EnableMouse.Value = false;
             Hid.DisableInputWhenOutOfFocus.Value = false;

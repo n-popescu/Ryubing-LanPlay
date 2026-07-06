@@ -197,9 +197,9 @@ namespace Ryujinx.Ava.Systems.Configuration
             public ReactiveObject<bool> ShowDynamicInputSwapWarning { get; private set; }
 
             /// <summary>
-            /// Pause emulation while Amiibo window is open
+            /// Pause emulation while scanning Amiibo
             /// </summary>
-            public ReactiveObject<bool> PauseEmulationWhileAmiiboWindowOpen { get; private set; }
+            public ReactiveObject<bool> PauseEmulationWhileScanningAmiibo { get; private set; }
 
             public UISection()
             {
@@ -222,8 +222,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 ShowConsole.Event += static (_, e) => ConsoleHelper.SetConsoleWindowState(e.NewValue);
                 ShowDynamicInputSwapWarning = new ReactiveObject<bool>();
                 ShowDynamicInputSwapWarning.Value = true;
-                PauseEmulationWhileAmiiboWindowOpen = new ReactiveObject<bool>();
-                PauseEmulationWhileAmiiboWindowOpen.Value = true;
+                PauseEmulationWhileScanningAmiibo = new ReactiveObject<bool>();
+                PauseEmulationWhileScanningAmiibo.Value = true;
             }
         }
 

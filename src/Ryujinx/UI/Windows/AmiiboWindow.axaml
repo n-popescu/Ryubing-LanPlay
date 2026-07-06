@@ -70,8 +70,8 @@
                                 <TextBlock Text="{ext:Locale Amiibo_UseRandomUuidLabel}" />
                             </CheckBox>
                             <CheckBox
-                                IsChecked="{Binding PauseEmulationWhileAmiiboWindowOpen}">
-                                <TextBlock Text="{ext:Locale Amiibo_PauseEmulationWhileWindowOpenLabel}" />
+                                IsChecked="{Binding PauseEmulationWhileScanningAmiibo}">
+                                <TextBlock Text="{ext:Locale Amiibo_PauseEmulationWhileScanningAmiibo}" />
                             </CheckBox>
                         </StackPanel>
                     </Flyout>
@@ -125,8 +125,8 @@
                                 <TextBlock Text="{ext:Locale Amiibo_UseRandomUuidLabel}" />
                             </CheckBox>
                             <CheckBox
-                                IsChecked="{Binding PauseEmulationWhileAmiiboWindowOpen}">
-                                <TextBlock Text="{ext:Locale Amiibo_PauseEmulationWhileWindowOpenLabel}" />
+                                IsChecked="{Binding PauseEmulationWhileScanningAmiibo}">
+                                <TextBlock Text="{ext:Locale Amiibo_PauseEmulationWhileScanningAmiibo}" />
                             </CheckBox>
                         </StackPanel>
                     </Flyout>

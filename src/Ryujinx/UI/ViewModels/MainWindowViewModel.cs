@@ -2055,7 +2055,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public async Task ScanAmiiboFromBin()
         {
-            bool shouldPause = ConfigurationState.Instance.UI.PauseEmulationWhileAmiiboWindowOpen.Value && IsGameRunning;
+            bool shouldPause = ConfigurationState.Instance.UI.PauseEmulationWhileScanningAmiibo.Value && IsGameRunning;
 
             if (shouldPause && AppHost?.Device?.System != null)
             {

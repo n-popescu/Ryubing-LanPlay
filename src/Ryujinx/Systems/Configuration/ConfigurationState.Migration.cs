@@ -151,7 +151,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             UI.WindowStartup.WindowPositionX.Value = shouldLoadFromFile ? cff.WindowStartup.WindowPositionX : UI.WindowStartup.WindowPositionX.Value;
             UI.WindowStartup.WindowPositionY.Value = shouldLoadFromFile ? cff.WindowStartup.WindowPositionY : UI.WindowStartup.WindowPositionY.Value;
             UI.WindowStartup.WindowMaximized.Value = shouldLoadFromFile ? cff.WindowStartup.WindowMaximized : UI.WindowStartup.WindowMaximized.Value;
-            UI.PauseEmulationWhileAmiiboWindowOpen.Value = cff.PauseEmulationWhileAmiiboWindowOpen;
+            UI.PauseEmulationWhileScanningAmiibo.Value = cff.PauseEmulationWhileScanningAmiibo;
 
             Hid.EnableKeyboard.Value = cff.EnableKeyboard;
             Hid.EnableMouse.Value = cff.EnableMouse;

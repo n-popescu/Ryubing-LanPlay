@@ -512,9 +512,9 @@ namespace Ryujinx.Ava.Systems.Configuration
         public ulong[] DirtyHacks { get; set; }
 
         /// <summary>
-        /// Pause emulation while Amiibo window is open
+        /// Pause emulation while scanning Amiibo
         /// </summary>
-        public bool PauseEmulationWhileAmiiboWindowOpen { get; set; }
+        public bool PauseEmulationWhileScanningAmiibo { get; set; }
 
         /// <summary>
         /// Loads a configuration file from disk
