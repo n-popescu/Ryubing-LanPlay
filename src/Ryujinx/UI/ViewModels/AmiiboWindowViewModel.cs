@@ -359,7 +359,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             _amiiboSeries.Clear();
 
-            foreach (var amiibo in _amiiboList)
+            foreach (AmiiboApi amiibo in _amiiboList)
             {
                 if (!_amiiboSeries.Contains(amiibo.AmiiboSeries))
                 {
@@ -369,7 +369,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     }
                     else
                     {
-                        bool hasCompatible = amiibo.GamesSwitch.Any(game => 
+                        bool hasCompatible = amiibo.GamesSwitch.Any(game =>
                             game != null && game.GameId.Contains(TitleId));
 
                         if (hasCompatible)
@@ -412,7 +412,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             _amiibos.Clear();
 
-            var query = _amiiboList.AsEnumerable();
+            IEnumerable<AmiiboApi> query = _amiiboList.AsEnumerable();
 
             if (_seriesSelectedIndex >= 0 && _seriesSelectedIndex < _amiiboSeries.Count)
             {
@@ -422,17 +422,17 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             if (!string.IsNullOrWhiteSpace(_searchText))
             {
-                query = query.Where(amiibo => 
+                query = query.Where(amiibo =>
                     amiibo.Name.Contains(_searchText, StringComparison.OrdinalIgnoreCase));
             }
 
             if (!_showAllAmiibo)
             {
-                query = query.Where(amiibo => 
+                query = query.Where(amiibo =>
                     amiibo.GamesSwitch.Any(game => game != null && game.GameId.Contains(TitleId)));
             }
 
-            query = _sortingAscending 
+            query = _sortingAscending
                 ? query.OrderBy(amiibo => amiibo.Name)
                 : query.OrderByDescending(amiibo => amiibo.Name);
 
@@ -448,8 +448,8 @@ namespace Ryujinx.Ava.UI.ViewModels
                 }
             }
 
-            AmiiboSelectedIndex = restoredIndex != -1 
-                ? restoredIndex 
+            AmiiboSelectedIndex = restoredIndex != -1
+                ? restoredIndex
                 : (_amiibos.Count > 0 ? 0 : -1);
 
             SetAmiiboDetails();
@@ -483,11 +483,11 @@ namespace Ryujinx.Ava.UI.ViewModels
             StringBuilder usageStringBuilder = new();
             bool writable = false;
 
-            foreach (var game in selected.GamesSwitch)
+            foreach (AmiiboApiGamesSwitch game in selected.GamesSwitch)
             {
                 if (game != null && game.GameId.Contains(TitleId))
                 {
-                    foreach (var usageItem in game.AmiiboUsage)
+                    foreach (AmiiboApiUsage usageItem in game.AmiiboUsage)
                     {
                         usageStringBuilder.Append($"{Environment.NewLine}- {usageItem.Usage.Replace("/", Environment.NewLine + "-")}");
                         if (usageItem.Write)
@@ -510,7 +510,6 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
 
             Usage = usageLabel + usageStringBuilder.ToString();
-
             _ = UpdateAmiiboPreview(imageUrl);
         }
 
@@ -584,15 +583,15 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             try
             {
-                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_imageCts.Token);
+                using CancellationTokenSource linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_imageCts.Token);
 
                 HttpResponseMessage response = await _httpClient.GetAsync(imageUrl, linkedCts.Token);
 
                 if (response.IsSuccessStatusCode)
                 {
                     byte[] bytes = await response.Content.ReadAsByteArrayAsync(linkedCts.Token);
-
                     using MemoryStream ms = new(bytes);
+
                     Bitmap bitmap = new(ms);
 
                     double ratio = Math.Min(AmiiboImageSize / bitmap.Size.Width, AmiiboImageSize / bitmap.Size.Height);
