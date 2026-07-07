@@ -146,21 +146,45 @@ echo "Packaging .dmg"
 UNCOMPRESSED_DMG="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
 COMPRESSED_DMG="$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 
-dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=100
-hfsplus "$UNCOMPRESSED_DMG" init
+STAGING_SIZE=$(du -sb "$DMG_FOLDER" | cut -f1)
+PADDING=$((STAGING_SIZE * 15 / 100) + (5 * 1024 * 1024))
+TOTAL_SIZE=$((STAGING_SIZE + PADDING))
+
+dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1 count=0 seek="$TOTAL_SIZE" status=none
+mkfs.hfsplus -v "Ryujinx" -J 0 "$UNCOMPRESSED_DMG"
+
+# https://developer.apple.com/library/archive/technotes/tn/tn1150.html
+patch_volume_header() {
+    local header_offset=$1
+    local value
+
+    # kHFSVolumeJournaledBit
+    value=$(dd if="$UNCOMPRESSED_DMG" bs=1 skip=$((header_offset + 4)) count=4 status=none | xxd -p)
+    xxd -r -p <<< "$(printf "%08s" "$(bc <<< "obase=16; ibase=16; ${value^^} & FFFFDFFF")")" | dd of="$UNCOMPRESSED_DMG" bs=1 seek=$((header_offset + 4)) conv=notrunc status=none
+
+    # kHasCustomIcon
+    value=$(dd if="$UNCOMPRESSED_DMG" bs=1 skip=$((header_offset + 112)) count=4 status=none | xxd -p)
+    xxd -r -p <<< "$(printf "%08s" "$(bc <<< "obase=16; ibase=16; ${value^^} | 00000400")")" | dd of="$UNCOMPRESSED_DMG" bs=1 seek=$((header_offset + 112)) conv=notrunc status=none
+}
+
+PRIMARY_VOLUME_HEADER=1024
+ALTERNATE_VOLUME_HEADER=$((TOTAL_SIZE - 1024))
+
+patch_volume_header "$PRIMARY_VOLUME_HEADER"
+patch_volume_header "$ALTERNATE_VOLUME_HEADER"
 
 shopt -s dotglob
 for f in "$DMG_FOLDER"/*; do
     [[ -e "$f" ]] || continue
     FILE_NAME=$(basename "$f")
-    hfsplus "$UNCOMPRESSED_DMG" add "$f" "/$FILE_NAME"
-    hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0755
+    dmg-hfsplus "$UNCOMPRESSED_DMG" add "$f" "/$FILE_NAME"
+    if [[ -d "$f" ]]; then
+        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0755
+    else
+        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0644
+    fi
 done
 shopt -u dotglob
-
-# https://developer.apple.com/library/archive/technotes/tn/tn1150.html
-FINDER_INFO=$(hfsplus "$UNCOMPRESSED_DMG" getattr / finderinfo)
-hfsplus "$UNCOMPRESSED_DMG" setattr / finderinfo ${FINDER_INFO:0:24}04${FINDER_INFO:26}
 
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 rm -r "$DMG_FOLDER"
