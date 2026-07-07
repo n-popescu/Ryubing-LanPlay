@@ -150,6 +150,7 @@ dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=100
 genisoimage -D -V "Ryujinx" \
     -no-pad -apple -uid 0 -gid 0 -dir-mode 0755 -file-mode 0755 \
     -o "$UNCOMPRESSED_DMG" "$DMG_FOLDER"
+hfsplus setattr "$UNCOMPRESSED_DMG" "kHasCustomIcon" 0x0400
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 rm -r "$DMG_FOLDER"
 rm -f "$UNCOMPRESSED_DMG"
