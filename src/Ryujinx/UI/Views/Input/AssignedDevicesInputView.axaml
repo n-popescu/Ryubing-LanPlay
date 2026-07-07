@@ -54,8 +54,7 @@
                                     VerticalAlignment="Center"
                                     ClipToBounds="False"
                                     IsChecked="{Binding IsAssigned}"
-                                    Checked="AssignedDeviceCheckBox_OnCheckedChanged"
-                                    Unchecked="AssignedDeviceCheckBox_OnCheckedChanged" />
+                                    IsCheckedChanged="AssignedDeviceCheckBox_OnCheckedChanged" />
                                 <TextBlock
                                     DockPanel.Dock="Right"
                                     Margin="10,0,0,0"

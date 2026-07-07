@@ -66,26 +66,26 @@ namespace Ryujinx.Ava.UI.Views.Input
                 var textBlock = new TextBlock
                 {
                     Text = profileName,
-                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     TextWrapping = TextWrapping.NoWrap,
                     MaxWidth = 170
                 };
                 Grid.SetColumn(textBlock, 0);
 
-                var linkIcon = new FluentAvalonia.UI.Controls.SymbolIcon
+                var linkIcon = new FASymbolIcon
                 {
-                    Symbol = FluentAvalonia.UI.Controls.Symbol.Link,
+                    Symbol = FASymbol.Link,
                     FontSize = 12,
                     Opacity = 0.6,
                     Margin = new Thickness(10, 0, 0, 0),
-                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+                    VerticalAlignment = VerticalAlignment.Center
                 };
                 Grid.SetColumn(linkIcon, 1);
 
                 // Bind visibility to whether the profile is linked
                 linkIcon.Bind(
-                    FluentAvalonia.UI.Controls.SymbolIcon.IsVisibleProperty,
+                    IsVisibleProperty,
                     new Avalonia.Data.Binding(".")
                     {
                         Converter = ProfileNameLinkedConverter.Instance,

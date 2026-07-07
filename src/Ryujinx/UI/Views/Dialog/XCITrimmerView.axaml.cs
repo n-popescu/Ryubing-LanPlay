@@ -7,6 +7,8 @@ using Ryujinx.Ava.Common.Models;
 using Ryujinx.Ava.UI.Controls;
 using Ryujinx.Ava.UI.ViewModels;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Ryujinx.Ava.UI.Views.Dialog
@@ -80,7 +82,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 
         private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (object content in e.AddedItems)
+            foreach (object content in e.AddedItems.Cast<object>().ToList())
             {
                 if (content is XCITrimmerFileModel applicationData)
                 {
@@ -88,7 +90,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
                 }
             }
 
-            foreach (object content in e.RemovedItems)
+            foreach (object content in e.RemovedItems.Cast<object>().ToList())
             {
                 if (content is XCITrimmerFileModel applicationData)
                 {
