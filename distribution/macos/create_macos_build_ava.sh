@@ -147,20 +147,20 @@ UNCOMPRESSED_DMG="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
 COMPRESSED_DMG="$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=100
-mkfs.hfsplus -v "Ryujinx" -J "$UNCOMPRESSED_DMG"
+hfsplus "$UNCOMPRESSED_DMG" init
 
 shopt -s dotglob
 for f in "$DMG_FOLDER"/*; do
     [[ -e "$f" ]] || continue
     FILE_NAME=$(basename "$f")
-    libdmg-hfsplus "$UNCOMPRESSED_DMG" add "$f" "/$FILE_NAME"
-    libdmg-hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0755
+    hfsplus "$UNCOMPRESSED_DMG" add "$f" "/$FILE_NAME"
+    hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0755
 done
 shopt -u dotglob
 
 # https://developer.apple.com/library/archive/technotes/tn/tn1150.html
-FINDER_INFO=$(libdmg-hfsplus "$UNCOMPRESSED_DMG" getattr / finderinfo)
-libdmg-hfsplus "$UNCOMPRESSED_DMG" setattr / finderinfo ${FINDER_INFO:0:24}04${FINDER_INFO:26}
+FINDER_INFO=$(hfsplus "$UNCOMPRESSED_DMG" getattr / finderinfo)
+hfsplus "$UNCOMPRESSED_DMG" setattr / finderinfo ${FINDER_INFO:0:24}04${FINDER_INFO:26}
 
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 rm -r "$DMG_FOLDER"
