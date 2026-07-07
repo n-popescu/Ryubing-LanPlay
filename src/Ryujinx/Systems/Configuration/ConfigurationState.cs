@@ -143,6 +143,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 DisableInputWhenOutOfFocus = Hid.DisableInputWhenOutOfFocus,
                 Hotkeys = Hid.Hotkeys,
                 InputConfig = Hid.InputConfig,
+                PlayerInputAssignments = Hid.PlayerInputAssignments,
+                AllowDuplicateDeviceAssignment = Hid.AllowDuplicateDeviceAssignment,
                 RainbowSpeed = Hid.RainbowSpeed,
                 GraphicsBackend = Graphics.GraphicsBackend,
                 PreferredGpu = Graphics.PreferredGpu,
@@ -156,6 +158,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 DebuggerSuspendOnStart = Debug.DebuggerSuspendOnStart,
                 ShowDirtyHacks = Hacks.ShowDirtyHacks,
                 DirtyHacks = Hacks.EnabledHacks.Select(it => it.Pack()).ToArray(),
+                PauseEmulationWhileScanningAmiibo = UI.PauseEmulationWhileScanningAmiibo,
             };
 
             return configurationFile;
@@ -260,6 +263,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             UI.WindowStartup.WindowPositionX.Value = 0;
             UI.WindowStartup.WindowPositionY.Value = 0;
             UI.WindowStartup.WindowMaximized.Value = false;
+            UI.PauseEmulationWhileScanningAmiibo.Value = true;
             Hid.EnableKeyboard.Value = false;
             Hid.EnableMouse.Value = false;
             Hid.DisableInputWhenOutOfFocus.Value = false;
@@ -331,6 +335,22 @@ namespace Ryujinx.Ava.Systems.Configuration
                         StickButton = PhysicalKey.H,
                     },
                 }
+            ];
+            Hid.PlayerInputAssignments.Value =
+            [
+                new PlayerInputAssignment
+                {
+                    PlayerIndex = PlayerIndex.Player1,
+                    EnableDynamicInputSwap = false,
+                    Devices =
+                    [
+                        new AssignedInputDevice
+                        {
+                            Type = AssignedInputDeviceType.Keyboard,
+                            Id = "0",
+                        },
+                    ],
+                },
             ];
             Debug.EnableGdbStub.Value = false;
             Debug.GdbStubPort.Value = 55555;

@@ -46,7 +46,7 @@
                     MinHeight="27"
                     MaxHeight="27"
                     HorizontalAlignment="Stretch"
-                    Watermark="{ext:Locale Search}"
+                    Watermark="{ext:Locale Common_Search_SearchWatermark}"
                     Text="{Binding Search}" />
             </Grid>
         </Panel>
@@ -158,7 +158,7 @@
                     MinWidth="90"
                     Margin="5"
                     Click="Close">
-                    <TextBlock Text="{ext:Locale InputDialogCancel}" />
+                    <TextBlock Text="{ext:Locale Common_Buttons_Cancel}" />
                 </Button>
             </StackPanel>
         </Panel>

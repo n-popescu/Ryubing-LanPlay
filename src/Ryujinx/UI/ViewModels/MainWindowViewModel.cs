@@ -160,6 +160,10 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         [ObservableProperty] public partial bool UpdateAvailable { get; set; }
 
+        [ObservableProperty] public partial string SkylanderButtonHeader { get; set; } = string.Empty;
+
+        [ObservableProperty] public partial bool SkylanderButtonEnabled { get; set; }
+
         public static AsyncRelayCommand UpdateCommand { get; } = Commands.Create(async () =>
         {
             if (Updater.CanUpdate(true))
@@ -204,6 +208,8 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         internal AppHost AppHost { get; set; }
 
+        public RelayCommand ToggleSkylanderCommand { get; }
+
         public MainWindowViewModel()
         {
             Applications = [];
@@ -233,6 +239,8 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Volume = ConfigurationState.Instance.System.AudioVolume;
                 CustomVSyncInterval = ConfigurationState.Instance.Graphics.CustomVSyncInterval.Value;
             }
+
+            ToggleSkylanderCommand = new RelayCommand(ExecuteToggleSkylander);
         }
 
         ~MainWindowViewModel()
@@ -376,6 +384,50 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public bool CanScanAmiiboBinaries => AmiiboBinReader.HasAmiiboKeyFile;
 
+        [RelayCommand]
+        private void UpdateSkylanderButton()
+        {
+            SkylanderButtonHeader = HasSkylander
+                ? LocaleManager.Instance[LocaleKeys.MenuBar_Actions_RemoveSkylanderButton]
+                : LocaleManager.Instance[LocaleKeys.MenuBar_Actions_ScanSkylanderButton];
+
+            SkylanderButtonEnabled = HasSkylander || IsSkylanderRequested;
+
+            OnPropertyChanged(nameof(SkylanderButtonHeader));
+            OnPropertyChanged(nameof(SkylanderButtonEnabled));
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                OnPropertyChanged(nameof(SkylanderButtonHeader));
+            }, DispatcherPriority.Render);
+        }
+        
+        private void UpdateSkylanderState()
+        {
+            if (AppHost?.Device?.System == null) return;
+
+            IsSkylanderRequested = AppHost.Device.System.SearchingForSkylander(out _);
+            HasSkylander = AppHost.Device.System.HasSkylander(out _);
+
+            UpdateSkylanderButton();
+        }
+
+        private async void ExecuteToggleSkylander()
+        {
+            if (!IsGameRunning) return;
+
+            if (HasSkylander)
+            {
+                await RemoveSkylander();
+            }
+            else
+            {
+                await ScanSkylander();
+            }
+
+            UpdateSkylanderState();
+        }
+
         public bool IsSkylanderRequested
         {
             get => field && _isGameRunning;
@@ -384,6 +436,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 field = value;
 
                 OnPropertyChanged();
+                UpdateSkylanderButton();
             }
         }
 
@@ -395,17 +448,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 field = value;
 
                 OnPropertyChanged();
-            }
-        }
-
-        public bool ShowSkylanderActions
-        {
-            get => field && _isGameRunning;
-            set
-            {
-                field = value;
-
-                OnPropertyChanged();
+                UpdateSkylanderButton();
             }
         }
 
@@ -495,6 +538,8 @@ namespace Ryujinx.Ava.UI.ViewModels
         }
 
         public bool HasCompatibilityEntry => SelectedApplication.HasPlayabilityInfo;
+
+        public bool IsXCIFile => Path.GetExtension(SelectedApplication.Path)?.ToLower() == ".xci";
 
         public bool HasDlc => ApplicationLibrary.HasDlcs(SelectedApplication.Id);
 
@@ -790,7 +835,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 {
                     ApplicationSort.Favorite => LocaleManager.Instance[LocaleKeys.CommonFavorite],
                     ApplicationSort.TitleId => LocaleManager.Instance[LocaleKeys.DlcManagerTableHeadingTitleIdLabel],
-                    ApplicationSort.Title => LocaleManager.Instance[LocaleKeys.GameListHeaderApplication],
+                    ApplicationSort.Title => LocaleManager.Instance[LocaleKeys.Common_Sort_NameLabel],
                     ApplicationSort.Developer => LocaleManager.Instance[LocaleKeys.GameListSortDeveloper],
                     ApplicationSort.LastPlayed => LocaleManager.Instance[LocaleKeys.GameListSortLastPlayed],
                     ApplicationSort.TotalTimePlayed => LocaleManager.Instance[LocaleKeys.GameListSortTimePlayed],
@@ -1258,7 +1303,13 @@ namespace Ryujinx.Ava.UI.ViewModels
                         break;
                     case ShaderCacheLoadingState shaderCacheState:
                         CacheLoadStatus = $"{current} / {total}";
-                        Splash = $"\"{SplashTextHelper.GetSplash()}\"";
+                        
+                        string splash = SplashTextHelper.GetSplash();
+
+                        if (!splash.IsNullOrEmpty())
+                        {
+                            Splash = $"\"{splash}\"";
+                        }
                         switch (shaderCacheState)
                         {
                             case ShaderCacheLoadingState.Start:
@@ -1488,7 +1539,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Title = LocaleManager.Instance[LocaleKeys.Dialog_Firmware_InstallFromFileFilePickerTitle],
                 FileTypeFilter = new List<FilePickerFileType>
                 {
-                    new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
+                    new(LocaleManager.Instance[LocaleKeys.Common_FilePicker_AllSupportedFormats])
                     {
                         Patterns = ["*.xci", "*.zip"],
                         AppleUniformTypeIdentifiers = ["com.ryujinx.xci", "public.zip-archive"],
@@ -1672,7 +1723,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Title = LocaleManager.Instance[LocaleKeys.Dialog_FileMenu_LoadApplicationFromFileFilePickerTitle],
                 FileTypeFilter = new List<FilePickerFileType>
                 {
-                    new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
+                    new(LocaleManager.Instance[LocaleKeys.Common_FilePicker_AllSupportedFormats])
                     {
                         Patterns = ["*.nsp", "*.xci", "*.nca", "*.nro", "*.nso"],
                         AppleUniformTypeIdentifiers =
@@ -1759,7 +1810,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
-        private async Task<IReadOnlyList<string>?> PickFolders(LocaleKeys titleKey)
+        private async Task<IReadOnlyList<string>> PickFolders(LocaleKeys titleKey)
         {
             return (await StorageProvider.OpenMultiFolderPickerAsync(new FolderPickerOpenOptions 
             { 
@@ -1935,13 +1986,13 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             if (version != null)
             {
-                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_FirmwareVersion, version.VersionString);
+                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_FirmwareVersionLabel, version.VersionString);
 
                 hasApplet = version.Major > 3;
             }
             else
             {
-                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_FirmwareVersion, "NaN");
+                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_FirmwareVersionLabel, "NaN");
             }
 
             IsAppletMenuActive = hasApplet;
@@ -2002,40 +2053,58 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
-        public async Task OpenBinFile()
+        public async Task ScanAmiiboFromBin()
         {
-            if (AppHost.Device.System.SearchingForAmiibo(out _) && IsGameRunning)
-            {
-                Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(
-                    new FilePickerOpenOptions
-                    {
-                        Title = LocaleManager.Instance[LocaleKeys.OpenFileDialogTitle],
-                        FileTypeFilter = new List<FilePickerFileType>
-                        {
-                            new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
-                            {
-                                Patterns = ["*.bin"],
-                            }
-                        }
-                    });
+            bool shouldPause = ConfigurationState.Instance.UI.PauseEmulationWhileScanningAmiibo.Value && IsGameRunning;
 
-                if (result.HasValue)
+            if (shouldPause && AppHost?.Device?.System != null)
+            {
+                AppHost?.Pause();
+            }
+            try
+            {
+                if (AppHost.Device.System.SearchingForAmiibo(out _) && IsGameRunning)
                 {
-                    AppHost.Device.System.ScanAmiiboFromBin(result.Value.Path.LocalPath);
+                    Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(
+                        new FilePickerOpenOptions
+                        {
+                            Title = LocaleManager.Instance[LocaleKeys.Dialog_Amiibo_ScanAmiiboFromBinFilePickerTitle],
+                            FileTypeFilter = new List<FilePickerFileType>
+                            {
+                                new(LocaleManager.Instance[LocaleKeys.Common_FilePicker_AllSupportedFormats])
+                                {
+                                    Patterns = ["*.bin"],
+                                }
+                            }
+                        });
+
+                    if (result.HasValue)
+                    {
+                        AppHost.Device.System.ScanAmiiboFromBin(result.Value.Path.LocalPath);
+                    }
+                }
+            }
+            finally
+            {
+                if (shouldPause && AppHost?.Device?.System != null)
+                {
+                    AppHost?.Resume();
                 }
             }
         }
-        public async Task OpenSkylanderWindow()
+
+        [RelayCommand]
+        public async Task ScanSkylander()
         {
             if (AppHost.Device.System.SearchingForSkylander(out int deviceId))
             {
                 Optional<IStorageFile> result = await StorageProvider.OpenSingleFilePickerAsync(
                     new FilePickerOpenOptions
                 {
-                    Title = LocaleManager.Instance[LocaleKeys.OpenFileDialogTitle],
+                    Title = LocaleManager.Instance[LocaleKeys.Dialog_Skylanders_ScanSkylanderFilePickerTitle],
                     FileTypeFilter = new List<FilePickerFileType>
                 {
-                    new(LocaleManager.Instance[LocaleKeys.AllSupportedFormats])
+                    new(LocaleManager.Instance[LocaleKeys.Common_FilePicker_AllSupportedFormats])
                     {
                         Patterns = ["*.sky", "*.bin", "*.dmp", "*.dump"],
                     },
@@ -2058,12 +2127,15 @@ namespace Ryujinx.Ava.UI.ViewModels
                         AppHost.Device.System.ScanSkylander(deviceId, data);
                     }
                 }
+                UpdateSkylanderButton();
             }
         }
 
+        [RelayCommand]
         public async Task RemoveSkylander()
         {
             AppHost.Device.System.RemoveSkylander();
+            UpdateSkylanderButton();
         }
 
         public void ReloadRenderDocApi()
@@ -2153,7 +2225,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Window.Position.X + (int)(Window.Bounds.Width / 2),
                 Window.Position.Y + (int)(Window.Bounds.Height / 2));
 
-            Avalonia.Platform.Screen? screen =
+            Avalonia.Platform.Screen screen =
                 Window.Screens.ScreenFromVisual(Window) ??
                 Window.Screens.ScreenFromPoint(windowCenter) ??
                 Window.Screens.Primary;
@@ -2317,7 +2389,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             if (notifyUser != null)
             {
                 await ContentDialogHelper.CreateWarningDialog(
-                    LocaleManager.Instance[LocaleKeys.TrimXCIFileFailedPrimaryText],
+                    LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_TrimFailedMessage],
                     notifyUser
                 );
             }
@@ -2343,18 +2415,18 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             if (trimmer.CanBeTrimmed)
             {
-                double savings = (double)trimmer.DiskSpaceSavingsB / 1024.0 / 1024.0;
-                double currentFileSize = (double)trimmer.FileSizeB / 1024.0 / 1024.0;
-                double cartDataSize = (double)trimmer.DataSizeB / 1024.0 / 1024.0;
+                int savings = (int)Math.Round((double)trimmer.DiskSpaceSavingsB / 1024.0 / 1024.0);
+                int currentFileSize = (int)Math.Round((double)trimmer.FileSizeB / 1024.0 / 1024.0);
+                int cartDataSize = (int)Math.Round((double)trimmer.DataSizeB / 1024.0 / 1024.0);
                 string secondaryText = LocaleManager.Instance.UpdateAndGetDynamicValue(
-                    LocaleKeys.TrimXCIFileDialogSecondaryText, currentFileSize, cartDataSize, savings);
+                    LocaleKeys.Dialog_XCITrimmer_SecondaryMessage, currentFileSize.ToString("0"), cartDataSize.ToString("0"), savings.ToString("0"));
 
                 UserResult result = await ContentDialogHelper.CreateConfirmationDialog(
-                    LocaleManager.Instance[LocaleKeys.TrimXCIFileDialogPrimaryText],
+                    LocaleManager.Instance[LocaleKeys.Dialog_XCITrimmer_PrimaryMessage],
                     secondaryText,
                     LocaleManager.Instance[LocaleKeys.Continue],
                     LocaleManager.Instance[LocaleKeys.Cancel],
-                    LocaleManager.Instance[LocaleKeys.GameListContextMenuTrimXCI]
+                    LocaleManager.Instance[LocaleKeys.GameListContextMenu_TrimXCIButton]
                 );
 
                 if (result == UserResult.Yes)
@@ -2364,8 +2436,8 @@ namespace Ryujinx.Ava.UI.ViewModels
                         Dispatcher.UIThread.Post(() =>
                         {
                             StatusBarProgressStatusText =
-                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBarXCIFileTrimming,
-                                    Path.GetFileName(filename));
+                                LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.StatusBar_TrimmingXCILabel,
+                                    Path.GetFileNameWithoutExtension(filename));
                             StatusBarProgressStatusVisible = true;
                             StatusBarProgressMaximum = 1;
                             StatusBarProgressValue = 0;

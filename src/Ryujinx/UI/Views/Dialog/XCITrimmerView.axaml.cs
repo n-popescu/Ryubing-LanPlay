@@ -18,6 +18,12 @@ namespace Ryujinx.Ava.UI.Views.Dialog
             InitializeComponent();
         }
 
+        private void ToggleSelect(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is XciTrimmerViewModel vm)
+                vm.ToggleSelect();
+        }
+
         public static async Task Show()
         {
             ContentDialog contentDialog = new()
@@ -29,7 +35,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
                 {
                     ViewModel = new XciTrimmerViewModel(RyujinxApp.MainWindow.ViewModel)
                 },
-                Title = LocaleManager.Instance[LocaleKeys.XCITrimmerWindowTitle]
+                Title = LocaleManager.Instance[LocaleKeys.MenuBar_Actions_XCITrimmerButton]
             };
 
             Style bottomBorder = new(x => x.OfType<Grid>().Name("DialogSpace").Child().OfType<Border>());
@@ -52,7 +58,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 
         private void Close(object sender, RoutedEventArgs e)
         {
-            ((ContentDialog)Parent).Hide();
+            ((ContentDialog)Parent!).Hide();
         }
 
         private void Cancel(Object sender, RoutedEventArgs e)
