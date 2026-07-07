@@ -142,19 +142,19 @@ echo "Packaging .dmg"
 UNCOMPRESSED_DMG="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
 COMPRESSED_DMG="$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 
-dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=10
-hfsplus "$UNCOMPRESSED_DMG" grow $((100 * 1024 * 1024)) "Ryujinx" # 100 mb * 1024 kb * 1024 b = total bytes in 100 mb
+dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=100
+mkfs.hfsplus -v "Ryujinx" -J "$UNCOMPRESSED_DMG"
 
 shopt -s dotglob
 for file in "$DMG_FOLDER"/*; do
     filename=$(basename "$file")
-    hfsplus "$UNCOMPRESSED_DMG" add "/$filename" "$file" 0755
+    libdmg-hfsplus "$UNCOMPRESSED_DMG" add "/$filename" "$file" 0755
 done
 shopt -u dotglob
 
 # https://developer.apple.com/library/archive/technotes/tn/tn1150.html
-FINDER_INFO=$(hfsplus "$UNCOMPRESSED_DMG" getattr / finderinfo)
-hfsplus "$UNCOMPRESSED_DMG" setattr / finderinfo ${FINDER_INFO:0:24}04${FINDER_INFO:26}
+FINDER_INFO=$(libdmg-hfsplus "$UNCOMPRESSED_DMG" getattr / finderinfo)
+libdmg-hfsplus "$UNCOMPRESSED_DMG" setattr / finderinfo ${FINDER_INFO:0:24}04${FINDER_INFO:26}
 
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 rm -r "$DMG_FOLDER"
