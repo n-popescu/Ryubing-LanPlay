@@ -146,10 +146,7 @@ dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1M count=100
 mkfs.hfsplus -v "Ryujinx" -J "$UNCOMPRESSED_DMG"
 
 shopt -s dotglob
-for file in "$DMG_FOLDER"/*; do
-    filename=$(basename "$file")
-    libdmg-hfsplus "$UNCOMPRESSED_DMG" add "/$filename" "$file" 0755
-done
+libdmg-hfsplus "$UNCOMPRESSED_DMG" addall / "$DMG_FOLDER"/*
 shopt -u dotglob
 
 # https://developer.apple.com/library/archive/technotes/tn/tn1150.html
