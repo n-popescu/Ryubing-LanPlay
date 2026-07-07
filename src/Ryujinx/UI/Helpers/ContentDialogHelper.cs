@@ -447,9 +447,9 @@ namespace Ryujinx.Ava.UI.Helpers
                 MinHeight = 80,
             };
 
-            content.Children.Add(new SymbolIcon
+            content.Children.Add(new FASymbolIcon
             {
-                Symbol = (Symbol)Symbol.Important,
+                Symbol = FASymbol.Important,
                 Margin = new Thickness(10),
                 FontSize = 40,
                 FlowDirection = FlowDirection.LeftToRight,
@@ -485,7 +485,7 @@ namespace Ryujinx.Ava.UI.Helpers
 
             content.Children.Add(checkBox);
 
-            ContentDialog contentDialog = new()
+            FAContentDialog contentDialog = new()
             {
                 Title = title,
                 PrimaryButtonText = LocaleManager.Instance[LocaleKeys.InputDialogOk],

@@ -34,7 +34,7 @@ namespace Ryujinx.Ava.UI.Views.Input
 
             AssignedDevicesInputView content = new(viewModel);
 
-            ContentDialog contentDialog = new()
+            FAContentDialog contentDialog = new()
             {
                 Title = LocaleManager.Instance[LocaleKeys.ControllerSettingsAssignedInputDevices],
                 PrimaryButtonText = LocaleManager.Instance[LocaleKeys.ControllerSettingsSave],
@@ -43,9 +43,9 @@ namespace Ryujinx.Ava.UI.Views.Input
                 Content = content,
             };
 
-            ContentDialogResult result = await contentDialog.ShowAsync();
+            FAContentDialogResult result = await contentDialog.ShowAsync();
 
-            if (result == ContentDialogResult.Primary)
+            if (result == FAContentDialogResult.Primary)
             {
                 viewModel.Save();
             }

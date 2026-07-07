@@ -19,27 +19,27 @@ namespace Ryujinx.Ava.UI.Helpers
                 return BindingOperations.DoNothing;
 
             if (value is not XCITrimmerFileModel app)
-                return default(Symbol);
+                return default(FASymbol);
             
             bool isProcessing = app.PercentageProgress != null;
             
             if (isProcessing)
-                return Symbol.Sync;
+                return FASymbol.Sync;
 
             if (app.ProcessingOutcome is not OperationOutcome.Successful
                 and not OperationOutcome.Undetermined)
-                return Symbol.ImportantFilled;
+                return FASymbol.ImportantFilled;
 
             if (app.Trimmable && app.Untrimmable)
-                return Symbol.Repair;
+                return FASymbol.Repair;
 
             if (app.Trimmable)
-                return Symbol.Clear;
+                return FASymbol.Clear;
 
             if (app.Untrimmable)
-                return Symbol.Checkmark;
+                return FASymbol.Checkmark;
 
-            return Symbol.Help;
+            return FASymbol.Help;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
