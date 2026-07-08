@@ -153,18 +153,18 @@ shopt -s dotglob
 for f in "$DMG_FOLDER"/*; do
     [[ -e "$f" ]] || continue
     FILE_NAME=$(basename "$f")
-    dmg-hfsplus "$UNCOMPRESSED_DMG" add "$f" "/$FILE_NAME"
+    strace dmg-hfsplus "$UNCOMPRESSED_DMG" add "$f" "/$FILE_NAME"
     if [[ -d "$f" ]]; then
-        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0755
+        strace dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0755
     else
-        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0644
+        strace dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0644
     fi
 done
 shopt -u dotglob
 
 # https://developer.apple.com/library/archive/technotes/tn/tn1150.html
 # kHasCustomIcon
-dmg-hfsplus "$UNCOMPRESSED_DMG" attr / C
+strace dmg-hfsplus "$UNCOMPRESSED_DMG" attr / C
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 
 rm -r "$DMG_FOLDER"
