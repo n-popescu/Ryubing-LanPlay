@@ -147,45 +147,15 @@ UNCOMPRESSED_DMG="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
 COMPRESSED_DMG="$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
 
 STAGING_SIZE=$(du -sb "$DMG_FOLDER" | cut -f1)
-PADDING=$(((STAGING_SIZE * 15 / 100) + (5 * 1024 * 1024)))
+PADDING=$((((STAGING_SIZE * 15 + 50) / 100) + (5 * 1024 * 1024)))
 TOTAL_SIZE=$((STAGING_SIZE + PADDING))
 
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1 count=0 seek="$TOTAL_SIZE" status=none
-mkfs.hfsplus -v "Ryujinx" -J 8M "$UNCOMPRESSED_DMG"
-
-# https://developer.apple.com/library/archive/technotes/tn/tn1150.html
-patch_volume_header() {
-    local header_offset=$1
-    local value
-
-    #kHFSVolumeJournaledBit
-    value=$(dd if="$UNCOMPRESSED_DMG" bs=1 skip=$((header_offset + 4)) count=4 status=none | xxd -p)
-    printf "%08X" $((0x${value^^} & 0xFFFFDFFF)) | xxd -r -p | dd of="$UNCOMPRESSED_DMG" bs=1 seek=$((header_offset + 4)) conv=notrunc status=none
-
-    #kHasCustomIcon
-    value=$(dd if="$UNCOMPRESSED_DMG" bs=1 skip=$((header_offset + 112)) count=4 status=none | xxd -p)
-    printf "%08X" $((0x${value^^} | 0x00000400)) | xxd -r -p | dd of="$UNCOMPRESSED_DMG" bs=1 seek=$((header_offset + 112)) conv=notrunc status=none
-}
-
-PRIMARY_VOLUME_HEADER=1024
-ALTERNATE_VOLUME_HEADER=$((TOTAL_SIZE - 1024))
-
-patch_volume_header "$PRIMARY_VOLUME_HEADER"
-patch_volume_header "$ALTERNATE_VOLUME_HEADER"
-
-shopt -s dotglob
-for f in "$DMG_FOLDER"/*; do
-    [[ -e "$f" ]] || continue
-    FILE_NAME=$(basename "$f")
-    dmg-hfsplus "$UNCOMPRESSED_DMG" add "$f" "/$FILE_NAME"
-    if [[ -d "$f" ]]; then
-        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0755
-    else
-        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0644
-    fi
-done
-shopt -u dotglob
-
+genisoimage -D -V "Ryujinx" \
+    -no-pad -apple -hfs -uid 0 -gid 0 -dir-mode 0644 -file-mode 0644 \
+    -o "$UNCOMPRESSED_DMG" "$DMG_FOLDER"
+hfsplus "$UNCOMPRESSED_DMG" chmod "/Ryujinx.app/Contents/MacOS/Ryujinx" 0755
+hfsplus "$UNCOMPRESSED_DMG" attr / C
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 rm -r "$DMG_FOLDER"
 rm -f "$UNCOMPRESSED_DMG"
