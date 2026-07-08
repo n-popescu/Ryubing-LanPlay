@@ -149,12 +149,14 @@ TOTAL_SIZE=$((STAGING_SIZE + PADDING))
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1 count=0 seek="$TOTAL_SIZE" status=none
 mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
 
+# Make all the folders first, because libdmg-hfsplus won't make non-existent directories.
 find "$DMG_FOLDER" -mindepth 1 -type d | sort | while IFS= read -r src; do
     dst="/${src#"$DMG_FOLDER"/}"
     
     dmg-hfsplus "$UNCOMPRESSED_DMG" mkdir "$dst"
     dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0755
 done
+# Copy the files over, setting correct permissions.
 find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src; do
     dst="/${src#"$DMG_FOLDER"/}"
     
@@ -166,7 +168,16 @@ find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src; do
         dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0644
     fi
 done
-dmg-hfsplus "$UNCOMPRESSED_DMG" -s clone_link addall "$DMG_FOLDER/Applications" /
+
+# Copy the symlink into a folder, then copy the folder over with symlink permissions.
+# It doesn't like files that much.
+if [[ -L "$DMG_FOLDER/Applications" ]]; then
+    TEMP="$OUTPUT_DIRECTORY/temp"
+    mkdir -p "$TEMP"
+    cp -P "$DMG_FOLDER/Applications" "$TEMP"
+    dmg-hfsplus "$UNCOMPRESSED_DMG" -s clone_link addall "$TEMP" /
+    rm -rf "$TEMP"
+fi
 
 # https://developer.apple.com/library/archive/technotes/tn/tn1150.html
 # kHasCustomIcon

@@ -177,7 +177,7 @@ jobs:
       
       - name: Install hfsprogs and libdmg-hfsplus
         run: |
-          sudo apt-get install -y cmake hfsprogs strace
+          sudo apt-get install -y cmake hfsprogs
           git clone https://github.com/mozilla/libdmg-hfsplus.git
           cd libdmg-hfsplus && cmake . && make && cd ..
           sudo mv libdmg-hfsplus/dmg/dmg /usr/local/bin/dmg
