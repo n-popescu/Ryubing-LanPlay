@@ -151,11 +151,11 @@ PADDING=$((((STAGING_SIZE * 15 + 50) / 100) + (5 * 1024 * 1024)))
 TOTAL_SIZE=$((STAGING_SIZE + PADDING))
 
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1 count=0 seek="$TOTAL_SIZE" status=none
-genisoimage -D -V "Ryujinx" \
-    -no-pad -apple -hfs -uid 0 -gid 0 -dir-mode 0644 -file-mode 0644 \
+strace genisoimage -apple -hfs -no-pad -D -V "Ryujinx" \
+    -uid 0 -gid 0 -dir-mode 0755 -file-mode 0644 \
     -o "$UNCOMPRESSED_DMG" "$DMG_FOLDER"
-hfsplus "$UNCOMPRESSED_DMG" chmod "/Ryujinx.app/Contents/MacOS/Ryujinx" 0755
-hfsplus "$UNCOMPRESSED_DMG" attr / C
+strace hfsplus "$UNCOMPRESSED_DMG" chmod "/Ryujinx.app/Contents/MacOS/Ryujinx" 0755
+strace hfsplus "$UNCOMPRESSED_DMG" attr / C
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 rm -r "$DMG_FOLDER"
 rm -f "$UNCOMPRESSED_DMG"
