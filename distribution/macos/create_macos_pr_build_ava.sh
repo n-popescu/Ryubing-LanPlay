@@ -149,22 +149,27 @@ TOTAL_SIZE=$((STAGING_SIZE + PADDING))
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1 count=0 seek="$TOTAL_SIZE" status=none
 mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
 
-shopt -s dotglob
-for f in "$DMG_FOLDER"/*; do
-    [[ -e "$f" ]] || continue
-    FILE_NAME=$(basename "$f")
-    strace dmg-hfsplus "$UNCOMPRESSED_DMG" add "$f" "/$FILE_NAME"
-    if [[ -d "$f" ]]; then
-        strace dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0755
+find "$DMG_FOLDER" -mindepth 1 -type d | sort | while IFS= read -r src; do
+    dst="/${src#"$DMG_FOLDER"/}"
+    
+    dmg-hfsplus "$UNCOMPRESSED_DMG" mkdir "$dst"
+    dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0755
+done
+find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src; do
+    dst="/${src#"$DMG_FOLDER"/}"
+    
+    dmg-hfsplus "$UNCOMPRESSED_DMG" add "$src" "$dst"
+    
+    if [[ -x "$f" ]]; then 
+        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0755
     else
-        strace dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0644
+        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0644
     fi
 done
-shopt -u dotglob
 
 # https://developer.apple.com/library/archive/technotes/tn/tn1150.html
 # kHasCustomIcon
-strace dmg-hfsplus "$UNCOMPRESSED_DMG" attr / C
+dmg-hfsplus "$UNCOMPRESSED_DMG" attr / C
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 
 rm -r "$DMG_FOLDER"
