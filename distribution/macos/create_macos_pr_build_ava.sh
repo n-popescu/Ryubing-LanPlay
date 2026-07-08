@@ -147,12 +147,23 @@ PADDING=$((((STAGING_SIZE * 15 + 50) / 100) + (5 * 1024 * 1024)))
 TOTAL_SIZE=$((STAGING_SIZE + PADDING))
 
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1 count=0 seek="$TOTAL_SIZE" status=none
-strace genisoimage -hfs -no-pad -D -V "Ryujinx" \
-    -uid 0 -gid 0 -dir-mode 0755 -file-mode 0644 \
-    -o "$UNCOMPRESSED_DMG" "$DMG_FOLDER"
-strace hfsplus "$UNCOMPRESSED_DMG" chmod "/Ryujinx.app/Contents/MacOS/Ryujinx" 0755
-strace hfsplus "$UNCOMPRESSED_DMG" attr / C
+mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
+
+find "$DMG_FOLDER" -type d -exec chmod 0755 {} +
+find "$DMG_FOLDER" -type f -exec chmod 0644 {} +
+find "$DMG_FOLDER" -type f | while IFS= read -r file; do
+    if file "$file" | grep -qE "Mach-O|executable|script"; then
+        chmod 0755 "$file"
+    fi
+done
+
+(cd "$DMG_FOLDER" && tar -cf - .) | dmg-hfsplus "$UNCOMPRESSED_DMG" untar
+
+# https://developer.apple.com/library/archive/technotes/tn/tn1150.html
+# kHasCustomIcon
+dmg-hfsplus "$UNCOMPRESSED_DMG" attr / C
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
+
 rm -r "$DMG_FOLDER"
 rm -f "$UNCOMPRESSED_DMG"
 
