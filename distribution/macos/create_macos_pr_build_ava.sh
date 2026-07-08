@@ -166,6 +166,7 @@ find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src; do
         dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0644
     fi
 done
+dmg-hfsplus "$UNCOMPRESSED_DMG" -s clone_link addall "$DMG_FOLDER/Applications" /
 
 # https://developer.apple.com/library/archive/technotes/tn/tn1150.html
 # kHasCustomIcon
