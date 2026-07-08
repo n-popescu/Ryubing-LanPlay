@@ -169,6 +169,18 @@ jobs:
           rm apple-codesign.tar.gz
           mv rcodesign /usr/bin/rcodesign
 
+      - name: Install attr
+        run: sudo apt-get install -y attr
+      
+      - name: Install hfsprogs and libdmg-hfsplus
+        run: |
+          sudo apt-get install -y cmake hfsprogs
+          git clone https://github.com/mozilla/libdmg-hfsplus.git
+          cd libdmg-hfsplus && cmake . && make && cd ..
+          sudo mv libdmg-hfsplus/dmg/dmg /usr/local/bin/dmg
+          sudo mv libdmg-hfsplus/hfs/hfsplus /usr/local/bin/dmg-hfsplus
+          sudo rm -r libdmg-hfsplus
+
       - name: Get version info
         id: version_info
         run: |

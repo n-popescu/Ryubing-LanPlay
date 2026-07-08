@@ -159,9 +159,12 @@ done
 # Copy the files over, setting correct permissions.
 find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src; do
     dst="/${src#"$DMG_FOLDER"/}"
-    
     dmg-hfsplus "$UNCOMPRESSED_DMG" add "$src" "$dst"
-    dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0755
+    if file "$src" | grep -qE "Mach-O"; then
+        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0755
+    else
+        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0644
+    fi
 done
 
 # Copy the symlink into a folder, then copy the folder over with symlink permissions.
