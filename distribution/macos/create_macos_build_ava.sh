@@ -153,15 +153,18 @@ TOTAL_SIZE=$((STAGING_SIZE + PADDING))
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1 count=0 seek="$TOTAL_SIZE" status=none
 mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
 
-find "$DMG_FOLDER" -type d -exec chmod 0755 {} +
-find "$DMG_FOLDER" -type f -exec chmod 0644 {} +
-find "$DMG_FOLDER" -type f | while IFS= read -r file; do
-    if file "$file" | grep -qE "Mach-O|executable|script"; then
-        chmod 0755 "$file"
+shopt -s dotglob
+for f in "$DMG_FOLDER"/*; do
+    [[ -e "$f" ]] || continue
+    FILE_NAME=$(basename "$f")
+    dmg-hfsplus "$UNCOMPRESSED_DMG" add "$f" "/$FILE_NAME"
+    if [[ -d "$f" ]]; then
+        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0755
+    else
+        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "/$FILE_NAME" 0644
     fi
 done
-
-(cd "$DMG_FOLDER" && tar -cf - .) | dmg-hfsplus "$UNCOMPRESSED_DMG" untar
+shopt -u dotglob
 
 # https://developer.apple.com/library/archive/technotes/tn/tn1150.html
 # kHasCustomIcon
