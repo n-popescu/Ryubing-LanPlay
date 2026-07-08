@@ -175,9 +175,9 @@ jobs:
       - name: Install attr
         run: sudo apt-get install -y attr
       
-      - name: Install hfsprogs, libdmg-hfsplus, and libraries
+      - name: Install hfsprogs, libdmg-hfsplus, and vim-common
         run: |
-          sudo apt-get install -y bc cmake hfsprogs vim-common
+          sudo apt-get install -y cmake hfsprogs vim-common
           git clone https://github.com/mozilla/libdmg-hfsplus.git
           cd libdmg-hfsplus && cmake . && make && cd ..
           sudo mv libdmg-hfsplus/dmg/dmg /usr/local/bin/dmg

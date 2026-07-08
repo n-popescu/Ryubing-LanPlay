@@ -147,20 +147,20 @@ PADDING=$(((STAGING_SIZE * 15 / 100) + (5 * 1024 * 1024)))
 TOTAL_SIZE=$((STAGING_SIZE + PADDING))
 
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1 count=0 seek="$TOTAL_SIZE" status=none
-mkfs.hfsplus -v "Ryujinx" -J 0 "$UNCOMPRESSED_DMG"
+mkfs.hfsplus -v "Ryujinx" -J 8M "$UNCOMPRESSED_DMG"
 
 # https://developer.apple.com/library/archive/technotes/tn/tn1150.html
 patch_volume_header() {
     local header_offset=$1
     local value
 
-    # kHFSVolumeJournaledBit
+    #kHFSVolumeJournaledBit
     value=$(dd if="$UNCOMPRESSED_DMG" bs=1 skip=$((header_offset + 4)) count=4 status=none | xxd -p)
-    xxd -r -p <<< "$(printf "%08s" "$(bc <<< "obase=16; ibase=16; ${value^^} & FFFFDFFF")")" | dd of="$UNCOMPRESSED_DMG" bs=1 seek=$((header_offset + 4)) conv=notrunc status=none
+    printf "%08X" $((0x${value^^} & 0xFFFFDFFF)) | xxd -r -p | dd of="$UNCOMPRESSED_DMG" bs=1 seek=$((header_offset + 4)) conv=notrunc status=none
 
-    # kHasCustomIcon
+    #kHasCustomIcon
     value=$(dd if="$UNCOMPRESSED_DMG" bs=1 skip=$((header_offset + 112)) count=4 status=none | xxd -p)
-    xxd -r -p <<< "$(printf "%08s" "$(bc <<< "obase=16; ibase=16; ${value^^} | 00000400")")" | dd of="$UNCOMPRESSED_DMG" bs=1 seek=$((header_offset + 112)) conv=notrunc status=none
+    printf "%08X" $((0x${value^^} | 0x00000400)) | xxd -r -p | dd of="$UNCOMPRESSED_DMG" bs=1 seek=$((header_offset + 112)) conv=notrunc status=none
 }
 
 PRIMARY_VOLUME_HEADER=1024
