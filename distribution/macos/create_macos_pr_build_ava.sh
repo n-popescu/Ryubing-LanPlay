@@ -152,7 +152,6 @@ mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
 # Make all the folders first, because libdmg-hfsplus won't make non-existent directories.
 find "$DMG_FOLDER" -mindepth 1 -type d | sort | while IFS= read -r src; do
     dst="/${src#"$DMG_FOLDER"/}"
-    
     dmg-hfsplus "$UNCOMPRESSED_DMG" mkdir "$dst"
     dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0755
 done
@@ -160,7 +159,7 @@ done
 find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src; do
     dst="/${src#"$DMG_FOLDER"/}"
     dmg-hfsplus "$UNCOMPRESSED_DMG" add "$src" "$dst"
-    if file "$src" | grep -qE "Mach-O"; then
+    if file "$src" | grep -Fqi "Mach-O"; then
         dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0755
     else
         dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0644
