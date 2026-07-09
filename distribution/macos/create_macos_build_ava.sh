@@ -153,21 +153,21 @@ TOTAL_SIZE=$((STAGING_SIZE + PADDING))
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1 count=0 seek="$TOTAL_SIZE" status=none
 mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
 
+find "$DMG_FOLDER" -type d -exec chmod 0755 {} +
+find "$DMG_FOLDER" -type f -exec chmod 0644 {} +
+
 # Make all the folders first, because libdmg-hfsplus won't make non-existent directories.
 find "$DMG_FOLDER" -mindepth 1 -type d | sort | while IFS= read -r src; do
     dst="/${src#"$DMG_FOLDER"/}"
     dmg-hfsplus "$UNCOMPRESSED_DMG" mkdir "$dst"
-    dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0755
 done
-# Copy the files over, setting correct permissions.
+# Copy the files over, setting correct permissions on the executable.
 find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src; do
     dst="/${src#"$DMG_FOLDER"/}"
-    dmg-hfsplus "$UNCOMPRESSED_DMG" add "$src" "$dst"
     if file "$src" | grep -Fqi "Mach-O"; then
-        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0755
-    else
-        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod "$dst" 0644
+        chmod 0755 "$src"
     fi
+    dmg-hfsplus "$UNCOMPRESSED_DMG" add "$src" "$dst"
 done
 
 # Copy the symlink into a folder, then copy the folder over with symlink permissions.
