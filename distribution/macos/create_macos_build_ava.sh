@@ -21,7 +21,7 @@ CONFIGURATION=$7
 CANARY=$8
 
 echo "Clearing xattr on all dot underscore files"
-if [[ "$(uname)" == "Darwin" ]]; 
+if [[ "$(uname)" == "Darwin" ]];
 then
     find "$BASE_DIRECTORY" -type f -name "._*" -exec sh -c '
     for f; 
@@ -74,8 +74,8 @@ dotnet publish -c "$CONFIGURATION" -r osx-x64 -o "$TEMP_DIRECTORY/publish_x64" "
 # Get rid of the support library for ARMeilleure for x64 (that's only for arm64).
 rm -rf "$TEMP_DIRECTORY/publish_x64/libarmeilleure-jitsupport.dylib"
 
-# Get rid of libsoundio from arm64 builds as we don't have a arm64 variant
-# TODO: remove this once done
+# Get rid of libsoundio from arm64 builds as we don't have a arm64 variant.
+# TODO: remove this once done.
 rm -rf "$TEMP_DIRECTORY/publish_arm64/libsoundio.dylib"
 
 pushd "$BASE_DIRECTORY/distribution/macos"
@@ -86,11 +86,11 @@ popd
 rm -rf "$UNIVERSAL_APP_BUNDLE"
 mkdir -p "$OUTPUT_DIRECTORY"
 
-# Let's copy one of the two different app bundle and remove the executable
+# Let's copy one of the two different app bundle and remove the executable.
 cp -R "$ARM64_APP_BUNDLE" "$UNIVERSAL_APP_BUNDLE"
 rm "$UNIVERSAL_APP_BUNDLE/$EXECUTABLE_SUB_PATH"
 
-# Make its libraries universal
+# Make its libraries universal.
 python3 "$BASE_DIRECTORY/distribution/macos/construct_universal_dylib.py" "$ARM64_APP_BUNDLE" "$X64_APP_BUNDLE" "$UNIVERSAL_APP_BUNDLE" "**/*.dylib"
 
 if ! [ -x "$(command -v lipo)" ];
@@ -105,10 +105,10 @@ else
     LIPO=lipo
 fi
 
-# Make the executable universal
+# Make the executable universal.
 $LIPO "$ARM64_APP_BUNDLE/$EXECUTABLE_SUB_PATH" "$X64_APP_BUNDLE/$EXECUTABLE_SUB_PATH" -output "$UNIVERSAL_APP_BUNDLE/$EXECUTABLE_SUB_PATH" -create
 
-# Patch up the Info.plist to have appropriate version
+# Patch up the Info.plist to have appropriate version.
 sed -r -i.bck "s/\%\%RYUJINX_BUILD_VERSION\%\%/$VERSION/g;" "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist"
 sed -r -i.bck "s/\%\%RYUJINX_BUILD_GIT_HASH\%\%/$SOURCE_REVISION_ID/g;" "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist"
 rm "$UNIVERSAL_APP_BUNDLE/Contents/Info.plist.bck"
@@ -162,7 +162,7 @@ echo ""
 echo "Creating .app archive"
 pushd "$DMG_FOLDER"
 tar --exclude "Ryujinx.app/Contents/MacOS/Ryujinx" -cvf "$RELEASE_TAR_FILE_NAME" Ryujinx.app 1> /dev/null
-python3 "$BASE_DIR/distribution/misc/add_tar_exec.py" "$RELEASE_TAR_FILE_NAME" "Ryujinx.app/Contents/MacOS/Ryujinx" "Ryujinx.app/Contents/MacOS/Ryujinx"
+python3 "$BASE_DIRECTORY/distribution/misc/add_tar_exec.py" "$RELEASE_TAR_FILE_NAME" "Ryujinx.app/Contents/MacOS/Ryujinx" "Ryujinx.app/Contents/MacOS/Ryujinx"
 gzip -9 < "$RELEASE_TAR_FILE_NAME" > "$RELEASE_TAR_FILE_NAME.gz"
 rm "$RELEASE_TAR_FILE_NAME"
 popd

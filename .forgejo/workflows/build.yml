@@ -165,6 +165,9 @@ jobs:
         with:
           token: ${{ secrets.SETUP_GLI_TOKEN }}
 
+      - name: Install attr
+        run: sudo apt-get install -y attr
+        
       - name: Install rcodesign
         run: |
           gli ghr -R indygreg/apple-platform-rs -p apple-codesign-*-x86_64-unknown-linux-musl.tar.gz -O apple-codesign.tar.gz
@@ -172,8 +175,14 @@ jobs:
           rm apple-codesign.tar.gz
           sudo mv rcodesign /usr/bin/rcodesign
 
-      - name: Install attr
-        run: sudo apt-get install -y attr
+      - name: Install hfsprogs and libdmg-hfsplus
+        run: |
+          sudo apt-get install -y cmake hfsprogs
+          git clone https://github.com/mozilla/libdmg-hfsplus.git
+          cd libdmg-hfsplus && cmake . && make && cd ..
+          sudo mv libdmg-hfsplus/dmg/dmg /usr/local/bin/dmg
+          sudo mv libdmg-hfsplus/hfs/hfsplus /usr/local/bin/dmg-hfsplus
+          sudo rm -r libdmg-hfsplus
       
       - name: Get version info
         id: version_info
@@ -203,5 +212,5 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: ryujinx-${{ matrix.configuration }}-${{ steps.version_info.outputs.result }}+${{ steps.version_info.outputs.git_short_hash }}-macos_universal
-          path: "publish/*.app.tar.gz"
+          path: "publish/*.dmg"
         if: forgejo.event_name == 'pull_request'
