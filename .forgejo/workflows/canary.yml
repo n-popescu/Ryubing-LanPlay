@@ -168,15 +168,15 @@ jobs:
         with:
           token: ${{ secrets.SETUP_GLI_TOKEN }}
 
+      - name: Install attr
+        run: sudo apt-get install -y attr
+        
       - name: Install rcodesign
         run: |
           gli ghr -R indygreg/apple-platform-rs -p apple-codesign-*-x86_64-unknown-linux-musl.tar.gz -O apple-codesign.tar.gz
           tar -xzvf apple-codesign.tar.gz --wildcards '*/rcodesign' --strip-components=1
           rm apple-codesign.tar.gz
           mv rcodesign /usr/bin/rcodesign
-
-      - name: Install attr
-        run: sudo apt-get install -y attr
       
       - name: Install hfsprogs and libdmg-hfsplus
         run: |
@@ -219,6 +219,7 @@ jobs:
           tag_name: ${{ steps.version_info.outputs.build_version }}
           files: |-
             publish_ava/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-macos_universal.app.tar.gz
+            publish_ava/ryujinx-canary-${{ steps.version_info.outputs.build_version }}-macos_universal.dmg
 
   post_ci:
     name: Post CI Steps

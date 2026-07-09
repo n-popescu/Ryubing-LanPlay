@@ -21,9 +21,11 @@ CONFIGURATION=$7
 CANARY=$8
 
 echo "Clearing xattr on all dot underscore files"
-if [[ "$(uname)" == "Darwin" ]]; then
+if [[ "$(uname)" == "Darwin" ]]; 
+then
     find "$BASE_DIRECTORY" -type f -name "._*" -exec sh -c '
-    for f; do
+    for f; 
+    do
         dir=$(dirname "$f")
         base=$(basename "$f")
         orig="$dir/${base#._}"
@@ -32,7 +34,8 @@ if [[ "$(uname)" == "Darwin" ]]; then
     ' sh {} +
 else
     find "$BASE_DIRECTORY" -type f -name "._*" -exec sh -c '
-    for f; do
+    for f; 
+    do
         dir=$(dirname "$f")
         base=$(basename "$f")
         orig="$dir/${base#._}"
@@ -41,9 +44,11 @@ else
     ' sh {} +
 fi
 
-if [ "$CANARY" == "1" ]; then
+if [ "$CANARY" == "1" ]; 
+then
   RELEASE_TAR_FILE_NAME=ryujinx-canary-$VERSION-macos_universal.app.tar
-elif [ "$VERSION" == "1.1.0" ]; then
+elif [ "$VERSION" == "1.1.0" ]; 
+then
   RELEASE_TAR_FILE_NAME=ryujinx-$CONFIGURATION-$VERSION+$SOURCE_REVISION_ID-macos_universal.app.tar
 else
   RELEASE_TAR_FILE_NAME=ryujinx-$VERSION-macos_universal.app.tar
@@ -118,6 +123,19 @@ mkdir "$DMG_FOLDER"
 tar -xzf "$BASE_DIRECTORY/distribution/macos/DMG_ASSETS/DMG_Structure.tar.gz" -C "$DMG_FOLDER" --strip-components=1
 cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
 
+# Set permissions explicitly, based on how macOS expects them.
+find "$DMG_FOLDER" -type d -exec chmod 0755 {} +
+find "$DMG_FOLDER" -type f -exec chmod 0644 {} +
+
+find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src;
+do
+    dst="/${src#"$DMG_FOLDER"/}"
+    if file "$src" | grep -Fqi "Mach-O"; 
+    then
+        chmod 0755 "$src"
+    fi
+done
+
 # Now sign it.
 echo ""
 echo "Signing .app"
@@ -139,7 +157,17 @@ else
     spctl -a -vv "$DMG_FOLDER/Ryujinx.app"
 fi
 
-# Package it into a disk image.
+# Create archive for legacy releases.
+echo ""
+echo "Creating .app archive"
+pushd "$DMG_FOLDER"
+tar --exclude "Ryujinx.app/Contents/MacOS/Ryujinx" -cvf "$RELEASE_TAR_FILE_NAME" Ryujinx.app 1> /dev/null
+python3 "$BASE_DIR/distribution/misc/add_tar_exec.py" "$RELEASE_TAR_FILE_NAME" "Ryujinx.app/Contents/MacOS/Ryujinx" "Ryujinx.app/Contents/MacOS/Ryujinx"
+gzip -9 < "$RELEASE_TAR_FILE_NAME" > "$RELEASE_TAR_FILE_NAME.gz"
+rm "$RELEASE_TAR_FILE_NAME"
+popd
+
+# Package the app into a disk image.
 echo ""
 echo "Packaging .dmg"
 
@@ -153,26 +181,23 @@ TOTAL_SIZE=$((STAGING_SIZE + PADDING))
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1 count=0 seek="$TOTAL_SIZE" status=none
 mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
 
-find "$DMG_FOLDER" -type d -exec chmod 0755 {} +
-find "$DMG_FOLDER" -type f -exec chmod 0644 {} +
-
 # Make all the folders first, because libdmg-hfsplus won't make non-existent directories.
-find "$DMG_FOLDER" -mindepth 1 -type d | sort | while IFS= read -r src; do
+find "$DMG_FOLDER" -mindepth 1 -type d | sort | while IFS= read -r src;
+do
     dst="/${src#"$DMG_FOLDER"/}"
     dmg-hfsplus "$UNCOMPRESSED_DMG" mkdir "$dst"
 done
-# Copy the files over, setting correct permissions on the executable.
-find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src; do
+# Copy the files over.
+find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src;
+do
     dst="/${src#"$DMG_FOLDER"/}"
-    if file "$src" | grep -Fqi "Mach-O"; then
-        chmod 0755 "$src"
-    fi
     dmg-hfsplus "$UNCOMPRESSED_DMG" add "$src" "$dst"
 done
 
 # Copy the symlink into a folder, then copy the folder over with symlink permissions.
 # It doesn't like files that much.
-if [[ -L "$DMG_FOLDER/Applications" ]]; then
+if [[ -L "$DMG_FOLDER/Applications" ]]; 
+then
     TEMP="$OUTPUT_DIRECTORY/temp"
     mkdir -p "$TEMP"
     cp -P "$DMG_FOLDER/Applications" "$TEMP"
@@ -185,8 +210,8 @@ fi
 dmg-hfsplus "$UNCOMPRESSED_DMG" attr / C
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 
-rm -r "$DMG_FOLDER"
 rm -f "$UNCOMPRESSED_DMG"
+rm -r "$DMG_FOLDER"
 
 # ... And sign it again. Thanks, Apple.
 echo ""

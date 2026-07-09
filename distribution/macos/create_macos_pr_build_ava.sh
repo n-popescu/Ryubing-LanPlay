@@ -20,9 +20,11 @@ SOURCE_REVISION_ID=$6
 CONFIGURATION=$7
 
 echo "Clearing xattr on all dot underscore files"
-if [[ "$(uname)" == "Darwin" ]]; then
+if [[ "$(uname)" == "Darwin" ]]; 
+then
     find "$BASE_DIRECTORY" -type f -name "._*" -exec sh -c '
-    for f; do
+    for f; 
+    do
         dir=$(dirname "$f")
         base=$(basename "$f")
         orig="$dir/${base#._}"
@@ -31,7 +33,8 @@ if [[ "$(uname)" == "Darwin" ]]; then
     ' sh {} +
 else
     find "$BASE_DIRECTORY" -type f -name "._*" -exec sh -c '
-    for f; do
+    for f; 
+    do
         dir=$(dirname "$f")
         base=$(basename "$f")
         orig="$dir/${base#._}"
@@ -114,6 +117,19 @@ mkdir "$DMG_FOLDER"
 tar -xzf "$BASE_DIRECTORY/distribution/macos/DMG_ASSETS/DMG_Structure.tar.gz" -C "$DMG_FOLDER" --strip-components=1
 cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
 
+# Set permissions explicitly, based on how macOS expects them.
+find "$DMG_FOLDER" -type d -exec chmod 0755 {} +
+find "$DMG_FOLDER" -type f -exec chmod 0644 {} +
+
+find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src;
+do
+    dst="/${src#"$DMG_FOLDER"/}"
+    if file "$src" | grep -Fqi "Mach-O"; 
+    then
+        chmod 0755 "$src"
+    fi
+done
+
 # Now sign it.
 echo ""
 echo "Signing .app"
@@ -135,74 +151,14 @@ else
     spctl -a -vv "$DMG_FOLDER/Ryujinx.app"
 fi
 
-# Package it into a disk image.
+# Create archive for legacy releases.
 echo ""
-echo "Packaging .dmg"
-
-UNCOMPRESSED_DMG="$OUTPUT_DIRECTORY/UNCOMPRESSED_$RELEASE_DMG_FILE_NAME"
-COMPRESSED_DMG="$OUTPUT_DIRECTORY/$RELEASE_DMG_FILE_NAME"
-
-STAGING_SIZE=$(du -sb "$DMG_FOLDER" | cut -f1)
-PADDING=$((((STAGING_SIZE * 15 + 50) / 100) + (5 * 1024 * 1024)))
-TOTAL_SIZE=$((STAGING_SIZE + PADDING))
-
-dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1 count=0 seek="$TOTAL_SIZE" status=none
-mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
-
-find "$DMG_FOLDER" -type d -exec chmod 0755 {} +
-find "$DMG_FOLDER" -type f -exec chmod 0644 {} +
-
-# Make all the folders first, because libdmg-hfsplus won't make non-existent directories.
-find "$DMG_FOLDER" -mindepth 1 -type d | sort | while IFS= read -r src; do
-    dst="/${src#"$DMG_FOLDER"/}"
-    dmg-hfsplus "$UNCOMPRESSED_DMG" mkdir "$dst"
-done
-# Copy the files over, setting correct permissions on the executable.
-find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src; do
-    dst="/${src#"$DMG_FOLDER"/}"
-    if file "$src" | grep -Fqi "Mach-O"; then
-        chmod 0755 "$src"
-    fi
-    dmg-hfsplus "$UNCOMPRESSED_DMG" add "$src" "$dst"
-done
-
-# Copy the symlink into a folder, then copy the folder over with symlink permissions.
-# It doesn't like files that much.
-if [[ -L "$DMG_FOLDER/Applications" ]]; then
-    TEMP="$OUTPUT_DIRECTORY/temp"
-    mkdir -p "$TEMP"
-    cp -P "$DMG_FOLDER/Applications" "$TEMP"
-    dmg-hfsplus "$UNCOMPRESSED_DMG" -s clone_link addall "$TEMP" /
-    rm -rf "$TEMP"
-fi
-
-# https://developer.apple.com/library/archive/technotes/tn/tn1150.html
-# kHasCustomIcon
-dmg-hfsplus "$UNCOMPRESSED_DMG" attr / C
-dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
-
-rm -r "$DMG_FOLDER"
-rm -f "$UNCOMPRESSED_DMG"
-
-# ... And sign it again. Thanks, Apple.
-echo ""
-echo "Signing .dmg"
-if ! [ -x "$(command -v codesign)" ];
-then
-    if ! [ -x "$(command -v rcodesign)" ];
-    then
-        echo "Cannot find rcodesign on your system, please install rcodesign."
-        exit 1
-    fi
-
-    echo "Using rcodesign for ad-hoc signing"
-    rcodesign sign "$COMPRESSED_DMG"
-else
-    echo "Using codesign for ad-hoc signing"
-    codesign --force --deep --sign - "$COMPRESSED_DMG"
-
-    echo "Using codesign to verify signature"
-    spctl -a -vv "$COMPRESSED_DMG"
-fi
+echo "Creating .app archive"
+pushd "$DMG_FOLDER"
+tar --exclude "Ryujinx.app/Contents/MacOS/Ryujinx" -cvf "$RELEASE_TAR_FILE_NAME" Ryujinx.app 1> /dev/null
+python3 "$BASE_DIR/distribution/misc/add_tar_exec.py" "$RELEASE_TAR_FILE_NAME" "Ryujinx.app/Contents/MacOS/Ryujinx" "Ryujinx.app/Contents/MacOS/Ryujinx"
+gzip -9 < "$RELEASE_TAR_FILE_NAME" > "$RELEASE_TAR_FILE_NAME.gz"
+rm "$RELEASE_TAR_FILE_NAME"
+popd
 
 echo "Done"

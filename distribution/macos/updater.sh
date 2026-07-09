@@ -35,6 +35,7 @@ attempt=0
 while true; do
     if lsof -p "$APP_PID" +r 1 &>/dev/null || ps -p "$APP_PID" &>/dev/null; then
         if [ "$attempt" -eq 4 ]; then
+            echo "Error: Update failed. Ryujinx was still open after 5 seconds."
             exit 1
         fi
         sleep 1
@@ -46,12 +47,36 @@ done
 
 sleep 1
 
-# Now replace and reopen.
-rm -rf "$INSTALL_DIRECTORY"
-mv "$NEW_APP_DIRECTORY" "$INSTALL_DIRECTORY"
+# Mount the .dmg.
+MOUNT_POINT=$(mktemp -d "/tmp/dmg-mount.$APP_PID")
+hdiutil attach "$NEW_APP_DIRECTORY" -mountpoint "$MOUNT_POINT" -nobrowse -quiet
 
+# Find the location of the updated Ryujinx.app bundle.
+# If it can't be found in the downloaded update, this script exits with status 2.
+
+NEW_APP=$(find "$MOUNT_POINT" -maxdepth 1 -name "Ryujinx.app" | head -n 1)
+if [ -z "$NEW_APP" ];
+then
+    echo "Error: Updated failed. Cannot find Ryujinx.app, is the update corrupted?"
+    hdiutil detach "$MOUNT_POINT" -force -quiet
+    rm -rf "$MOUNT_POINT"
+    exit 2
+fi
+
+# Replace.
+rm -rf "$INSTALL_DIRECTORY"
+cp -R "$NEW_APP" "$INSTALL_DIRECTORY"
+
+# Cleanup.
+hdiutil detach "$MOUNT_POINT" -force -quiet
+rm -rf "$MOUNT_POINT"
+rm -rf "$NEW_APP_DIRECTORY"
+
+# Relaunch.
 if [ "$#" -le 3 ]; then
     open -a "$INSTALL_DIRECTORY"
 else
     open -a "$INSTALL_DIRECTORY" --args "${APP_ARGUMENTS[@]}"
 fi
+
+echo "Done"

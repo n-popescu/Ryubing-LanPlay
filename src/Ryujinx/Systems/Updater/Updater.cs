@@ -114,7 +114,7 @@ namespace Ryujinx.Ava.Systems
         {
             _updateSuccessful = false;
 
-            // Empty update dir, although it shouldn't ever have anything inside it
+            // Empty update dir, although it shouldn't ever have anything inside it.
             if (Directory.Exists(_updateDir))
             {
                 Directory.Delete(_updateDir, true);
@@ -122,13 +122,21 @@ namespace Ryujinx.Ava.Systems
 
             Directory.CreateDirectory(_updateDir);
 
-            // If we get a .zip url switch it to the preferred .7z file instead
-            // The update server still returns the .zip url by default for legacy support
+            // If we get a .zip url, switch it to the preferred .7z file instead.
+            // The update server still returns the .zip url by default for legacy support.
             downloadUrl = downloadUrl.Replace(".zip", ".7z");
             
-            // If we get a .tar.gz url switch it to the preferred .tar.xz file instead
-            // The update server still returns the .tar.gz url by default for legacy support
-            downloadUrl = downloadUrl.Replace(".tar.gz", ".tar.xz");
+            // If we get a .tar.gz url, and we're not on macOS, switch it to the preferred .tar.xz file instead.
+            // The update server still returns the .tar.gz url by default for legacy support.
+            if (OperatingSystem.IsMacOS())
+            {
+                // On macOS, .dmg has built-in LZMA compression, and thus .app.tar.gz is now for legacy support.
+                downloadUrl = downloadUrl.Replace(".app.tar.gz", ".dmg");
+            }
+            else
+            {
+                downloadUrl = downloadUrl.Replace(".tar.gz", ".tar.xz");
+            }
             
             string updateFile = Path.Combine(_updateDir, "update.bin");
 
@@ -196,7 +204,7 @@ namespace Ryujinx.Ava.Systems
                     if (OperatingSystem.IsMacOS())
                     {
                         string baseBundlePath = Path.GetFullPath(Path.Combine(executableDirectory, "..", ".."));
-                        string newBundlePath = Path.Combine(_updateDir, "Ryujinx.app");
+                        string newBundlePath = Path.Combine(_updateDir, "Ryujinx.dmg");
                         string updaterScriptPath = Path.Combine(newBundlePath, "Contents", "Resources", "updater.sh");
                         string currentPid = Environment.ProcessId.ToString();
 
@@ -260,7 +268,7 @@ namespace Ryujinx.Ava.Systems
             for (int i = 0; i < _connectionCount; i++)
             {
 #pragma warning disable SYSLIB0014
-                // TODO: WebClient is obsolete and need to be replaced with a more complex logic using HttpClient.
+                // TODO: WebClient is obsolete and needs to be replaced with a more complex logic using HttpClient.
                 using WebClient client = new();
 #pragma warning restore SYSLIB0014
 
