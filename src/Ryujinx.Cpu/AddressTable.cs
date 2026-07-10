@@ -214,7 +214,7 @@ namespace ARMeilleure.Common
             {
                 ulong bottomLevelSize = (ulong)BitUtils.Pow2RoundUp((int)entries) * (ulong)sizeof(TEntry);
                 
-                _sparseFill = new MemoryBlock(bottomLevelSize, MemoryAllocationFlags.Mirrorable);
+                _sparseFill = new MemoryBlock(bottomLevelSize >> 10, MemoryAllocationFlags.Mirrorable);
 
                 _fillBottomLevel = new SparseMemoryBlock(bottomLevelSize, null, _sparseFill);
                 _fillBottomLevelPtr = (TEntry*)_fillBottomLevel.Block.Pointer;
