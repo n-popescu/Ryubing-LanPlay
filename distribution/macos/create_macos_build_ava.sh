@@ -46,13 +46,17 @@ fi
 
 if [ "$CANARY" == "1" ]; 
 then
-  RELEASE_TAR_FILE_NAME=ryujinx-canary-$VERSION-macos_universal.app.tar
+  RELEASE_FILE_NAME=ryujinx-canary-$VERSION-macos_universal
 elif [ "$VERSION" == "1.1.0" ]; 
 then
-  RELEASE_TAR_FILE_NAME=ryujinx-$CONFIGURATION-$VERSION+$SOURCE_REVISION_ID-macos_universal.app.tar
+  RELEASE_FILE_NAME=ryujinx-$CONFIGURATION-$VERSION+$SOURCE_REVISION_ID-macos_universal
 else
-  RELEASE_TAR_FILE_NAME=ryujinx-$VERSION-macos_universal.app.tar
+  RELEASE_FILE_NAME=ryujinx-$VERSION-macos_universal
 fi
+
+RELEASE_APP_FILE_NAME="$RELEASE_FILE_NAME.app"
+RELEASE_DMG_FILE_NAME="$RELEASE_FILE_NAME.dmg"
+RELEASE_TAR_FILE_NAME="$RELEASE_APP_FILE_NAME.tar"
 
 ARM64_APP_BUNDLE="$TEMP_DIRECTORY/output_arm64/Ryujinx.app"
 X64_APP_BUNDLE="$TEMP_DIRECTORY/output_x64/Ryujinx.app"
