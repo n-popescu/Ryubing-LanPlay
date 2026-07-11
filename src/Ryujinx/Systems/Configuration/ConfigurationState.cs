@@ -61,6 +61,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 UseInputGlobalConfig = System.UseInputGlobalConfig,
                 DockedMode = System.EnableDockedMode,
                 EnableDiscordIntegration = EnableDiscordIntegration,
+                UseWayland = UseWayland,
                 UpdateCheckerType = UpdateCheckerType,
                 FocusLostActionType = FocusLostActionType,
                 ShowConfirmExit = ShowConfirmExit,
@@ -194,6 +195,9 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.UseInputGlobalConfig.Value = false;
             System.EnableDockedMode.Value = true;
             EnableDiscordIntegration.Value = true;
+            // We only want to use Wayland by default if it exists on the system.
+            UseWayland.Value = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE")?.ToLower() is not null 
+                               && Environment.GetEnvironmentVariable("XDG_SESSION_TYPE")?.ToLower() == "wayland";
             UpdateCheckerType.Value = UpdaterType.PromptAtStartup;
             FocusLostActionType.Value = FocusLostType.DoNothing;
             ShowConfirmExit.Value = true;
@@ -360,7 +364,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         private static GraphicsBackend DefaultGraphicsBackend()
         {
             // Any system running macOS or returning any amount of valid Vulkan devices should default to Vulkan.
-            // Checks for if the Vulkan version and featureset is compatible should be performed within VulkanRenderer.
+            // Checks for if the Vulkan version and feature set is compatible should be performed within VulkanRenderer.
             if (OperatingSystem.IsMacOS() || VulkanRenderer.GetPhysicalDevices().Length > 0)
             {
                 return GraphicsBackend.Vulkan;

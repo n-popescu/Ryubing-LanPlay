@@ -17,7 +17,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// <summary>
         /// The current version of the file format
         /// </summary>
-        public const int CurrentVersion = 73;
+        public const int CurrentVersion = 74;
 
         /// <summary>
         /// Version of the configuration file format
@@ -160,7 +160,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         public bool MatchSystemTime { get; set; }
 
         /// <summary>
-        /// Enable or disable use global input config  (Independent from controllers binding)
+        /// Enable or disable use global input config (independent of controllers binding)
         /// </summary>
         public bool UseInputGlobalConfig { get; set; }
 
@@ -174,6 +174,11 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// </summary>
         public bool EnableDiscordIntegration { get; set; }
 
+        /// <summary>
+        /// Use Wayland if available
+        /// </summary>
+        public bool UseWayland { get; set; }
+        
         /// <summary>
         /// DEPRECATED: Checks for updates when Ryujinx starts when enabled
         /// </summary>

@@ -2651,6 +2651,56 @@
       }
     },
     {
+      "ID": "SettingsTabGeneralUseWayland",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Use Wayland (Requires Restart)",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
+      "ID": "SettingsTabGeneralUseWaylandTooltip",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "EXPERIMENTAL. Whether to use the X11 or Wayland protocol for rendering.\n\n Leave ON if unsure.\n\nRequires a restart to take effect.",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
       "ID": "SettingsTabGeneralHideCursor",
       "Translations": {
         "ar_SA": "إخفاء المؤشر:",
@@ -16447,6 +16497,31 @@
         "tr_TR": "",
         "uk_UA": "",
         "zh_CN": "控制台将会在下次启动 Ryujinx 时可用。",
+        "zh_TW": ""
+      }
+    },
+    {
+      "ID": "SettingsUseWaylandRestartMessage",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Display protocol settings have been modified. This will require a restart to be applied.",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
         "zh_TW": ""
       }
     },

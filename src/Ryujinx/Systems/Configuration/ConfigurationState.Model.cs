@@ -886,12 +886,12 @@ namespace Ryujinx.Ava.Systems.Configuration
         public MultiplayerSection Multiplayer { get; private set; }
 
         /// <summary>
-        /// The Debug
+        /// The Debug Section
         /// </summary>
         public DebugSection Debug { get; private set; }
 
         /// <summary>
-        ///     The Dirty Hacks section
+        /// The Dirty Hacks section
         /// </summary>
         public HacksSection Hacks { get; private set; }
 
@@ -900,6 +900,11 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// </summary>
         public ReactiveObject<bool> EnableDiscordIntegration { get; private set; }
 
+        /// <summary>
+        /// Use Wayland if available
+        /// </summary>
+        public ReactiveObject<bool> UseWayland { get; private set; }
+        
         /// <summary>
         /// Checks for updates when Ryujinx starts when enabled, either prompting when an update is found or just showing a notification.
         /// </summary>
@@ -949,6 +954,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             FocusLostActionType = new ReactiveObject<FocusLostType>();
             HideCursor = new ReactiveObject<HideCursorMode>();
             EnableDiscordIntegration = new ReactiveObject<bool>();
+            UseWayland = new ReactiveObject<bool>();
             ShowConfirmExit = new ReactiveObject<bool>();
             RememberWindowState = new ReactiveObject<bool>();
             ShowOldUI = new ReactiveObject<bool>();

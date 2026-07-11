@@ -18,7 +18,6 @@ using Ryujinx.Common.GraphicsDriver;
 using Ryujinx.Common.Logging;
 using Ryujinx.Common.SystemInterop;
 using Ryujinx.Common.Utilities;
-using Ryujinx.Graphics.RenderDocApi;
 using Ryujinx.Graphics.Vulkan.MoltenVK;
 using Ryujinx.Headless;
 using Ryujinx.SDL3.Common;
@@ -43,6 +42,22 @@ namespace Ryujinx.Ava
         public static bool UseHardwareAcceleration { get; private set; }
         public static string BackendThreadingArg { get; private set; }
         public static bool CoreDumpArg { get; private set; }
+
+        public static string xdgSessionType
+        {
+            get
+            {
+#nullable enable
+                string? sessionType = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE");
+#nullable disable
+                if (sessionType == null || !ConfigurationState.Instance.UseWayland.Value)
+                {
+                    sessionType = "x11";
+                }
+                return sessionType;
+            }
+            private set;
+        }
 
         private const uint MbIconwarning = 0x30;
 
@@ -195,16 +210,31 @@ namespace Ryujinx.Ava
             return BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
 
-        public static AppBuilder BuildAvaloniaApp() =>
-            AppBuilder.Configure<RyujinxApp>()
-                .UsePlatformDetect()
-                
+        public static AppBuilder BuildAvaloniaApp()
+        {
+            AppBuilder appBuilder = AppBuilder.Configure<RyujinxApp>();
+            
+            if (xdgSessionType is "wayland")
+            {
+                // Avalonia's Wayland backend uses EGL (read: OpenGL) by default.
+                // As of 12.1.0, this cannot be changed.
+                appBuilder.UseWayland();
+                appBuilder.UseSkia();
+                appBuilder.With(new SkiaOptions
+                {
+                    UseOpacitySaveLayer = true,
+                });
+                appBuilder.UseHarfBuzz();
+            }
+            else
+            {
                 // Vulkan UI rendering performs better, but its unpolished, and as such it lacks effective transparency.
                 // https://github.com/AvaloniaUI/Avalonia/issues/19378
                 // https://github.com/AvaloniaUI/Avalonia/issues/9610
                 // X11RenderingMode.Glx && X11RenderingMode.Egl, Win32RenderingMode.Vulkan have these issues.
-                
-                .With(new X11PlatformOptions
+
+                appBuilder.UsePlatformDetect();
+                appBuilder.With(new X11PlatformOptions
                 {
                     EnableMultiTouch = true,
                     EnableIme = true,
@@ -212,14 +242,18 @@ namespace Ryujinx.Ava
                     RenderingMode = UseHardwareAcceleration
                         ? [X11RenderingMode.Glx, X11RenderingMode.Software]
                         : [X11RenderingMode.Software]
-                })
-                .With(new Win32PlatformOptions
+                });
+                appBuilder.With(new Win32PlatformOptions
                 {
                     WinUICompositionBackdropCornerRadius = 8.0f,
                     RenderingMode = UseHardwareAcceleration
                         ? [Win32RenderingMode.AngleEgl, Win32RenderingMode.Software]
                         : [Win32RenderingMode.Software]
                 });
+            }
+
+            return appBuilder;
+        }
 
         private static bool ConsumeCommandLineArgument(ref string[] args, string targetArgument)
         {
@@ -271,7 +305,7 @@ namespace Ryujinx.Ava
 
             ReloadConfig();
 
-            WindowScaleFactor = ForceDpiAware.GetWindowScaleFactor();
+            WindowScaleFactor = ForceDpiAware.GetWindowScaleFactor(ConfigurationState.Instance.UseWayland.Value);
 
             // Logging system information.
             PrintSystemInfo();
@@ -437,12 +471,17 @@ namespace Ryujinx.Ava
 
         internal static void PrintSystemInfo()
         {
-            // Print the ryubing logo + joke splash
+            // Print the Ryubing logo + joke splash
             SplashTextHelper.PrintSplash(); 
             
             Logger.Notice.Print(LogClass.Application, $"{RyujinxApp.FullAppName} Version: {Version}");
             Logger.Notice.Print(LogClass.Application, $".NET Runtime: {RuntimeInformation.FrameworkDescription}");
             SystemInfo.Gather().Print();
+
+            if (OperatingSystem.IsLinux())
+            {
+                Logger.Notice.Print(LogClass.Application, $"Display protocol: {xdgSessionType}.");
+            }
 
             Logger.Notice.Print(LogClass.Application, $"Logs Enabled: {Logger.GetEnabledLevels()
                     .FormatCollection(

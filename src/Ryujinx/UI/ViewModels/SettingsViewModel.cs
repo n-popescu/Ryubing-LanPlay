@@ -171,6 +171,24 @@ namespace Ryujinx.Ava.UI.ViewModels
         public bool IsOpenGLAvailable => !OperatingSystem.IsMacOS();
 
         public bool EnableDiscordIntegration { get; set; }
+        public bool UseWayland
+        {
+            get;
+            set
+            {
+                bool currentValue = ConfigurationState.Instance.UseWayland.Value;
+                field = value;
+                ConfigurationState.Instance.ToFileFormat().SaveConfig(Program.ConfigurationPath);
+                if (currentValue != value)
+                {
+                    NotificationHelper.ShowInformation(
+                        LocaleManager.Instance[LocaleKeys.SettingsAppRequiredRestartMessage],
+                        LocaleManager.Instance[LocaleKeys.SettingsUseWaylandRestartMessage]);
+                }
+                    
+                OnPropertyChanged();
+            }
+        }
         public bool ShowConfirmExit { get; set; }
         public bool IgnoreApplet { get; set; }
         public bool SkipUserProfiles { get; set; }
@@ -657,6 +675,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             // User Interface
             EnableDiscordIntegration = config.EnableDiscordIntegration;
+            UseWayland = config.UseWayland;
             ShowConfirmExit = config.ShowConfirmExit;
             RememberWindowState = config.RememberWindowState;
             ShowOldUI = config.ShowOldUI;
@@ -777,6 +796,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             // User Interface
             config.EnableDiscordIntegration.Value = EnableDiscordIntegration;
+            config.UseWayland.Value = UseWayland;
             config.ShowConfirmExit.Value = ShowConfirmExit;
             config.RememberWindowState.Value = RememberWindowState;
             config.ShowOldUI.Value = ShowOldUI;

@@ -2,15 +2,18 @@ using Ryujinx.Common.Logging;
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace Ryujinx.Common.SystemInterop
 {
     public static partial class ForceDpiAware
     {
+        // Windows
         [LibraryImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static partial bool SetProcessDPIAware();
 
+        // X11
         private const string X11LibraryName = "libX11.so.6";
 
         [LibraryImport(X11LibraryName)]
@@ -20,13 +23,16 @@ namespace Ryujinx.Common.SystemInterop
         private static partial nint XGetDefault(nint display, [MarshalAs(UnmanagedType.LPStr)] string program, [MarshalAs(UnmanagedType.LPStr)] string option);
 
         [LibraryImport(X11LibraryName)]
-        private static partial int XDisplayWidth(nint display, int screenNumber);
+        private static partial nint XDisplayWidth(nint display, int screenNumber);
 
         [LibraryImport(X11LibraryName)]
-        private static partial int XDisplayWidthMM(nint display, int screenNumber);
+        private static partial nint XDisplayWidthMM(nint display, int screenNumber);
 
         [LibraryImport(X11LibraryName)]
-        private static partial int XCloseDisplay(nint display);
+        private static partial nint XCloseDisplay(nint display);
+        
+        // Wayland
+        private const string WaylandLibraryName = "wayland-client";
 
         private const double StandardDpiScale = 96.0;
         private const double MaxScaleFactor = 1.25;
@@ -43,7 +49,7 @@ namespace Ryujinx.Common.SystemInterop
             }
         }
 
-        public static double GetActualScaleFactor()
+        public static double GetActualScaleFactor(bool useWayland)
         {
             double userDpiScale = 96.0;
 
@@ -56,8 +62,28 @@ namespace Ryujinx.Common.SystemInterop
                 else if (OperatingSystem.IsLinux())
                 {
                     string xdgSessionType = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE")?.ToLower();
+                    if (xdgSessionType is not null && xdgSessionType == "wayland" && useWayland)
+                    {
+                        // Check compositor
+                        string compositor = Environment.GetEnvironmentVariable("WAYLAND_DISPLAY");
+                        if (compositor is null)
+                        {
+                            Logger.Warning?.Print(LogClass.Application, "Couldn't determine monitor DPI: Wayland display value is null");
+                            return userDpiScale;
+                        }
+                        
+                        int displayNumber = Int32.Parse(Regex.Match(compositor, @"\d+").Value); 
+                        // nint display = wl_display_connect(displayNumber);
+                        // if (display == nint.Zero)
+                        // {
+                        //    Logger.Warning?.Print(LogClass.Application, "Couldn't determine monitor DPI: Could not connect to Wayland server");
+                        //    return userDpiScale;
+                        //}
 
-                    if (xdgSessionType is null or "x11")
+                        Logger.Info?.PrintMsg(LogClass.Application, "Insert Wayland DPI check here.");
+                        
+                    }
+                    else if ((xdgSessionType is null or "x11") || (xdgSessionType is "wayland" && !useWayland))
                     {
                         nint display = XOpenDisplay(null);
                         string dpiString = Marshal.PtrToStringAnsi(XGetDefault(display, "Xft", "dpi"));
@@ -67,11 +93,6 @@ namespace Ryujinx.Common.SystemInterop
                         }
 
                         _ = XCloseDisplay(display);
-                    }
-                    else if (xdgSessionType == "wayland")
-                    {
-                        // TODO
-                        Logger.Warning?.Print(LogClass.Application, "Couldn't determine monitor DPI: Wayland not yet supported");
                     }
                     else
                     {
@@ -87,9 +108,9 @@ namespace Ryujinx.Common.SystemInterop
             return userDpiScale;
         }
 
-        public static double GetWindowScaleFactor()
+        public static double GetWindowScaleFactor(bool useWayland)
         {
-            double userDpiScale = GetActualScaleFactor();
+            double userDpiScale = GetActualScaleFactor(useWayland);
 
             return Math.Min(userDpiScale / StandardDpiScale, MaxScaleFactor);
         }

@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ext="clr-namespace:Ryujinx.Ava.Common.Markup"
     xmlns:viewModels="clr-namespace:Ryujinx.Ava.UI.ViewModels"
+    xmlns:helper="clr-namespace:Ryujinx.Common.Helper;assembly=Ryujinx.Common"
     mc:Ignorable="d"
     x:DataType="viewModels:SettingsViewModel">
     <Design.DataContext>
@@ -72,6 +73,14 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{ext:Locale SettingsTabGeneralShowOldUI}" />
                                 <TextBlock Classes="globalConfigMarker" IsVisible="{Binding IsGameTitleNotNull}" />
+                            </StackPanel>
+                        </CheckBox>
+                        <CheckBox IsChecked="{Binding UseWayland}"
+                                  IsVisible="{x:Static helper:RunningPlatform.IsLinux}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center"
+                                           ToolTip.Tip="{ext:Locale SettingsTabGeneralUseWaylandTooltip}"
+                                           Text="{ext:Locale SettingsTabGeneralUseWayland}" />
                             </StackPanel>
                         </CheckBox>
                         <CheckBox IsChecked="{Binding EnableDiscordIntegration}">
