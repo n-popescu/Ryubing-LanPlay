@@ -91,11 +91,9 @@ namespace ARMeilleure.Common
         private SparseMemoryBlock _fillBottomLevel;
         private TEntry* _fillBottomLevelPtr;
 
-        private readonly List<TableSparseBlock> _sparseReserved;
-        private readonly ReaderWriterLockSlim _sparseLock;
+        private TableSparseBlock _sparseReserved;
 
         private ulong _sparseBlockSize;
-        private ulong _sparseReservedOffset;
 
         public bool Sparse { get; }
 
@@ -129,12 +127,10 @@ namespace ARMeilleure.Common
                 {
                     return (nint)_sparseTable;
                 }
-                else
+
+                lock (_pages)
                 {
-                    lock (_pages)
-                    {
-                        return (nint)GetRootPage();
-                    }
+                    return (nint)GetRootPage();
                 }
             }
         }
@@ -162,13 +158,6 @@ namespace ARMeilleure.Common
             }
 
             Sparse = sparse;
-
-            if (sparse)
-            {
-                // If the address table is sparse, allocate a fill block
-                _sparseReserved = [];
-                _sparseLock = new ReaderWriterLockSlim();
-            }
         }
 
         /// <summary>
@@ -217,9 +206,9 @@ namespace ARMeilleure.Common
                 _sparseBoundsStart = address;
                 _sparseBoundsEnd = address + size;
                 
-                ulong bottomLevelSize = (ulong)BitUtils.Pow2RoundUp((int)entries) * (ulong)sizeof(TEntry);
+                ulong bottomLevelSize = entries * (ulong)sizeof(TEntry);
                 
-                _sparseFill = new MemoryBlock(bottomLevelSize >> 10, MemoryAllocationFlags.Mirrorable);
+                _sparseFill = new MemoryBlock(BitUtils.AlignUp(bottomLevelSize >> 10, MemoryBlock.GetPageSize()), MemoryAllocationFlags.Mirrorable);
 
                 _fillBottomLevel = new SparseMemoryBlock(bottomLevelSize, null, _sparseFill);
                 _fillBottomLevelPtr = (TEntry*)_fillBottomLevel.Block.Pointer;
@@ -271,18 +260,16 @@ namespace ARMeilleure.Common
                 
                 return ref _sparseTable[index];
             }
-            else
+
+            lock (_pages)
             {
-                lock (_pages)
-                {
-                    TEntry* page = GetPage(address);
+                TEntry* page = GetPage(address);
 
-                    long index = Levels.Last().GetValue(address);
+                long index = Levels.Last().GetValue(address);
 
-                    EnsureMapped((nint)(page + index));
+                EnsureMapped((nint)(page + index));
 
-                    return ref page[index];
-                }
+                return ref page[index];
             }
         }
 
@@ -328,28 +315,11 @@ namespace ARMeilleure.Common
         {
             if (Sparse)
             {
-                // Check sparse allocations to see if the pointer is in any of them.
-                // Ensure the page is committed if there's a match.
+                SparseMemoryBlock sparse = _sparseReserved.Block;
 
-                _sparseLock.EnterReadLock();
-
-                try
+                if (ptr >= sparse.Block.Pointer && ptr < sparse.Block.Pointer + (nint)sparse.Block.Size)
                 {
-                    foreach (TableSparseBlock reserved in _sparseReserved)
-                    {
-                        SparseMemoryBlock sparse = reserved.Block;
-
-                        if (ptr >= sparse.Block.Pointer && ptr < sparse.Block.Pointer + (nint)sparse.Block.Size)
-                        {
-                            sparse.EnsureMapped((ulong)(ptr - sparse.Block.Pointer));
-
-                            break;
-                        }
-                    }
-                }
-                finally
-                {
-                    _sparseLock.ExitReadLock();
+                    sparse.EnsureMapped((ulong)(ptr - sparse.Block.Pointer));
                 }
             }
         }
@@ -405,8 +375,7 @@ namespace ARMeilleure.Common
         {
             TableSparseBlock block = new(_sparseBlockSize, EnsureMapped, InitLeafPage);
 
-            _sparseReserved.Add(block);
-            _sparseReservedOffset = 0;
+            _sparseReserved = block;
 
             return block;
         }
@@ -427,29 +396,18 @@ namespace ARMeilleure.Common
 
             if (Sparse && leaf)
             {
-                _sparseLock.EnterWriteLock();
-
                 SparseMemoryBlock block;
 
-                if (_sparseReserved.Count == 0)
+                if (_sparseReserved.Block == null)
                 {
                     block = ReserveNewSparseBlock().Block;
                 }
                 else
                 {
-                    block = _sparseReserved.Last().Block;
-
-                    if (_sparseReservedOffset == block.Block.Size)
-                    {
-                        block = ReserveNewSparseBlock().Block;
-                    }
+                    block = _sparseReserved.Block;
                 }
 
-                page = new AddressTablePage(true, block.Block.Pointer + (nint)_sparseReservedOffset);
-
-                _sparseReservedOffset += (ulong)size;
-
-                _sparseLock.ExitWriteLock();
+                page = new AddressTablePage(true, block.Block.Pointer);
             }
             else
             {
@@ -495,16 +453,10 @@ namespace ARMeilleure.Common
 
                 if (Sparse)
                 {
-                    foreach (TableSparseBlock block in _sparseReserved)
-                    {
-                        block.Dispose();
-                    }
-
-                    _sparseReserved.Clear();
+                    _sparseReserved.Dispose();
 
                     _fillBottomLevel.Dispose();
                     _sparseFill.Dispose();
-                    _sparseLock.Dispose();
                 }
 
                 _disposed = true;
