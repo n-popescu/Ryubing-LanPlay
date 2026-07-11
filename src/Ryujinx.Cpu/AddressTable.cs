@@ -80,6 +80,8 @@ namespace ARMeilleure.Common
         }
 
         private bool _disposed;
+        private ulong _sparseBoundsStart;
+        private ulong _sparseBoundsEnd;
         private TEntry** _table;
         private TEntry* _sparseTable;
         private readonly List<AddressTablePage> _pages;
@@ -212,6 +214,9 @@ namespace ARMeilleure.Common
             
             if (Sparse)
             {
+                _sparseBoundsStart = address;
+                _sparseBoundsEnd = address + size;
+                
                 ulong bottomLevelSize = (ulong)BitUtils.Pow2RoundUp((int)entries) * (ulong)sizeof(TEntry);
                 
                 _sparseFill = new MemoryBlock(bottomLevelSize >> 10, MemoryAllocationFlags.Mirrorable);
@@ -230,6 +235,21 @@ namespace ARMeilleure.Common
         /// <inheritdoc/>
         public bool IsValid(ulong address)
         {
+            if (Sparse)
+            {
+                if ((address & ~Mask) == 0)
+                {
+                    if (address >= _sparseBoundsStart && address < _sparseBoundsEnd)
+                    {
+                        return true;
+                    }
+
+                    throw new IndexOutOfRangeException($"requested address was ({address}), but the valid range is only ({_sparseBoundsStart} - {_sparseBoundsEnd})");
+                }
+
+                return false;
+            }
+            
             return (address & ~Mask) == 0;
         }
 
