@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.OpenGL;
 using Avalonia.Threading;
 using DiscordRPC;
 using Gommon;
@@ -219,6 +220,13 @@ namespace Ryujinx.Ava
                 // Avalonia's Wayland backend uses EGL (read: OpenGL) by default.
                 // As of 12.1.0, this cannot be changed.
                 appBuilder.UseWayland();
+                appBuilder.With(new WaylandPlatformOptions
+                {
+                    // https://github.com/AvaloniaUI/Avalonia/pull/21448#issuecomment-4659937267
+                    // Latest NVIDIA drivers have issues with mapping EGL from Ava's Wayland.
+                    // Specifying the version here should prevent a segfault.
+                    GlProfiles = [new GlVersion(GlProfileType.OpenGLES, 3, 2)],
+                });
                 appBuilder.UseSkia();
                 appBuilder.With(new SkiaOptions
                 {
