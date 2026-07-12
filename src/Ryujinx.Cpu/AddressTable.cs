@@ -87,10 +87,6 @@ namespace ARMeilleure.Common
         private readonly List<AddressTablePage> _pages;
         private TEntry _fill;
 
-        private MemoryBlock _sparseFill;
-        private SparseMemoryBlock _fillBottomLevel;
-        private TEntry* _fillBottomLevelPtr;
-
         private TableSparseBlock _sparseReserved;
 
         private ulong _sparseBlockSize;
@@ -181,12 +177,6 @@ namespace ARMeilleure.Common
         /// <param name="fillValue">New fill value</param>
         private void UpdateFill(TEntry fillValue)
         {
-            if (_sparseFill != null)
-            {
-                Span<byte> span = _sparseFill.GetSpan(0, (int)_sparseFill.Size);
-                MemoryMarshal.Cast<byte, TEntry>(span).Fill(fillValue);
-            }
-
             _fill = fillValue;
         }
 
@@ -205,15 +195,8 @@ namespace ARMeilleure.Common
             {
                 _sparseBoundsStart = address;
                 _sparseBoundsEnd = address + size;
-                
-                ulong bottomLevelSize = entries * (ulong)sizeof(TEntry);
-                
-                _sparseFill = new MemoryBlock(BitUtils.AlignUp(bottomLevelSize >> 10, MemoryBlock.GetPageSize()), MemoryAllocationFlags.Mirrorable);
 
-                _fillBottomLevel = new SparseMemoryBlock(bottomLevelSize, null, _sparseFill);
-                _fillBottomLevelPtr = (TEntry*)_fillBottomLevel.Block.Pointer;
-
-                _sparseBlockSize = bottomLevelSize;
+                _sparseBlockSize = entries * (ulong)sizeof(TEntry);
                 
                 _sparseTable = (TEntry*)Allocate((int)entries, Fill, leaf: true);
 
@@ -287,7 +270,7 @@ namespace ARMeilleure.Common
                 ref AddressTableLevel level = ref Levels[i];
                 ref TEntry* nextPage = ref page[level.GetValue(address)];
 
-                if (nextPage == null || nextPage == _fillBottomLevelPtr)
+                if (nextPage == null)
                 {
                     ref AddressTableLevel nextLevel = ref Levels[i + 1];
 
@@ -297,7 +280,7 @@ namespace ARMeilleure.Common
                     }
                     else
                     {
-                        nextPage = (TEntry*)Allocate(1 << nextLevel.Length, GetFillValue(i), leaf: false);
+                        nextPage = (TEntry*)Allocate(1 << nextLevel.Length, nint.Zero, leaf: false);
                     }
                 }
 
@@ -325,23 +308,6 @@ namespace ARMeilleure.Common
         }
 
         /// <summary>
-        /// Get the fill value for a non-leaf level of the table.
-        /// </summary>
-        /// <param name="level">Level to get the fill value for</param>
-        /// <returns>The fill value</returns>
-        private nint GetFillValue(int level)
-        {
-            if (_fillBottomLevel != null && level == Levels.Length - 2)
-            {
-                return (nint)_fillBottomLevelPtr;
-            }
-            else
-            {
-                return nint.Zero;
-            }
-        }
-
-        /// <summary>
         /// Lazily initialize and get the root page of the <see cref="AddressTable{TEntry}"/>.
         /// </summary>
         /// <returns>Root page of the <see cref="AddressTable{TEntry}"/></returns>
@@ -352,7 +318,7 @@ namespace ARMeilleure.Common
                 if (Levels.Length == 1)
                     _table = (TEntry**)Allocate(1 << Levels[0].Length, Fill, leaf: true);
                 else
-                    _table = (TEntry**)Allocate(1 << Levels[0].Length, GetFillValue(0), leaf: false);
+                    _table = (TEntry**)Allocate(1 << Levels[0].Length, nint.Zero, leaf: false);
             }
 
             return _table;
@@ -396,16 +362,13 @@ namespace ARMeilleure.Common
 
             if (Sparse && leaf)
             {
-                SparseMemoryBlock block;
-
-                if (_sparseReserved.Block == null)
+                if (_sparseReserved.Block != null)
                 {
-                    block = ReserveNewSparseBlock().Block;
+                    throw new InvalidOperationException();
+                    
                 }
-                else
-                {
-                    block = _sparseReserved.Block;
-                }
+                
+                SparseMemoryBlock block = ReserveNewSparseBlock().Block;
 
                 page = new AddressTablePage(true, block.Block.Pointer);
             }
@@ -454,9 +417,6 @@ namespace ARMeilleure.Common
                 if (Sparse)
                 {
                     _sparseReserved.Dispose();
-
-                    _fillBottomLevel.Dispose();
-                    _sparseFill.Dispose();
                 }
 
                 _disposed = true;
