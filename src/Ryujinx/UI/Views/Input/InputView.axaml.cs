@@ -67,6 +67,7 @@ namespace Ryujinx.Ava.UI.Views.Input
                 {
                     Text = profileName,
                     VerticalAlignment = VerticalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Left,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     TextWrapping = TextWrapping.NoWrap,
                     MaxWidth = 170
