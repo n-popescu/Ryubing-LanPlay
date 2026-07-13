@@ -114,12 +114,31 @@ echo "Staging directory for packaging"
 DMG_FOLDER="$OUTPUT_DIRECTORY/dmg"
 mkdir "$DMG_FOLDER"
 
+echo ""
+echo "Checking exec perms..."
+ls -l "$UNIVERSAL_APP_BUNDLE/Contents/MacOS/Ryujinx"
+echo ""
+
 tar -xzf "$BASE_DIRECTORY/distribution/macos/DMG_ASSETS/DMG_Structure.tar.gz" -C "$DMG_FOLDER" --strip-components=1
 cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
 
 # Set permissions explicitly, based on how macOS expects them.
 find "$DMG_FOLDER" -type d -exec chmod 0755 {} +
 find "$DMG_FOLDER" -type f -exec chmod 0644 {} +
+
+find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src;
+do
+    dst="/${src#"$DMG_FOLDER"/}"
+    if file "$src" | grep -Fqi "Mach-O"; 
+    then
+        chmod 0755 "$src"
+    fi
+done
+
+echo ""
+echo "Checking exec perms..."
+ls -l "$DMG_FOLDER/Ryujinx.app/Contents/MacOS/Ryujinx"
+echo ""
 
 # Now sign it.
 echo ""
@@ -141,6 +160,11 @@ else
     echo "Using codesign to verify signature"
     spctl -a -vv "$DMG_FOLDER/Ryujinx.app"
 fi
+
+echo ""
+echo "Checking exec perms..."
+ls -l "$DMG_FOLDER/Ryujinx.app/Contents/MacOS/Ryujinx"
+echo ""
 
 # Create archive for legacy releases.
 echo ""
@@ -176,15 +200,15 @@ done
 find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src;
 do
     dst="/${src#"$DMG_FOLDER"/}"
-    
     dmg-hfsplus "$UNCOMPRESSED_DMG" add "$src" "$dst"
-    if file "$dst" | grep -Fqi "Mach-O"; 
-    then
-        # Clear extended attributes and set the executable permission because macOS hates us.
-        dmg-hfsplus "$UNCOMPRESSED_DMG" attr L- "$dst"
-        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod 0755 "$dst"
-    fi
 done
+
+echo ""
+echo "Checking exec perms..."
+hfsplus "$UNCOMPRESSED_DMG" extract /Ryujinx.app/Content/MacOS/Ryujinx "$BASE_DIRECTORY/Ryujinx"
+ls -l "$BASE_DIRECTORY/Ryujinx"
+rm -f "$BASE_DIRECTORY/Ryujinx"
+echo ""
 
 # Copy the symlink into a folder, then copy the folder over with symlink permissions.
 # It doesn't like files that much.
