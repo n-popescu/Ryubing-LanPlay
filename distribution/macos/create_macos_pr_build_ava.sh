@@ -121,15 +121,6 @@ cp -R "$UNIVERSAL_APP_BUNDLE" "$DMG_FOLDER/Ryujinx.app"
 find "$DMG_FOLDER" -type d -exec chmod 0755 {} +
 find "$DMG_FOLDER" -type f -exec chmod 0644 {} +
 
-find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src;
-do
-    dst="/${src#"$DMG_FOLDER"/}"
-    if file "$src" | grep -Fqi "Mach-O"; 
-    then
-        chmod 0755 "$src"
-    fi
-done
-
 # Now sign it.
 echo ""
 echo "Signing .app"
@@ -154,9 +145,9 @@ fi
 # Create archive for legacy releases.
 echo ""
 echo "Creating .app archive"
-pushd "$DMG_FOLDER"
-tar --exclude "Ryujinx.app/Contents/MacOS/Ryujinx" -cvf "$RELEASE_TAR_FILE_NAME" Ryujinx.app 1> /dev/null
-python3 "$BASE_DIRECTORY/distribution/misc/add_tar_exec.py" "$RELEASE_TAR_FILE_NAME" "Ryujinx.app/Contents/MacOS/Ryujinx" "Ryujinx.app/Contents/MacOS/Ryujinx"
+pushd "$OUTPUT_DIRECTORY"
+tar --exclude "$DMG_FOLDER/Ryujinx.app/Contents/MacOS/Ryujinx" -cvf "$RELEASE_TAR_FILE_NAME" Ryujinx.app 1> /dev/null
+python3 "$BASE_DIRECTORY/distribution/misc/add_tar_exec.py" "$RELEASE_TAR_FILE_NAME" "$DMG_FOLDER/Ryujinx.app/Contents/MacOS/Ryujinx" "$DMG_FOLDER/Ryujinx.app/Contents/MacOS/Ryujinx"
 gzip -9 < "$RELEASE_TAR_FILE_NAME" > "$RELEASE_TAR_FILE_NAME.gz"
 rm "$RELEASE_TAR_FILE_NAME"
 popd
@@ -185,7 +176,14 @@ done
 find "$DMG_FOLDER" -mindepth 1 -type f | while IFS= read -r src;
 do
     dst="/${src#"$DMG_FOLDER"/}"
+    
     dmg-hfsplus "$UNCOMPRESSED_DMG" add "$src" "$dst"
+    if file "$dst" | grep -Fqi "Mach-O"; 
+    then
+        # Clear extended attributes and set the executable permission because macOS hates us.
+        dmg-hfsplus "$UNCOMPRESSED_DMG" attr L- "$dst"
+        dmg-hfsplus "$UNCOMPRESSED_DMG" chmod 0755 "$dst"
+    fi
 done
 
 # Copy the symlink into a folder, then copy the folder over with symlink permissions.
