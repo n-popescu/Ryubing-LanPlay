@@ -31,7 +31,7 @@
     <PackageReference Include="SkiaSharp.NativeAssets.macOS" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" />
     <PackageReference Include="NetCoreServer" />
-    <PackageReference Include="Open.NAT.Core" />
+    <PackageReference Include="Open.Nat.V2" />
   </ItemGroup>
 
   <ItemGroup>
