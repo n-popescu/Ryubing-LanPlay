@@ -122,13 +122,13 @@ then
     fi
 
     echo "Using rcodesign for ad-hoc signing"
-    rcodesign sign --entitlements-xml-path "$ENTITLEMENTS_FILE_PATH" "$DMG_FOLDER/Ryujinx.app"
+    rcodesign sign --entitlements-xml-path "$ENTITLEMENTS_FILE_PATH" "$UNIVERSAL_APP_BUNDLE"
 else
     echo "Using codesign for ad-hoc signing"
-    codesign --entitlements "$ENTITLEMENTS_FILE_PATH" --force --deep --sign - "$DMG_FOLDER/Ryujinx.app"
+    codesign --entitlements "$ENTITLEMENTS_FILE_PATH" --force --deep --sign - "$UNIVERSAL_APP_BUNDLE"
     
     echo "Using codesign to verify signature"
-    spctl -a -vv "$DMG_FOLDER/Ryujinx.app"
+    spctl -a -vv "$UNIVERSAL_APP_BUNDLE"
 fi
 
 echo "Creating archive"
