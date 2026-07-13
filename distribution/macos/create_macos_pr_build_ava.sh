@@ -167,7 +167,7 @@ TOTAL_SIZE=$((STAGING_SIZE + PADDING))
 dd if=/dev/zero of="$UNCOMPRESSED_DMG" bs=1 count=0 seek="$TOTAL_SIZE" status=none
 mkfs.hfsplus -v "Ryujinx" "$UNCOMPRESSED_DMG"
 
-yes | hpmount "$UNCOMPRESSED_DMG"
+hpmount "$UNCOMPRESSED_DMG"
 # Make all the folders first, because hpcopy won't make non-existent directories.
 find "$DMG_FOLDER" -mindepth 1 -type d | sort | while IFS= read -r src;
 do
