@@ -212,5 +212,5 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: ryujinx-${{ matrix.configuration }}-${{ steps.version_info.outputs.result }}+${{ steps.version_info.outputs.git_short_hash }}-macos_universal
-          path: "publish/*.tar.gz"
+          path: "publish/*.app"
         if: forgejo.event_name == 'pull_request'
