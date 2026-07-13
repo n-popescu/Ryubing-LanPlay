@@ -130,10 +130,12 @@ namespace Ryujinx.Graphics.Vulkan
                 if (translationLayer == TranslationLayer.MoltenVK)
                 {
                     VulkanDriver.MoltenVK();
+                    IsMoltenVk = true;
                 }
                 if (translationLayer == TranslationLayer.KosmicKrisp)
                 {
                     VulkanDriver.KosmicKrisp();
+                    IsKosmicKrisp = true;
                 }
             }
 
@@ -413,10 +415,6 @@ namespace Ryujinx.Graphics.Vulkan
             }
 
             IsQualcommProprietary = hasDriverProperties && driverProperties.DriverID == DriverId.QualcommProprietary;
-
-            IsMoltenVk = hasDriverProperties && driverProperties.DriverID == DriverId.Moltenvk;
-
-            IsKosmicKrisp = hasDriverProperties && driverProperties.DriverID == DriverId.MesaKosmickrisp;
 
             ulong minResourceAlignment = Math.Max(
                 Math.Max(
