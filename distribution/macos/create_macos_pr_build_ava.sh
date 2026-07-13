@@ -182,12 +182,12 @@ hpumount
 TEMP="$OUTPUT_DIRECTORY/temp"
 mkdir -p "$TEMP"
 cp -P "$DMG_FOLDER/Applications" "$TEMP"
-hfsplus "$UNCOMPRESSED_DMG" -s clone_link addall "$TEMP" /
+dmg-hfsplus "$UNCOMPRESSED_DMG" -s clone_link addall "$TEMP" /
 rm -rf "$TEMP"
 
 # https://developer.apple.com/library/archive/technotes/tn/tn1150.html
 # kHasCustomIcon
-hfsplus "$UNCOMPRESSED_DMG" attr / C
+dmg-hfsplus "$UNCOMPRESSED_DMG" attr / C
 dmg dmg -c lzma "$UNCOMPRESSED_DMG" "$COMPRESSED_DMG"
 
 rm -f "$UNCOMPRESSED_DMG"
