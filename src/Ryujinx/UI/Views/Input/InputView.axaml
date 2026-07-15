@@ -102,7 +102,7 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
                         MaxHeight="32"
-                        Padding="12,0,44,0"
+                        Padding="12,0,15,0"
                         IsEnabled="{Binding ShowSettings}"
                         SelectedItem="{Binding ChosenProfile, Mode=TwoWay}"
                         SelectionChanged="ComboBox_SelectionChanged"
