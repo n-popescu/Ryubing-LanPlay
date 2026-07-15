@@ -21,14 +21,11 @@ namespace Ryujinx.Cpu
         private readonly struct TableSparseBlock : IDisposable
         {
             public readonly SparseMemoryBlock Block;
-            public readonly MemoryBlock Fill;
             private readonly TrackingEventDelegate _trackingEvent;
 
-            public TableSparseBlock(ulong size, Action<nint> ensureMapped, PageInitDelegate pageInit)
+            public TableSparseBlock(ulong size, Action<nint> ensureMapped, PageInitDelegate pageInit, MemoryBlock fill)
             {
-                Fill = new MemoryBlock(MemoryBlock.GetPageSize() << 10, MemoryAllocationFlags.Mirrorable);
-                
-                SparseMemoryBlock block = new(size, pageInit, Fill);
+                SparseMemoryBlock block = new(size, pageInit, fill);
 
                 _trackingEvent = (address, _, _) =>
                 {
@@ -55,7 +52,6 @@ namespace Ryujinx.Cpu
                 NativeSignalHandler.RemoveTrackedRegion((nuint)Block.Block.Pointer);
 
                 Block.Dispose();
-                Fill?.Dispose();
             }
         }
 
@@ -63,9 +59,8 @@ namespace Ryujinx.Cpu
         private TEntry* _table;
         private TEntry _fill;
 
-        private readonly TableSparseBlock _sparseReserved;
-
-        private ulong _sparseBlockSize;
+        private TableSparseBlock _block;
+        private readonly MemoryBlock _fillBlock;
 
         /// <inheritdoc/>
         public AddressTableType TableType => AddressTableType.MonoBlock;
@@ -118,14 +113,18 @@ namespace Ryujinx.Cpu
             {
                 Mask |= level.Mask;
             }
+            
+            _fillBlock = new MemoryBlock(MemoryBlock.GetPageSize() << 10, MemoryAllocationFlags.Mirrorable);
+            
+            // We need to use the full size, as some games dynamically expand the code range (e.g. SSBU)
+            // Limiting the size to only the requested code range will cause crashes
+            // This should not be an issue tho, as the SparseBlock dynamically allocates memory as needed, and
+            // Falls back to the fill block in case guest code tries to call an unmapped function.
+            ulong bottomLevelSize = (1ul << Levels.Last().Length) * (ulong)sizeof(TEntry);
 
-            ulong bottomLevelSize = (1ul << levels.Last().Length) * (ulong)sizeof(TEntry);
+            _block = new TableSparseBlock(bottomLevelSize, EnsureMapped, InitLeafPage, _fillBlock);
 
-            _sparseBlockSize = bottomLevelSize;
-
-            _sparseReserved = new TableSparseBlock(_sparseBlockSize, EnsureMapped, InitLeafPage);
-
-            _table = (TEntry*)_sparseReserved.Block.Block.Pointer;
+            _table = (TEntry*)_block.Block.Block.Pointer;
         }
 
         /// <summary>
@@ -145,9 +144,9 @@ namespace Ryujinx.Cpu
         /// <param name="fillValue">New fill value</param>
         private void UpdateFill(TEntry fillValue)
         {
-            if (_sparseReserved.Fill != null)
+            if (_fillBlock != null)
             {
-                Span<byte> span = _sparseReserved.Fill.GetSpan(0, (int)_sparseReserved.Fill.Size);
+                Span<byte> span = _fillBlock.GetSpan(0, (int)_fillBlock.Size);
                 MemoryMarshal.Cast<byte, TEntry>(span).Fill(fillValue);
             }
 
@@ -161,14 +160,7 @@ namespace Ryujinx.Cpu
         /// <param name="size"></param>
         public void SignalCodeRange(ulong address, ulong size)
         {
-            AddressTableLevel bottom = Levels.Last();
-            ulong bottomLevelEntries = 1ul << bottom.Length;
 
-            ulong entryIndex = address >> bottom.Index;
-            ulong entries = size >> bottom.Index;
-            entries += entryIndex - BitUtils.AlignDown(entryIndex, bottomLevelEntries);
-
-            _sparseBlockSize = Math.Max(_sparseBlockSize, BitUtils.AlignUp(entries, bottomLevelEntries) * (ulong)sizeof(TEntry));
         }
 
         /// <inheritdoc/>
@@ -200,7 +192,7 @@ namespace Ryujinx.Cpu
         /// <param name="ptr">Pointer to be mapped</param>
         private void EnsureMapped(nint ptr)
         {
-            SparseMemoryBlock sparse = _sparseReserved.Block;
+            SparseMemoryBlock sparse = _block.Block;
 
             if (ptr >= sparse.Block.Pointer && ptr < sparse.Block.Pointer + (nint)sparse.Block.Size)
             {
@@ -238,7 +230,8 @@ namespace Ryujinx.Cpu
                 return;
             }
 
-            _sparseReserved.Dispose();
+            _block.Dispose();
+            _fillBlock.Dispose();
 
             _disposed = true;
         }
