@@ -236,7 +236,7 @@ namespace ARMeilleure.Instructions
 
                 hostAddress = context.Load(OperandType.I64, hostAddressAddr);
             }
-            else if (table.Sparse)
+            else if (table.TableType ==  AddressTableType.MonoBlock)
             {
                 // Inline table lookup. Only enabled when the sparse function table is enabled with 2 levels.
                 // Deliberately attempts to avoid branches.

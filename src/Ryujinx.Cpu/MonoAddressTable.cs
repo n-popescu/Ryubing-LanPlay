@@ -1,0 +1,254 @@
+using ARMeilleure.Common;
+using Ryujinx.Common;
+using Ryujinx.Cpu.Signal;
+using Ryujinx.Memory;
+using System;
+using System.Linq;
+using System.Runtime.InteropServices;
+using static Ryujinx.Cpu.MemoryEhMeilleure;
+
+namespace Ryujinx.Cpu
+{
+    /// <summary>
+    /// Represents a table of guest address to a value.
+    /// </summary>
+    /// <typeparam name="TEntry">Type of the value</typeparam>
+    public unsafe class MonoAddressTable<TEntry> : IAddressTable<TEntry> where TEntry : unmanaged
+    {
+        /// <summary>
+        /// A sparsely mapped block of memory with a signal handler to map pages as they're accessed.
+        /// </summary>
+        private readonly struct TableSparseBlock : IDisposable
+        {
+            public readonly SparseMemoryBlock Block;
+            public readonly MemoryBlock Fill;
+            private readonly TrackingEventDelegate _trackingEvent;
+
+            public TableSparseBlock(ulong size, Action<nint> ensureMapped, PageInitDelegate pageInit)
+            {
+                Fill = new MemoryBlock(MemoryBlock.GetPageSize() << 10, MemoryAllocationFlags.Mirrorable);
+                
+                SparseMemoryBlock block = new(size, pageInit, Fill);
+
+                _trackingEvent = (address, _, _) =>
+                {
+                    ulong pointer = (ulong)block.Block.Pointer + address;
+                    ensureMapped((nint)pointer);
+                    return pointer;
+                };
+
+                bool added = NativeSignalHandler.AddTrackedRegion(
+                (nuint)block.Block.Pointer,
+                (nuint)(block.Block.Pointer + (nint)block.Block.Size),
+                Marshal.GetFunctionPointerForDelegate(_trackingEvent));
+
+                if (!added)
+                {
+                    throw new InvalidOperationException("Number of allowed tracked regions exceeded.");
+                }
+
+                Block = block;
+            }
+
+            public void Dispose()
+            {
+                NativeSignalHandler.RemoveTrackedRegion((nuint)Block.Block.Pointer);
+
+                Block.Dispose();
+                Fill?.Dispose();
+            }
+        }
+
+        private bool _disposed;
+        private TEntry* _table;
+        private TEntry _fill;
+
+        private readonly TableSparseBlock _sparseReserved;
+
+        private ulong _sparseBlockSize;
+
+        /// <inheritdoc/>
+        public AddressTableType TableType => AddressTableType.MonoBlock;
+        
+        /// <inheritdoc/>
+        public ulong Mask { get; }
+
+        /// <inheritdoc/>
+        public AddressTableLevel[] Levels { get; }
+
+        /// <inheritdoc/>
+        public TEntry Fill
+        {
+            get
+            {
+                return _fill;
+            }
+            set
+            {
+                UpdateFill(value);
+            }
+        }
+
+        /// <inheritdoc/>
+        public nint Base
+        {
+            get
+            {
+                ObjectDisposedException.ThrowIf(_disposed, this);
+
+                return (nint)_table;
+            }
+        }
+
+        /// <summary>
+        /// Constructs a new instance of the <see cref="AddressTable{TEntry}"/> class with the specified list of
+        /// <see cref="AddressTableLevel"/>.
+        /// </summary>
+        /// <param name="levels">Levels for the address table</param>
+        /// <exception cref="ArgumentNullException"><paramref name="levels"/> is null</exception>
+        /// <exception cref="ArgumentException">Length of <paramref name="levels"/> is less than 2</exception>
+        public MonoAddressTable(AddressTableLevel[] levels)
+        {
+            ArgumentNullException.ThrowIfNull(levels);
+
+            Levels = levels;
+            Mask = 0;
+
+            foreach (AddressTableLevel level in Levels)
+            {
+                Mask |= level.Mask;
+            }
+
+            ulong bottomLevelSize = (1ul << levels.Last().Length) * (ulong)sizeof(TEntry);
+
+            _sparseBlockSize = bottomLevelSize;
+
+            _sparseReserved = new TableSparseBlock(_sparseBlockSize, EnsureMapped, InitLeafPage);
+
+            _table = (TEntry*)_sparseReserved.Block.Block.Pointer;
+        }
+
+        /// <summary>
+        /// Create an <see cref="AddressTable{TEntry}"/> instance for an ARM function table.
+        /// Selects the best table structure for A32/A64, taking into account the selected memory manager type.
+        /// </summary>
+        /// <param name="for64Bits">True if the guest is A64, false otherwise</param>
+        /// <returns>An <see cref="AddressTable{TEntry}"/> for ARM function lookup</returns>
+        public static MonoAddressTable<TEntry> CreateForArm(bool for64Bits)
+        {
+            return new MonoAddressTable<TEntry>(AddressTablePresets.GetArmPreset(for64Bits, true));
+        }
+
+        /// <summary>
+        /// Update the fill value for the bottom level of the table.
+        /// </summary>
+        /// <param name="fillValue">New fill value</param>
+        private void UpdateFill(TEntry fillValue)
+        {
+            if (_sparseReserved.Fill != null)
+            {
+                Span<byte> span = _sparseReserved.Fill.GetSpan(0, (int)_sparseReserved.Fill.Size);
+                MemoryMarshal.Cast<byte, TEntry>(span).Fill(fillValue);
+            }
+
+            _fill = fillValue;
+        }
+
+        /// <summary>
+        /// Signal that the given code range exists.
+        /// </summary>
+        /// <param name="address"></param>
+        /// <param name="size"></param>
+        public void SignalCodeRange(ulong address, ulong size)
+        {
+            AddressTableLevel bottom = Levels.Last();
+            ulong bottomLevelEntries = 1ul << bottom.Length;
+
+            ulong entryIndex = address >> bottom.Index;
+            ulong entries = size >> bottom.Index;
+            entries += entryIndex - BitUtils.AlignDown(entryIndex, bottomLevelEntries);
+
+            _sparseBlockSize = Math.Max(_sparseBlockSize, BitUtils.AlignUp(entries, bottomLevelEntries) * (ulong)sizeof(TEntry));
+        }
+
+        /// <inheritdoc/>
+        public bool IsValid(ulong address)
+        {
+            return (address & ~Mask) == 0;
+        }
+
+        /// <inheritdoc/>
+        public ref TEntry GetValue(ulong address)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+
+            if (!IsValid(address))
+            {
+                throw new ArgumentException($"Address 0x{address:X} is not mapped onto the table.", nameof(address));
+            }
+
+            long index = Levels.Last().GetValue(address);
+
+            EnsureMapped((nint)(_table + index));
+
+            return ref _table[index];
+        }
+
+        /// <summary>
+        /// Ensure the given pointer is mapped in any overlapping sparse reservations.
+        /// </summary>
+        /// <param name="ptr">Pointer to be mapped</param>
+        private void EnsureMapped(nint ptr)
+        {
+            SparseMemoryBlock sparse = _sparseReserved.Block;
+
+            if (ptr >= sparse.Block.Pointer && ptr < sparse.Block.Pointer + (nint)sparse.Block.Size)
+            {
+                sparse.EnsureMapped((ulong)(ptr - sparse.Block.Pointer));
+            }
+        }
+
+        /// <summary>
+        /// Initialize a leaf page with the fill value.
+        /// </summary>
+        /// <param name="page">Page to initialize</param>
+        private void InitLeafPage(Span<byte> page)
+        {
+            MemoryMarshal.Cast<byte, TEntry>(page).Fill(_fill);
+        }
+
+        /// <summary>
+        /// Releases all resources used by the <see cref="AddressTable{TEntry}"/> instance.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Releases all unmanaged and optionally managed resources used by the <see cref="AddressTable{TEntry}"/>
+        /// instance.
+        /// </summary>
+        /// <param name="disposing"><see langword="true"/> to dispose managed resources also; otherwise just unmanaged resouces</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _sparseReserved.Dispose();
+
+            _disposed = true;
+        }
+
+        /// <summary>
+        /// Frees resources used by the <see cref="AddressTable{TEntry}"/> instance.
+        /// </summary>
+        ~MonoAddressTable()
+        {
+            Dispose(false);
+        }
+    }
+}

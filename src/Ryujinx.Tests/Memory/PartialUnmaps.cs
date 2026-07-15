@@ -60,7 +60,7 @@ namespace Ryujinx.Tests.Memory
             _translator ??= new Translator(
                 new JitMemoryAllocator(),
                 new MockMemoryManager(),
-                AddressTable<ulong>.CreateForArm(true, MemoryManagerType.SoftwarePageTable));
+                AddressTable<ulong>.CreateForArm(true));
             
             NativeSignalHandler.InitializeSignalHandler();
         }

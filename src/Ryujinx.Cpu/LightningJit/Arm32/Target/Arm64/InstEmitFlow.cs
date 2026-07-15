@@ -132,7 +132,7 @@ namespace Ryujinx.Cpu.LightningJit.Arm32.Target.Arm64
             RegisterAllocator regAlloc,
             TailMerger tailMerger,
             Action writeEpilogue,
-            AddressTable<ulong> funcTable,
+            IAddressTable<ulong> funcTable,
             nint funcPtr,
             int spillBaseOffset,
             uint nextAddress,
@@ -143,7 +143,7 @@ namespace Ryujinx.Cpu.LightningJit.Arm32.Target.Arm64
             int tempGuestAddress = -1;
 
             bool inlineLookup = guestAddress.Kind != OperandKind.Constant &&
-                                funcTable is { Sparse: true };
+                                funcTable.TableType == AddressTableType.MonoBlock;
 
             if (guestAddress.Kind == OperandKind.Constant)
             {
