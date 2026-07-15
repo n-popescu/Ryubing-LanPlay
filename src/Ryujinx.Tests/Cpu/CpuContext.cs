@@ -13,8 +13,8 @@ namespace Ryujinx.Tests.Cpu
 
         public CpuContext(IMemoryManager memory, bool for64Bit)
         {
-            bool mono = memory.Type is not MemoryManagerType.SoftwareMmu and not MemoryManagerType.SoftwarePageTable;
-            IAddressTable<ulong> functionTable = mono ? MonoAddressTable<ulong>.CreateForArm(for64Bit) : AddressTable<ulong>.CreateForArm(for64Bit);
+            bool sparse = memory.Type is not MemoryManagerType.SoftwareMmu and not MemoryManagerType.SoftwarePageTable;
+            IAddressTable<ulong> functionTable = sparse ? SparseAddressTable<ulong>.CreateForArm(for64Bit) : AddressTable<ulong>.CreateForArm(for64Bit);
             
             _translator = new Translator(new JitMemoryAllocator(), memory, functionTable);
             memory.UnmapEvent += UnmapHandler;

@@ -13,7 +13,7 @@ namespace Ryujinx.Cpu
     /// Represents a table of guest address to a value.
     /// </summary>
     /// <typeparam name="TEntry">Type of the value</typeparam>
-    public unsafe class MonoAddressTable<TEntry> : IAddressTable<TEntry> where TEntry : unmanaged
+    public unsafe class SparseAddressTable<TEntry> : IAddressTable<TEntry> where TEntry : unmanaged
     {
         /// <summary>
         /// A sparsely mapped block of memory with a signal handler to map pages as they're accessed.
@@ -59,11 +59,11 @@ namespace Ryujinx.Cpu
         private TEntry* _table;
         private TEntry _fill;
 
-        private TableSparseBlock _block;
+        private readonly TableSparseBlock _block;
         private readonly MemoryBlock _fillBlock;
 
         /// <inheritdoc/>
-        public AddressTableType TableType => AddressTableType.MonoBlock;
+        public AddressTableType TableType => AddressTableType.Sparse;
         
         /// <inheritdoc/>
         public ulong Mask { get; }
@@ -102,7 +102,7 @@ namespace Ryujinx.Cpu
         /// <param name="levels">Levels for the address table</param>
         /// <exception cref="ArgumentNullException"><paramref name="levels"/> is null</exception>
         /// <exception cref="ArgumentException">Length of <paramref name="levels"/> is less than 2</exception>
-        public MonoAddressTable(AddressTableLevel[] levels)
+        public SparseAddressTable(AddressTableLevel[] levels)
         {
             ArgumentNullException.ThrowIfNull(levels);
 
@@ -133,9 +133,9 @@ namespace Ryujinx.Cpu
         /// </summary>
         /// <param name="for64Bits">True if the guest is A64, false otherwise</param>
         /// <returns>An <see cref="AddressTable{TEntry}"/> for ARM function lookup</returns>
-        public static MonoAddressTable<TEntry> CreateForArm(bool for64Bits)
+        public static SparseAddressTable<TEntry> CreateForArm(bool for64Bits)
         {
-            return new MonoAddressTable<TEntry>(AddressTablePresets.GetArmPreset(for64Bits, true));
+            return new SparseAddressTable<TEntry>(AddressTablePresets.GetArmPreset(for64Bits, true));
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace Ryujinx.Cpu
         /// <summary>
         /// Frees resources used by the <see cref="AddressTable{TEntry}"/> instance.
         /// </summary>
-        ~MonoAddressTable()
+        ~SparseAddressTable()
         {
             Dispose(false);
         }
