@@ -2099,6 +2099,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 {
                     await ContentDialogHelper.CreateErrorDialog(LocaleManager.Instance[LocaleKeys.DialogProfileInvalidProfileNameErrorMessage]);
                 }
+
+                IsModified = false;
             }
         }
 
