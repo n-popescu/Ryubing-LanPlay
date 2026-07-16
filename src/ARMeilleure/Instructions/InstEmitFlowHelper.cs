@@ -238,7 +238,7 @@ namespace ARMeilleure.Instructions
             }
             else if (table.TableType ==  AddressTableType.Sparse)
             {
-                // Inline table lookup. Only enabled when the sparse function table is enabled with 2 levels.
+                // Inline table lookup. Only enabled when the sparse function table is enabled with 1 level.
                 // Deliberately attempts to avoid branches.
 
                 Operand tableBase = !context.HasPtc ?

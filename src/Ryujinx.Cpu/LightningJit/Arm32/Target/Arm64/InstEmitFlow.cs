@@ -190,7 +190,7 @@ namespace Ryujinx.Cpu.LightningJit.Arm32.Target.Arm64
             }
             else if (inlineLookup)
             {
-                // Inline table lookup. Only enabled when the sparse function table is enabled with 2 levels.
+                // Inline table lookup. Only enabled when the sparse function table is enabled with 1 level.
 
                 Operand indexReg = Register(NextFreeRegister(tempRegister + 1, tempGuestAddress));
 
