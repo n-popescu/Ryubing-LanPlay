@@ -27,9 +27,12 @@ namespace Ryujinx.Ava.UI.Renderer
         private string _className;
 
         protected GLXWindow X11Window { get; set; }
+        protected GLXWindow WaylandWindow { get; set; }
+        protected string XDGSessionType = Program.XDGSessionType;
 
         protected nint WindowHandle { get; set; }
         protected nint X11Display { get; set; }
+        protected nint WaylandDisplay { get; set; }
         protected nint NsView { get; set; }
         protected nint MetalLayer { get; set; }
 
@@ -104,6 +107,7 @@ namespace Ryujinx.Ava.UI.Renderer
         {
             WindowHandle = nint.Zero;
             X11Display = nint.Zero;
+            WaylandDisplay = nint.Zero;
             NsView = nint.Zero;
             MetalLayer = nint.Zero;
         }

@@ -10,6 +10,7 @@ namespace Ryujinx.Ava.Utilities.SystemInfo
     {
         public string OsDescription { get; protected set; }
         public string CpuName { get; protected set; }
+        public string DisplayProtocol { get; protected set; }
         public ulong RamTotal { get; protected set; }
         public ulong RamAvailable { get; protected set; }
         protected static int LogicalCoreCount => Environment.ProcessorCount;
@@ -26,7 +27,13 @@ namespace Ryujinx.Ava.Utilities.SystemInfo
         {
             Logger.Notice.Print(LogClass.Application, $"Operating System: {OsDescription}", "PrintSystemInfo");
             Logger.Notice.Print(LogClass.Application, $"CPU: {CpuName}", "PrintSystemInfo");
+            // TODO: Grab GPU information and print it to the log. Include brand, model, VRAM type/amount, and driver version.
             Logger.Notice.Print(LogClass.Application, $"RAM: Total {ToGBString(RamTotal)} ; Available {ToGBString(RamAvailable)}", "PrintSystemInfo");
+            
+            if (OperatingSystem.IsLinux())
+            {
+                Logger.Notice.Print(LogClass.Application, $"Display Protocol: {DisplayProtocol}", "PrintSystemInfo");
+            }
         }
 
         public static SystemInfo Gather()
@@ -39,7 +46,7 @@ namespace Ryujinx.Ava.Utilities.SystemInfo
 
             if (OperatingSystem.IsMacOS())
                 return new MacOSSystemInfo();
-
+            
             Logger.Error?.Print(LogClass.Application, "SystemInfo unsupported on this platform");
 
             return new SystemInfo();

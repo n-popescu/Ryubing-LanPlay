@@ -72,15 +72,8 @@ namespace Ryujinx.Common.SystemInterop
                             return userDpiScale;
                         }
                         
-                        int displayNumber = Int32.Parse(Regex.Match(compositor, @"\d+").Value); 
-                        // nint display = wl_display_connect(displayNumber);
-                        // if (display == nint.Zero)
-                        // {
-                        //    Logger.Warning?.Print(LogClass.Application, "Couldn't determine monitor DPI: Could not connect to Wayland server");
-                        //    return userDpiScale;
-                        //}
-
-                        Logger.Info?.PrintMsg(LogClass.Application, "Insert Wayland DPI check here.");
+                        Logger.Warning?.PrintMsg(LogClass.Application, "Wayland DPI support is currently not implemented.");
+                        // TODO: Implement Wayland DPI scaling support.
                         
                     }
                     else if ((xdgSessionType is null or "x11") || (xdgSessionType is "wayland" && !useWayland))

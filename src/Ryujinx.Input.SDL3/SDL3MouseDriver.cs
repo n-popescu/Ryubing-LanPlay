@@ -119,6 +119,8 @@ namespace Ryujinx.Input.SDL3
                     break;
 
                 // NOTE: On Linux using Wayland mouse motion events won't be received at all.
+                // TODO: Investigate if this is still the case. With Wayland support and SDL3,
+                //       it's unclear, and should be implemented with the new rendering backend.
                 case SDL_EventType.SDL_EVENT_MOUSE_MOTION:
                     CurrentPosition = new Vector2(evnt.motion.x, evnt.motion.y);
                     _lastCursorMoveTime = Stopwatch.GetTimestamp();

@@ -43,26 +43,26 @@ namespace Ryujinx.Ava
         public static bool UseHardwareAcceleration { get; private set; }
         public static string BackendThreadingArg { get; private set; }
         public static bool CoreDumpArg { get; private set; }
+        private const uint MbIconwarning = 0x30;
 
-        public static string xdgSessionType
+        public static string XDGSessionType
         {
             get
             {
 #nullable enable
-                string? sessionType = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE");
+                field = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE");
 #nullable disable
-                if (sessionType == null || !ConfigurationState.Instance.UseWayland.Value)
+                if (field == null || !ConfigurationState.Instance.UseWayland.Value)
                 {
-                    sessionType = "x11";
+                    field = "x11";
                 }
-                return sessionType;
+
+                return field;
             }
             private set;
         }
 
-        private const uint MbIconwarning = 0x30;
-
-        [STAThread]
+[STAThread]
         public static int Main(string[] args)
         {
             Version = ReleaseInformation.Version;
@@ -199,7 +199,7 @@ namespace Ryujinx.Ava
                 HeadlessRyujinx.Entrypoint(args);
                 return 0;
             }
-
+            
             Initialize(args);
 
             LoggerAdapter.Register();
@@ -215,7 +215,7 @@ namespace Ryujinx.Ava
         {
             AppBuilder appBuilder = AppBuilder.Configure<RyujinxApp>();
             
-            if (xdgSessionType is "wayland")
+            if (XDGSessionType is "wayland")
             {
                 // Avalonia's Wayland backend uses EGL (read: OpenGL) by default.
                 // As of 12.1.0, this cannot be changed.
@@ -225,7 +225,7 @@ namespace Ryujinx.Ava
                     // https://github.com/AvaloniaUI/Avalonia/pull/21448#issuecomment-4659937267
                     // Latest NVIDIA drivers have issues with mapping EGL from Ava's Wayland.
                     // Specifying the version here should prevent a segfault.
-                    GlProfiles = [new GlVersion(GlProfileType.OpenGLES, 3, 2)],
+                    // GlProfiles = [new GlVersion(GlProfileType.OpenGLES, 3, 2)],
                 });
                 appBuilder.UseSkia();
                 appBuilder.With(new SkiaOptions
@@ -485,11 +485,6 @@ namespace Ryujinx.Ava
             Logger.Notice.Print(LogClass.Application, $"{RyujinxApp.FullAppName} Version: {Version}");
             Logger.Notice.Print(LogClass.Application, $".NET Runtime: {RuntimeInformation.FrameworkDescription}");
             SystemInfo.Gather().Print();
-
-            if (OperatingSystem.IsLinux())
-            {
-                Logger.Notice.Print(LogClass.Application, $"Display protocol: {xdgSessionType}.");
-            }
 
             Logger.Notice.Print(LogClass.Application, $"Logs Enabled: {Logger.GetEnabledLevels()
                     .FormatCollection(

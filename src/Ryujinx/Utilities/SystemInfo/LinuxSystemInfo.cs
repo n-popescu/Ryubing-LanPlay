@@ -1,3 +1,4 @@
+using Ryujinx.Ava.Systems.Configuration;
 using Ryujinx.Common.Logging;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,14 @@ namespace Ryujinx.Ava.Utilities.SystemInfo
                 cpuName = cpuDict["model name"] ?? cpuDict["Processor"] ?? cpuDict["Hardware"] ?? "Unknown";
             }
 
+#nullable enable
+            string? xdgSessionType = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE");
+#nullable disable
+            if (xdgSessionType == null || !ConfigurationState.Instance.UseWayland.Value)
+            {
+                xdgSessionType = "x11";
+            }
+
             Dictionary<string, string> memDict = new(StringComparer.Ordinal)
             {
                 ["MemTotal"] = null,
@@ -41,6 +50,7 @@ namespace Ryujinx.Ava.Utilities.SystemInfo
             ulong.TryParse(memDict["MemAvailable"]?.Split(' ')[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out ulong availableKiB);
 
             CpuName = $"{cpuName} ; {LogicalCoreCount} logical";
+            DisplayProtocol = $"{xdgSessionType}";
             RamTotal = totalKiB * 1024;
             RamAvailable = availableKiB * 1024;
         }

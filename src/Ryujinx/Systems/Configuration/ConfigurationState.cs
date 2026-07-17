@@ -196,6 +196,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.EnableDockedMode.Value = true;
             EnableDiscordIntegration.Value = true;
             // We only want to use Wayland by default if it exists on the system.
+            // TODO: Fix Wayland by default selection.
             UseWayland.Value = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE")?.ToLower() is not null 
                                && Environment.GetEnvironmentVariable("XDG_SESSION_TYPE")?.ToLower() == "wayland";
             UpdateCheckerType.Value = UpdaterType.PromptAtStartup;
