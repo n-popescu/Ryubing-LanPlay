@@ -1188,6 +1188,16 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             }
         }
 
+        private void ApplySelectedProfileSilently(string profileName)
+        {
+            SetSelectedProfileSilently(profileName);
+
+            if (TryLoadProfileConfiguration(profileName, out InputConfig profileConfig))
+            {
+                LoadConfiguration(profileConfig, false);
+            }
+        }
+
         private void RefreshProfileBindingState()
         {
             OnPropertyChanged(nameof(CanBindSelectedProfile));
@@ -1346,7 +1356,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             }
 
             LoadConfiguration(LoadDefaultConfiguration(), false);
-            SetSelectedProfileSilently(GetCurrentProfileDefaultName());
             RefreshProfileBindingState();
         }
 
@@ -1428,10 +1437,20 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         {
             bool duplicateDeviceAssignmentChanged = _allowDuplicateDeviceAssignment.HasValue &&
                 _allowDuplicateDeviceAssignment.Value != GetSavedAllowDuplicateDeviceAssignment();
-            bool configChanged = !ConfigsMatch(GetSelectedDeviceConfig(), GetDisplayedInputConfig(GetPersistedInputConfig()));
+            bool configChanged = !ConfigsMatch(GetSelectedDeviceConfig(), GetPersistedComparisonConfig());
             bool playerAssignmentsChanged = !PlayerAssignmentsMatch(GetEditedPlayerInputAssignment(), GetPersistedPlayerInputAssignment());
 
             return duplicateDeviceAssignmentChanged || configChanged || playerAssignmentsChanged;
+        }
+
+        private InputConfig GetPersistedComparisonConfig()
+        {
+            if (!IsDefaultProfileName(ProfileName) && TryLoadProfileConfiguration(ProfileName, out InputConfig profileConfig))
+            {
+                return profileConfig;
+            }
+
+            return GetDisplayedInputConfig(GetPersistedInputConfig());
         }
 
         private static bool ConfigsMatch(InputConfig currentConfig, InputConfig otherConfig)
@@ -1857,7 +1876,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                     selectedProfile = GetCurrentProfileDefaultName();
                 }
 
-                SetSelectedProfileSilently(selectedProfile);
+                ApplySelectedProfileSilently(selectedProfile);
             }
             finally
             {
@@ -2130,7 +2149,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                 ReplaceBoundProfileName(ProfileName, null);
                 LoadProfiles();
 
-                SetSelectedProfileSilently(ProfilesList[0].ToString());
+                ApplySelectedProfileSilently(ProfilesList[0].ToString());
                 RefreshModifiedState();
             }
         }

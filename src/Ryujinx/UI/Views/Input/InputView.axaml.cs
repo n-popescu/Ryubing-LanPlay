@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Interactivity;
 using Avalonia;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using FluentAvalonia.UI.Controls;
@@ -11,12 +12,15 @@ using Ryujinx.Ava.UI.Controls;
 using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Ava.UI.Models;
 using Ryujinx.Ava.UI.ViewModels.Input;
+using System.ComponentModel;
 
 namespace Ryujinx.Ava.UI.Views.Input
 {
     public partial class InputView : RyujinxControl<InputViewModel>
     {
         private bool _dialogOpen;
+        private bool _isEditingProfileName;
+        private InputViewModel _subscribedViewModel;
 
         public InputView()
         {
@@ -43,10 +47,23 @@ namespace Ryujinx.Ava.UI.Views.Input
 
         private void ReplaceViewModel(bool useGlobalConfig)
         {
-            ViewModel = new InputViewModel(this, useGlobalConfig); // Create new Input Page with the selected input config scope.
+            if (_subscribedViewModel != null)
+            {
+                _subscribedViewModel.PropertyChanged -= ViewModel_OnPropertyChanged;
+                _subscribedViewModel = null;
+            }
+
+            InputViewModel newViewModel = new InputViewModel(this, useGlobalConfig); // Create new Input Page with the selected input config scope.
+            newViewModel.PropertyChanged += ViewModel_OnPropertyChanged;
+            _subscribedViewModel = newViewModel;
+
+            ViewModel = newViewModel;
             InitializeComponent();
 
             SetupProfileBoxItemTemplate();
+
+            _isEditingProfileName = false;
+            UpdateProfileLinkIconVisibility();
 
             if (VisualRoot is not null)
             {
@@ -232,8 +249,44 @@ namespace Ryujinx.Ava.UI.Views.Input
             ViewModel?.LoadProfile();
         }
 
+        private void ViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(InputViewModel.IsProfileLinked))
+            {
+                UpdateProfileLinkIconVisibility();
+            }
+        }
+
+        private void ProfileBox_OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            _isEditingProfileName = true;
+            UpdateProfileLinkIconVisibility();
+        }
+
+        private void ProfileBox_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            _isEditingProfileName = false;
+            UpdateProfileLinkIconVisibility();
+        }
+
+        private void UpdateProfileLinkIconVisibility()
+        {
+            if (ProfileLinkIcon == null)
+            {
+                return;
+            }
+
+            ProfileLinkIcon.IsVisible = !_isEditingProfileName && (ViewModel?.IsProfileLinked ?? false);
+        }
+
         public void Dispose()
         {
+            if (_subscribedViewModel != null)
+            {
+                _subscribedViewModel.PropertyChanged -= ViewModel_OnPropertyChanged;
+                _subscribedViewModel = null;
+            }
+
             ViewModel.Dispose();
         }
     }
