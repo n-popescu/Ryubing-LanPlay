@@ -208,6 +208,7 @@
                     <MenuItem
                         Name="MiiEditorMenuItem" Header="{ext:Locale MenuBar_Actions_MiiEditorButton}" Icon="{ext:Icon fa-solid fa-face-grin-wide}" />
                     <MenuItem Name="XCITrimmerMenuItem" Header="{ext:Locale MenuBar_Actions_XCITrimmerButton}" Icon="{ext:Icon fa-solid fa-scissors}" />
+                    <MenuItem Name="Fat32Merger" Header="{ext:Locale MenuBar_Actions_MergeDumpButton}" Icon="{ext:Icon fa-solid fa-code-merge}"/>
                 </MenuItem>
             </MenuItem>
             <MenuItem VerticalAlignment="Center" Header="{ext:Locale MenuBarView}">
