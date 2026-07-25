@@ -1,0 +1,20 @@
+<UserControl
+    x:Class="Ryujinx.Ava.UI.Views.Dialog.Fat32MergeView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+    xmlns:ext="clr-namespace:Ryujinx.Ava.Common.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Ryujinx.Ava.UI.ViewModels"
+    xmlns:helpers="clr-namespace:Ryujinx.Ava.UI.Helpers"
+    xmlns:models="clr-namespace:Ryujinx.Ava.Common.Models"
+    Width="700"
+    Height="600"
+    x:DataType="viewModels:Fat32MergeViewModel"
+    Focusable="True"
+    mc:Ignorable="d">
+    <Button Name="CloseButton" MinWidth="90" Click="Close" IsVisible="False">
+        <TextBlock Text="{ext:Locale SettingsButtonClose}" />
+    </Button>
+</UserControl>
