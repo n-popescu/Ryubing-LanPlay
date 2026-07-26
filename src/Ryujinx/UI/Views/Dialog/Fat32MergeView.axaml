@@ -14,7 +14,12 @@
     x:DataType="viewModels:Fat32MergeViewModel"
     Focusable="True"
     mc:Ignorable="d">
-    <Button Name="CloseButton" MinWidth="90" Click="Close" IsVisible="False">
-        <TextBlock Text="{ext:Locale SettingsButtonClose}" />
-    </Button>
+    <Grid Margin="25,10,25,0" RowDefinitions="*,*" ColumnDefinitions="*,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Panel>
+            <TextBlock Text="Merge progress" />
+        </Panel>
+        <Button Grid.Row="1" Grid.Column="1" Name="CloseButton" MinWidth="90" Click="Close" IsVisible="True">
+            <TextBlock Text="{ext:Locale SettingsButtonClose}" />
+        </Button>
+    </Grid>
 </UserControl>
