@@ -162,6 +162,7 @@ namespace Ryujinx.Common.Logging
         {
             if (_logTargets.Any(t => t.Name == target.Name))
             {
+                target.Dispose();
                 return;
             }
 
