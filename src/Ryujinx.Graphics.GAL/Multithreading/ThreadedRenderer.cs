@@ -534,12 +534,12 @@ namespace Ryujinx.Graphics.GAL.Multithreading
             _running = false;
             _galWorkAvailable.Set();
 
-            if (_gpuThread != null && _gpuThread.IsAlive)
+            if (_gpuThread is { IsAlive: true })
             {
                 _gpuThread.Join();
             }
             
-            if (_backendThread != null && _backendThread.IsAlive)
+            if (_backendThread is { IsAlive: true })
             {
                 _backendThread.Join();
             }
