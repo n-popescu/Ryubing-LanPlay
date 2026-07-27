@@ -195,11 +195,14 @@ namespace Ryujinx.Graphics.GAL.Multithreading
         {
             // The reference table is sized so that it will never overflow, so long as the references are taken after the command is allocated.
 
-            int index = _refProducerPtr;
+            // make sure increment is thread safe
+            int index = Interlocked.Increment(ref _refProducerPtr) - 1;
+            
+            index %= _refQueue.Length;
 
             _refQueue[index] = obj;
 
-            _refProducerPtr = (_refProducerPtr + 1) % _refQueue.Length;
+            _refProducerPtr %= _refQueue.Length;
 
             return index;
         }
@@ -534,6 +537,11 @@ namespace Ryujinx.Graphics.GAL.Multithreading
             if (_gpuThread != null && _gpuThread.IsAlive)
             {
                 _gpuThread.Join();
+            }
+            
+            if (_backendThread != null && _backendThread.IsAlive)
+            {
+                _backendThread.Join();
             }
 
             // Dispose the renderer.
