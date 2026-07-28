@@ -36,6 +36,21 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 
             await contentDialog.ShowAsync();
         }
+
+        private void Dingus(object sender, RoutedEventArgs e)
+        {
+            ViewModel.BeStinky();
+        }
+
+        private void Merge(object sender, RoutedEventArgs e)
+        {
+            ViewModel.MergeDump();
+        }
+
+        private void SetProgress(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SetProgress();
+        }
         
         private void Close(object sender, RoutedEventArgs e)
         {

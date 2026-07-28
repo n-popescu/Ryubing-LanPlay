@@ -14,7 +14,7 @@
     x:DataType="viewModels:Fat32MergeViewModel"
     Focusable="True"
     mc:Ignorable="d">
-    <Grid Margin="25,10,25,0" RowDefinitions="*,Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid Margin="25,10,25,0" RowDefinitions="Auto,*,Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Panel>
             <TextBlock Text="Merge progress" />
         </Panel>
@@ -31,8 +31,16 @@
 
             </Grid>
         </Border>
+        
+        <Button Grid.Row="2" Name="BeStinkyButton" MinWidth="90" Click="Merge" IsVisible="True" HorizontalAlignment="Left">
+            <TextBlock Text="Merge" />
+        </Button>
 
-        <Button Grid.Row="2" Grid.Column="1" Name="CloseButton" MinWidth="90" Click="Close" IsVisible="True" HorizontalAlignment="Right">
+        <Button Grid.Row="2" Name="SetProgressButton" MinWidth="90" Click="SetProgress" IsVisible="True" HorizontalAlignment="Center">
+            <TextBlock Text="Set Progress" />
+        </Button>
+        
+        <Button Grid.Row="2" Name="CloseButton" MinWidth="90" Click="Close" IsVisible="True" HorizontalAlignment="Right">
             <TextBlock Text="{ext:Locale SettingsButtonClose}" />
         </Button>
     </Grid>
