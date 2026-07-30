@@ -37,8 +37,8 @@
             <TextBlock Text="Merge" />
         </Button>
 
-        <Button Grid.Row="2" Name="SetProgressButton" MinWidth="90" Click="SetProgress" IsVisible="True" HorizontalAlignment="Center">
-            <TextBlock Text="Set Progress" />
+        <Button Grid.Row="2" Name="SelectFolderButton" MinWidth="90" Click="OpenFolderPicker" IsVisible="True" HorizontalAlignment="Center">
+            <TextBlock Text="Select Split Dump Folder" />
         </Button>
         
         <Button Grid.Row="2" Name="CloseButton" MinWidth="90" Click="Close" IsVisible="True" HorizontalAlignment="Right">
