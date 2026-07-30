@@ -8,11 +8,6 @@ namespace Ryujinx.Ava.UI.ViewModels
 {
     public class Fat32MergeViewModel : BaseModel
     {
-        public void BeStinky()
-        {
-            Console.WriteLine("Deez Nuts");
-        }
-
         public void MergeDump()
         {
             RyujinxApp.MainWindow.ViewModel.StorageProvider.OpenSingleFolderPickerAsync();

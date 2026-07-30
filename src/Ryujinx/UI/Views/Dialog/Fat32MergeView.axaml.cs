@@ -41,11 +41,6 @@ namespace Ryujinx.Ava.UI.Views.Dialog
             await contentDialog.ShowAsync();
         }
 
-        private void Dingus(object sender, RoutedEventArgs e)
-        {
-            ViewModel.BeStinky();
-        }
-
         private void Merge(object sender, RoutedEventArgs e)
         {
             ViewModel.MergeDump();
@@ -61,11 +56,11 @@ namespace Ryujinx.Ava.UI.Views.Dialog
             try
             {
                 Optional<IStorageFolder> folder = await RyujinxApp.MainWindow.ViewModel.StorageProvider.OpenSingleFolderPickerAsync();
-                Console.Write(folder.ToString());
+                Console.Write(folder.Value.Path);
             }
             catch (Exception exception)
             {
-                // Put some logging here later using the logging stuff!
+                Console.Write(exception.ToString()); // TODO: Replace this with proper logging in the final product
             }
             
         }
