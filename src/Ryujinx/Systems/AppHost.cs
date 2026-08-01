@@ -41,6 +41,7 @@ using Ryujinx.HLE.HOS.Services.Account.Acc;
 using Ryujinx.Input;
 using Ryujinx.Input.HLE;
 using SkiaSharp;
+using SPB.Graphics.Exceptions;
 using SPB.Graphics.Vulkan;
 using System;
 using System.Collections.Generic;
@@ -688,8 +689,22 @@ namespace Ryujinx.Ava.Systems
 
             if (RendererHost.EmbeddedWindow is EmbeddedWindowOpenGL openGlWindow)
             {
-                // Try to bind the OpenGL context before calling the shutdown event.
-                openGlWindow.MakeCurrent(false, false);
+                try
+                {
+                    // Try to bind the OpenGL context before disposing GPU resources.
+                    openGlWindow.MakeCurrent();
+                }
+                catch (ContextException e) when (_userChannelPersistence.ShouldRestart)
+                {
+                    // ExecuteProgram may detach the old native window before GPU
+                    // disposal. Allow the old context to be released with the window
+                    // and continue the requested program relaunch.
+                    Logger.Warning?.Print(
+                        LogClass.UI,
+                        $"Failed to bind OpenGL context during program relaunch: {e}");
+
+                    return;
+                }
 
                 Device.DisposeGpu();
 
