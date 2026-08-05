@@ -11,6 +11,8 @@ using Ryujinx.Ava.UI.ViewModels;
 using Ryujinx.Ava.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Ryujinx.Ava.UI.Views.Dialog
@@ -55,8 +57,23 @@ namespace Ryujinx.Ava.UI.Views.Dialog
         {
             try
             {
+                // Note for future me: Hey you! Look at the keys install function in MainWindowViewModel.cs!
+                // This section does the silly folder opening doodad. Oh and also actually gets the files.
                 Optional<IStorageFolder> folder = await RyujinxApp.MainWindow.ViewModel.StorageProvider.OpenSingleFolderPickerAsync();
-                Console.Write(folder.Value.Path);
+                string dir = folder.Value.Path.LocalPath; 
+                string[] files = Directory.EnumerateFiles(dir, "*").ToArray();
+                
+                // Debugging stuff 1
+                Console.WriteLine(dir);
+                foreach (string file in files)
+                {
+                    Console.WriteLine(file);
+                }
+                
+                // Ok future me, here, you are going to want to borrow bubbles xci / nsp reading code from tkmm
+                string gamedata = "Stuff from the tkmm code"; // Wait does the tkmm code also allow you to view the filename in its header?
+                string extension = "XCI or NSP"; // This also comes from the tkmm code btw.
+                string combinedname = $"{gamedata}.{extension}"; // This will look better ok?
             }
             catch (Exception exception)
             {

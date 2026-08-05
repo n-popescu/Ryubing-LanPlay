@@ -181,4 +181,9 @@
   <ItemGroup>
     <AdditionalFiles Include="..\..\assets\Locales\*.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="UI\Views\Dialog\Fat32MergeView.axaml.cs">
+      <DependentUpon>Fat32MergeView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>
