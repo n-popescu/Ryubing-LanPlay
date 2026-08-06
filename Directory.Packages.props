@@ -11,15 +11,15 @@
     
     <!-- UI -->
     <!-- TODO: Avalonia >= 12.0.0 requires refactoring -->
-    <PackageVersion Include="Avalonia" Version="12.1.0" />
-    <PackageVersion Include="Avalonia.Controls.DataGrid" Version="12.1.0" />
-    <PackageVersion Include="Avalonia.Desktop" Version="12.1.0" />
+    <PackageVersion Include="Avalonia" Version="12.1.1" />
+    <PackageVersion Include="Avalonia.Controls.DataGrid" Version="12.1.2" />
+    <PackageVersion Include="Avalonia.Desktop" Version="12.1.1" />
     <!-- TODO: Replace Avalonia.Diagnostics (Deprecated). -->
     <!-- <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3" /> -->
     <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3" />
-    <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="12.1.0" />
+    <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="12.1.1" />
     
-    <PackageVersion Include="FluentAvaloniaUI" Version="3.0.1" />
+    <PackageVersion Include="FluentAvaloniaUI" Version="3.0.2" />
 
     <PackageVersion Include="Optris.Icons.Avalonia" Version="12.0.7" />
     <PackageVersion Include="Optris.Icons.Avalonia.FontAwesome" Version="12.0.7" />
