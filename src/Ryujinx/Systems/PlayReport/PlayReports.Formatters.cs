@@ -7,6 +7,9 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using NsmbudMap = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string,
+        System.Collections.Generic.Dictionary<string, string>>>;
 
 namespace Ryujinx.Ava.Systems.PlayReport
 {
@@ -1130,10 +1133,8 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 
                 try
                 {
-                    Dictionary<string, Dictionary<string, Dictionary<string, string>>> output;
-                    string data;
-                    data = EmbeddedResources.ReadAllText("Ryujinx/Assets/PlayReports/nsmbud.json");
-                    output = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(data);
+                    string data = EmbeddedResources.ReadAllText("Ryujinx/Assets/PlayReports/nsmbud.json");
+                    NsmbudMap output = JsonSerializer.Deserialize(data, NsmbudJsonContext.Default.DictionaryStringDictionaryStringDictionaryStringString);
                     if (SpecialMapNames(courseint) == "Hazard")
                     {
                         return $"Last Played: Course {worldstr}-Hazard";
@@ -1199,5 +1200,8 @@ namespace Ryujinx.Ava.Systems.PlayReport
             // desert ice = 14, acorn squid = 13
             // all other course numbers are to be considered a hazard
         }
+
+        [JsonSerializable(typeof(NsmbudMap))]
+        internal partial class NsmbudJsonContext : JsonSerializerContext;
     }
 }

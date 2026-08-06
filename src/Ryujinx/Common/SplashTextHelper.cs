@@ -3,6 +3,7 @@ using Ryujinx.Common.Logging;
 using Gommon;
 using Ryujinx.Ava.Systems.Configuration;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Ryujinx.Common
 {
@@ -40,9 +41,8 @@ namespace Ryujinx.Common
             {
                 try
                 {
-                    string data;
-                    data = EmbeddedResources.ReadAllText("Ryujinx/Assets/Splashes.json");
-                    SplashLocales splashJson = JsonSerializer.Deserialize<SplashLocales>(data);
+                    string data = EmbeddedResources.ReadAllText("Ryujinx/Assets/Splashes.json");
+                    SplashLocales splashJson = JsonSerializer.Deserialize(data, SplashLocalesContext.Default.SplashLocales);
                     _finalSplash = splashJson.Locales[ConfigurationState.Instance.UI.LanguageCode.Value].GetRandomElement() ?? "";
                 }
                 catch
@@ -54,11 +54,13 @@ namespace Ryujinx.Common
             return _finalSplash;
         }
 
-        private struct SplashLocales
+        public struct SplashLocales
         {
             public Dictionary<string, List<string>> Locales { get; set; }
         }
 
     }
 
+    [JsonSerializable(typeof(SplashTextHelper.SplashLocales))]
+    internal partial class SplashLocalesContext : JsonSerializerContext;
 }
