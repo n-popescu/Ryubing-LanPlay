@@ -18,8 +18,15 @@ namespace Ryujinx.Ava.UI.ViewModels
                 {
                     File.Delete($"{dir}{filename}");
                 }
-
-                using (Stream mergedFile = File.Open($"{dir}{filename}", FileMode.Create)) // SWEET LIBERTY WHAT IS THIS ABOMINATION I MADE???
+                Console.WriteLine("Old file purged");
+                
+                // Replace this garbage 2GB limited code with OS commands NOW! - Ghost of awesomeanchovies past
+                
+                //xcopy (windows)
+                //??? (mac idk what they use)
+                //cat (linux?)
+                
+                using (Stream mergedFile = File.Open($"{dir}dingus{filename}", FileMode.Create)) // SWEET LIBERTY WHAT IS THIS ABOMINATION I MADE???
                 {
                     foreach (string file in files)
                     {
@@ -28,21 +35,14 @@ namespace Ryujinx.Ava.UI.ViewModels
                 }
                 Console.WriteLine("It has been done.");
             }
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine("Merge failed!");
+                if (e.ToString().Contains("used by another process"))
+                {
+                    Console.WriteLine("File is in use by another process!");
+                }
+                Console.WriteLine(e.ToString());
             }
-        }
-
-        public string IsXciOrNsp(string file)
-        {
-            Stream file01 = File.Open(file, FileMode.Open); // Totally not trying to adapt tkmm code frfr (thanks bubbles)
-            Span<byte> buffer = stackalloc byte[4]; file01.ReadExactly(buffer);
-            if (buffer.SequenceEqual("PFS0"u8))
-            { 
-                return ".nsp";
-            }
-            return ".xci";
         }
 
         public void SetProgress()

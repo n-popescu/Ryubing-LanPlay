@@ -69,7 +69,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
                 
                 // Begin the name reading stuff here
                 
-                FileName = $"{ViewModel.IsXciOrNsp(SplitPaths[0])}";
+                FileName = Path.GetFileName(Dir);
                 Console.WriteLine(FileName); // More testing stuff lol
                 
             }
