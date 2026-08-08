@@ -67,10 +67,11 @@ namespace Ryujinx.Ava.UI.Views.Dialog
                 Dir = folder.Value.Path.LocalPath; 
                 SplitPaths = Directory.EnumerateFiles(Dir, "*").ToArray();
                 
-                // Ok future me, here, you are going to want to borrow bubbles xci / nsp reading code from tkmm
-                string gamedata = "Stuff from the tkmm code"; // Wait does the tkmm code also allow you to view the filename in its header?
-                string extension = "XCI or NSP"; // This also comes from the tkmm code btw.
-                string combinedname = $"{gamedata}.{extension}"; // This will look better ok?
+                // Begin the name reading stuff here
+                
+                FileName = $"{ViewModel.IsXciOrNsp(SplitPaths[0])}";
+                Console.WriteLine(FileName); // More testing stuff lol
+                
             }
             catch (Exception exception)
             {

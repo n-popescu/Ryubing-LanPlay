@@ -14,25 +14,35 @@ namespace Ryujinx.Ava.UI.ViewModels
             try
             {
                 Console.WriteLine("Beginning merge");
-                if (File.Exists($"{dir}mergedfile"))
+                if (File.Exists($"{dir}{filename}"))
                 {
-                    File.Delete($"{dir}mergedfile");
+                    File.Delete($"{dir}{filename}");
                 }
 
-                using (Stream MergedFile = File.Open($"{dir}mergedfile", FileMode.Create)) // SWEET LIBERTY WHAT IS THIS ABOMINATION I MADE???
+                using (Stream mergedFile = File.Open($"{dir}{filename}", FileMode.Create)) // SWEET LIBERTY WHAT IS THIS ABOMINATION I MADE???
                 {
                     foreach (string file in files)
                     {
-                        MergedFile.Write(File.ReadAllBytes(file));
+                        mergedFile.Write(File.ReadAllBytes(file));
                     }
                 }
                 Console.WriteLine("It has been done.");
-
             }
             catch
             {
-                Console.WriteLine("Something blew up ya goober!");
+                Console.WriteLine("Merge failed!");
             }
+        }
+
+        public string IsXciOrNsp(string file)
+        {
+            Stream file01 = File.Open(file, FileMode.Open); // Totally not trying to adapt tkmm code frfr (thanks bubbles)
+            Span<byte> buffer = stackalloc byte[4]; file01.ReadExactly(buffer);
+            if (buffer.SequenceEqual("PFS0"u8))
+            { 
+                return ".nsp";
+            }
+            return ".xci";
         }
 
         public void SetProgress()
