@@ -3,15 +3,36 @@ using Avalonia.Data;
 using Avalonia.Platform.Storage;
 using Ryujinx.Ava.Utilities;
 using System;
+using System.IO;
 
 namespace Ryujinx.Ava.UI.ViewModels
 {
     public class Fat32MergeViewModel : BaseModel
     {
-        public void MergeDump()
+        public void MergeDump(string[] files, string dir, string filename)
         {
-            RyujinxApp.MainWindow.ViewModel.StorageProvider.OpenSingleFolderPickerAsync();
-            Console.WriteLine("Not implemented yet you silly person!"); // You know what this does. Make some command stuff that merges the files or something
+            try
+            {
+                Console.WriteLine("Beginning merge");
+                if (File.Exists($"{dir}mergedfile"))
+                {
+                    File.Delete($"{dir}mergedfile");
+                }
+
+                using (Stream MergedFile = File.Open($"{dir}mergedfile", FileMode.Create)) // SWEET LIBERTY WHAT IS THIS ABOMINATION I MADE???
+                {
+                    foreach (string file in files)
+                    {
+                        MergedFile.Write(File.ReadAllBytes(file));
+                    }
+                }
+                Console.WriteLine("It has been done.");
+
+            }
+            catch
+            {
+                Console.WriteLine("Something blew up ya goober!");
+            }
         }
 
         public void SetProgress()

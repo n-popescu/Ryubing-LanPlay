@@ -19,6 +19,12 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 {
     public partial class Fat32MergeView : RyujinxControl<Fat32MergeViewModel>
     {
+        public string[] SplitPaths; // Store the strings for the split dump files here so we can mess around lol.
+
+        public string Dir; // Save the dir itself.
+
+        public string FileName;
+        
         public Fat32MergeView()
         {
             InitializeComponent();
@@ -45,7 +51,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 
         private void Merge(object sender, RoutedEventArgs e)
         {
-            ViewModel.MergeDump();
+            ViewModel.MergeDump(SplitPaths, Dir, FileName);
         }
 
         private void SetProgress(object sender, RoutedEventArgs e)
@@ -57,18 +63,9 @@ namespace Ryujinx.Ava.UI.Views.Dialog
         {
             try
             {
-                // Note for future me: Hey you! Look at the keys install function in MainWindowViewModel.cs!
-                // This section does the silly folder opening doodad. Oh and also actually gets the files.
                 Optional<IStorageFolder> folder = await RyujinxApp.MainWindow.ViewModel.StorageProvider.OpenSingleFolderPickerAsync();
-                string dir = folder.Value.Path.LocalPath; 
-                string[] files = Directory.EnumerateFiles(dir, "*").ToArray();
-                
-                // Debugging stuff 1
-                Console.WriteLine(dir);
-                foreach (string file in files)
-                {
-                    Console.WriteLine(file);
-                }
+                Dir = folder.Value.Path.LocalPath; 
+                SplitPaths = Directory.EnumerateFiles(Dir, "*").ToArray();
                 
                 // Ok future me, here, you are going to want to borrow bubbles xci / nsp reading code from tkmm
                 string gamedata = "Stuff from the tkmm code"; // Wait does the tkmm code also allow you to view the filename in its header?
