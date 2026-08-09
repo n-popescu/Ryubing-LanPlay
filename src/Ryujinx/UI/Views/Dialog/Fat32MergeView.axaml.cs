@@ -57,11 +57,6 @@ namespace Ryujinx.Ava.UI.Views.Dialog
             ViewModel.MergeDump(Dir, FileName);
         }
 
-        private void SetProgress(object sender, RoutedEventArgs e)
-        {
-            ViewModel.SetProgress(); //Test commit contents
-        }
-
         private async void OpenFolderPicker(object sender, RoutedEventArgs e)
         {
             try

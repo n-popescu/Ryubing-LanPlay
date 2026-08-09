@@ -12,6 +12,14 @@ namespace Ryujinx.Ava.UI.ViewModels
 {
     public class Fat32MergeViewModel : BaseModel
     {
+        public string Dingus
+        {
+            get
+            {
+                return "Text lol";
+            }
+        }
+
         public void MergeDump(string dir, string filename)
         {
             try
@@ -70,11 +78,6 @@ namespace Ryujinx.Ava.UI.ViewModels
             {
                 Logger.Error?.Print(LogClass.Application, e.ToString());
             }
-        }
-
-        public void SetProgress()
-        {
-            Console.WriteLine("Updating not implemented"); // Related to XCITrimmerViewModel.cs > SetProgress()
         }
     }
 }

@@ -9,32 +9,17 @@
     xmlns:viewModels="clr-namespace:Ryujinx.Ava.UI.ViewModels"
     xmlns:helpers="clr-namespace:Ryujinx.Ava.UI.Helpers"
     xmlns:models="clr-namespace:Ryujinx.Ava.Common.Models"
-    Width="700"
-    Height="600"
+    Width="450"
+    Height="250"
     x:DataType="viewModels:Fat32MergeViewModel"
     Focusable="True"
     mc:Ignorable="d">
     <Grid Margin="25,10,25,0" RowDefinitions="Auto,*,Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Panel>
-            <TextBlock Text="Merge progress" />
+            <TextBlock Text="{Binding Dingus}" />
         </Panel>
-        <Border 
-            Grid.Row="1"
-                Margin="0,0,0,20"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                BorderBrush="{DynamicResource AppListHoverBackgroundColor}"
-                BorderThickness="1"
-                CornerRadius="5"
-                Padding="2.5">
-            <Grid RowDefinitions="Auto" ColumnDefinitions="*,Auto" >
-                <TextBlock Grid.Column="0"  Text="Filename"/>
-                <TextBlock Grid.Column="1" Text="Filesize"/>
-            </Grid>
-        </Border>
-        
-        <Button Grid.Row="2" Name="BeStinkyButton" MinWidth="90" Click="Merge" IsVisible="True" HorizontalAlignment="Left">
-            <TextBlock Text="Merge" />
+        <Button Grid.Row="2" Name="MergeButton" MinWidth="90" Click="Merge" IsVisible="True" HorizontalAlignment="Left">
+            <TextBlock Text="" />
         </Button>
 
         <Button Grid.Row="2" Name="SelectFolderButton" MinWidth="90" Click="OpenFolderPicker" IsVisible="True" HorizontalAlignment="Center">
@@ -42,7 +27,7 @@
         </Button>
         
         <Button Grid.Row="2" Name="CloseButton" MinWidth="90" Click="Close" IsVisible="True" HorizontalAlignment="Right">
-            <TextBlock Text="{ext:Locale SettingsButtonClose}" />
+            <TextBlock Text="" />
         </Button>
     </Grid>
 </UserControl>
