@@ -15,8 +15,6 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             try
             {
-                string commandName;
-                
                 Console.WriteLine("Beginning merge");
                 if (File.Exists($"{dir}{filename}"))
                 {
@@ -37,16 +35,23 @@ namespace Ryujinx.Ava.UI.ViewModels
                     Console.WriteLine("Beginning merge using windows CMD"); // Thank you stack random ~~citizen~~ stack exchange post
 
                     var processStartInfo = new ProcessStartInfo();
-                    processStartInfo.FileName = "/bin/bash";
+                    processStartInfo.FileName = "CMD.exe";
                     processStartInfo.WorkingDirectory = dir;
-                    processStartInfo.Arguments = $"-c \"cat * > \'{filename}\'\"";
+                    processStartInfo.Arguments = $"/C copy /B * \"{filename}\"";
                     
                     Console.WriteLine(processStartInfo.Arguments);
-                    Process.Start(processStartInfo); // Thank you bash for auto ordering by name.
+                    Process.Start(processStartInfo); // Thank you cmd for auto ordering by name.
                 }
                 else if (OperatingSystem.IsMacOS())
                 {
-                    Console.WriteLine($"Currently not implemented: MacOS merge");
+                    Console.WriteLine("Beginning merge using whatever mac uses"); // Thank you stack random ~~citizen~~ stack exchange post
+
+                    var processStartInfo = new ProcessStartInfo();
+                    processStartInfo.FileName = $"copy /B * \"{filename}\"";
+                    processStartInfo.WorkingDirectory = dir;
+                    
+                    Console.WriteLine(processStartInfo.Arguments);
+                    Process.Start(processStartInfo); // Thank you cmd for auto ordering by name.
                 }
                 else if (OperatingSystem.IsLinux())
                 {
@@ -60,7 +65,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     Console.WriteLine(processStartInfo.Arguments);
                     Process.Start(processStartInfo); // Thank you bash for auto ordering by name.
                 }
-                else
+                else if (OperatingSystem.IsFreeBSD())
                 {
                     Console.WriteLine("Unsupported OS!");
                 }
