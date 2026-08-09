@@ -2,6 +2,7 @@
 using Avalonia.Data;
 using Avalonia.Platform.Storage;
 using Ryujinx.Ava.Utilities;
+using Ryujinx.Common.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,55 +16,48 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             try
             {
-                Console.WriteLine("Beginning merge");
                 if (File.Exists($"{dir}{filename}"))
                 {
                     File.Delete($"{dir}{filename}");
+                    Logger.Notice.Print(LogClass.Application, "Removed pre-existing file");
                 }
-                Console.WriteLine("Old file purged");
-                Console.WriteLine($"{dir}{filename}");
-                
-                // Replace this garbage 2GB limited code with OS commands NOW! - Ghost of awesomeanchovies past
-                
-                //xcopy (windows)
-                //??? (mac idk what they use)
-                
-                
+
                 // NOTE: Copy commands built into stream in C# are limited to 2GB per file. Using OS commands gets around this.
                 if (OperatingSystem.IsWindows())
                 {
-                    Console.WriteLine("Beginning merge using windows CMD"); // Thank you stack random ~~citizen~~ stack exchange post
+                    Console.WriteLine("Beginning merge using windows CMD");
 
                     var processStartInfo = new ProcessStartInfo();
                     processStartInfo.FileName = "CMD.exe";
                     processStartInfo.WorkingDirectory = dir;
                     processStartInfo.Arguments = $"/C copy /B * \"{filename}\"";
                     
-                    Console.WriteLine(processStartInfo.Arguments);
-                    Process.Start(processStartInfo); // Thank you cmd for auto ordering by name.
+                    using var process = Process.Start(processStartInfo);
+                    process?.WaitForExit();
                 }
                 else if (OperatingSystem.IsMacOS())
                 {
-                    Console.WriteLine("Beginning merge using whatever mac uses"); // Thank you stack random ~~citizen~~ stack exchange post
+                    Console.WriteLine("Beginning merge using whatever mac uses");
 
                     var processStartInfo = new ProcessStartInfo();
-                    processStartInfo.FileName = $"\"cat * > \'{filename}\'\"";
+                    processStartInfo.FileName = "/bin/sh";
                     processStartInfo.WorkingDirectory = dir;
+                    processStartInfo.Arguments = $"-c \"cat * > \'{filename}\'\"";
                     
-                    Console.WriteLine(processStartInfo.Arguments);
-                    Process.Start(processStartInfo); // Thank you cmd for auto ordering by name.
+                    using var process = Process.Start(processStartInfo);
+                    process?.WaitForExit();
                 }
                 else if (OperatingSystem.IsLinux())
                 {
-                    Console.WriteLine("Beginning merge using linux bash commands"); // Thank you stack random ~~citizen~~ stack exchange post
+                    Console.WriteLine("Beginning merge using linux bash commands");
 
                     var processStartInfo = new ProcessStartInfo();
                     processStartInfo.FileName = "/bin/bash";
                     processStartInfo.WorkingDirectory = dir;
                     processStartInfo.Arguments = $"-c \"cat * > \'{filename}\'\"";
                     
-                    Console.WriteLine(processStartInfo.Arguments);
-                    Process.Start(processStartInfo); // Thank you bash for auto ordering by name.
+                    using var process = Process.Start(processStartInfo);
+                    process?.WaitForExit();
                 }
                 else if (OperatingSystem.IsFreeBSD())
                 {
