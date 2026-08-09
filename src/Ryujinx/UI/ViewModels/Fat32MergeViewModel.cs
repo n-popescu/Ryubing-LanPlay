@@ -25,8 +25,8 @@ namespace Ryujinx.Ava.UI.ViewModels
                 // NOTE: Copy commands built into stream in C# are limited to 2GB per file. Using OS commands gets around this.
                 if (OperatingSystem.IsWindows())
                 {
-                    Console.WriteLine("Beginning merge using windows CMD");
-
+                    Logger.Notice.Print(LogClass.Application, "Beginning merge using windows CMD");
+                    
                     var processStartInfo = new ProcessStartInfo();
                     processStartInfo.FileName = "CMD.exe";
                     processStartInfo.WorkingDirectory = dir;
@@ -37,7 +37,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 }
                 else if (OperatingSystem.IsMacOS())
                 {
-                    Console.WriteLine("Beginning merge using whatever mac uses");
+                    Logger.Notice.Print(LogClass.Application, "Beginning merge using whatever macos uses");
 
                     var processStartInfo = new ProcessStartInfo();
                     processStartInfo.FileName = "/bin/sh";
@@ -49,7 +49,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 }
                 else if (OperatingSystem.IsLinux())
                 {
-                    Console.WriteLine("Beginning merge using linux bash commands");
+                    Logger.Notice.Print(LogClass.Application, "Beginning merge using linux bash commands");
 
                     var processStartInfo = new ProcessStartInfo();
                     processStartInfo.FileName = "/bin/bash";
@@ -59,20 +59,16 @@ namespace Ryujinx.Ava.UI.ViewModels
                     using var process = Process.Start(processStartInfo);
                     process?.WaitForExit();
                 }
-                else if (OperatingSystem.IsFreeBSD())
+                else
                 {
-                    Console.WriteLine("Unsupported OS!");
+                    Logger.Notice.Print(LogClass.Application, "Your OS is unsupported by the merge tool!");
+                    return;
                 }
-                
-                Console.WriteLine("It has been done.");
+                Logger.Notice.Print(LogClass.Application, "Merge complete!");
             }
             catch (Exception e)
             {
-                if (e.ToString().Contains("used by another process"))
-                {
-                    Console.WriteLine("File is in use by another process!");
-                }
-                Console.WriteLine(e.ToString());
+                Logger.Error?.Print(LogClass.Application, e.ToString());
             }
         }
 

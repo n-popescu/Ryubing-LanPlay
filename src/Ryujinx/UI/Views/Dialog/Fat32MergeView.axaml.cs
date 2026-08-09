@@ -11,6 +11,7 @@ using Ryujinx.Ava.Common.Models;
 using Ryujinx.Ava.UI.Controls;
 using Ryujinx.Ava.UI.ViewModels;
 using Ryujinx.Ava.Utilities;
+using Ryujinx.Common.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -78,11 +79,10 @@ namespace Ryujinx.Ava.UI.Views.Dialog
                 {
                     SplitPaths.Remove($"{Dir}{FileName}");
                 }
-                Console.WriteLine($"Filename is {FileName}");
             }
             catch (Exception exception)
             {
-                Console.Write(exception.ToString()); // TODO: Replace this with proper logging in the final product
+                Logger.Error?.Print(LogClass.Application, exception.ToString());
             }
             
         }
