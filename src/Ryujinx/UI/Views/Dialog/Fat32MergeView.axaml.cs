@@ -2,6 +2,8 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.Styling;
+using DynamicData;
+using ExCSS;
 using FluentAvalonia.UI.Controls;
 using Gommon;
 using Ryujinx.Ava.Common.Locale;
@@ -19,7 +21,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 {
     public partial class Fat32MergeView : RyujinxControl<Fat32MergeViewModel>
     {
-        public string[] SplitPaths; // Store the strings for the split dump files here so we can mess around lol.
+        public List<string> SplitPaths; // Store the strings for the split dump files here so we can mess around lol.
 
         public string Dir; // Save the dir itself.
 
@@ -65,13 +67,24 @@ namespace Ryujinx.Ava.UI.Views.Dialog
             {
                 Optional<IStorageFolder> folder = await RyujinxApp.MainWindow.ViewModel.StorageProvider.OpenSingleFolderPickerAsync();
                 Dir = folder.Value.Path.LocalPath; 
-                SplitPaths = Directory.EnumerateFiles(Dir, "*").ToArray();
+                SplitPaths = Directory.EnumerateFiles(Dir, "*").ToList();
                 
                 // Begin the name reading stuff here
                 
                 FileName = Path.GetFileName(Dir);
+                if (SplitPaths.Contains($"{Dir}{FileName}")) // This thing made me use lists instead of arrays. Array stinky.
+                {
+                    SplitPaths.Remove($"{Dir}{FileName}");
+                }
+                /*
+                SplitPaths.OrderByDescending(int)
                 Console.WriteLine(FileName); // More testing stuff lol
-                
+                foreach (string file in SplitPaths)
+                {
+                    Console.WriteLine(file);
+                }
+                */
+                for ()
             }
             catch (Exception exception)
             {
