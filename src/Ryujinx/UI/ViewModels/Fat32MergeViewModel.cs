@@ -11,7 +11,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 {
     public class Fat32MergeViewModel : BaseModel
     {
-        public void MergeDump(List<string> files, string dir, string filename)
+        public void MergeDump(string dir, string filename)
         {
             try
             {
@@ -23,12 +23,12 @@ namespace Ryujinx.Ava.UI.ViewModels
                     File.Delete($"{dir}{filename}");
                 }
                 Console.WriteLine("Old file purged");
+                Console.WriteLine($"{dir}{filename}");
                 
                 // Replace this garbage 2GB limited code with OS commands NOW! - Ghost of awesomeanchovies past
                 
                 //xcopy (windows)
                 //??? (mac idk what they use)
-                //cat (linux?)
                 
                 
                 // NOTE: Copy commands built into stream in C# are limited to 2GB per file. Using OS commands gets around this.
@@ -43,14 +43,11 @@ namespace Ryujinx.Ava.UI.ViewModels
                 else if (OperatingSystem.IsLinux())
                 {
                     Console.WriteLine("Beginning merge using linux bash commands");
-                    commandName = "cat";
+
+                    string thething = $"-c \"cat \'{dir}*\' > \'{dir}{filename}test.xci\'\"";
                     
-                    foreach (string file in files)
-                    {
-                        commandName += $" {file}";
-                    }
-                        ;
-                    commandName += $" > {filename}";
+                    Console.WriteLine(thething);
+                    Process.Start("/bin/bash", thething); // Thank you bash for auto ordering by name.
                 }
                 else
                 {

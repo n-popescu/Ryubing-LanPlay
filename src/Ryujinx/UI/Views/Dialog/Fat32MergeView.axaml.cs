@@ -53,7 +53,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 
         private void Merge(object sender, RoutedEventArgs e)
         {
-            ViewModel.MergeDump(SplitPaths, Dir, FileName);
+            ViewModel.MergeDump(Dir, FileName);
         }
 
         private void SetProgress(object sender, RoutedEventArgs e)
@@ -76,15 +76,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
                 {
                     SplitPaths.Remove($"{Dir}{FileName}");
                 }
-                /*
-                SplitPaths.OrderByDescending(int)
-                Console.WriteLine(FileName); // More testing stuff lol
-                foreach (string file in SplitPaths)
-                {
-                    Console.WriteLine(file);
-                }
-                */
-                for ()
+                Console.WriteLine($"Filename is {FileName}");
             }
             catch (Exception exception)
             {
