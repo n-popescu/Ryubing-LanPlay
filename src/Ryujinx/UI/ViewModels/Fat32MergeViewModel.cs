@@ -42,27 +42,21 @@ namespace Ryujinx.Ava.UI.ViewModels
                 }
                 else if (OperatingSystem.IsLinux())
                 {
-                    Console.WriteLine("Beginning merge using linux bash commands");
+                    Console.WriteLine("Beginning merge using linux bash commands"); // Thank you stack random ~~citizen~~ stack exchange post
 
-                    string thething = $"-c \"cat \'{dir}*\' > \'{dir}{filename}test.xci\'\"";
+                    var processStartInfo = new ProcessStartInfo();
+                    processStartInfo.FileName = "/bin/bash";
+                    processStartInfo.WorkingDirectory = dir;
+                    processStartInfo.Arguments = $"-c \"cat * > \'{filename}test.xci\'\"";
                     
-                    Console.WriteLine(thething);
-                    Process.Start("/bin/bash", thething); // Thank you bash for auto ordering by name.
+                    Console.WriteLine(processStartInfo.Arguments);
+                    Process.Start(processStartInfo); // Thank you bash for auto ordering by name.
                 }
                 else
                 {
                     Console.WriteLine("Unsupported OS!");
                 }
                 
-                
-                /*
-                using (Stream mergedFile = File.Open($"{dir}dingus{filename}", FileMode.Create)) // SWEET LIBERTY WHAT IS THIS ABOMINATION I MADE???
-                {
-                    foreach (string file in files)
-                    {
-                        mergedFile.Write(File.ReadAllBytes(file));
-                    }
-                } */
                 Console.WriteLine("It has been done.");
             }
             catch (Exception e)
