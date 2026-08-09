@@ -47,7 +47,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     Console.WriteLine("Beginning merge using whatever mac uses"); // Thank you stack random ~~citizen~~ stack exchange post
 
                     var processStartInfo = new ProcessStartInfo();
-                    processStartInfo.FileName = $"copy /B * \"{filename}\"";
+                    processStartInfo.FileName = $"\"cat * > \'{filename}\'\"";
                     processStartInfo.WorkingDirectory = dir;
                     
                     Console.WriteLine(processStartInfo.Arguments);
