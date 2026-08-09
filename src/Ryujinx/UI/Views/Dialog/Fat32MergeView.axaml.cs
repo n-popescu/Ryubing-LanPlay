@@ -71,7 +71,9 @@ namespace Ryujinx.Ava.UI.Views.Dialog
                 
                 // Begin the name reading stuff here
                 
-                FileName = Path.GetFileName(Dir);
+                FileName = Path.GetDirectoryName(Dir);
+                FileName = FileName.Remove(0, FileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                
                 if (SplitPaths.Contains($"{Dir}{FileName}")) // This thing made me use lists instead of arrays. Array stinky.
                 {
                     SplitPaths.Remove($"{Dir}{FileName}");

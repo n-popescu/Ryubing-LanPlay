@@ -34,11 +34,19 @@ namespace Ryujinx.Ava.UI.ViewModels
                 // NOTE: Copy commands built into stream in C# are limited to 2GB per file. Using OS commands gets around this.
                 if (OperatingSystem.IsWindows())
                 {
+                    Console.WriteLine("Beginning merge using windows CMD"); // Thank you stack random ~~citizen~~ stack exchange post
+
+                    var processStartInfo = new ProcessStartInfo();
+                    processStartInfo.FileName = "/bin/bash";
+                    processStartInfo.WorkingDirectory = dir;
+                    processStartInfo.Arguments = $"-c \"cat * > \'{filename}\'\"";
                     
+                    Console.WriteLine(processStartInfo.Arguments);
+                    Process.Start(processStartInfo); // Thank you bash for auto ordering by name.
                 }
                 else if (OperatingSystem.IsMacOS())
                 {
-                    
+                    Console.WriteLine($"Currently not implemented: MacOS merge");
                 }
                 else if (OperatingSystem.IsLinux())
                 {
@@ -47,7 +55,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     var processStartInfo = new ProcessStartInfo();
                     processStartInfo.FileName = "/bin/bash";
                     processStartInfo.WorkingDirectory = dir;
-                    processStartInfo.Arguments = $"-c \"cat * > \'{filename}test.xci\'\"";
+                    processStartInfo.Arguments = $"-c \"cat * > \'{filename}\'\"";
                     
                     Console.WriteLine(processStartInfo.Arguments);
                     Process.Start(processStartInfo); // Thank you bash for auto ordering by name.
