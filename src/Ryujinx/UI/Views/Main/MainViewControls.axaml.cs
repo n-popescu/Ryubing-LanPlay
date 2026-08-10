@@ -29,13 +29,13 @@ namespace Ryujinx.Ava.UI.Views.Main
 
         public void Sort_Checked(object sender, RoutedEventArgs args)
         {
-            if (sender is RadioButton { Tag: string sortStrategy })
+            if (sender is RadioButton { IsChecked: true, Tag: string sortStrategy })
                 ViewModel.Sort(Enum.Parse<ApplicationSort>(sortStrategy));
         }
 
         public void Order_Checked(object sender, RoutedEventArgs args)
         {
-            if (sender is RadioButton { Tag: string sortOrder })
+            if (sender is RadioButton { IsChecked: true, Tag: string sortOrder })
                 ViewModel.Sort(sortOrder is not "Descending");
         }
 
