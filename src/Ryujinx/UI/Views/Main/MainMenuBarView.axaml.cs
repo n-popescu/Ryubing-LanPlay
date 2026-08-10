@@ -199,7 +199,8 @@ namespace Ryujinx.Ava.UI.Views.Main
             {
                 ViewModel.WindowState = WindowState.Normal;
 
-                Window.Arrange(new Rect(Window.Position.X, Window.Position.Y, windowWidthScaled, windowHeightScaled));
+                Window.Width = windowWidthScaled;
+                Window.Height = windowHeightScaled;
             });
         }
     }
