@@ -12,16 +12,11 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 {
     public partial class Fat32MergeView : RyujinxControl<Fat32MergeViewModel>
     {
-        public List<string> SplitPaths = new List<string>();
-
-        public string Dir;
-
-        public string FileName;
-        
         public Fat32MergeView()
         {
             InitializeComponent();
         }
+        
         public static async Task Show()
         {
             ContentDialog contentDialog = new()

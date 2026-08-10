@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Gommon;
 using Ryujinx.Ava.Common.Locale;
@@ -16,44 +17,36 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public string Dir;
 
-        public string FileName;
+        public string FileName = "None Selected";
         
         
         public string MergedName
         {
             get
             {
-                return $"{LocaleKeys.Fat32Merge_FileNamePrefix}{Dir}";
+                return $"{LocaleManager.Instance[LocaleKeys.Fat32Merge_FileNamePrefix]}{FileName}";
             }
         }
 
         public async void OpenFolderPicker()
         {
+            
             try
             {
-                List<string> unorderedSplitPaths;
-                
                 Optional<IStorageFolder> folder = await RyujinxApp.MainWindow.ViewModel.StorageProvider.OpenSingleFolderPickerAsync();
                 Dir = folder.Value.Path.LocalPath; 
-                unorderedSplitPaths = Directory.EnumerateFiles(Dir, "*").ToList();
+                SplitPaths = Directory.EnumerateFiles(Dir, "*").ToList();
                 FileName = Path.GetDirectoryName(Dir);
                 FileName = FileName.Remove(0, FileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                
-
-                if (unorderedSplitPaths.Contains($"{Dir}{FileName}"))
+                SplitPaths.Sort();
+                if (SplitPaths.Contains($"{Dir}{FileName}"))
                 {
-                    unorderedSplitPaths.Remove($"{Dir}{FileName}");
-                }
-
-                SplitPaths.Clear();
-                for (int fileindex = 0; fileindex < unorderedSplitPaths.Count; fileindex++)
-                {
-                    SplitPaths.Add($"{Dir}0{fileindex}");
+                    SplitPaths.Remove($"{Dir}{FileName}");
                 }
             }
             catch (Exception exception)
             {
-                Logger.Error?.Print(LogClass.Application, $"{LocaleKeys.Fat32Merge_MergeEndFailed}");
+                Logger.Error?.Print(LogClass.Application, $"{LocaleManager.Instance[LocaleKeys.Fat32Merge_MergeEndFailed]}");
                 Logger.Error?.Print(LogClass.Application, exception.ToString());
             }
         }
@@ -66,9 +59,9 @@ namespace Ryujinx.Ava.UI.ViewModels
                 if (File.Exists($"{Dir}{FileName}"))
                 {
                     File.Delete($"{Dir}{FileName}");
-                    Logger.Notice.Print(LogClass.Application, $"{LocaleKeys.Fat32Merge_RemoveExistingFile}");
+                    Logger.Notice.Print(LogClass.Application, $"{LocaleManager.Instance[LocaleKeys.Fat32Merge_RemoveExistingFile]}");
                 }
-                Logger.Notice.Print(LogClass.Application, $"{LocaleKeys.Fat32Merge_MergeBegin}");
+                Logger.Notice.Print(LogClass.Application, $"{LocaleManager.Instance[LocaleKeys.Fat32Merge_MergeBegin]}");
                 using (FileStream output = File.Create($"{Dir}{FileName}"))
                 {
                     foreach (string file in SplitPaths)
@@ -79,11 +72,11 @@ namespace Ryujinx.Ava.UI.ViewModels
                         }
                     }
                 }
-                Logger.Notice.Print(LogClass.Application, $"{LocaleKeys.Fat32Merge_MergeEnd}");
+                Logger.Notice.Print(LogClass.Application, $"{LocaleManager.Instance[LocaleKeys.Fat32Merge_MergeEnd]}");
             }
             catch (Exception e)
             {
-                Logger.Error?.Print(LogClass.Application, $"{LocaleKeys.Fat32Merge_MergeEndFailed}");
+                Logger.Error?.Print(LogClass.Application, $"{LocaleManager.Instance[LocaleKeys.Fat32Merge_MergeEndFailed]}");
                 Logger.Error?.Print(LogClass.Application, e.ToString());
             }
         }
