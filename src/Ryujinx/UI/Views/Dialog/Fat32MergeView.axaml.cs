@@ -22,9 +22,9 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 {
     public partial class Fat32MergeView : RyujinxControl<Fat32MergeViewModel>
     {
-        public List<string> SplitPaths; // Store the strings for the split dump files here so we can mess around lol.
+        public List<string> SplitPaths = new List<string>();
 
-        public string Dir; // Save the dir itself.
+        public string Dir;
 
         public string FileName;
         
@@ -54,30 +54,37 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 
         private void Merge(object sender, RoutedEventArgs e)
         {
-            ViewModel.MergeDump(Dir, FileName);
+            ViewModel.MergeDump(Dir, FileName, SplitPaths);
         }
 
         private async void OpenFolderPicker(object sender, RoutedEventArgs e)
         {
             try
             {
+                List<string> unorderedSplitPaths;
+                
                 Optional<IStorageFolder> folder = await RyujinxApp.MainWindow.ViewModel.StorageProvider.OpenSingleFolderPickerAsync();
                 Dir = folder.Value.Path.LocalPath; 
-                SplitPaths = Directory.EnumerateFiles(Dir, "*").ToList();
-                
-                // Begin the name reading stuff here
-                
+                unorderedSplitPaths = Directory.EnumerateFiles(Dir, "*").ToList();
                 FileName = Path.GetDirectoryName(Dir);
                 FileName = FileName.Remove(0, FileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
                 
-                if (SplitPaths.Contains($"{Dir}{FileName}")) // This thing made me use lists instead of arrays. Array stinky.
+
+                if (unorderedSplitPaths.Contains($"{Dir}{FileName}"))
                 {
-                    SplitPaths.Remove($"{Dir}{FileName}");
+                    unorderedSplitPaths.Remove($"{Dir}{FileName}");
+                }
+
+                SplitPaths.Clear();
+                for (int fileindex = 0; fileindex < unorderedSplitPaths.Count; fileindex++)
+                {
+                    SplitPaths.Add($"{Dir}0{fileindex}");
                 }
             }
             catch (Exception exception)
             {
                 Logger.Error?.Print(LogClass.Application, exception.ToString());
+                Logger.Error?.Print(LogClass.Application, "Merge failed!");
             }
             
         }

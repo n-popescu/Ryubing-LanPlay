@@ -19,7 +19,7 @@
             <TextBlock Text="{Binding Dingus}" />
         </Panel>
         <Button Grid.Row="2" Name="MergeButton" MinWidth="90" Click="Merge" IsVisible="True" HorizontalAlignment="Left">
-            <TextBlock Text="" />
+            <TextBlock Text="{ext:Locale Fat32Merge_MergeButton}" />
         </Button>
 
         <Button Grid.Row="2" Name="SelectFolderButton" MinWidth="90" Click="OpenFolderPicker" IsVisible="True" HorizontalAlignment="Center">
@@ -27,7 +27,7 @@
         </Button>
         
         <Button Grid.Row="2" Name="CloseButton" MinWidth="90" Click="Close" IsVisible="True" HorizontalAlignment="Right">
-            <TextBlock Text="" />
+            <TextBlock Text="{ext:Locale SettingsButtonClose}" />
         </Button>
     </Grid>
 </UserControl>

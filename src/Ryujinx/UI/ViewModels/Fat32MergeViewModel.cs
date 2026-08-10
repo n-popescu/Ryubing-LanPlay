@@ -20,8 +20,23 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
-        public void MergeDump(string dir, string filename)
+        public void MergeDump(string dir, string filename, List<string> files)
         {
+            using (FileStream output = File.Create($"{dir}{filename}"))
+            {
+                foreach (string file in files)
+                {
+                    using (FileStream input = File.OpenRead(file))
+                    {
+                        input.CopyTo(output);
+                    }
+                }
+            }
+
+
+
+
+            /*
             try
             {
                 if (File.Exists($"{dir}{filename}"))
@@ -34,12 +49,12 @@ namespace Ryujinx.Ava.UI.ViewModels
                 if (OperatingSystem.IsWindows())
                 {
                     Logger.Notice.Print(LogClass.Application, "Beginning merge using windows CMD");
-                    
+
                     var processStartInfo = new ProcessStartInfo();
                     processStartInfo.FileName = "CMD.exe";
                     processStartInfo.WorkingDirectory = dir;
                     processStartInfo.Arguments = $"/C copy /B * \"{filename}\"";
-                    
+
                     using var process = Process.Start(processStartInfo);
                     process?.WaitForExit();
                 }
@@ -51,7 +66,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     processStartInfo.FileName = "/bin/sh";
                     processStartInfo.WorkingDirectory = dir;
                     processStartInfo.Arguments = $"-c \"cat * > \'{filename}\'\"";
-                    
+
                     using var process = Process.Start(processStartInfo);
                     process?.WaitForExit();
                 }
@@ -63,7 +78,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     processStartInfo.FileName = "/bin/bash";
                     processStartInfo.WorkingDirectory = dir;
                     processStartInfo.Arguments = $"-c \"cat * > \'{filename}\'\"";
-                    
+
                     using var process = Process.Start(processStartInfo);
                     process?.WaitForExit();
                 }
@@ -77,7 +92,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             catch (Exception e)
             {
                 Logger.Error?.Print(LogClass.Application, e.ToString());
-            }
+            } */
         }
     }
 }
