@@ -16,14 +16,14 @@
     mc:Ignorable="d">
     <Grid Margin="25,10,25,0" RowDefinitions="Auto,*,Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Panel>
-            <TextBlock Text="{Binding Dingus}" />
+            <TextBlock Text="{Binding MergedName}" />
         </Panel>
         <Button Grid.Row="2" Name="MergeButton" MinWidth="90" Click="Merge" IsVisible="True" HorizontalAlignment="Left">
             <TextBlock Text="{ext:Locale Fat32Merge_MergeButton}" />
         </Button>
 
         <Button Grid.Row="2" Name="SelectFolderButton" MinWidth="90" Click="OpenFolderPicker" IsVisible="True" HorizontalAlignment="Center">
-            <TextBlock Text="Select Split Dump Folder" />
+            <TextBlock Text="{ext:Locale Fat32Merge_SelectFolder}" />
         </Button>
         
         <Button Grid.Row="2" Name="CloseButton" MinWidth="90" Click="Close" IsVisible="True" HorizontalAlignment="Right">

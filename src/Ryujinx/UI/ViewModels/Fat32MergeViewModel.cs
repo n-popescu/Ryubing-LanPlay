@@ -1,98 +1,91 @@
-
-using Avalonia.Data;
 using Avalonia.Platform.Storage;
+using Gommon;
+using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Utilities;
 using Ryujinx.Common.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Diagnostics;
+using System.Linq;
 
 namespace Ryujinx.Ava.UI.ViewModels
 {
     public class Fat32MergeViewModel : BaseModel
     {
-        public string Dingus
+        public List<string> SplitPaths = new List<string>();
+
+        public string Dir;
+
+        public string FileName;
+        
+        
+        public string MergedName
         {
             get
             {
-                return "Text lol";
+                return $"{LocaleKeys.Fat32Merge_FileNamePrefix}{Dir}";
             }
         }
 
-        public void MergeDump(string dir, string filename, List<string> files)
+        public async void OpenFolderPicker()
         {
-            using (FileStream output = File.Create($"{dir}{filename}"))
-            {
-                foreach (string file in files)
-                {
-                    using (FileStream input = File.OpenRead(file))
-                    {
-                        input.CopyTo(output);
-                    }
-                }
-            }
-
-
-
-
-            /*
             try
             {
-                if (File.Exists($"{dir}{filename}"))
+                List<string> unorderedSplitPaths;
+                
+                Optional<IStorageFolder> folder = await RyujinxApp.MainWindow.ViewModel.StorageProvider.OpenSingleFolderPickerAsync();
+                Dir = folder.Value.Path.LocalPath; 
+                unorderedSplitPaths = Directory.EnumerateFiles(Dir, "*").ToList();
+                FileName = Path.GetDirectoryName(Dir);
+                FileName = FileName.Remove(0, FileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                
+
+                if (unorderedSplitPaths.Contains($"{Dir}{FileName}"))
                 {
-                    File.Delete($"{dir}{filename}");
-                    Logger.Notice.Print(LogClass.Application, "Removed pre-existing file");
+                    unorderedSplitPaths.Remove($"{Dir}{FileName}");
                 }
 
-                // NOTE: Copy commands built into stream in C# are limited to 2GB per file. Using OS commands gets around this.
-                if (OperatingSystem.IsWindows())
+                SplitPaths.Clear();
+                for (int fileindex = 0; fileindex < unorderedSplitPaths.Count; fileindex++)
                 {
-                    Logger.Notice.Print(LogClass.Application, "Beginning merge using windows CMD");
-
-                    var processStartInfo = new ProcessStartInfo();
-                    processStartInfo.FileName = "CMD.exe";
-                    processStartInfo.WorkingDirectory = dir;
-                    processStartInfo.Arguments = $"/C copy /B * \"{filename}\"";
-
-                    using var process = Process.Start(processStartInfo);
-                    process?.WaitForExit();
+                    SplitPaths.Add($"{Dir}0{fileindex}");
                 }
-                else if (OperatingSystem.IsMacOS())
+            }
+            catch (Exception exception)
+            {
+                Logger.Error?.Print(LogClass.Application, $"{LocaleKeys.Fat32Merge_MergeEndFailed}");
+                Logger.Error?.Print(LogClass.Application, exception.ToString());
+            }
+        }
+
+        public void MergeDump()
+        {
+            
+            try
+            {
+                if (File.Exists($"{Dir}{FileName}"))
                 {
-                    Logger.Notice.Print(LogClass.Application, "Beginning merge using whatever macos uses");
-
-                    var processStartInfo = new ProcessStartInfo();
-                    processStartInfo.FileName = "/bin/sh";
-                    processStartInfo.WorkingDirectory = dir;
-                    processStartInfo.Arguments = $"-c \"cat * > \'{filename}\'\"";
-
-                    using var process = Process.Start(processStartInfo);
-                    process?.WaitForExit();
+                    File.Delete($"{Dir}{FileName}");
+                    Logger.Notice.Print(LogClass.Application, $"{LocaleKeys.Fat32Merge_RemoveExistingFile}");
                 }
-                else if (OperatingSystem.IsLinux())
+                Logger.Notice.Print(LogClass.Application, $"{LocaleKeys.Fat32Merge_MergeBegin}");
+                using (FileStream output = File.Create($"{Dir}{FileName}"))
                 {
-                    Logger.Notice.Print(LogClass.Application, "Beginning merge using linux bash commands");
-
-                    var processStartInfo = new ProcessStartInfo();
-                    processStartInfo.FileName = "/bin/bash";
-                    processStartInfo.WorkingDirectory = dir;
-                    processStartInfo.Arguments = $"-c \"cat * > \'{filename}\'\"";
-
-                    using var process = Process.Start(processStartInfo);
-                    process?.WaitForExit();
+                    foreach (string file in SplitPaths)
+                    {
+                        using (FileStream input = File.OpenRead(file))
+                        {
+                            input.CopyTo(output);
+                        }
+                    }
                 }
-                else
-                {
-                    Logger.Notice.Print(LogClass.Application, "Your OS is unsupported by the merge tool!");
-                    return;
-                }
-                Logger.Notice.Print(LogClass.Application, "Merge complete!");
+                Logger.Notice.Print(LogClass.Application, $"{LocaleKeys.Fat32Merge_MergeEnd}");
             }
             catch (Exception e)
             {
+                Logger.Error?.Print(LogClass.Application, $"{LocaleKeys.Fat32Merge_MergeEndFailed}");
                 Logger.Error?.Print(LogClass.Application, e.ToString());
-            } */
+            }
         }
     }
 }
