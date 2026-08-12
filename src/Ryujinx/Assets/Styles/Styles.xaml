@@ -249,7 +249,7 @@
     </Style>
     <Style Selector="Button">
         <Setter Property="MinWidth"
-                Value="80" />
+                Value="0" />
     </Style>
     <Style Selector="ProgressBar:horizontal">
         <Setter Property="MinWidth" Value="0"/>
