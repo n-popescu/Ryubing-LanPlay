@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Gommon;
 using Ryujinx.Ava.Common.Locale;
+using Ryujinx.Ava.Systems.AppLibrary;
 using Ryujinx.Ava.Utilities;
 using Ryujinx.Common.Logging;
 using System;
@@ -36,9 +37,16 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Optional<IStorageFolder> folder = await RyujinxApp.MainWindow.ViewModel.StorageProvider.OpenSingleFolderPickerAsync();
                 Dir = folder.Value.Path.LocalPath; 
                 SplitPaths = Directory.EnumerateFiles(Dir, "*").ToList();
+                SplitPaths.Sort();
+
+                // Check ApplicationLibrary.TryGetApplicationsFromFile() for pointers.
+                
+                
+                // Replace this with libhac or something idk
                 FileName = Path.GetDirectoryName(Dir);
                 FileName = FileName.Remove(0, FileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                SplitPaths.Sort();
+                
+                
                 if (SplitPaths.Contains($"{Dir}{FileName}"))
                 {
                     SplitPaths.Remove($"{Dir}{FileName}");
