@@ -1,6 +1,8 @@
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Gommon;
+using LibHac.FsSystem;
+using LibHac.Tools.FsSystem;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Systems.AppLibrary;
 using Ryujinx.Ava.Utilities;
@@ -9,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 
 namespace Ryujinx.Ava.UI.ViewModels
 {
@@ -40,6 +43,22 @@ namespace Ryujinx.Ava.UI.ViewModels
                 SplitPaths.Sort();
 
                 // Check ApplicationLibrary.TryGetApplicationsFromFile() for pointers.
+                
+                using FileStream file = new(SplitPaths[0], FileMode.Open, FileAccess.Read);
+
+
+                // For XCI games
+                LibHac.Tools.Fs.Xci xci = new(_virtualFileSystem.KeySet, file.AsStorage()); // Gotta find how to access the keys too : (
+                //applications = GetApplicationsFromPfs(xci.OpenPartition(XciPartitionType.Secure), applicationPath);
+                
+                
+                
+                // For NSP games
+                PartitionFileSystem pfs = new();
+                pfs.Initialize(file.AsStorage());
+                
+                ApplicationData result = GetApplicationFromNsp(pfs, applicationPath);
+                // In this struct there exists the title name from the NSP. Go figure it out future me!
                 
                 
                 // Replace this with libhac or something idk
