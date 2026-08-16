@@ -152,14 +152,17 @@
                 <Button
                     Classes="accent"
                     Content="{ext:Locale SettingsButtonOk}"
-                    Command="{Binding OkButton}" />
+                    Command="{Binding OkButton}"
+                    MinWidth="80" />
                 <Button
                     HotKey="Escape"
                     Content="{ext:Locale Common_Buttons_Cancel}"
-                    Command="{Binding CancelButton}" />
+                    Command="{Binding CancelButton}"
+                    MinWidth="80" />
                 <Button
                     Content="{ext:Locale SettingsButtonApply}"
-                    Command="{Binding ApplyButton}" />
+                    Command="{Binding ApplyButton}"
+                    MinWidth="80" />
             </ReversibleStackPanel>
         </Grid>
     </Grid>
