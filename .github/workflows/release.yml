@@ -1,0 +1,319 @@
+name: Release
+
+# Builds and publishes the emulator for Windows, Linux and macOS, and attaches every artifact to a
+# GitHub release.
+#
+# It runs automatically when a v<major>.<minor>.<patch> tag is pushed, and can also be started by
+# hand from the Actions tab, in which case the tag is created from the branch or commit the workflow
+# was started on.
+#
+# The Forgejo workflows under .forgejo/ stay as they are: they build the upstream project's own
+# releases on its own runners, with an internal version service and update server that are not
+# reachable from GitHub Actions.
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, as major.minor.patch (for example 1.3.2). A v<version> tag is created if it does not exist yet.'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark the GitHub release as a pre-release'
+        required: false
+        default: false
+        type: boolean
+
+# Needed to create the release, its tag and its assets.
+permissions:
+  contents: write
+
+# One release at a time, and never cancelled halfway through: a partially uploaded release is worse
+# than a late one.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: 1
+  # Builds identify themselves as release builds, but with the in-app updater compiled out: it asks
+  # the upstream project's update server for the latest official build, which knows nothing about
+  # this repository and would happily replace these binaries with an upstream one.
+  RYUJINX_TARGET_RELEASE_CHANNEL_NAME: release
+  EXTRA_DEFINE_CONSTANTS: DISABLE_UPDATER
+  RELEASE: 1
+
+jobs:
+  info:
+    name: Resolve version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+      tag: ${{ steps.resolve.outputs.tag }}
+      short_hash: ${{ steps.resolve.outputs.short_hash }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve the version, tag and commit being released
+        id: resolve
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+
+          if [ "${{ github.event_name }}" = 'push' ]; then
+            TAG="${{ github.ref_name }}"
+            VERSION="${TAG#v}"
+          else
+            VERSION="$INPUT_VERSION"
+            TAG="v$VERSION"
+          fi
+
+          # The in-app version has to parse as a .NET System.Version, and the update and shortcut
+          # paths assume three components, so reject anything else here rather than at run time.
+          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::'$VERSION' is not a major.minor.patch version"
+            exit 1
+          fi
+
+          {
+            echo "version=$VERSION"
+            echo "tag=$TAG"
+            echo "short_hash=$(git rev-parse --short "$GITHUB_SHA")"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "Releasing $VERSION as $TAG from $(git rev-parse --short "$GITHUB_SHA")" >> "$GITHUB_STEP_SUMMARY"
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: 'Cache: ~/.nuget/packages'
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
+
+      - name: Build the solution
+        run: dotnet build Ryujinx.sln -c Release
+
+      - name: Run the tests
+        run: dotnet test src/Ryujinx.Tests/Ryujinx.Tests.csproj -c Release --no-build --logger 'console;verbosity=normal'
+
+  desktop:
+    name: ${{ matrix.platform.name }}
+    needs: [info, test]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - { name: win-x64,     zip_os_name: win_x64,     arch_name: x64,   appimage: false }
+          - { name: win-arm64,   zip_os_name: win_arm64,   arch_name: arm64, appimage: false }
+          - { name: linux-x64,   zip_os_name: linux_x64,   arch_name: x64,   appimage: true  }
+          - { name: linux-arm64, zip_os_name: linux_arm64, arch_name: arm64, appimage: true  }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: 'Cache: ~/.nuget/packages'
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
+
+      - name: Stamp the version into ReleaseInformation.cs
+        run: |
+          set -euo pipefail
+          sed --in-place \
+            -e 's/%%RYUJINX_BUILD_VERSION%%/${{ needs.info.outputs.version }}/g' \
+            -e 's/%%RYUJINX_BUILD_GIT_HASH%%/${{ needs.info.outputs.short_hash }}/g' \
+            -e 's/%%RYUJINX_TARGET_RELEASE_CHANNEL_NAME%%/${{ env.RYUJINX_TARGET_RELEASE_CHANNEL_NAME }}/g' \
+            -e 's/%%RYUJINX_CONFIG_FILE_NAME%%/Config.json/g' \
+            src/Ryujinx.Common/ReleaseInformation.cs
+
+      - name: Publish
+        run: |
+          dotnet publish src/Ryujinx -c Release -r '${{ matrix.platform.name }}' -o ./publish \
+            --self-contained \
+            -p:Version='${{ needs.info.outputs.version }}' \
+            -p:SourceRevisionId='${{ needs.info.outputs.short_hash }}' \
+            -p:DebugType=embedded \
+            -p:ExtraDefineConstants=${{ env.EXTRA_DEFINE_CONSTANTS }}
+
+      - name: Drop the macOS-only support library
+        run: rm -f publish/libarmeilleure-jitsupport.dylib
+
+      - name: Create the output directory
+        run: mkdir -p release_output
+
+      - name: Pack the Windows build
+        if: startsWith(matrix.platform.name, 'win-')
+        env:
+          BASE: ryujinx-${{ needs.info.outputs.version }}-${{ matrix.platform.zip_os_name }}
+        run: |
+          set -euo pipefail
+          # Packed from inside publish/ so the emulator sits at the root of the archive rather than
+          # inside a stray publish/ folder.
+          cd publish
+          7z a -tzip "../release_output/$BASE.zip" ./*
+          7z a -t7z  "../release_output/$BASE.7z"  ./*
+
+      - name: Pack the Linux build
+        if: startsWith(matrix.platform.name, 'linux-')
+        env:
+          BASE: ryujinx-${{ needs.info.outputs.version }}-${{ matrix.platform.zip_os_name }}
+        run: |
+          set -euo pipefail
+          chmod +x publish/Ryujinx.sh publish/Ryujinx
+          tar -C publish -czf "release_output/$BASE.tar.gz" .
+          tar -C publish -cJf "release_output/$BASE.tar.xz" .
+
+      - name: Build the AppImage
+        if: matrix.platform.appimage
+        env:
+          ARCH_NAME: ${{ matrix.platform.arch_name }}
+        run: |
+          set -euo pipefail
+
+          # $ARCH is what appimagetool names the image after; the runtime is the small launcher it
+          # prepends, and it has to be the target machine's, not the runner's.
+          case '${{ matrix.platform.name }}' in
+            linux-x64)   export ARCH=x86_64;  RUNTIME_ARCH=x86_64 ;;
+            linux-arm64) export ARCH=aarch64; RUNTIME_ARCH=aarch64 ;;
+            *) echo "::error::no AppImage architecture for ${{ matrix.platform.name }}"; exit 1 ;;
+          esac
+
+          curl -fsSL -o "$RUNNER_TEMP/appimagetool" \
+            https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          curl -fsSL -o "$RUNNER_TEMP/appimage-runtime" \
+            "https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-$RUNTIME_ARCH"
+          chmod +x "$RUNNER_TEMP/appimagetool"
+          export PATH="$RUNNER_TEMP:$PATH"
+
+          RUNTIME_FILE="$RUNNER_TEMP/appimage-runtime" BUILDDIR=publish OUTDIR=publish_appimage \
+            distribution/linux/appimage/build-appimage.sh
+
+          mv publish_appimage/Ryujinx.AppImage \
+            "release_output/ryujinx-${{ needs.info.outputs.version }}-$ARCH_NAME.AppImage"
+
+      - name: Upload the artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform.zip_os_name }}
+          path: release_output
+          if-no-files-found: error
+          retention-days: 7
+
+  macos:
+    name: macos_universal
+    needs: [info, test]
+    # A real macOS runner, because the bundling, lipo, dylib fix-ups and ad-hoc signing all need
+    # macOS tooling. It produces a universal (arm64 + x64) .app.
+    runs-on: macos-14
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: 'Cache: ~/.nuget/packages'
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
+
+      - name: Stamp the version into ReleaseInformation.cs
+        # macOS ships BSD sed, whose -i takes the backup suffix as a separate argument.
+        run: |
+          set -euo pipefail
+          sed -i '' \
+            -e 's/%%RYUJINX_BUILD_VERSION%%/${{ needs.info.outputs.version }}/g' \
+            -e 's/%%RYUJINX_BUILD_GIT_HASH%%/${{ needs.info.outputs.short_hash }}/g' \
+            -e 's/%%RYUJINX_TARGET_RELEASE_CHANNEL_NAME%%/${{ env.RYUJINX_TARGET_RELEASE_CHANNEL_NAME }}/g' \
+            -e 's/%%RYUJINX_CONFIG_FILE_NAME%%/Config.json/g' \
+            src/Ryujinx.Common/ReleaseInformation.cs
+
+      - name: Build the universal macOS .app
+        env:
+          EXTRA_ARGS: -p:ExtraDefineConstants=${{ env.EXTRA_DEFINE_CONSTANTS }}
+        run: |
+          set -euo pipefail
+          chmod +x distribution/macos/*.sh
+          ./distribution/macos/create_macos_build_ava.sh \
+            . macos_tmp release_output distribution/macos/entitlements.xml \
+            '${{ needs.info.outputs.version }}' '${{ needs.info.outputs.short_hash }}' Release 0
+
+      - name: Keep only the archive
+        run: |
+          set -euo pipefail
+          rm -rf release_output/Ryujinx.app
+          ls -la release_output
+
+      - name: Upload the artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-macos_universal
+          path: release_output/*.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    name: Publish the release
+    needs: [info, desktop, macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download every build
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          merge-multiple: true
+          path: release_output
+
+      - name: List what is about to be published
+        run: ls -la release_output
+
+      - name: Create or update the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.info.outputs.tag }}
+          VERSION: ${{ needs.info.outputs.version }}
+          PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          set -euo pipefail
+
+          # A manual run releases whatever commit it was started on, so the tag may not exist yet;
+          # gh creates it from --target in that case.
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" release_output/* --clobber
+          else
+            ARGS=(--title "$VERSION" --target "$GITHUB_SHA" --generate-notes)
+            if [ "${PRERELEASE:-false}" = 'true' ]; then
+              ARGS+=(--prerelease)
+            fi
+            gh release create "$TAG" "${ARGS[@]}" release_output/*
+          fi
+
+          gh release view "$TAG" >> "$GITHUB_STEP_SUMMARY"

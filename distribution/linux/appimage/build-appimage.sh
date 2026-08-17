@@ -33,7 +33,16 @@ chmod +x AppDir/AppRun AppDir/usr/bin/Ryujinx*
 
 mkdir -p "$OUTDIR"
 
+# Set RUNTIME_FILE to build for an architecture other than the host's: appimagetool only ships the
+# runtime for the machine it runs on, so a cross-architecture AppImage needs to be handed the
+# matching one (from https://github.com/AppImage/type2-runtime/releases).
+if [ -n "${RUNTIME_FILE:-}" ]; then
+    set -- --runtime-file "$RUNTIME_FILE"
+else
+    set --
+fi
+
 # The "-n" flag removes the appstream checks during build, in case the main website is down.
 # Run "appstreamcli validate --explain AppDir/usr/share/metainfo/app.ryujinx.Ryujinx.appdata.xml" to check manually
 appimagetool --appimage-extract-and-run -n --comp zstd --mksquashfs-opt -Xcompression-level --mksquashfs-opt 21 \
-    AppDir "$OUTDIR"/Ryujinx.AppImage
+    "$@" AppDir "$OUTDIR"/Ryujinx.AppImage
