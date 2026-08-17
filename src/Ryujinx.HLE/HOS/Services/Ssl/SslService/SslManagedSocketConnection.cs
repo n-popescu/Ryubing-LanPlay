@@ -117,7 +117,17 @@ namespace Ryujinx.HLE.HOS.Services.Ssl.SslService
         public ResultCode Handshake(string hostName)
         {
             StartSslOperation();
-            _stream = new SslStream(new NetworkStream(((DefaultSocket)((ManagedSocket)Socket).Socket).BaseSocket, false), false, null, null);
+
+            // The socket is not always backed by a host socket: with LAN Play or RyuLDN selected it is a
+            // virtual one, and casting it to DefaultSocket used to throw an InvalidCastException here,
+            // which surfaced as the game failing to reach the online service.
+            ISocketImpl socketImpl = ((ManagedSocket)Socket).Socket;
+
+            Stream socketStream = socketImpl is DefaultSocket hostSocket
+                ? new NetworkStream(hostSocket.BaseSocket, false)
+                : new SocketImplStream(socketImpl);
+
+            _stream = new SslStream(socketStream, false, null, null);
             hostName = RetrieveHostName(hostName);
             _stream.AuthenticateAsClient(hostName, null, TranslateSslVersion(_sslVersion), false);
             EndSslOperation();
