@@ -42,22 +42,32 @@ namespace Ryujinx.Ava.UI.ViewModels
                 SplitPaths = Directory.EnumerateFiles(Dir, "*").ToList();
                 SplitPaths.Sort();
 
+
+                bool IsXci = true;
                 // Check ApplicationLibrary.TryGetApplicationsFromFile() for pointers.
-                
                 using FileStream file = new(SplitPaths[0], FileMode.Open, FileAccess.Read);
+                // NOTE: Either the 00 or the merged dump will be first, so this is probably fine! (I sure hope so me)
+                
 
+                if (IsXci)
+                {
+                    // For XCI games
+                    LibHac.Tools.Fs.Xci xci = new(MainWindowViewModel.VirtualFileSystem.KeySet, file.AsStorage()); // Gotta find how to access the keys too : (
+                    //applications = GetApplicationsFromPfs(xci.OpenPartition(XciPartitionType.Secure), applicationPath);
+                }
+                else
+                {
+                    // For NSP games
+                    PartitionFileSystem pfs = new();
+                    pfs.Initialize(file.AsStorage());
+                }
 
-                // For XCI games
-                LibHac.Tools.Fs.Xci xci = new(_virtualFileSystem.KeySet, file.AsStorage()); // Gotta find how to access the keys too : (
-                //applications = GetApplicationsFromPfs(xci.OpenPartition(XciPartitionType.Secure), applicationPath);
                 
                 
                 
-                // For NSP games
-                PartitionFileSystem pfs = new();
-                pfs.Initialize(file.AsStorage());
+
                 
-                ApplicationData result = GetApplicationFromNsp(pfs, applicationPath);
+                //ApplicationData result = GetApplicationFromNsp(pfs, applicationPath);
                 // In this struct there exists the title name from the NSP. Go figure it out future me!
                 
                 

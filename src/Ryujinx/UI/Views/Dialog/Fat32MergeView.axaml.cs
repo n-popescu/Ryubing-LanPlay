@@ -12,6 +12,7 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 {
     public partial class Fat32MergeView : RyujinxControl<Fat32MergeViewModel>
     {
+        
         public Fat32MergeView()
         {
             InitializeComponent();
