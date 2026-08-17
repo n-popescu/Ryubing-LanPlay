@@ -1,12 +1,14 @@
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Gommon;
+using LibHac.Common.Keys;
 using LibHac.FsSystem;
 using LibHac.Tools.FsSystem;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Systems.AppLibrary;
 using Ryujinx.Ava.UI.Windows;
 using Ryujinx.Ava.Utilities;
+using Ryujinx.Common.Configuration;
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.FileSystem;
 using System;
@@ -25,8 +27,9 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public string FileName = "None Selected";
 
-        public VirtualFileSystem VirtualFileSystem; // :angry_cat:
-        
+        public string keydir = AppDataManager.KeysDirPath;
+
+        private KeySet _KeySet = KeySet.CreateDefaultKeySet(); // Check VirtualFileSystem.ReloadKeySet() perhaps
         
         public string MergedName
         {
@@ -36,19 +39,60 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
+        private void GetKeySet()
+        {
+            string prodKeyFile = null;
+            string titleKeyFile = null;
+            string consoleKeyFile = null;
+            string devKeyFile = null;
+            
+            if (AppDataManager.Mode == AppDataManager.LaunchMode.UserProfile)
+            {
+                LoadSetAtPath(AppDataManager.KeysDirPathUser);
+            }
+
+            LoadSetAtPath(AppDataManager.KeysDirPath);
+            
+            void LoadSetAtPath(string basePath)
+            {
+                string localProdKeyFile = Path.Combine(basePath, "prod.keys");
+                string localTitleKeyFile = Path.Combine(basePath, "title.keys");
+                string localConsoleKeyFile = Path.Combine(basePath, "console.keys");
+                string localDevKeyFile = Path.Combine(basePath, "dev.keys");
+
+                if (File.Exists(localProdKeyFile))
+                {
+                    prodKeyFile = localProdKeyFile;
+                }
+
+                if (File.Exists(localTitleKeyFile))
+                {
+                    titleKeyFile = localTitleKeyFile;
+                }
+
+                if (File.Exists(localConsoleKeyFile))
+                {
+                    consoleKeyFile = localConsoleKeyFile;
+                }
+
+                if (File.Exists(localDevKeyFile))
+                {
+                    devKeyFile = localDevKeyFile;
+                }
+            }
+            
+            ExternalKeyReader.ReadKeyFile(_KeySet, prodKeyFile, devKeyFile, titleKeyFile, consoleKeyFile, null);
+        }
+
         public async void OpenFolderPicker()
         {
-            
             try
             {
-
                 Optional<IStorageFolder> folder = await RyujinxApp.MainWindow.ViewModel.StorageProvider.OpenSingleFolderPickerAsync();
                 Dir = folder.Value.Path.LocalPath; 
                 SplitPaths = Directory.EnumerateFiles(Dir, "*").ToList();
                 SplitPaths.Sort();
 
-
-                VirtualFileSystem vfs; // Check VirtualFileSystem.ReloadKeySet() perhaps
                 
                 bool IsXci = true;
                 // Check ApplicationLibrary.TryGetApplicationsFromFile() for pointers.
@@ -59,7 +103,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 if (IsXci)
                 {
                     // For XCI games
-                    LibHac.Tools.Fs.Xci xci = new(vfs.KeySet, file.AsStorage()); // Gotta find how to access the keys too : (
+                    LibHac.Tools.Fs.Xci xci = new(_KeySet, file.AsStorage());
                     //applications = GetApplicationsFromPfs(xci.OpenPartition(XciPartitionType.Secure), applicationPath);
                 }
                 else
