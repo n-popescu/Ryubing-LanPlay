@@ -5,6 +5,8 @@ using FluentAvalonia.UI.Controls;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.UI.Controls;
 using Ryujinx.Ava.UI.ViewModels;
+using Ryujinx.Ava.UI.Windows;
+using Ryujinx.HLE.FileSystem;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,7 +14,6 @@ namespace Ryujinx.Ava.UI.Views.Dialog
 {
     public partial class Fat32MergeView : RyujinxControl<Fat32MergeViewModel>
     {
-        
         public Fat32MergeView()
         {
             InitializeComponent();

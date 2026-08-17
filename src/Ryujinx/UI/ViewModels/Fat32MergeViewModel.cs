@@ -5,8 +5,10 @@ using LibHac.FsSystem;
 using LibHac.Tools.FsSystem;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Systems.AppLibrary;
+using Ryujinx.Ava.UI.Windows;
 using Ryujinx.Ava.Utilities;
 using Ryujinx.Common.Logging;
+using Ryujinx.HLE.FileSystem;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,6 +24,8 @@ namespace Ryujinx.Ava.UI.ViewModels
         public string Dir;
 
         public string FileName = "None Selected";
+
+        public VirtualFileSystem VirtualFileSystem; // :angry_cat:
         
         
         public string MergedName
@@ -37,12 +41,15 @@ namespace Ryujinx.Ava.UI.ViewModels
             
             try
             {
+
                 Optional<IStorageFolder> folder = await RyujinxApp.MainWindow.ViewModel.StorageProvider.OpenSingleFolderPickerAsync();
                 Dir = folder.Value.Path.LocalPath; 
                 SplitPaths = Directory.EnumerateFiles(Dir, "*").ToList();
                 SplitPaths.Sort();
 
 
+                VirtualFileSystem vfs; // Check VirtualFileSystem.ReloadKeySet() perhaps
+                
                 bool IsXci = true;
                 // Check ApplicationLibrary.TryGetApplicationsFromFile() for pointers.
                 using FileStream file = new(SplitPaths[0], FileMode.Open, FileAccess.Read);
@@ -52,7 +59,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 if (IsXci)
                 {
                     // For XCI games
-                    LibHac.Tools.Fs.Xci xci = new(MainWindowViewModel.VirtualFileSystem.KeySet, file.AsStorage()); // Gotta find how to access the keys too : (
+                    LibHac.Tools.Fs.Xci xci = new(vfs.KeySet, file.AsStorage()); // Gotta find how to access the keys too : (
                     //applications = GetApplicationsFromPfs(xci.OpenPartition(XciPartitionType.Secure), applicationPath);
                 }
                 else
