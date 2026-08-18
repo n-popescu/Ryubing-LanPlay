@@ -130,6 +130,13 @@ namespace Ryujinx.Tests.HLE
                     {
                         // A client went away; it will be forgotten on the next scan.
                     }
+                    catch (ObjectDisposedException)
+                    {
+                        // Dispose closed the socket between the receive above and this send. Nothing is
+                        // left to forward to, and letting this escape would take the whole test host
+                        // process down with it, because this is a background thread.
+                        return;
+                    }
                 }
             }
         }
