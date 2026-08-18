@@ -1205,7 +1205,21 @@ namespace Ryujinx.HLE.HOS.Services.Ldn.UserServiceCreator
                                 NetworkClient = new LdnMitmClient(context.Device.Configuration);
                                 break;
                             case MultiplayerMode.LanPlay:
-                                if (SocketHelpers.CurrentLanPlayStack is { } lanPlayStack)
+                                // Carrying LDN over the relay is what makes a game with no LAN mode of
+                                // its own work over LAN Play, so it is on by default. With it off the
+                                // relay only carries the plain IP traffic of games that do have one,
+                                // and local wireless is stubbed exactly as if multiplayer were off.
+                                // This is read when the game initialises LDN, so like the backend
+                                // choice itself it does not migrate under a running session.
+                                if (!context.Device.Configuration.MultiplayerLanPlayLdnMitm)
+                                {
+                                    Logger.Info?.Print(LogClass.ServiceLdn,
+                                        "LAN Play is active but ldn_mitm over the relay is disabled. Local wireless is stubbed; " +
+                                        "games that have no LAN mode of their own will not find sessions on the relay.");
+
+                                    NetworkClient = new LdnDisabledClient();
+                                }
+                                else if (SocketHelpers.CurrentLanPlayStack is { } lanPlayStack)
                                 {
                                     NetworkClient = new LanPlayLdnClient(lanPlayStack);
                                 }

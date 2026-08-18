@@ -200,6 +200,12 @@ namespace Ryujinx.HLE
         public string MultiplayerLanPlayVirtualIp { internal get; set; }
 
         /// <summary>
+        /// Carries local wireless (LDN) over the LAN Play relay using the ldn_mitm protocol, which is
+        /// what makes games with no LAN mode of their own work over LAN Play
+        /// </summary>
+        public bool MultiplayerLanPlayLdnMitm { internal get; set; }
+
+        /// <summary>
         /// An action called when HLE force a refresh of output after docked mode changed.
         /// </summary>
         public Action RefreshInputConfig { internal get; set; }
@@ -249,6 +255,7 @@ namespace Ryujinx.HLE
                                 string multiplayerLdnServer,
                                 string multiplayerLanPlayServer,
                                 string multiplayerLanPlayVirtualIp,
+                                bool multiplayerLanPlayLdnMitm,
                                 bool enableGdbStub,
                                 ushort gdbStubPort,
                                 bool debuggerSuspendOnStart,
@@ -280,6 +287,7 @@ namespace Ryujinx.HLE
             MultiplayerLdnServer = multiplayerLdnServer;
             MultiplayerLanPlayServer = multiplayerLanPlayServer;
             MultiplayerLanPlayVirtualIp = multiplayerLanPlayVirtualIp;
+            MultiplayerLanPlayLdnMitm = multiplayerLanPlayLdnMitm;
             EnableGdbStub = enableGdbStub;
             GdbStubPort = gdbStubPort;
             DebuggerSuspendOnStart = debuggerSuspendOnStart;

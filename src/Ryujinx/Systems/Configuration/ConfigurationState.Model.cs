@@ -734,6 +734,12 @@ namespace Ryujinx.Ava.Systems.Configuration
             /// </summary>
             public ReactiveObject<string> LanPlayVirtualIp { get; private set; }
 
+            /// <summary>
+            /// Whether local wireless (LDN) is carried over the LAN Play relay using the ldn_mitm
+            /// protocol, which is what makes games with no LAN mode of their own work over LAN Play
+            /// </summary>
+            public ReactiveObject<bool> LanPlayLdnMitm { get; private set; }
+
             public string GetLdnServer()
             {
                 string ldnServer = LdnServer;
@@ -767,6 +773,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 LanPlayServer.LogChangesToValue(nameof(LanPlayServer));
                 LanPlayVirtualIp = new ReactiveObject<string>();
                 LanPlayVirtualIp.LogChangesToValue(nameof(LanPlayVirtualIp));
+                LanPlayLdnMitm = new ReactiveObject<bool>();
+                LanPlayLdnMitm.LogChangesToValue(nameof(LanPlayLdnMitm));
             }
         }
 
@@ -999,6 +1007,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 Multiplayer.GetLdnServer(),
                 Multiplayer.LanPlayServer,
                 Multiplayer.LanPlayVirtualIp,
+                Multiplayer.LanPlayLdnMitm,
                 Debug.EnableGdbStub,
                 Debug.GdbStubPort,
                 Debug.DebuggerSuspendOnStart,

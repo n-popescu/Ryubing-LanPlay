@@ -155,6 +155,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 LdnServer = Multiplayer.LdnServer,
                 MultiplayerLanPlayServer = Multiplayer.LanPlayServer,
                 MultiplayerLanPlayVirtualIp = Multiplayer.LanPlayVirtualIp,
+                MultiplayerLanPlayLdnMitm = Multiplayer.LanPlayLdnMitm,
                 EnableGdbStub = Debug.EnableGdbStub,
                 GdbStubPort = Debug.GdbStubPort,
                 DebuggerSuspendOnStart = Debug.DebuggerSuspendOnStart,
@@ -232,6 +233,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             Multiplayer.LdnServer.Value = string.Empty;
             Multiplayer.LanPlayServer.Value = string.Empty;
             Multiplayer.LanPlayVirtualIp.Value = string.Empty;
+            Multiplayer.LanPlayLdnMitm.Value = true;
             UI.GuiColumns.FavColumn.Value = true;
             UI.GuiColumns.IconColumn.Value = true;
             UI.GuiColumns.AppColumn.Value = true;

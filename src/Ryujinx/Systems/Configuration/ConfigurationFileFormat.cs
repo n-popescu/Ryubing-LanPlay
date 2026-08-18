@@ -17,7 +17,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// <summary>
         /// The current version of the file format
         /// </summary>
-        public const int CurrentVersion = 74;
+        public const int CurrentVersion = 75;
 
         /// <summary>
         /// Version of the configuration file format
@@ -485,6 +485,11 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// Virtual 10.13.x.x address used on the LAN Play network, or empty for an automatic one
         /// </summary>
         public string MultiplayerLanPlayVirtualIp { get; set; }
+
+        /// <summary>
+        /// Carries local wireless (LDN) over the LAN Play relay using the ldn_mitm protocol
+        /// </summary>
+        public bool MultiplayerLanPlayLdnMitm { get; set; }
 
         /// <summary>
         /// Uses Hypervisor over JIT if available

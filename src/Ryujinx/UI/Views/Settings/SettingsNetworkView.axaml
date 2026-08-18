@@ -123,6 +123,12 @@
                         ToolTip.Tip="{ext:Locale MultiplayerLanPlayVirtualIpTooltip}"
                         PlaceholderText="{ext:Locale MultiplayerLanPlayVirtualIpWatermark}" />
                 </StackPanel>
+                <CheckBox Margin="10,0,0,0"
+                    IsVisible="{Binding IsLanPlaySelected}"
+                    IsChecked="{Binding LanPlayLdnMitm}">
+                    <TextBlock Text="{ext:Locale MultiplayerLanPlayLdnMitm}"
+                        ToolTip.Tip="{ext:Locale MultiplayerLanPlayLdnMitmTooltip}" />
+                </CheckBox>
                 <TextBlock  Margin="10,0,0,0"
                     VerticalAlignment="Center"
                     Name="InvalidLdnPassphraseBlock"
