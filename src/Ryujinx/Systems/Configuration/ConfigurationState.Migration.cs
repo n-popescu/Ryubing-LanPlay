@@ -169,6 +169,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             Multiplayer.LdnServer.Value = cff.LdnServer;
             Multiplayer.LanPlayServer.Value = cff.MultiplayerLanPlayServer;
             Multiplayer.LanPlayVirtualIp.Value = cff.MultiplayerLanPlayVirtualIp;
+            Multiplayer.LanPlayLdnMitm.Value = cff.MultiplayerLanPlayLdnMitm;
 
             Debug.EnableGdbStub.Value = shouldLoadFromFile ? cff.EnableGdbStub : Debug.EnableGdbStub.Value; // Get from global config only
             Debug.GdbStubPort.Value = shouldLoadFromFile ? cff.GdbStubPort : Debug.GdbStubPort.Value; // Get from global config only
@@ -551,6 +552,14 @@ namespace Ryujinx.Ava.Systems.Configuration
 
                     cff.MultiplayerLanPlayServer = string.Empty;
                     cff.MultiplayerLanPlayVirtualIp = string.Empty;
+                }),
+                (75, static cff =>
+                {
+                    // Carrying LDN over the relay is what makes a game with no LAN mode of its own
+                    // work over LAN Play, and it is what LAN Play did before this was configurable,
+                    // so an existing configuration keeps that behaviour.
+
+                    cff.MultiplayerLanPlayLdnMitm = true;
                 })
             );
     }

@@ -218,6 +218,7 @@ namespace Ryujinx.Ava.Systems
             ConfigurationState.Instance.Multiplayer.DisableP2p.Event += UpdateDisableP2pState;
             ConfigurationState.Instance.Multiplayer.LanPlayServer.Event += UpdateLanPlayServerState;
             ConfigurationState.Instance.Multiplayer.LanPlayVirtualIp.Event += UpdateLanPlayVirtualIpState;
+            ConfigurationState.Instance.Multiplayer.LanPlayLdnMitm.Event += UpdateLanPlayLdnMitmState;
 
             ConfigurationState.Instance.Debug.EnableGdbStub.Event += UpdateEnableGdbStubState;
             ConfigurationState.Instance.Debug.GdbStubPort.Event += UpdateGdbStubPortState;
@@ -567,6 +568,14 @@ namespace Ryujinx.Ava.Systems
             Device.System.ApplyMultiplayerConfiguration();
         }
 
+        private void UpdateLanPlayLdnMitmState(object sender, ReactiveEventArgs<bool> e)
+        {
+            // Only the LDN service reads this, and it reads it when the game initialises LDN, so there is
+            // nothing to re-apply here: the running session keeps the transport it started with and the new
+            // value is picked up the next time the game enters its local multiplayer menu.
+            Device.Configuration.MultiplayerLanPlayLdnMitm = e.NewValue;
+        }
+
         private void UpdateLdnPassphraseState(object sender, ReactiveEventArgs<string> e)
         {
             Device.Configuration.MultiplayerLdnPassphrase = e.NewValue;
@@ -685,6 +694,7 @@ namespace Ryujinx.Ava.Systems
             ConfigurationState.Instance.Multiplayer.Mode.Event -= UpdateMultiplayerModeState;
             ConfigurationState.Instance.Multiplayer.LanPlayServer.Event -= UpdateLanPlayServerState;
             ConfigurationState.Instance.Multiplayer.LanPlayVirtualIp.Event -= UpdateLanPlayVirtualIpState;
+            ConfigurationState.Instance.Multiplayer.LanPlayLdnMitm.Event -= UpdateLanPlayLdnMitmState;
 
             _topLevel.PointerMoved -= TopLevel_PointerEnteredOrMoved;
             _topLevel.PointerEntered -= TopLevel_PointerEnteredOrMoved;

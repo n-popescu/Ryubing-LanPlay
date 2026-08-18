@@ -2,6 +2,24 @@
 
 All updates to this Ryujinx branch will be documented in this file.
 
+## [1.3.32](<https://github.com/n-popescu/Ryubing-LanPlay/releases/tag/v1.3.32>) - 2026-08-18
+### Multiplayer:
+ - Added **Use ldn_mitm for games without LAN Play support** to *Settings → Network*, shown when the
+   multiplayer mode is LAN Play and on by default.
+   - Controls whether local wireless (LDN) is carried over the relay with the ldn_mitm protocol, which
+     is what makes games that have no LAN mode of their own work over LAN Play.
+   - Turning it off narrows LAN Play to the plain IP traffic of games that do have a LAN mode, and
+     stubs local wireless.
+   - Read when a game initialises LDN, so it takes effect the next time the game enters its local
+     multiplayer menu rather than mid-session.
+   - Configuration version 75. Existing configurations are migrated with the option on, so LAN Play
+     behaves exactly as before unless it is turned off.
+### Tests:
+ - Fixed the in-process LAN Play test relay taking the test host process down. Its forwarding loop
+   caught `SocketException` but not `ObjectDisposedException`, so disposing the relay between a receive
+   and a send threw on a background thread and ended the process, aborting `dotnet test` at a
+   different test each run.
+
 ## [1.3.2](<https://git.ryujinx.app/ryubing/ryujinx/-/releases/1.3.2>) - 2025-06-09
 
 ## [1.3.1](<https://git.ryujinx.app/ryubing/ryujinx/-/releases/1.3.1>) - 2025-04-23

@@ -444,6 +444,12 @@ namespace Ryujinx.Ava.UI.ViewModels
         public string LanPlayVirtualIp { get; set; }
 
         /// <summary>
+        /// Carries local wireless (LDN) over the relay with the ldn_mitm protocol, which is what makes
+        /// games with no LAN mode of their own work over LAN Play.
+        /// </summary>
+        public bool LanPlayLdnMitm { get; set; }
+
+        /// <summary>
         /// Result of the last LAN Play connection test, shown under the server field.
         /// </summary>
         public string LanPlayTestResult
@@ -830,6 +836,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             LdnPassphrase = config.Multiplayer.LdnPassphrase;
             LanPlayServer = config.Multiplayer.LanPlayServer;
             LanPlayVirtualIp = config.Multiplayer.LanPlayVirtualIp;
+            LanPlayLdnMitm = config.Multiplayer.LanPlayLdnMitm;
 
             // Debug
             EnableGdbStub = config.Debug.EnableGdbStub.Value;
@@ -960,6 +967,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             config.Multiplayer.LdnPassphrase.Value = LdnPassphrase;
             config.Multiplayer.LanPlayServer.Value = LanPlayServer ?? string.Empty;
             config.Multiplayer.LanPlayVirtualIp.Value = LanPlayVirtualIp ?? string.Empty;
+            config.Multiplayer.LanPlayLdnMitm.Value = LanPlayLdnMitm;
 
             // Debug
             config.Debug.EnableGdbStub.Value = EnableGdbStub;

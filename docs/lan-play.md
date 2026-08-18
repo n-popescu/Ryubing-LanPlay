@@ -196,6 +196,9 @@ The modes stay mutually exclusive and independent:
   that `LanDiscovery` had inline before.
 * **LAN Play** shares the ldn_mitm protocol implementation (`LanDiscovery`, `LanProtocol`) so that
   it is byte compatible with consoles running ldn_mitm, but carries it over the virtual interface.
+  This is what makes games with no LAN mode of their own work over a relay, and it can be turned off
+  with the **Use ldn_mitm for games without LAN Play support** option (§10), which narrows LAN Play to
+  the games that do have a LAN mode.
 * **Disabled** is untouched, and LAN Play is only activated when the mode is explicitly selected.
 
 ## 9. Building
@@ -211,9 +214,35 @@ dotnet build src/Ryujinx/Ryujinx.csproj -c Release
 * **LAN Play Server** — `host:port`, for example `switch.example.com:11451`. The port defaults to
   11451 when omitted. If the relay requires a login, use `user:password@host:port`.
 * **Virtual IP** — leave empty for an automatic address, or force one inside `10.13.0.0/16`.
+* **Use ldn_mitm for games without LAN Play support** — on by default. See below.
 
-Stored in `Config.json` as `multiplayer_lan_play_server` / `multiplayer_lan_play_virtual_ip`
-(configuration version 74; older configuration files are migrated automatically).
+Stored in `Config.json` as `multiplayer_lan_play_server` / `multiplayer_lan_play_virtual_ip` /
+`multiplayer_lan_play_ldn_mitm` (configuration version 75; older configuration files are migrated
+automatically, and the migration turns the ldn_mitm option on so an existing configuration keeps the
+behaviour LAN Play had before it was configurable).
+
+### ldn_mitm over the relay
+
+A relay carries two quite different kinds of traffic, and this option decides whether the first one is
+carried at all:
+
+* **Local wireless (LDN).** Most games only have local wireless multiplayer and no LAN mode, so on a
+  real console they need the ldn_mitm homebrew to turn local wireless into ordinary IP traffic a relay
+  can route. That is this path: `LanPlayLdnClient` over `LanDiscovery`/`LanProtocol`, byte compatible
+  with a real Switch running ldn_mitm, which is what lets consoles and other emulators join the same
+  session. **This option controls it.**
+* **A game's own LAN mode.** A handful of games speak plain IP on the local network. That traffic goes
+  through `LanPlaySocket` and the virtual interface and is *not* affected by this option.
+
+Leaving it on is what most people want: with it off, a game that has no LAN mode of its own will never
+find a session on the relay. Turning it off narrows LAN Play to the games that do have one and stubs
+local wireless, which is useful if a game misbehaves when the emulator answers LDN scans over the
+relay.
+
+Like the backend choice itself, the value is read when the game initialises LDN, so it does not
+migrate under a running session — toggling it mid-game takes effect the next time the game enters its
+local multiplayer menu. `AppHost.UpdateLanPlayLdnMitmState` therefore only updates the device
+configuration and deliberately does not re-apply the multiplayer configuration.
 
 ## 11. Changing the multiplayer mode while a game is running
 
