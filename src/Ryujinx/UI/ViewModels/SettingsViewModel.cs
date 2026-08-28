@@ -283,6 +283,18 @@ namespace Ryujinx.Ava.UI.ViewModels
         public string TurboMultiplierPercentageText => $"{TurboMultiplier}%";
 
         public bool EnableInternetAccess { get; set; }
+
+        /// <summary>
+        /// Lets the hosts file on the virtual SD card override the DNS blacklist, so Nintendo's
+        /// hostnames can be pointed at a private replacement for them.
+        /// </summary>
+        public bool RedirectNintendoServers { get; set; }
+
+        /// <summary>
+        /// Path to a PEM bundle of certificate authorities the guest trusts in addition to the
+        /// host's. Adds trust; does not disable verification.
+        /// </summary>
+        public string PrivateServerCaBundle { get; set; }
         public bool EnableFsIntegrityChecks { get; set; }
         public bool IgnoreMissingServices { get; set; }
         public MemoryConfiguration DramSize { get; set; }
@@ -813,6 +825,8 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             // Network
             EnableInternetAccess = config.System.EnableInternetAccess;
+            RedirectNintendoServers = config.System.RedirectNintendoServers;
+            PrivateServerCaBundle = config.System.PrivateServerCaBundle;
             // LAN interface index is loaded asynchronously in PopulateNetworkInterfaces()
 
             // Logging
@@ -944,6 +958,8 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             // Network
             config.System.EnableInternetAccess.Value = EnableInternetAccess;
+            config.System.RedirectNintendoServers.Value = RedirectNintendoServers;
+            config.System.PrivateServerCaBundle.Value = PrivateServerCaBundle ?? string.Empty;
 
             // Logging
             config.Logger.EnableFileLog.Value = EnableFileLog;

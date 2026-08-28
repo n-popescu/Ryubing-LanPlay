@@ -2,6 +2,47 @@
 
 All updates to this Ryujinx branch will be documented in this file.
 
+## [1.3.33](<https://github.com/n-popescu/Ryubing-LanPlay/releases/tag/v1.3.33>) - 2026-08-28
+### Network:
+ - Added **Private Nintendo Servers** to *Settings → Network*, for pointing the guest at your own
+   replacement for Nintendo's online servers. Two settings, both needed, and
+   [`docs/private-servers.md`](docs/private-servers.md) is the guide.
+   - **Redirect Nintendo's hostnames using the hosts file on the SD card.** Ryujinx already read
+     `/atmosphere/hosts/default.txt` off the virtual SD card; what this changes is that a hostname on
+     the built-in DNS block list may now be redirected by it. Without that, the hostnames a private
+     server actually serves — NPLN game servers, `accounts.nintendo.com`, the NAT-check pair — were
+     refused before the hosts file was ever consulted.
+     - **The override is narrow on purpose:** it applies only to a hostname the hosts file names, so
+       a blocked hostname with no entry stays blocked. Turning it on is a redirect to a server you
+       specified, not a general unblocking, and it cannot open a path to Nintendo's own servers for
+       anything you have not explicitly redirected.
+     - Needs guest Internet access, and the checkbox is disabled without it.
+   - **Trusted CA certificate.** A PEM bundle the guest's TLS trusts *in addition* to your system's,
+     so a certificate your own server signed for a Nintendo hostname is accepted.
+     - **This adds trust rather than disabling verification**, which is the difference between a
+       redirect to a known server and a hole. A certificate that does not cover the hostname the game
+       asked for is still rejected, as is an expired one, one from an unconfigured CA, and a
+       self-signed one. The alternative — a callback that accepts everything — would have applied to
+       every TLS connection the guest makes, including ones to real Nintendo.
+     - Several PEM blocks in one file work, for two servers or a CA rotation, and an intermediate the
+       server sends on the wire is used to build the chain.
+   - Both apply to new lookups and new connections, so a running game keeps what it has. The CA
+     bundle is cached on its path, so changing the file's contents without changing the path needs a
+     restart.
+   - Configuration version 76. Existing configurations get it off with no CA, since redirecting
+     Nintendo's hostnames to somebody else's server is not a default anybody should acquire by
+     upgrading.
+   - Headless: `--redirect-nintendo-servers` and `--private-server-ca <path>`.
+### Fixes:
+ - Fixed a wildcard hosts-file entry reporting the pattern that matched as the resolved hostname
+   rather than the hostname the guest asked for. With an entry like `*.baas.nintendo.com` the guest
+   was handed `*.baas.nintendo.com` back, which its TLS then compared against the server's
+   certificate and saw as a name mismatch — for a certificate that was in fact correct.
+### Tests:
+ - `DnsBlacklistTests` and `PrivateServerTrustTests`: 14 tests, including the two that matter most —
+   a blocked host with no hosts-file entry staying blocked with the override on, and a hostname
+   mismatch still being fatal with a private CA configured.
+
 ## [1.3.32](<https://github.com/n-popescu/Ryubing-LanPlay/releases/tag/v1.3.32>) - 2026-08-18
 ### Multiplayer:
  - Added **Use ldn_mitm for games without LAN Play support** to *Settings → Network*, shown when the

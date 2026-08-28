@@ -331,14 +331,14 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres
 
                 string targetHost = host;
 
-                if (DnsBlacklist.IsHostBlocked(host))
+                if (!DnsBlacklist.TryAllow(host, context.Device.Configuration.RedirectNintendoServers, out hostEntry))
                 {
                     Logger.Info?.Print(LogClass.ServiceSfdnsres, $"DNS Blocked: {host}");
 
                     netDbErrorCode = NetDbError.HostNotFound;
                     errno = GaiError.NoData;
                 }
-                else
+                else if (hostEntry == null)
                 {
                     Logger.Info?.Print(LogClass.ServiceSfdnsres, $"Trying to resolve: {host}");
 
@@ -557,14 +557,14 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres
 
                 string targetHost = host;
 
-                if (DnsBlacklist.IsHostBlocked(host))
+                if (!DnsBlacklist.TryAllow(host, context.Device.Configuration.RedirectNintendoServers, out hostEntry))
                 {
                     Logger.Info?.Print(LogClass.ServiceSfdnsres, $"DNS Blocked: {host}");
 
                     netDbErrorCode = NetDbError.HostNotFound;
                     errno = GaiError.NoData;
                 }
-                else
+                else if (hostEntry == null)
                 {
                     Logger.Info?.Print(LogClass.ServiceSfdnsres, $"Trying to resolve: {host}");
 

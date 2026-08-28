@@ -211,6 +211,8 @@ namespace Ryujinx.Ava.Systems
             ConfigurationState.Instance.Graphics.EnableCustomVSyncInterval.Event += UpdateCustomVSyncIntervalEnabled;
 
             ConfigurationState.Instance.System.EnableInternetAccess.Event += UpdateEnableInternetAccessState;
+            ConfigurationState.Instance.System.RedirectNintendoServers.Event += UpdateRedirectNintendoServersState;
+            ConfigurationState.Instance.System.PrivateServerCaBundle.Event += UpdatePrivateServerCaBundleState;
             ConfigurationState.Instance.Multiplayer.LanInterfaceId.Event += UpdateLanInterfaceIdState;
             ConfigurationState.Instance.Multiplayer.Mode.Event += UpdateMultiplayerModeState;
             ConfigurationState.Instance.Multiplayer.LdnPassphrase.Event += UpdateLdnPassphraseState;
@@ -539,6 +541,23 @@ namespace Ryujinx.Ava.Systems
             Device.Configuration.EnableInternetAccess = e.NewValue;
         }
 
+        private void UpdateRedirectNintendoServersState(object sender, ReactiveEventArgs<bool> e)
+        {
+            // Read per lookup by the resolver, so this takes effect on the next name the guest
+            // resolves. A game that has already connected keeps the connection it has -- the same
+            // semantics as EnableInternetAccess above, and for the same reason: there is nothing
+            // here that could retroactively move an open socket.
+            Device.Configuration.RedirectNintendoServers = e.NewValue;
+        }
+
+        private void UpdatePrivateServerCaBundleState(object sender, ReactiveEventArgs<string> e)
+        {
+            // Read per TLS handshake, so a new value applies to the next connection. The bundle
+            // itself is cached on its path inside PrivateServerTrust, so changing the FILE while
+            // the path stays the same still needs a restart.
+            Device.Configuration.PrivateServerCaBundle = e.NewValue;
+        }
+
         private void UpdateLanInterfaceIdState(object sender, ReactiveEventArgs<string> e)
         {
             Device.Configuration.MultiplayerLanInterfaceId = e.NewValue;
@@ -695,6 +714,8 @@ namespace Ryujinx.Ava.Systems
             ConfigurationState.Instance.Multiplayer.LanPlayServer.Event -= UpdateLanPlayServerState;
             ConfigurationState.Instance.Multiplayer.LanPlayVirtualIp.Event -= UpdateLanPlayVirtualIpState;
             ConfigurationState.Instance.Multiplayer.LanPlayLdnMitm.Event -= UpdateLanPlayLdnMitmState;
+            ConfigurationState.Instance.System.RedirectNintendoServers.Event -= UpdateRedirectNintendoServersState;
+            ConfigurationState.Instance.System.PrivateServerCaBundle.Event -= UpdatePrivateServerCaBundleState;
 
             _topLevel.PointerMoved -= TopLevel_PointerEnteredOrMoved;
             _topLevel.PointerEntered -= TopLevel_PointerEnteredOrMoved;

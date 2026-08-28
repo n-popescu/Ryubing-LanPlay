@@ -79,6 +79,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 EnableLowPowerPtc = System.EnableLowPowerPtc,
                 TickScalar = System.TickScalar,
                 EnableInternetAccess = System.EnableInternetAccess,
+                RedirectNintendoServers = System.RedirectNintendoServers,
+                PrivateServerCaBundle = System.PrivateServerCaBundle,
                 EnableFsIntegrityChecks = System.EnableFsIntegrityChecks,
                 FsGlobalAccessLogMode = System.FsGlobalAccessLogMode,
                 AudioBackend = System.AudioBackend,
@@ -216,6 +218,8 @@ namespace Ryujinx.Ava.Systems.Configuration
             Graphics.ScalingFilterLevel.Value = 80;
             System.EnablePtc.Value = true;
             System.EnableInternetAccess.Value = false;
+            System.RedirectNintendoServers.Value = false;
+            System.PrivateServerCaBundle.Value = string.Empty;
             System.EnableFsIntegrityChecks.Value = true;
             System.FsGlobalAccessLogMode.Value = 0;
             System.AudioBackend.Value = AudioBackend.SDL3;

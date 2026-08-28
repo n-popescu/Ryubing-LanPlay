@@ -104,6 +104,8 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.EnableLowPowerPtc.Value = cff.EnableLowPowerPtc;
             System.TickScalar.Value = cff.TickScalar;
             System.EnableInternetAccess.Value = cff.EnableInternetAccess;
+            System.RedirectNintendoServers.Value = cff.RedirectNintendoServers;
+            System.PrivateServerCaBundle.Value = cff.PrivateServerCaBundle ?? string.Empty;
             System.EnableFsIntegrityChecks.Value = cff.EnableFsIntegrityChecks;
             System.FsGlobalAccessLogMode.Value = cff.FsGlobalAccessLogMode;
             System.AudioBackend.Value = cff.AudioBackend;
@@ -560,6 +562,16 @@ namespace Ryujinx.Ava.Systems.Configuration
                     // so an existing configuration keeps that behaviour.
 
                     cff.MultiplayerLanPlayLdnMitm = true;
+                }),
+                (76, static cff =>
+                {
+                    // Off, and with no CA bundle. Redirecting Nintendo's hostnames to somebody
+                    // else's server is not a default anybody should acquire by upgrading -- and
+                    // with no server to point at, turning it on would only make blocked lookups
+                    // fail differently.
+
+                    cff.RedirectNintendoServers = false;
+                    cff.PrivateServerCaBundle = string.Empty;
                 })
             );
     }
