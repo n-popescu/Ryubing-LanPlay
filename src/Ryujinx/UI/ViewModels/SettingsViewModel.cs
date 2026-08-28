@@ -282,19 +282,58 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public string TurboMultiplierPercentageText => $"{TurboMultiplier}%";
 
-        public bool EnableInternetAccess { get; set; }
+        /// <summary>
+        /// Notifies, because the private-server settings below are only usable with it on and are
+        /// greyed out without it. A plain auto-property would evaluate that once, when the page
+        /// loads, so ticking this would leave them greyed until Settings was reopened.
+        /// </summary>
+        public bool EnableInternetAccess
+        {
+            get;
+            set
+            {
+                field = value;
+
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Lets the hosts file on the virtual SD card override the DNS blacklist, so Nintendo's
         /// hostnames can be pointed at a private replacement for them.
         /// </summary>
-        public bool RedirectNintendoServers { get; set; }
+        /// <remarks>
+        /// Notifies for the same reason as <see cref="EnableInternetAccess"/>: the CA path is only
+        /// usable with this on.
+        /// </remarks>
+        public bool RedirectNintendoServers
+        {
+            get;
+            set
+            {
+                field = value;
+
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Path to a PEM bundle of certificate authorities the guest trusts in addition to the
         /// host's. Adds trust; does not disable verification.
         /// </summary>
-        public string PrivateServerCaBundle { get; set; }
+        /// <remarks>
+        /// Notifies so that the Browse button's result appears in the text box.
+        /// </remarks>
+        public string PrivateServerCaBundle
+        {
+            get;
+            set
+            {
+                field = value;
+
+                OnPropertyChanged();
+            }
+        }
         public bool EnableFsIntegrityChecks { get; set; }
         public bool IgnoreMissingServices { get; set; }
         public MemoryConfiguration DramSize { get; set; }
