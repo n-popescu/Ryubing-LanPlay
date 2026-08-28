@@ -42,6 +42,10 @@ All updates to this Ryujinx branch will be documented in this file.
  - `DnsBlacklistTests` and `PrivateServerTrustTests`: 14 tests, including the two that matter most —
    a blocked host with no hosts-file entry staying blocked with the override on, and a hostname
    mismatch still being fatal with a private CA configured.
+ - Every certificate a `PrivateServerTrustTests` case builds now shares one timestamp. Each helper
+   read the clock for itself, so a second ticking over between making an issuer and making the
+   certificate it signs left the child outliving its parent — which X509 refuses, failing the test
+   about one run in three and aborting `dotnet test` somewhere different each time.
 
 ## [1.3.32](<https://github.com/n-popescu/Ryubing-LanPlay/releases/tag/v1.3.32>) - 2026-08-18
 ### Multiplayer:

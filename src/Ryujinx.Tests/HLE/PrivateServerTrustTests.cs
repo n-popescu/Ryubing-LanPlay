@@ -25,11 +25,24 @@ namespace Ryujinx.Tests.HLE
     {
         private const string Hostname = "dauth-lp1.ndas.srv.nintendo.net";
 
+        /// <summary>
+        /// One instant for every certificate a test makes.
+        /// </summary>
+        /// <remarks>
+        /// Load-bearing. Each helper used to read the clock for itself, so a second ticking over
+        /// between making an issuer and making the certificate it signs left the child outliving
+        /// its parent by a second -- which X509 refuses, so the test failed roughly one run in
+        /// three. Exactly the shape of flake the 1.3.32 changelog entry complains about: a suite
+        /// that aborts somewhere different each run.
+        /// </remarks>
+        private DateTimeOffset _now;
+
         private string _dir;
 
         [SetUp]
         public void SetUp()
         {
+            _now = DateTimeOffset.UtcNow;
             _dir = Path.Combine(Path.GetTempPath(), "ryujinx-private-ca-" + Guid.NewGuid().ToString("n"));
             Directory.CreateDirectory(_dir);
         }
@@ -46,7 +59,7 @@ namespace Ryujinx.Tests.HLE
         /// <summary>
         /// Makes a self-signed CA, the way a private server's own tooling would.
         /// </summary>
-        private static X509Certificate2 CreateCa(string name, int validFromDaysAgo = 1)
+        private X509Certificate2 CreateCa(string name, int validFromDaysAgo = 1)
         {
             using RSA key = RSA.Create(2048);
 
@@ -57,14 +70,16 @@ namespace Ryujinx.Tests.HLE
             request.CertificateExtensions.Add(
                 new X509KeyUsageExtension(X509KeyUsageFlags.KeyCertSign | X509KeyUsageFlags.CrlSign, true));
 
+            // Comfortably wider than anything it signs, at both ends, so no child can fall
+            // outside its parent's window.
             return request.CreateSelfSigned(
-                DateTimeOffset.UtcNow.AddDays(-validFromDaysAgo), DateTimeOffset.UtcNow.AddYears(1));
+                _now.AddDays(-validFromDaysAgo).AddDays(-1), _now.AddYears(5));
         }
 
         /// <summary>
         /// Makes a leaf certificate for a hostname, signed by a CA.
         /// </summary>
-        private static X509Certificate2 CreateLeaf(X509Certificate2 ca, string hostname)
+        private X509Certificate2 CreateLeaf(X509Certificate2 ca, string hostname)
         {
             using RSA key = RSA.Create(2048);
 
@@ -80,8 +95,7 @@ namespace Ryujinx.Tests.HLE
             byte[] serial = new byte[8];
             RandomNumberGenerator.Fill(serial);
 
-            return request.Create(
-                ca, DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(30), serial);
+            return request.Create(ca, _now.AddDays(-1), _now.AddDays(30), serial);
         }
 
         private string WritePem(string fileName, params X509Certificate2[] certificates)
@@ -276,7 +290,7 @@ namespace Ryujinx.Tests.HLE
             RandomNumberGenerator.Fill(serial);
 
             using X509Certificate2 intermediatePublic = intermediateRequest.Create(
-                root, DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddYears(1), serial);
+                root, _now.AddDays(-1), _now.AddYears(1), serial);
             using X509Certificate2 intermediate = intermediatePublic.CopyWithPrivateKey(intermediateKey);
 
             using X509Certificate2 leaf = CreateLeaf(intermediate, Hostname);
@@ -311,7 +325,7 @@ namespace Ryujinx.Tests.HLE
             RandomNumberGenerator.Fill(serial);
 
             using X509Certificate2 expired = request.Create(
-                ca, DateTimeOffset.UtcNow.AddDays(-30), DateTimeOffset.UtcNow.AddDays(-1), serial);
+                ca, _now.AddDays(-30), _now.AddDays(-1), serial);
 
             string bundle = WritePem("ca.pem", ca);
 
