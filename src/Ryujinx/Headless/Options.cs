@@ -37,6 +37,9 @@ namespace Ryujinx.Headless
             if (NeedsOverride(nameof(EnableInternetAccess)))
                 EnableInternetAccess = configurationState.System.EnableInternetAccess;
 
+            if (NeedsOverride(nameof(EnableSwitchNet)))
+                EnableSwitchNet = configurationState.System.EnableSwitchNet;
+
             if (NeedsOverride(nameof(DisableFsIntegrityChecks)))
                 DisableFsIntegrityChecks = !configurationState.System.EnableFsIntegrityChecks;
 
@@ -299,6 +302,9 @@ namespace Ryujinx.Headless
 
         [Option("enable-internet-connection", Required = false, Default = false, HelpText = "Enables guest Internet connection.")]
         public bool EnableInternetAccess { get; set; }
+
+        [Option("enable-switchnet", Required = false, Default = false, HelpText = "Redirects requests to Nintendo's online services to a self-hosted SwitchNet server, for hosts the DNS-MITM hosts file (/atmosphere/hosts/default.txt on the emulated SD card) actually redirects.")]
+        public bool EnableSwitchNet { get; set; }
 
         [Option("disable-fs-integrity-checks", Required = false, HelpText = "Disables integrity checks on Game content files.")]
         public bool DisableFsIntegrityChecks { get; set; }

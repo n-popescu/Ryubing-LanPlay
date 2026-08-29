@@ -1,6 +1,7 @@
 using Ryujinx.HLE.HOS.Services.Sockets.Bsd;
 using Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl;
 using Ryujinx.HLE.HOS.Services.Sockets.Bsd.Proxy;
+using Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres.Proxy;
 using Ryujinx.HLE.HOS.Services.Ssl.Types;
 using System;
 using System.IO;
@@ -19,14 +20,16 @@ namespace Ryujinx.HLE.HOS.Services.Ssl.SslService
 
         private readonly BsdContext _bsdContext;
         private readonly SslVersion _sslVersion;
+        private readonly bool _enableSwitchNet;
         private SslStream _stream;
         private bool _isBlockingSocket;
         private int _previousReadTimeout;
 
-        public SslManagedSocketConnection(BsdContext bsdContext, SslVersion sslVersion, int socketFd, ISocket socket)
+        public SslManagedSocketConnection(BsdContext bsdContext, SslVersion sslVersion, int socketFd, ISocket socket, bool enableSwitchNet)
         {
             _bsdContext = bsdContext;
             _sslVersion = sslVersion;
+            _enableSwitchNet = enableSwitchNet;
 
             SocketFd = socketFd;
             Socket = socket;
@@ -127,8 +130,22 @@ namespace Ryujinx.HLE.HOS.Services.Ssl.SslService
                 ? new NetworkStream(hostSocket.BaseSocket, false)
                 : new SocketImplStream(socketImpl);
 
-            _stream = new SslStream(socketStream, false, null, null);
             hostName = RetrieveHostName(hostName);
+
+            // SwitchNet: trust whatever certificate the operator's server presents, but only for a
+            // host the operator has actually redirected via the DNS-MITM hosts file. Everyone else,
+            // and every other host, keeps the OS's own certificate validation untouched. Real
+            // hardware has this same split -- redirection and certificate trust are separate
+            // problems, and this scoping is what makes trust follow redirection instead of being a
+            // blanket bypass for every TLS connection the guest makes.
+            bool trustSwitchNetCertificate = _enableSwitchNet
+                && DnsMitmResolver.Instance.TryGetOverride(hostName, out _, out _);
+
+            RemoteCertificateValidationCallback certificateValidation = trustSwitchNetCertificate
+                ? (_, _, _, _) => true
+                : null;
+
+            _stream = new SslStream(socketStream, false, certificateValidation, null);
             _stream.AuthenticateAsClient(hostName, null, TranslateSslVersion(_sslVersion), false);
             EndSslOperation();
 

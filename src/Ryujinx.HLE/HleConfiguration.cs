@@ -114,6 +114,13 @@ namespace Ryujinx.HLE
         public bool EnableInternetAccess { internal get; set; }
 
         /// <summary>
+        /// Redirects the guest's requests to Nintendo's online services to a self-hosted SwitchNet
+        /// server, for hosts the DNS-MITM hosts file actually redirects. See the settings model's
+        /// <c>System.EnableSwitchNet</c> for the full explanation.
+        /// </summary>
+        public bool EnableSwitchNet { internal get; set; }
+
+        /// <summary>
         /// Control LibHac's integrity check level.
         /// </summary>
         /// <remarks>This cannot be changed after <see cref="Switch"/> instantiation.</remarks>
@@ -239,6 +246,7 @@ namespace Ryujinx.HLE
                                 bool enablePtc,
                                 long tickScalar,
                                 bool enableInternetAccess,
+                                bool enableSwitchNet,
                                 IntegrityCheckLevel fsIntegrityCheckLevel,
                                 int fsGlobalAccessLogMode,
                                 long systemTimeOffset,
@@ -271,6 +279,7 @@ namespace Ryujinx.HLE
             EnablePtc = enablePtc;
             TickScalar = tickScalar;
             EnableInternetAccess = enableInternetAccess;
+            EnableSwitchNet = enableSwitchNet;
             FsIntegrityCheckLevel = fsIntegrityCheckLevel;
             FsGlobalAccessLogMode = fsGlobalAccessLogMode;
             SystemTimeOffset = systemTimeOffset;

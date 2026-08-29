@@ -82,25 +82,46 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres.Proxy
 
         public IPHostEntry ResolveAddress(string host)
         {
+            if (TryGetOverride(host, out string pattern, out IPAddress address))
+            {
+                Logger.Info?.PrintMsg(LogClass.ServiceBsd, $"Redirecting '{host}' to: {address}");
+
+                return new IPHostEntry
+                {
+                    AddressList = [address],
+                    HostName = pattern,
+                    Aliases = [],
+                };
+            }
+
+            // No match has been found, resolve the host using regular dns
+            return Dns.GetHostEntry(host);
+        }
+
+        /// <summary>
+        /// Reports whether the hosts file redirects <paramref name="host"/>, without falling back
+        /// to a real DNS lookup when it does not match. SwitchNet support uses this to scope its
+        /// behaviour -- bypassing the online-service DNS blacklist, trusting the operator's TLS
+        /// certificate -- strictly to hosts the operator has actually redirected, rather than to
+        /// every blocked or online-service hostname.
+        /// </summary>
+        public bool TryGetOverride(string host, out string pattern, out IPAddress address)
+        {
             foreach (KeyValuePair<string, IPAddress> hostEntry in _mitmHostEntries)
             {
                 // Check for AMS hosts file extension: "*"
                 // NOTE: MatchesSimpleExpression also allows "?" as a wildcard
                 if (FileSystemName.MatchesSimpleExpression(hostEntry.Key, host))
                 {
-                    Logger.Info?.PrintMsg(LogClass.ServiceBsd, $"Redirecting '{host}' to: {hostEntry.Value}");
-
-                    return new IPHostEntry
-                    {
-                        AddressList = [hostEntry.Value],
-                        HostName = hostEntry.Key,
-                        Aliases = [],
-                    };
+                    pattern = hostEntry.Key;
+                    address = hostEntry.Value;
+                    return true;
                 }
             }
 
-            // No match has been found, resolve the host using regular dns
-            return Dns.GetHostEntry(host);
+            pattern = null;
+            address = null;
+            return false;
         }
     }
 }

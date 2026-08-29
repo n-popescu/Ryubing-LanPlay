@@ -2,6 +2,24 @@
 
 All updates to this Ryujinx branch will be documented in this file.
 
+## Unreleased
+### Network:
+ - Added **SwitchNet Support** to *Settings → Network*, off by default.
+   - When on, redirects the guest's requests to Nintendo's online services (accounts, friends, and
+     Splatoon 3's NPLN game server) to a self-hosted [SwitchNet](https://github.com/n-popescu/switchnet)
+     server, for any host the DNS-MITM hosts file (`/atmosphere/hosts/default.txt` on the emulated SD
+     card) actually redirects -- the exact same file and format used to redirect a real console, so a
+     SwitchNet operator's existing hosts file works unmodified here.
+   - Also trusts the TLS certificate a redirected host's connection presents, since it won't be signed
+     by a real certificate authority. Scoped the same way as the redirect itself: only a host the hosts
+     file actually redirects, never a blanket bypass for every TLS connection the guest makes.
+   - Splatoon 3's own gRPC/HTTP2 stack (NPLN) does its own TLS on top of a raw socket, bypassing the
+     `ssl` service entirely, so this toggle alone does not cover it -- it needs the same
+     certificate-pinning patch a real console running SwitchNet needs. See SwitchNet's own
+     `docs/ROADMAP.md` for that.
+   - Configuration version 76. Existing configurations are migrated with the option off, so nothing
+     changes for anyone not running their own SwitchNet server.
+
 ## [1.3.32](<https://github.com/n-popescu/Ryubing-LanPlay/releases/tag/v1.3.32>) - 2026-08-18
 ### Multiplayer:
  - Added **Use ldn_mitm for games without LAN Play support** to *Settings → Network*, shown when the

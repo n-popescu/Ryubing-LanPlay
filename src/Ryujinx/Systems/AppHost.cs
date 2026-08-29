@@ -211,6 +211,7 @@ namespace Ryujinx.Ava.Systems
             ConfigurationState.Instance.Graphics.EnableCustomVSyncInterval.Event += UpdateCustomVSyncIntervalEnabled;
 
             ConfigurationState.Instance.System.EnableInternetAccess.Event += UpdateEnableInternetAccessState;
+            ConfigurationState.Instance.System.EnableSwitchNet.Event += UpdateEnableSwitchNetState;
             ConfigurationState.Instance.Multiplayer.LanInterfaceId.Event += UpdateLanInterfaceIdState;
             ConfigurationState.Instance.Multiplayer.Mode.Event += UpdateMultiplayerModeState;
             ConfigurationState.Instance.Multiplayer.LdnPassphrase.Event += UpdateLdnPassphraseState;
@@ -537,6 +538,11 @@ namespace Ryujinx.Ava.Systems
         private void UpdateEnableInternetAccessState(object sender, ReactiveEventArgs<bool> e)
         {
             Device.Configuration.EnableInternetAccess = e.NewValue;
+        }
+
+        private void UpdateEnableSwitchNetState(object sender, ReactiveEventArgs<bool> e)
+        {
+            Device.Configuration.EnableSwitchNet = e.NewValue;
         }
 
         private void UpdateLanInterfaceIdState(object sender, ReactiveEventArgs<string> e)

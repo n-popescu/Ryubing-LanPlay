@@ -17,7 +17,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// <summary>
         /// The current version of the file format
         /// </summary>
-        public const int CurrentVersion = 75;
+        public const int CurrentVersion = 76;
 
         /// <summary>
         /// Version of the configuration file format
@@ -285,6 +285,12 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// Enables or disables guest Internet access
         /// </summary>
         public bool EnableInternetAccess { get; set; }
+
+        /// <summary>
+        /// Redirects the guest's requests to Nintendo's online services to a self-hosted SwitchNet
+        /// server, for hosts the DNS-MITM hosts file actually redirects.
+        /// </summary>
+        public bool EnableSwitchNet { get; set; }
 
         /// <summary>
         /// Enables integrity checks on Game content files

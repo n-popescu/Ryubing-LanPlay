@@ -331,7 +331,13 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres
 
                 string targetHost = host;
 
-                if (DnsBlacklist.IsHostBlocked(host))
+                // SwitchNet: an operator-redirected host bypasses the blacklist below --
+                // the blacklist exists to stop these hosts reaching real Nintendo servers,
+                // and a hosts-file override means they never will.
+                bool switchNetOverride = context.Device.Configuration.EnableSwitchNet
+                    && DnsMitmResolver.Instance.TryGetOverride(host, out _, out _);
+
+                if (!switchNetOverride && DnsBlacklist.IsHostBlocked(host))
                 {
                     Logger.Info?.Print(LogClass.ServiceSfdnsres, $"DNS Blocked: {host}");
 
@@ -557,7 +563,13 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres
 
                 string targetHost = host;
 
-                if (DnsBlacklist.IsHostBlocked(host))
+                // SwitchNet: an operator-redirected host bypasses the blacklist below --
+                // the blacklist exists to stop these hosts reaching real Nintendo servers,
+                // and a hosts-file override means they never will.
+                bool switchNetOverride = context.Device.Configuration.EnableSwitchNet
+                    && DnsMitmResolver.Instance.TryGetOverride(host, out _, out _);
+
+                if (!switchNetOverride && DnsBlacklist.IsHostBlocked(host))
                 {
                     Logger.Info?.Print(LogClass.ServiceSfdnsres, $"DNS Blocked: {host}");
 

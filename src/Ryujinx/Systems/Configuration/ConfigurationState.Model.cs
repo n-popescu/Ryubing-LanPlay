@@ -379,6 +379,16 @@ namespace Ryujinx.Ava.Systems.Configuration
             public ReactiveObject<bool> EnableInternetAccess { get; private set; }
 
             /// <summary>
+            /// Redirects the guest's requests to Nintendo's online services (accounts, friends,
+            /// NPLN game servers) to a self-hosted SwitchNet server instead, using the same
+            /// Atmosphère-style DNS-MITM hosts file (<c>/atmosphere/hosts/default.txt</c> on the
+            /// emulated SD card) an operator would use on real hardware. Has no effect unless the
+            /// hosts file actually redirects a given host -- this does not point anywhere on its
+            /// own, and does not affect hosts the operator has not redirected.
+            /// </summary>
+            public ReactiveObject<bool> EnableSwitchNet { get; private set; }
+
+            /// <summary>
             /// Enables integrity checks on Game content files
             /// </summary>
             public ReactiveObject<bool> EnableFsIntegrityChecks { get; private set; }
@@ -470,6 +480,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 };
                 EnableInternetAccess = new ReactiveObject<bool>();
                 EnableInternetAccess.LogChangesToValue(nameof(EnableInternetAccess));
+                EnableSwitchNet = new ReactiveObject<bool>();
+                EnableSwitchNet.LogChangesToValue(nameof(EnableSwitchNet));
                 EnableFsIntegrityChecks = new ReactiveObject<bool>();
                 EnableFsIntegrityChecks.LogChangesToValue(nameof(EnableFsIntegrityChecks));
                 FsGlobalAccessLogMode = new ReactiveObject<int>();
@@ -987,6 +999,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 System.EnablePtc,
                 System.TickScalar,
                 System.EnableInternetAccess,
+                System.EnableSwitchNet,
                 System.EnableFsIntegrityChecks
                     ? IntegrityCheckLevel.ErrorOnInvalid
                     : IntegrityCheckLevel.None,

@@ -283,6 +283,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         public string TurboMultiplierPercentageText => $"{TurboMultiplier}%";
 
         public bool EnableInternetAccess { get; set; }
+        public bool EnableSwitchNet { get; set; }
         public bool EnableFsIntegrityChecks { get; set; }
         public bool IgnoreMissingServices { get; set; }
         public MemoryConfiguration DramSize { get; set; }
@@ -813,6 +814,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             // Network
             EnableInternetAccess = config.System.EnableInternetAccess;
+            EnableSwitchNet = config.System.EnableSwitchNet;
             // LAN interface index is loaded asynchronously in PopulateNetworkInterfaces()
 
             // Logging
@@ -944,6 +946,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             // Network
             config.System.EnableInternetAccess.Value = EnableInternetAccess;
+            config.System.EnableSwitchNet.Value = EnableSwitchNet;
 
             // Logging
             config.Logger.EnableFileLog.Value = EnableFileLog;

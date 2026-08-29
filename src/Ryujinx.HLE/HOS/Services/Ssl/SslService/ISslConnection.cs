@@ -61,7 +61,7 @@ namespace Ryujinx.HLE.HOS.Services.Ssl.SslService
                 return ResultCode.InvalidSocket;
             }
 
-            InitializeConnection(internalFd);
+            InitializeConnection(internalFd, context.Device.Configuration.EnableSwitchNet);
 
             int outputFd = inputFd;
 
@@ -75,11 +75,11 @@ namespace Ryujinx.HLE.HOS.Services.Ssl.SslService
             return ResultCode.Success;
         }
 
-        private void InitializeConnection(int socketFd)
+        private void InitializeConnection(int socketFd, bool enableSwitchNet)
         {
             ISocket bsdSocket = _bsdContext.RetrieveSocket(socketFd);
 
-            _connection = new SslManagedSocketConnection(_bsdContext, _sslVersion, socketFd, bsdSocket);
+            _connection = new SslManagedSocketConnection(_bsdContext, _sslVersion, socketFd, bsdSocket, enableSwitchNet);
         }
 
         [CommandCmif(1)]

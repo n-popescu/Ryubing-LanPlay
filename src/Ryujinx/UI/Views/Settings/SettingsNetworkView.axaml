@@ -142,6 +142,10 @@
                     <TextBlock Text="{ext:Locale SettingsTabSystemEnableInternetAccess}"
                         ToolTip.Tip="{ext:Locale EnableInternetAccessTooltip}" />
                 </CheckBox>
+                <CheckBox Margin="10,0,0,0" IsChecked="{Binding EnableSwitchNet}">
+                    <TextBlock Text="{ext:Locale SettingsTabSystemEnableSwitchNet}"
+                        ToolTip.Tip="{ext:Locale EnableSwitchNetTooltip}" />
+                </CheckBox>
                 <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center"
                         Text="{ext:Locale SettingsTabNetworkInterface}"

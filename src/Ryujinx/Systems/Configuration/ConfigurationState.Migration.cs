@@ -104,6 +104,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.EnableLowPowerPtc.Value = cff.EnableLowPowerPtc;
             System.TickScalar.Value = cff.TickScalar;
             System.EnableInternetAccess.Value = cff.EnableInternetAccess;
+            System.EnableSwitchNet.Value = cff.EnableSwitchNet;
             System.EnableFsIntegrityChecks.Value = cff.EnableFsIntegrityChecks;
             System.FsGlobalAccessLogMode.Value = cff.FsGlobalAccessLogMode;
             System.AudioBackend.Value = cff.AudioBackend;
@@ -560,7 +561,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                     // so an existing configuration keeps that behaviour.
 
                     cff.MultiplayerLanPlayLdnMitm = true;
-                })
+                }),
+                (76, static cff => cff.EnableSwitchNet = false)
             );
     }
 }
