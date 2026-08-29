@@ -325,9 +325,6 @@ namespace Ryujinx.Ava.UI.ViewModels
         /// Notifies so that the Browse button's result appears in the text box.
         /// </remarks>
         public string PrivateServerCaBundle
-        public string SwitchNetServer { get; set; }
-        public string SwitchNetDeviceAccountId { get; set; }
-        public string SwitchNetPassword { get; set; }
         {
             get;
             set
@@ -337,6 +334,11 @@ namespace Ryujinx.Ava.UI.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        /// <summary>SwitchNet server address, as host or host:port. Empty disables the login.</summary>
+        public string SwitchNetServer { get; set; }
+        public string SwitchNetDeviceAccountId { get; set; }
+        public string SwitchNetPassword { get; set; }
         public bool EnableFsIntegrityChecks { get; set; }
         public bool IgnoreMissingServices { get; set; }
         public MemoryConfiguration DramSize { get; set; }
@@ -1005,9 +1007,9 @@ namespace Ryujinx.Ava.UI.ViewModels
             config.System.EnableInternetAccess.Value = EnableInternetAccess;
             config.System.RedirectNintendoServers.Value = RedirectNintendoServers;
             config.System.PrivateServerCaBundle.Value = PrivateServerCaBundle ?? string.Empty;
-            config.System.SwitchNetServer.Value = SwitchNetServer;
-            config.System.SwitchNetDeviceAccountId.Value = SwitchNetDeviceAccountId;
-            config.System.SwitchNetPassword.Value = SwitchNetPassword;
+            config.System.SwitchNetServer.Value = SwitchNetServer ?? string.Empty;
+            config.System.SwitchNetDeviceAccountId.Value = SwitchNetDeviceAccountId ?? string.Empty;
+            config.System.SwitchNetPassword.Value = SwitchNetPassword ?? string.Empty;
 
             // Logging
             config.Logger.EnableFileLog.Value = EnableFileLog;
