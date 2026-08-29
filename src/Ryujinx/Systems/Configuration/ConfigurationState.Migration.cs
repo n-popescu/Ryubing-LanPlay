@@ -105,6 +105,9 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.TickScalar.Value = cff.TickScalar;
             System.EnableInternetAccess.Value = cff.EnableInternetAccess;
             System.EnableSwitchNet.Value = cff.EnableSwitchNet;
+            System.SwitchNetServer.Value = cff.SwitchNetServer;
+            System.SwitchNetDeviceAccountId.Value = cff.SwitchNetDeviceAccountId;
+            System.SwitchNetPassword.Value = cff.SwitchNetPassword;
             System.EnableFsIntegrityChecks.Value = cff.EnableFsIntegrityChecks;
             System.FsGlobalAccessLogMode.Value = cff.FsGlobalAccessLogMode;
             System.AudioBackend.Value = cff.AudioBackend;
@@ -562,7 +565,13 @@ namespace Ryujinx.Ava.Systems.Configuration
 
                     cff.MultiplayerLanPlayLdnMitm = true;
                 }),
-                (76, static cff => cff.EnableSwitchNet = false)
+                (76, static cff => cff.EnableSwitchNet = false),
+                (77, static cff =>
+                {
+                    cff.SwitchNetServer = string.Empty;
+                    cff.SwitchNetDeviceAccountId = string.Empty;
+                    cff.SwitchNetPassword = string.Empty;
+                })
             );
     }
 }

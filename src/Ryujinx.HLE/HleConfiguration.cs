@@ -121,6 +121,26 @@ namespace Ryujinx.HLE
         public bool EnableSwitchNet { internal get; set; }
 
         /// <summary>
+        /// Address of the SwitchNet server (its nginx edge) for the emulator's OWN
+        /// account login: "192.168.1.50", "192.168.1.50:443" or a hostname. Empty
+        /// means no SwitchNet login, and games get the locally generated id token.
+        /// </summary>
+        public string SwitchNetServer { internal get; set; }
+
+        /// <summary>
+        /// The SwitchNet device account id to log in as. Create one with
+        /// 'switchnetctl account create'.
+        /// </summary>
+        public string SwitchNetDeviceAccountId { internal get; set; }
+
+        /// <summary>
+        /// The device account's password. Stored in the emulator's configuration in
+        /// the clear, so it is a credential for the operator's own private server and
+        /// nothing else.
+        /// </summary>
+        public string SwitchNetPassword { internal get; set; }
+
+        /// <summary>
         /// Control LibHac's integrity check level.
         /// </summary>
         /// <remarks>This cannot be changed after <see cref="Switch"/> instantiation.</remarks>
@@ -247,6 +267,9 @@ namespace Ryujinx.HLE
                                 long tickScalar,
                                 bool enableInternetAccess,
                                 bool enableSwitchNet,
+                                string switchNetServer,
+                                string switchNetDeviceAccountId,
+                                string switchNetPassword,
                                 IntegrityCheckLevel fsIntegrityCheckLevel,
                                 int fsGlobalAccessLogMode,
                                 long systemTimeOffset,
@@ -280,6 +303,9 @@ namespace Ryujinx.HLE
             TickScalar = tickScalar;
             EnableInternetAccess = enableInternetAccess;
             EnableSwitchNet = enableSwitchNet;
+            SwitchNetServer = switchNetServer;
+            SwitchNetDeviceAccountId = switchNetDeviceAccountId;
+            SwitchNetPassword = switchNetPassword;
             FsIntegrityCheckLevel = fsIntegrityCheckLevel;
             FsGlobalAccessLogMode = fsGlobalAccessLogMode;
             SystemTimeOffset = systemTimeOffset;

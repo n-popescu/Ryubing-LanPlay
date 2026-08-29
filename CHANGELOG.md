@@ -19,6 +19,26 @@ All updates to this Ryujinx branch will be documented in this file.
      `docs/ROADMAP.md` for that.
    - Configuration version 76. Existing configurations are migrated with the option off, so nothing
      changes for anyone not running their own SwitchNet server.
+ - Added **SwitchNet account login**, in the same *Settings -> Network* section: a server address,
+   a device account ID and a password, shown only when SwitchNet Support is on.
+   - Games ask the account service for a BAAS identity token before they can reach an online game
+     server. Ryujinx generates one locally that is the right shape but signed with a throwaway key,
+     which any server that actually checks the signature rejects. With these set, the emulator
+     performs the same three calls a console makes -- dauth device token, BAAS application token,
+     BAAS login -- against your own SwitchNet server, and hands the game the token that server
+     signed.
+   - Create the account on the server with
+     `switchnetctl account create -device-account-id <id> -password <password>`.
+   - No Nintendo credential is presented, verified or forged anywhere in this. Every token involved
+     is one your own server signed with its own key, and the device account password is a SwitchNet
+     credential that cannot be used as a Nintendo one.
+   - The login is separate from the guest traffic the DNS-MITM hosts file redirects, and both need
+     to point at the same server: this is how the *emulator* fetches an identity, the hosts file is
+     how the *game's own* connections get there.
+   - Failures are logged once per distinct reason with the actual cause (wrong password, server
+     unreachable, malformed address) rather than a generic failure, and fall back to the previous
+     locally generated token.
+   - Configuration version 77, migrated with the fields empty.
 
 ## [1.3.32](<https://github.com/n-popescu/Ryubing-LanPlay/releases/tag/v1.3.32>) - 2026-08-18
 ### Multiplayer:

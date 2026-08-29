@@ -389,6 +389,27 @@ namespace Ryujinx.Ava.Systems.Configuration
             public ReactiveObject<bool> EnableSwitchNet { get; private set; }
 
             /// <summary>
+            /// Address of the SwitchNet server for the emulator's own account login --
+            /// "192.168.1.50", "192.168.1.50:443" or a hostname. This is the emulator
+            /// talking to SwitchNet on its own behalf, which is separate from the guest
+            /// traffic the hosts file redirects; point both at the same server.
+            /// </summary>
+            public ReactiveObject<string> SwitchNetServer { get; private set; }
+
+            /// <summary>
+            /// The SwitchNet device account id to log in as, from
+            /// 'switchnetctl account create'.
+            /// </summary>
+            public ReactiveObject<string> SwitchNetDeviceAccountId { get; private set; }
+
+            /// <summary>
+            /// That device account's password. Stored in the clear in Config.json, so
+            /// it is a credential for the operator's own private server and nothing
+            /// else -- it is not a Nintendo credential and cannot be used as one.
+            /// </summary>
+            public ReactiveObject<string> SwitchNetPassword { get; private set; }
+
+            /// <summary>
             /// Enables integrity checks on Game content files
             /// </summary>
             public ReactiveObject<bool> EnableFsIntegrityChecks { get; private set; }
@@ -482,6 +503,13 @@ namespace Ryujinx.Ava.Systems.Configuration
                 EnableInternetAccess.LogChangesToValue(nameof(EnableInternetAccess));
                 EnableSwitchNet = new ReactiveObject<bool>();
                 EnableSwitchNet.LogChangesToValue(nameof(EnableSwitchNet));
+                SwitchNetServer = new ReactiveObject<string>();
+                SwitchNetServer.LogChangesToValue(nameof(SwitchNetServer));
+                SwitchNetDeviceAccountId = new ReactiveObject<string>();
+                SwitchNetDeviceAccountId.LogChangesToValue(nameof(SwitchNetDeviceAccountId));
+                // Deliberately NOT logged: LogChangesToValue prints the new value, and
+                // this one is a password.
+                SwitchNetPassword = new ReactiveObject<string>();
                 EnableFsIntegrityChecks = new ReactiveObject<bool>();
                 EnableFsIntegrityChecks.LogChangesToValue(nameof(EnableFsIntegrityChecks));
                 FsGlobalAccessLogMode = new ReactiveObject<int>();
@@ -1000,6 +1028,9 @@ namespace Ryujinx.Ava.Systems.Configuration
                 System.TickScalar,
                 System.EnableInternetAccess,
                 System.EnableSwitchNet,
+                System.SwitchNetServer,
+                System.SwitchNetDeviceAccountId,
+                System.SwitchNetPassword,
                 System.EnableFsIntegrityChecks
                     ? IntegrityCheckLevel.ErrorOnInvalid
                     : IntegrityCheckLevel.None,

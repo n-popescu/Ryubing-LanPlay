@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Kernel.Threading;
 using Ryujinx.HLE.HOS.Services.Account.Acc.AsyncContext;
+using Ryujinx.HLE.HOS.Services.Account.Acc.SwitchNet;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -24,6 +25,12 @@ namespace Ryujinx.HLE.HOS.Services.Account.Acc.AccountService
 
         private byte[] _cachedTokenData;
         private DateTime _cachedTokenExpiry;
+
+        /// <summary>
+        /// Captured in EnsureIdTokenCacheAsync, which is the only place with a
+        /// ServiceCtx before the async implementation runs.
+        /// </summary>
+        private HleConfiguration _configuration;
 
         public ManagerServer(UserId userId)
         {
@@ -101,6 +108,10 @@ namespace Ryujinx.HLE.HOS.Services.Account.Acc.AccountService
             KEvent asyncEvent = new(context.Device.System.KernelContext);
             AsyncExecution asyncExecution = new(asyncEvent);
 
+            // Captured here because the implementation below runs on its own task and
+            // never sees a ServiceCtx.
+            _configuration = context.Device.Configuration;
+
             asyncExecution.Initialize(1000, EnsureIdTokenCacheAsyncImpl);
 
             asyncContext = new IAsyncContext(asyncExecution);
@@ -116,7 +127,17 @@ namespace Ryujinx.HLE.HOS.Services.Account.Acc.AccountService
             //       in the "account:/" savedata.
             //       Then its read data, use dauth API with this data to get the Token Id and probably store the dauth response
             //       in "su/cache/USERID_IN_UUID_STRING.dat" (where USERID_IN_UUID_STRING is formatted as "%08x-%04x-%04x-%02x%02x-%08x%04x") in the "account:/" savedata.
-            //       Since we don't support online services, we can stub it.
+
+            // This call is where a console does the dauth exchange, so it is where
+            // SwitchNet's login goes too: the network round trip happens on this task
+            // rather than in LoadIdTokenCache, which is synchronous and would stall the
+            // guest. With SwitchNet off this stays the stub it has always been.
+            if (SwitchNetAccountSession.TryGetClient(_configuration, out _))
+            {
+                await SwitchNetAccountSession.PrefetchAsync(_configuration, token);
+
+                return;
+            }
 
             Logger.Stub?.PrintStub(LogClass.ServiceAcc);
 
@@ -127,9 +148,7 @@ namespace Ryujinx.HLE.HOS.Services.Account.Acc.AccountService
         public ResultCode LoadIdTokenCache(ServiceCtx context)
         {
             ulong bufferPosition = context.Request.ReceiveBuff[0].Position;
-#pragma warning disable IDE0059 // Remove unnecessary value assignment
             ulong bufferSize = context.Request.ReceiveBuff[0].Size;
-#pragma warning restore IDE0059
 
             // NOTE: This opens the file at "su/cache/USERID_IN_UUID_STRING.dat" (where USERID_IN_UUID_STRING is formatted as "%08x-%04x-%04x-%02x%02x-%08x%04x")
             //       in the "account:/" savedata and writes some data in the buffer.
@@ -147,13 +166,41 @@ namespace Ryujinx.HLE.HOS.Services.Account.Acc.AccountService
             }
             */
 
-            if (_cachedTokenData == null || DateTime.UtcNow > _cachedTokenExpiry)
+            // A real token from the operator's own SwitchNet server, when one is
+            // configured. GenerateIdToken below is the right shape but is signed with a
+            // throwaway key generated on the spot, so a server that actually verifies
+            // the signature -- which SwitchNet does -- rejects it. The client caches and
+            // renews on its own, so this is a lookup rather than a login in the common
+            // case; EnsureIdTokenCacheAsync above is what does the network work.
+            byte[] tokenData;
+
+            if (SwitchNetAccountSession.TryGetIdToken(context.Device.Configuration, out string switchNetIdToken))
             {
-                _cachedTokenExpiry = DateTime.UtcNow + TimeSpan.FromHours(3);
-                _cachedTokenData = Encoding.ASCII.GetBytes(GenerateIdToken());
+                tokenData = Encoding.ASCII.GetBytes(switchNetIdToken);
+            }
+            else
+            {
+                if (_cachedTokenData == null || DateTime.UtcNow > _cachedTokenExpiry)
+                {
+                    _cachedTokenExpiry = DateTime.UtcNow + TimeSpan.FromHours(3);
+                    _cachedTokenData = Encoding.ASCII.GetBytes(GenerateIdToken());
+                }
+
+                tokenData = _cachedTokenData;
             }
 
-            byte[] tokenData = _cachedTokenData;
+            // The locally generated token is a known size, but a SwitchNet one is
+            // whatever that server signed. Writing past the guest's buffer would
+            // corrupt its memory, so it is refused instead -- with a log line, because
+            // the result code alone says nothing about which token was too big.
+            if ((ulong)tokenData.Length > bufferSize)
+            {
+                Logger.Warning?.Print(LogClass.ServiceAcc,
+                    $"The id token is {tokenData.Length} bytes and the guest offered a "
+                    + $"{bufferSize} byte buffer.");
+
+                return ResultCode.InvalidIdTokenCacheBufferSize;
+            }
 
             context.Memory.Write(bufferPosition, tokenData);
             context.ResponseData.Write(tokenData.Length);

@@ -146,6 +146,42 @@
                     <TextBlock Text="{ext:Locale SettingsTabSystemEnableSwitchNet}"
                         ToolTip.Tip="{ext:Locale EnableSwitchNetTooltip}" />
                 </CheckBox>
+                <StackPanel Margin="30,0,0,0" Orientation="Horizontal"
+                    IsVisible="{Binding EnableSwitchNet}">
+                    <TextBlock VerticalAlignment="Center"
+                        Text="{ext:Locale SettingsTabSystemSwitchNetServer}"
+                        ToolTip.Tip="{ext:Locale SwitchNetServerTooltip}"
+                        Width="180" />
+                    <TextBox Name="SwitchNetServer"
+                        Text="{Binding SwitchNetServer}"
+                        Width="250"
+                        ToolTip.Tip="{ext:Locale SwitchNetServerTooltip}"
+                        PlaceholderText="{ext:Locale SwitchNetServerWatermark}" />
+                </StackPanel>
+                <StackPanel Margin="30,0,0,0" Orientation="Horizontal"
+                    IsVisible="{Binding EnableSwitchNet}">
+                    <TextBlock VerticalAlignment="Center"
+                        Text="{ext:Locale SettingsTabSystemSwitchNetDeviceAccountId}"
+                        ToolTip.Tip="{ext:Locale SwitchNetDeviceAccountIdTooltip}"
+                        Width="180" />
+                    <TextBox Name="SwitchNetDeviceAccountId"
+                        Text="{Binding SwitchNetDeviceAccountId}"
+                        Width="250"
+                        ToolTip.Tip="{ext:Locale SwitchNetDeviceAccountIdTooltip}"
+                        PlaceholderText="{ext:Locale SwitchNetDeviceAccountIdWatermark}" />
+                </StackPanel>
+                <StackPanel Margin="30,0,0,0" Orientation="Horizontal"
+                    IsVisible="{Binding EnableSwitchNet}">
+                    <TextBlock VerticalAlignment="Center"
+                        Text="{ext:Locale SettingsTabSystemSwitchNetPassword}"
+                        ToolTip.Tip="{ext:Locale SwitchNetPasswordTooltip}"
+                        Width="180" />
+                    <TextBox Name="SwitchNetPassword"
+                        Text="{Binding SwitchNetPassword}"
+                        PasswordChar="*"
+                        Width="250"
+                        ToolTip.Tip="{ext:Locale SwitchNetPasswordTooltip}" />
+                </StackPanel>
                 <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center"
                         Text="{ext:Locale SettingsTabNetworkInterface}"

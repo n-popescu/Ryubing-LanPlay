@@ -17,7 +17,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// <summary>
         /// The current version of the file format
         /// </summary>
-        public const int CurrentVersion = 76;
+        public const int CurrentVersion = 77;
 
         /// <summary>
         /// Version of the configuration file format
@@ -291,6 +291,21 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// server, for hosts the DNS-MITM hosts file actually redirects.
         /// </summary>
         public bool EnableSwitchNet { get; set; }
+
+        /// <summary>
+        /// Address of the SwitchNet server for the emulator's own account login.
+        /// </summary>
+        public string SwitchNetServer { get; set; }
+
+        /// <summary>
+        /// The SwitchNet device account id to log in as.
+        /// </summary>
+        public string SwitchNetDeviceAccountId { get; set; }
+
+        /// <summary>
+        /// That device account's password, stored in the clear.
+        /// </summary>
+        public string SwitchNetPassword { get; set; }
 
         /// <summary>
         /// Enables integrity checks on Game content files

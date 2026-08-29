@@ -284,6 +284,9 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public bool EnableInternetAccess { get; set; }
         public bool EnableSwitchNet { get; set; }
+        public string SwitchNetServer { get; set; }
+        public string SwitchNetDeviceAccountId { get; set; }
+        public string SwitchNetPassword { get; set; }
         public bool EnableFsIntegrityChecks { get; set; }
         public bool IgnoreMissingServices { get; set; }
         public MemoryConfiguration DramSize { get; set; }
@@ -815,6 +818,9 @@ namespace Ryujinx.Ava.UI.ViewModels
             // Network
             EnableInternetAccess = config.System.EnableInternetAccess;
             EnableSwitchNet = config.System.EnableSwitchNet;
+            SwitchNetServer = config.System.SwitchNetServer;
+            SwitchNetDeviceAccountId = config.System.SwitchNetDeviceAccountId;
+            SwitchNetPassword = config.System.SwitchNetPassword;
             // LAN interface index is loaded asynchronously in PopulateNetworkInterfaces()
 
             // Logging
@@ -947,6 +953,9 @@ namespace Ryujinx.Ava.UI.ViewModels
             // Network
             config.System.EnableInternetAccess.Value = EnableInternetAccess;
             config.System.EnableSwitchNet.Value = EnableSwitchNet;
+            config.System.SwitchNetServer.Value = SwitchNetServer;
+            config.System.SwitchNetDeviceAccountId.Value = SwitchNetDeviceAccountId;
+            config.System.SwitchNetPassword.Value = SwitchNetPassword;
 
             // Logging
             config.Logger.EnableFileLog.Value = EnableFileLog;
