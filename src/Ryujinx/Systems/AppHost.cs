@@ -213,6 +213,8 @@ namespace Ryujinx.Ava.Systems
             ConfigurationState.Instance.System.EnableInternetAccess.Event += UpdateEnableInternetAccessState;
             ConfigurationState.Instance.System.RedirectNintendoServers.Event += UpdateRedirectNintendoServersState;
             ConfigurationState.Instance.System.PrivateServerCaBundle.Event += UpdatePrivateServerCaBundleState;
+            ConfigurationState.Instance.System.PrivateServerAddress.Event += UpdatePrivateServerAddressState;
+            ConfigurationState.Instance.System.PrivateServerNatCheckSecondaryAddress.Event += UpdatePrivateServerNatCheckSecondaryAddressState;
             ConfigurationState.Instance.Multiplayer.LanInterfaceId.Event += UpdateLanInterfaceIdState;
             ConfigurationState.Instance.Multiplayer.Mode.Event += UpdateMultiplayerModeState;
             ConfigurationState.Instance.Multiplayer.LdnPassphrase.Event += UpdateLdnPassphraseState;
@@ -558,6 +560,18 @@ namespace Ryujinx.Ava.Systems
             Device.Configuration.PrivateServerCaBundle = e.NewValue;
         }
 
+        private void UpdatePrivateServerAddressState(object sender, ReactiveEventArgs<string> e)
+        {
+            // Read per lookup by DnsBlacklist.TryAllow, so this takes effect on the next name
+            // the guest resolves -- the same semantics as RedirectNintendoServers above.
+            Device.Configuration.PrivateServerAddress = e.NewValue;
+        }
+
+        private void UpdatePrivateServerNatCheckSecondaryAddressState(object sender, ReactiveEventArgs<string> e)
+        {
+            Device.Configuration.PrivateServerNatCheckSecondaryAddress = e.NewValue;
+        }
+
         private void UpdateLanInterfaceIdState(object sender, ReactiveEventArgs<string> e)
         {
             Device.Configuration.MultiplayerLanInterfaceId = e.NewValue;
@@ -716,6 +730,8 @@ namespace Ryujinx.Ava.Systems
             ConfigurationState.Instance.Multiplayer.LanPlayLdnMitm.Event -= UpdateLanPlayLdnMitmState;
             ConfigurationState.Instance.System.RedirectNintendoServers.Event -= UpdateRedirectNintendoServersState;
             ConfigurationState.Instance.System.PrivateServerCaBundle.Event -= UpdatePrivateServerCaBundleState;
+            ConfigurationState.Instance.System.PrivateServerAddress.Event -= UpdatePrivateServerAddressState;
+            ConfigurationState.Instance.System.PrivateServerNatCheckSecondaryAddress.Event -= UpdatePrivateServerNatCheckSecondaryAddressState;
 
             _topLevel.PointerMoved -= TopLevel_PointerEnteredOrMoved;
             _topLevel.PointerEntered -= TopLevel_PointerEnteredOrMoved;

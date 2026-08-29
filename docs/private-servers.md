@@ -4,16 +4,30 @@ Ryujinx can be pointed at a private replacement for Nintendo's online servers �
 for consoles and emulators you own — so that a game's account, friends and online features talk to
 it instead of Nintendo.
 
-Two settings, under *Settings → Network → Private Nintendo Servers*. **Both are needed**, and they
-solve two different problems that are easy to confuse:
+Settings under *Settings → Network → Private Nintendo Servers* solve two different problems that
+are easy to confuse:
 
 | | Problem | Setting |
 | --- | --- | --- |
-| **1** | Nintendo's hostnames have to resolve to your server | *Redirect Nintendo's hostnames using the hosts file on the SD card* |
+| **1** | Nintendo's hostnames have to resolve to your server | *either* the hosts file *or* a redirect address — see [section 1](#1-setting-it-up) |
 | **2** | The guest has to accept your server's certificate for those hostnames | *Trusted CA certificate* |
 
-Neither one turns certificate verification off. That distinction is the whole design and is worth
-reading [section 3](#3-certificate-trust-adds-a-ca-it-does-not-disable-verification) for.
+**Problem 1 has two independent solutions**, and you can use either, or both together:
+
+- **The hosts file on the virtual SD card.** Name a hostname, get an address. Precise, and lets
+  different hostnames go to different addresses — the shape a real Atmosphère install already uses,
+  so a private server that generates this file for a real console can hand you the identical one.
+- **A single redirect address.** No hosts file at all: point every Nintendo hostname SwitchNet-style
+  redirection covers at one address, in a text box. Simpler, and enough if your whole deployment is
+  one server.
+
+A hosts-file entry for a given hostname wins when both are configured — it is the more specific of
+the two. Neither mechanism touches certificate trust, which is entirely separate: turning either one
+on gets the guest talking to your server, but its TLS still rejects your server's certificate until
+the CA setting below is configured too.
+
+Certificate trust itself never turns verification off. That distinction is the whole design of
+[section 3](#3-certificate-trust-adds-a-ca-it-does-not-disable-verification).
 
 > Use this with servers you run and games you own. This adds nothing that helps against Nintendo's
 > own servers: it only makes the emulator willing to talk to a server you have set up yourself.
@@ -23,9 +37,12 @@ reading [section 3](#3-certificate-trust-adds-a-ca-it-does-not-disable-verificat
 ## 1. Setting it up
 
 **Enable guest Internet access** first, under *Settings → Network → Network Connection*. Without it
-every lookup is refused before any of this is reached, and the redirect checkbox stays disabled.
+every lookup is refused before any of this is reached, and the hosts-file redirect checkbox stays
+disabled.
 
-**Put a hosts file on the virtual SD card**, at:
+### 1.1 The hosts file (precise, per hostname)
+
+Put a hosts file on the virtual SD card, at:
 
 ```
 <Ryujinx data>/sdcard/atmosphere/hosts/default.txt
@@ -48,12 +65,38 @@ are its business, not something to transcribe by hand.
 the checkbox changes is that a hostname on the built-in DNS block list is now allowed to be
 redirected. See [section 2](#2-the-block-list-and-why-the-override-is-narrow).
 
+### 1.2 One redirect address (simpler, whole deployment)
+
+Skip the hosts file and type an address directly into **Redirect address**, under the checkbox.
+Every Nintendo-online-service hostname the block list would otherwise refuse now resolves there
+instead — without maintaining a file, and without the checkbox above needing to be on at all: **this
+field is its own switch**, empty meaning no redirect, the same way the SwitchNet account fields
+further down the page have no separate on/off next to them.
+
+It has to be an IP address, not a hostname — the resolver this configures is precisely the one that
+would have to resolve that hostname, and asking it to resolve one to redirect through would be
+circular.
+
+**One host needs its own address: `nncs2`.** Nintendo's NAT-check protocol probes `nncs1` and
+`nncs2` as two separate servers, and one message type must be answered from a genuinely different
+address or the console de-duplicates the probe and matchmaking finds matches that will not start.
+Leaving **NAT-check secondary address** empty while **Redirect address** is set answers `nncs2` from
+the primary address too, which has exactly that failure mode — so fill it in with a second address
+if you are redirecting a title that uses Pia (Splatoon 3 does not; it uses ICE instead and never
+touches `nncs1`/`nncs2`).
+
+Both fields take effect on the next name the guest resolves — no restart needed, unlike the CA
+setting below.
+
+### 1.3 Either way: certificate trust
+
 **Point the CA setting at your server's certificate authority**, as a PEM file. This is the file your
 server's certificate-generation step produced — often called `rootCA.pem` or `ca.crt`. It is the
-public certificate, not the private key.
+public certificate, not the private key. Needed regardless of which redirect mechanism above you
+used — trust and redirection are independent, see [section 3](#3-certificate-trust-adds-a-ca-it-does-not-disable-verification).
 
-**Restart the game.** Both settings apply to new lookups and new connections; a game that has
-already connected keeps what it has.
+**Restart the game** if you changed the CA setting. The redirect settings apply live; the CA bundle
+is cached on its path and only re-reads on a restart of the emulator.
 
 ---
 
@@ -74,13 +117,16 @@ those hostnames — that is what the guest asks for. Among the blocked patterns:
 | `*-lp1.n.n.srv.nintendo.net` | the NAT-check pair |
 | `*-lp1.znc.srv.nintendo.net` | the mobile-app service |
 
-**The override applies only to a hostname the hosts file actually names.** A blocked hostname with
-no entry stays blocked. That is deliberate and it is the property to preserve if this code is ever
-changed: turning the setting on is a *redirect to a server you specified*, not a general unblocking,
-so it cannot open a path to Nintendo's own servers for anything you have not explicitly redirected.
+**Both mechanisms apply only to a hostname they actually name.** The hosts-file override applies
+only to a hostname the file names; the redirect address applies only to a hostname the block list
+already matches (Splatoon 3's NPLN tenant, the account server, the NAT-check pair, and so on — never
+an arbitrary hostname). A blocked hostname neither one names stays blocked. That is deliberate and
+it is the property to preserve if this code is ever changed: turning either setting on is a
+*redirect to a server you specified*, not a general unblocking, so it cannot open a path to
+Nintendo's own servers for anything you have not explicitly redirected.
 
-`DnsBlacklistTests` covers it, including the case that matters — a blocked host with no entry, with
-the override on, still refused.
+`DnsBlacklistTests` covers it, including the case that matters for each mechanism — a blocked host
+with no hosts-file entry and no redirect address configured, still refused.
 
 ---
 
@@ -121,13 +167,15 @@ works with only the root configured.
 
 | Symptom | Almost certainly |
 | --- | --- |
-| `DNS Blocked: <host>` in the log | The hosts file has no entry for it. The override only covers hostnames the file names. |
+| `DNS Blocked: <host>` in the log | Neither mechanism names this host: no hosts-file entry, and (if configured) the redirect address is empty or not a bare IP. |
+| A game that redirects fine everywhere else never matches its opponents | Redirected `nncs1` and `nncs2` to the same address — check the NAT-check secondary address is set and genuinely different, or that your hosts file has separate entries for both. Splatoon 3 does not use `nncs1`/`nncs2` at all, so this only affects Pia titles. |
 | `Trying to resolve: <host>` and then a connection failure | The hostname resolved but the server did not answer. Not an emulator problem: check the server and the port. |
 | No log line at all for a hostname | Guest Internet access is off, or the game never asked for it. |
 | `Private server CA bundle not found` | The path is wrong. It is read at handshake time, not when you set it. |
 | `The server certificate does not chain to a trusted private CA` | The file is not the CA that signed the server's certificate, or the server is not presenting its intermediate. |
 | `Rejecting the server certificate: RemoteCertificateNameMismatch` | The server's certificate does not cover the hostname the game asked for. This is a real misconfiguration and is not forgiven — see section 3. |
-| The certificate settings changed and nothing happened | Both apply to new connections. Restart the game. Changing the *contents* of the CA file without changing its path needs a restart of the emulator, because the bundle is cached on its path. |
+| The redirect address changed and nothing happened | It should have — redirect settings apply to the next lookup, no restart needed. If it truly did not, confirm the address is a bare IP literal (a hostname is silently ignored, see 1.2). |
+| The certificate settings changed and nothing happened | The CA bundle is cached on its path and only re-reads on a restart of the emulator, unlike the redirect settings. |
 
 Turn on `Logging → Enable info logs` and watch for `ServiceSfdnsres` and `ServiceSsl`.
 
@@ -161,4 +209,5 @@ players.
 | Settings | `Ryujinx/UI/Views/Settings/SettingsNetworkView.axaml` |
 | Tests | `Ryujinx.Tests/HLE/{DnsBlacklistTests,PrivateServerTrustTests}.cs` |
 
-Headless has both as `--redirect-nintendo-servers` and `--private-server-ca <path>`.
+Headless: `--redirect-nintendo-servers`, `--private-server-ca <path>`,
+`--private-server-address <ip>` and `--private-server-natcheck-secondary-address <ip>`.

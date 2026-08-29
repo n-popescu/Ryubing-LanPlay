@@ -167,9 +167,11 @@
                     <TextBlock Text="{ext:Locale SettingsTabNetworkRedirectNintendoServers}"
                         ToolTip.Tip="{ext:Locale SettingsTabNetworkRedirectNintendoServersTooltip}" />
                 </CheckBox>
-                <StackPanel Margin="10,0,0,0"
-                    Orientation="Horizontal"
-                    IsEnabled="{Binding RedirectNintendoServers}">
+                <!-- Not gated on RedirectNintendoServers: trust and redirection are
+                     independent in code (PrivateServerTrust reads only this path), and
+                     the address fields below are a second, independent way to redirect
+                     that does not go through this checkbox at all. -->
+                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center"
                         Text="{ext:Locale SettingsTabNetworkPrivateServerCa}"
                         ToolTip.Tip="{ext:Locale SettingsTabNetworkPrivateServerCaTooltip}"
@@ -187,6 +189,35 @@
                         <TextBlock HorizontalAlignment="Center"
                             Text="{ext:Locale SettingsTabNetworkPrivateServerCaBrowse}" />
                     </Button>
+                </StackPanel>
+
+                <TextBlock Margin="10,6,0,0"
+                    FontStyle="Italic"
+                    MaxWidth="600"
+                    TextWrapping="Wrap"
+                    Focusable="False"
+                    Text="{ext:Locale SettingsTabNetworkPrivateServerAddressAbout}" />
+                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center"
+                        Text="{ext:Locale SettingsTabNetworkPrivateServerAddress}"
+                        ToolTip.Tip="{ext:Locale SettingsTabNetworkPrivateServerAddressTooltip}"
+                        Width="200" />
+                    <TextBox Name="PrivateServerAddress"
+                        Text="{Binding PrivateServerAddress}"
+                        Width="250"
+                        ToolTip.Tip="{ext:Locale SettingsTabNetworkPrivateServerAddressTooltip}"
+                        PlaceholderText="{ext:Locale SettingsTabNetworkPrivateServerAddressWatermark}" />
+                </StackPanel>
+                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center"
+                        Text="{ext:Locale SettingsTabNetworkPrivateServerNatCheckSecondaryAddress}"
+                        ToolTip.Tip="{ext:Locale SettingsTabNetworkPrivateServerNatCheckSecondaryAddressTooltip}"
+                        Width="200" />
+                    <TextBox Name="PrivateServerNatCheckSecondaryAddress"
+                        Text="{Binding PrivateServerNatCheckSecondaryAddress}"
+                        Width="250"
+                        ToolTip.Tip="{ext:Locale SettingsTabNetworkPrivateServerNatCheckSecondaryAddressTooltip}"
+                        PlaceholderText="{ext:Locale SettingsTabNetworkPrivateServerNatCheckSecondaryAddressWatermark}" />
                 </StackPanel>
 
                 <!-- The emulator's OWN login to the private server, as opposed to the

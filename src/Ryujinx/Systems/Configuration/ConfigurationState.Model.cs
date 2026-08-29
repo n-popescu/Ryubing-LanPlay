@@ -391,6 +391,20 @@ namespace Ryujinx.Ava.Systems.Configuration
             public ReactiveObject<string> PrivateServerCaBundle { get; private set; }
 
             /// <summary>
+            /// A single address answering for every blocked Nintendo hostname the hosts file
+            /// does not more specifically cover. Empty is the switch, independently of
+            /// RedirectNintendoServers -- see HleConfiguration.PrivateServerAddress.
+            /// </summary>
+            public ReactiveObject<string> PrivateServerAddress { get; private set; }
+
+            /// <summary>
+            /// Where the nncs2 NAT-check host resolves instead of PrivateServerAddress. Pia
+            /// requires nncs1 and nncs2 to answer from two different addresses -- see
+            /// HleConfiguration.PrivateServerNatCheckSecondaryAddress.
+            /// </summary>
+            public ReactiveObject<string> PrivateServerNatCheckSecondaryAddress { get; private set; }
+
+            /// <summary>
             /// Address of the SwitchNet server for the emulator's own account login.
             /// Separate from RedirectNintendoServers, which redirects the GUEST's
             /// traffic; this is the emulator fetching an identity token on its own
@@ -500,6 +514,10 @@ namespace Ryujinx.Ava.Systems.Configuration
                 RedirectNintendoServers.LogChangesToValue(nameof(RedirectNintendoServers));
                 PrivateServerCaBundle = new ReactiveObject<string>();
                 PrivateServerCaBundle.LogChangesToValue(nameof(PrivateServerCaBundle));
+                PrivateServerAddress = new ReactiveObject<string>();
+                PrivateServerAddress.LogChangesToValue(nameof(PrivateServerAddress));
+                PrivateServerNatCheckSecondaryAddress = new ReactiveObject<string>();
+                PrivateServerNatCheckSecondaryAddress.LogChangesToValue(nameof(PrivateServerNatCheckSecondaryAddress));
                 SwitchNetServer = new ReactiveObject<string>();
                 SwitchNetServer.LogChangesToValue(nameof(SwitchNetServer));
                 SwitchNetDeviceAccountId = new ReactiveObject<string>();
@@ -1025,6 +1043,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 System.EnableInternetAccess,
                 System.RedirectNintendoServers,
                 System.PrivateServerCaBundle,
+                System.PrivateServerAddress,
+                System.PrivateServerNatCheckSecondaryAddress,
                 System.SwitchNetServer,
                 System.SwitchNetDeviceAccountId,
                 System.SwitchNetPassword,

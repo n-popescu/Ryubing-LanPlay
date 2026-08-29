@@ -331,7 +331,12 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres
 
                 string targetHost = host;
 
-                if (!DnsBlacklist.TryAllow(host, context.Device.Configuration.RedirectNintendoServers, out hostEntry))
+                if (!DnsBlacklist.TryAllow(
+                    host,
+                    context.Device.Configuration.RedirectNintendoServers,
+                    context.Device.Configuration.PrivateServerAddress,
+                    context.Device.Configuration.PrivateServerNatCheckSecondaryAddress,
+                    out hostEntry))
                 {
                     Logger.Info?.Print(LogClass.ServiceSfdnsres, $"DNS Blocked: {host}");
 
@@ -557,7 +562,12 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres
 
                 string targetHost = host;
 
-                if (!DnsBlacklist.TryAllow(host, context.Device.Configuration.RedirectNintendoServers, out hostEntry))
+                if (!DnsBlacklist.TryAllow(
+                    host,
+                    context.Device.Configuration.RedirectNintendoServers,
+                    context.Device.Configuration.PrivateServerAddress,
+                    context.Device.Configuration.PrivateServerNatCheckSecondaryAddress,
+                    out hostEntry))
                 {
                     Logger.Info?.Print(LogClass.ServiceSfdnsres, $"DNS Blocked: {host}");
 

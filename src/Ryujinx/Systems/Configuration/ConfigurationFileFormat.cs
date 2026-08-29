@@ -17,7 +17,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// <summary>
         /// The current version of the file format
         /// </summary>
-        public const int CurrentVersion = 77;
+        public const int CurrentVersion = 78;
 
         /// <summary>
         /// Version of the configuration file format
@@ -297,6 +297,18 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// the host's, so a privately-signed certificate for a Nintendo hostname is accepted
         /// </summary>
         public string PrivateServerCaBundle { get; set; }
+
+        /// <summary>
+        /// A single address that answers for every blocked Nintendo hostname the hosts file
+        /// does not more specifically cover. Empty means no redirect.
+        /// </summary>
+        public string PrivateServerAddress { get; set; }
+
+        /// <summary>
+        /// Where the nncs2 NAT-check host resolves instead of PrivateServerAddress. Pia requires
+        /// nncs1 and nncs2 to answer from two different addresses.
+        /// </summary>
+        public string PrivateServerNatCheckSecondaryAddress { get; set; }
 
         /// <summary>
         /// Address of the SwitchNet server for the emulator's own account login.
