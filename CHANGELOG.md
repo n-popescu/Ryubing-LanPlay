@@ -2,7 +2,7 @@
 
 All updates to this Ryujinx branch will be documented in this file.
 
-## [1.3.34](<https://github.com/n-popescu/Ryubing-LanPlay/releases/tag/v1.3.34>) - 2026-08-29
+## [1.3.35](<https://github.com/n-popescu/Ryubing-LanPlay/releases/tag/v1.3.35>) - 2026-08-29
 ### Network:
  - Added **SwitchNet Account** to *Settings → Network*, below Private Nintendo Servers, for logging
    the emulator in to a SwitchNet server so games present that server's identity token instead of the
@@ -26,6 +26,12 @@ All updates to this Ryujinx branch will be documented in this file.
    - Configuration version 77. Existing configurations get all three empty, so nothing acquires a
      login by upgrading.
    - Headless: `--switchnet-server`, `--switchnet-device-account-id` and `--switchnet-password`.
+
+## 1.3.34 - withdrawn
+Built from a commit that is no longer in this repository's history, so what it shipped does
+not correspond to anything you can check out. Its contents are in 1.3.35 above, in a reworked
+form. The release is left published rather than deleted, because deleting it would break the
+download links of anyone who already has it.
 
 ## [1.3.33](<https://github.com/n-popescu/Ryubing-LanPlay/releases/tag/v1.3.33>) - 2026-08-28
 ### Network:
