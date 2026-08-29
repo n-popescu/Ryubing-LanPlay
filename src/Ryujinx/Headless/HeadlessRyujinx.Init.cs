@@ -226,6 +226,8 @@ namespace Ryujinx.Headless
                         options.EnableInternetAccess,
                         options.RedirectNintendoServers,
                         options.PrivateServerCaBundle,
+                        options.PrivateServerAddress,
+                        options.PrivateServerNatCheckSecondaryAddress,
                         options.SwitchNetServer,
                         options.SwitchNetDeviceAccountId,
                         options.SwitchNetPassword,

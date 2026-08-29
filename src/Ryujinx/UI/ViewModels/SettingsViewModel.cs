@@ -335,6 +335,17 @@ namespace Ryujinx.Ava.UI.ViewModels
             }
         }
 
+        /// <summary>
+        /// A single address that answers for every blocked Nintendo hostname the hosts file
+        /// does not more specifically cover. Empty means no redirect.
+        /// </summary>
+        public string PrivateServerAddress { get; set; }
+
+        /// <summary>
+        /// Where the nncs2 NAT-check host resolves instead of PrivateServerAddress.
+        /// </summary>
+        public string PrivateServerNatCheckSecondaryAddress { get; set; }
+
         /// <summary>SwitchNet server address, as host or host:port. Empty disables the login.</summary>
         public string SwitchNetServer { get; set; }
         public string SwitchNetDeviceAccountId { get; set; }
@@ -871,6 +882,8 @@ namespace Ryujinx.Ava.UI.ViewModels
             EnableInternetAccess = config.System.EnableInternetAccess;
             RedirectNintendoServers = config.System.RedirectNintendoServers;
             PrivateServerCaBundle = config.System.PrivateServerCaBundle;
+            PrivateServerAddress = config.System.PrivateServerAddress;
+            PrivateServerNatCheckSecondaryAddress = config.System.PrivateServerNatCheckSecondaryAddress;
             SwitchNetServer = config.System.SwitchNetServer;
             SwitchNetDeviceAccountId = config.System.SwitchNetDeviceAccountId;
             SwitchNetPassword = config.System.SwitchNetPassword;
@@ -1007,6 +1020,8 @@ namespace Ryujinx.Ava.UI.ViewModels
             config.System.EnableInternetAccess.Value = EnableInternetAccess;
             config.System.RedirectNintendoServers.Value = RedirectNintendoServers;
             config.System.PrivateServerCaBundle.Value = PrivateServerCaBundle ?? string.Empty;
+            config.System.PrivateServerAddress.Value = PrivateServerAddress ?? string.Empty;
+            config.System.PrivateServerNatCheckSecondaryAddress.Value = PrivateServerNatCheckSecondaryAddress ?? string.Empty;
             config.System.SwitchNetServer.Value = SwitchNetServer ?? string.Empty;
             config.System.SwitchNetDeviceAccountId.Value = SwitchNetDeviceAccountId ?? string.Empty;
             config.System.SwitchNetPassword.Value = SwitchNetPassword ?? string.Empty;

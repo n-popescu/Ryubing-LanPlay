@@ -136,6 +136,45 @@ namespace Ryujinx.HLE
         public string PrivateServerCaBundle { internal get; set; }
 
         /// <summary>
+        /// A single address that answers for EVERY blocked Nintendo hostname that the hosts
+        /// file does not more specifically cover.
+        /// </summary>
+        /// <remarks>
+        /// <see cref="RedirectNintendoServers"/> and the hosts file are the precise mechanism:
+        /// name the hostnames you want redirected, one line each. This is the blunt one: point
+        /// every game-server-shaped hostname SwitchNet blocks at one place, without maintaining
+        /// a hosts file at all. A hosts-file entry for a given hostname still wins over this when
+        /// both are configured -- it is more specific.
+        /// <para>
+        /// This field alone is the switch, the same as the SwitchNet account fields below: empty
+        /// means no redirect, independently of <see cref="RedirectNintendoServers"/>. An IP
+        /// literal only -- a hostname would have to be resolved by the very resolver this
+        /// configures, which is circular.
+        /// </para>
+        /// <para>
+        /// Does not cover <c>nncs2</c>. Pia's NAT-check requires that host to answer from a
+        /// SECOND, DIFFERENT address, or the console de-duplicates the probe and NAT detection
+        /// never completes; see <see cref="PrivateServerNatCheckSecondaryAddress"/>.
+        /// </para>
+        /// </remarks>
+        public string PrivateServerAddress { internal get; set; }
+
+        /// <summary>
+        /// The address the <c>nncs2</c> NAT-check host resolves to, instead of
+        /// <see cref="PrivateServerAddress"/>.
+        /// </summary>
+        /// <remarks>
+        /// Pia probes <c>nncs1</c> and <c>nncs2</c> as two separate servers and one NAT-check
+        /// message type must be answered from a different address. Pointing both at the same
+        /// address makes the console de-duplicate the probe, so NAT detection never completes and
+        /// matchmaking finds matches that will not start. Leaving this empty while
+        /// <see cref="PrivateServerAddress"/> is set answers <c>nncs2</c> from the primary address
+        /// too, which has that same failure mode -- so this is not a "nice to have" the way most
+        /// address fields are.
+        /// </remarks>
+        public string PrivateServerNatCheckSecondaryAddress { internal get; set; }
+
+        /// <summary>
         /// Address of the SwitchNet server for the emulator's OWN account login:
         /// "192.168.1.50", "192.168.1.50:443" or a hostname.
         /// </summary>
@@ -288,6 +327,8 @@ namespace Ryujinx.HLE
                                 bool enableInternetAccess,
                                 bool redirectNintendoServers,
                                 string privateServerCaBundle,
+                                string privateServerAddress,
+                                string privateServerNatCheckSecondaryAddress,
                                 string switchNetServer,
                                 string switchNetDeviceAccountId,
                                 string switchNetPassword,
@@ -325,6 +366,8 @@ namespace Ryujinx.HLE
             EnableInternetAccess = enableInternetAccess;
             RedirectNintendoServers = redirectNintendoServers;
             PrivateServerCaBundle = privateServerCaBundle;
+            PrivateServerAddress = privateServerAddress;
+            PrivateServerNatCheckSecondaryAddress = privateServerNatCheckSecondaryAddress;
             SwitchNetServer = switchNetServer;
             SwitchNetDeviceAccountId = switchNetDeviceAccountId;
             SwitchNetPassword = switchNetPassword;

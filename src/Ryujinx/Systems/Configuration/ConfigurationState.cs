@@ -81,6 +81,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 EnableInternetAccess = System.EnableInternetAccess,
                 RedirectNintendoServers = System.RedirectNintendoServers,
                 PrivateServerCaBundle = System.PrivateServerCaBundle,
+                PrivateServerAddress = System.PrivateServerAddress,
+                PrivateServerNatCheckSecondaryAddress = System.PrivateServerNatCheckSecondaryAddress,
                 SwitchNetServer = System.SwitchNetServer,
                 SwitchNetDeviceAccountId = System.SwitchNetDeviceAccountId,
                 SwitchNetPassword = System.SwitchNetPassword,
@@ -223,6 +225,8 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.EnableInternetAccess.Value = false;
             System.RedirectNintendoServers.Value = false;
             System.PrivateServerCaBundle.Value = string.Empty;
+            System.PrivateServerAddress.Value = string.Empty;
+            System.PrivateServerNatCheckSecondaryAddress.Value = string.Empty;
             System.SwitchNetServer.Value = string.Empty;
             System.SwitchNetDeviceAccountId.Value = string.Empty;
             System.SwitchNetPassword.Value = string.Empty;

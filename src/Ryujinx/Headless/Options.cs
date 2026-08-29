@@ -43,6 +43,12 @@ namespace Ryujinx.Headless
             if (NeedsOverride(nameof(PrivateServerCaBundle)))
                 PrivateServerCaBundle = configurationState.System.PrivateServerCaBundle;
 
+            if (NeedsOverride(nameof(PrivateServerAddress)))
+                PrivateServerAddress = configurationState.System.PrivateServerAddress;
+
+            if (NeedsOverride(nameof(PrivateServerNatCheckSecondaryAddress)))
+                PrivateServerNatCheckSecondaryAddress = configurationState.System.PrivateServerNatCheckSecondaryAddress;
+
             if (NeedsOverride(nameof(SwitchNetServer)))
                 SwitchNetServer = configurationState.System.SwitchNetServer;
 
@@ -320,6 +326,12 @@ namespace Ryujinx.Headless
 
         [Option("private-server-ca", Required = false, Default = "", HelpText = "Path to a PEM bundle of certificate authorities the guest's TLS trusts in addition to the host's. Adds trust; does not disable verification.")]
         public string PrivateServerCaBundle { get; set; }
+
+        [Option("private-server-address", Required = false, Default = "", HelpText = "A single address that answers for every blocked Nintendo hostname the hosts file does not more specifically cover. Empty means no redirect.")]
+        public string PrivateServerAddress { get; set; }
+
+        [Option("private-server-natcheck-secondary-address", Required = false, Default = "", HelpText = "Where the nncs2 NAT-check host resolves instead of --private-server-address. Must differ from it or NAT detection never completes.")]
+        public string PrivateServerNatCheckSecondaryAddress { get; set; }
 
         [Option("switchnet-server", Required = false, Default = "", HelpText = "Address of the SwitchNet server for the emulator's own account login, e.g. 192.168.1.50 or 192.168.1.50:443.")]
         public string SwitchNetServer { get; set; }

@@ -106,6 +106,8 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.EnableInternetAccess.Value = cff.EnableInternetAccess;
             System.RedirectNintendoServers.Value = cff.RedirectNintendoServers;
             System.PrivateServerCaBundle.Value = cff.PrivateServerCaBundle ?? string.Empty;
+            System.PrivateServerAddress.Value = cff.PrivateServerAddress ?? string.Empty;
+            System.PrivateServerNatCheckSecondaryAddress.Value = cff.PrivateServerNatCheckSecondaryAddress ?? string.Empty;
             System.SwitchNetServer.Value = cff.SwitchNetServer ?? string.Empty;
             System.SwitchNetDeviceAccountId.Value = cff.SwitchNetDeviceAccountId ?? string.Empty;
             System.SwitchNetPassword.Value = cff.SwitchNetPassword ?? string.Empty;
@@ -585,6 +587,15 @@ namespace Ryujinx.Ava.Systems.Configuration
                     cff.SwitchNetServer = string.Empty;
                     cff.SwitchNetDeviceAccountId = string.Empty;
                     cff.SwitchNetPassword = string.Empty;
+                }),
+                (78, static cff =>
+                {
+                    // No global redirect address. Blocked hostnames stay blocked except
+                    // where RedirectNintendoServers plus a hosts-file entry already
+                    // allowed them -- unchanged by upgrading.
+
+                    cff.PrivateServerAddress = string.Empty;
+                    cff.PrivateServerNatCheckSecondaryAddress = string.Empty;
                 })
             );
     }
