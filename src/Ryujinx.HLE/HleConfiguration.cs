@@ -136,6 +136,31 @@ namespace Ryujinx.HLE
         public string PrivateServerCaBundle { internal get; set; }
 
         /// <summary>
+        /// Address of the SwitchNet server for the emulator's OWN account login:
+        /// "192.168.1.50", "192.168.1.50:443" or a hostname.
+        /// </summary>
+        /// <remarks>
+        /// Separate from the guest traffic RedirectNintendoServers redirects. That is
+        /// the game reaching the server; this is the emulator fetching the identity
+        /// token a game asks the account service for before it can reach any online
+        /// game server. Empty means no login, and games get the id token Ryujinx
+        /// generates locally -- correct in shape, signed with a throwaway key.
+        /// </remarks>
+        public string SwitchNetServer { internal get; set; }
+
+        /// <summary>
+        /// The SwitchNet device account id to log in as. Create one on the server with
+        /// 'switchnetctl account create'.
+        /// </summary>
+        public string SwitchNetDeviceAccountId { internal get; set; }
+
+        /// <summary>
+        /// That device account's password. A credential for the operator's own private
+        /// server; it is not a Nintendo password and cannot be used as one.
+        /// </summary>
+        public string SwitchNetPassword { internal get; set; }
+
+        /// <summary>
         /// Control LibHac's integrity check level.
         /// </summary>
         /// <remarks>This cannot be changed after <see cref="Switch"/> instantiation.</remarks>
@@ -263,6 +288,9 @@ namespace Ryujinx.HLE
                                 bool enableInternetAccess,
                                 bool redirectNintendoServers,
                                 string privateServerCaBundle,
+                                string switchNetServer,
+                                string switchNetDeviceAccountId,
+                                string switchNetPassword,
                                 IntegrityCheckLevel fsIntegrityCheckLevel,
                                 int fsGlobalAccessLogMode,
                                 long systemTimeOffset,
@@ -297,6 +325,9 @@ namespace Ryujinx.HLE
             EnableInternetAccess = enableInternetAccess;
             RedirectNintendoServers = redirectNintendoServers;
             PrivateServerCaBundle = privateServerCaBundle;
+            SwitchNetServer = switchNetServer;
+            SwitchNetDeviceAccountId = switchNetDeviceAccountId;
+            SwitchNetPassword = switchNetPassword;
             FsIntegrityCheckLevel = fsIntegrityCheckLevel;
             FsGlobalAccessLogMode = fsGlobalAccessLogMode;
             SystemTimeOffset = systemTimeOffset;
