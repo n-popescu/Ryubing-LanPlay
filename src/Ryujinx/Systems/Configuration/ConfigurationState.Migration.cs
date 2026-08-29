@@ -106,6 +106,9 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.EnableInternetAccess.Value = cff.EnableInternetAccess;
             System.RedirectNintendoServers.Value = cff.RedirectNintendoServers;
             System.PrivateServerCaBundle.Value = cff.PrivateServerCaBundle ?? string.Empty;
+            System.SwitchNetServer.Value = cff.SwitchNetServer ?? string.Empty;
+            System.SwitchNetDeviceAccountId.Value = cff.SwitchNetDeviceAccountId ?? string.Empty;
+            System.SwitchNetPassword.Value = cff.SwitchNetPassword ?? string.Empty;
             System.EnableFsIntegrityChecks.Value = cff.EnableFsIntegrityChecks;
             System.FsGlobalAccessLogMode.Value = cff.FsGlobalAccessLogMode;
             System.AudioBackend.Value = cff.AudioBackend;
@@ -572,6 +575,16 @@ namespace Ryujinx.Ava.Systems.Configuration
 
                     cff.RedirectNintendoServers = false;
                     cff.PrivateServerCaBundle = string.Empty;
+                }),
+                (77, static cff =>
+                {
+                    // No SwitchNet account. The three fields are the switch, so empty
+                    // means a game keeps getting the locally generated id token, which
+                    // is exactly what it got before this existed.
+
+                    cff.SwitchNetServer = string.Empty;
+                    cff.SwitchNetDeviceAccountId = string.Empty;
+                    cff.SwitchNetPassword = string.Empty;
                 })
             );
     }

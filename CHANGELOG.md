@@ -2,6 +2,31 @@
 
 All updates to this Ryujinx branch will be documented in this file.
 
+## [1.3.34](<https://github.com/n-popescu/Ryubing-LanPlay/releases/tag/v1.3.34>) - 2026-08-29
+### Network:
+ - Added **SwitchNet Account** to *Settings → Network*, below Private Nintendo Servers, for logging
+   the emulator in to a SwitchNet server so games present that server's identity token instead of the
+   one Ryujinx generates locally. [`docs/switchnet.md`](docs/switchnet.md) is the guide.
+   - Three fields — **Server**, **Device Account ID** and **Device Account Password**. Create the
+     account on the server with `switchnetctl account create`.
+   - **The three fields are the switch.** There is deliberately no separate on/off checkbox beside
+     them: filled-in credentials sitting next to an "off" is a state where two settings contradict
+     each other and one of them wins quietly. All three empty is a working configuration, not an
+     error.
+   - This is independent of the redirect and CA settings above it. A private server that does not
+     check identity needs those and no login at all; this matters only when the server verifies the
+     token, which SwitchNet does. Both halves are usually wanted together.
+   - The login runs the same three calls hardware does — device auth token, application token,
+     then the account login — and the resulting token is cached and refreshed before it expires.
+     It is fetched in `EnsureIdTokenCacheAsync`, the call hardware does this work in, so a game that
+     follows the normal order never waits on it.
+   - **A failed login is not fatal and does not fake success.** The game falls back to the locally
+     generated token, which a SwitchNet game server will reject — with one warning in the log
+     saying so, per distinct reason, rather than one per request.
+   - Configuration version 77. Existing configurations get all three empty, so nothing acquires a
+     login by upgrading.
+   - Headless: `--switchnet-server`, `--switchnet-device-account-id` and `--switchnet-password`.
+
 ## [1.3.33](<https://github.com/n-popescu/Ryubing-LanPlay/releases/tag/v1.3.33>) - 2026-08-28
 ### Network:
  - Added **Private Nintendo Servers** to *Settings → Network*, for pointing the guest at your own

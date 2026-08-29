@@ -81,6 +81,9 @@ namespace Ryujinx.Ava.Systems.Configuration
                 EnableInternetAccess = System.EnableInternetAccess,
                 RedirectNintendoServers = System.RedirectNintendoServers,
                 PrivateServerCaBundle = System.PrivateServerCaBundle,
+                SwitchNetServer = System.SwitchNetServer,
+                SwitchNetDeviceAccountId = System.SwitchNetDeviceAccountId,
+                SwitchNetPassword = System.SwitchNetPassword,
                 EnableFsIntegrityChecks = System.EnableFsIntegrityChecks,
                 FsGlobalAccessLogMode = System.FsGlobalAccessLogMode,
                 AudioBackend = System.AudioBackend,
@@ -220,6 +223,9 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.EnableInternetAccess.Value = false;
             System.RedirectNintendoServers.Value = false;
             System.PrivateServerCaBundle.Value = string.Empty;
+            System.SwitchNetServer.Value = string.Empty;
+            System.SwitchNetDeviceAccountId.Value = string.Empty;
+            System.SwitchNetPassword.Value = string.Empty;
             System.EnableFsIntegrityChecks.Value = true;
             System.FsGlobalAccessLogMode.Value = 0;
             System.AudioBackend.Value = AudioBackend.SDL3;

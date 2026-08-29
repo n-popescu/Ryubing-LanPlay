@@ -188,6 +188,49 @@
                             Text="{ext:Locale SettingsTabNetworkPrivateServerCaBrowse}" />
                     </Button>
                 </StackPanel>
+
+                <!-- The emulator's OWN login to the private server, as opposed to the
+                     guest traffic the two settings above redirect and trust. Separate
+                     because a private server that does not check identity needs those
+                     and not this. -->
+                <TextBlock Margin="10,6,0,0" Classes="h1"
+                    Text="{ext:Locale SettingsTabNetworkSwitchNetAccount}" />
+                <TextBlock Margin="10,0,0,0" FontStyle="Italic" MaxWidth="640"
+                    TextWrapping="Wrap" Focusable="False"
+                    Text="{ext:Locale SettingsTabNetworkSwitchNetAccountHint}" />
+                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center"
+                        Text="{ext:Locale SettingsTabNetworkSwitchNetServer}"
+                        ToolTip.Tip="{ext:Locale SettingsTabNetworkSwitchNetServerTooltip}"
+                        Width="200" />
+                    <TextBox Name="SwitchNetServer"
+                        Text="{Binding SwitchNetServer}"
+                        Width="250"
+                        ToolTip.Tip="{ext:Locale SettingsTabNetworkSwitchNetServerTooltip}"
+                        PlaceholderText="{ext:Locale SettingsTabNetworkSwitchNetServerWatermark}" />
+                </StackPanel>
+                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center"
+                        Text="{ext:Locale SettingsTabNetworkSwitchNetDeviceAccountId}"
+                        ToolTip.Tip="{ext:Locale SettingsTabNetworkSwitchNetDeviceAccountIdTooltip}"
+                        Width="200" />
+                    <TextBox Name="SwitchNetDeviceAccountId"
+                        Text="{Binding SwitchNetDeviceAccountId}"
+                        Width="250"
+                        ToolTip.Tip="{ext:Locale SettingsTabNetworkSwitchNetDeviceAccountIdTooltip}"
+                        PlaceholderText="{ext:Locale SettingsTabNetworkSwitchNetDeviceAccountIdWatermark}" />
+                </StackPanel>
+                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center"
+                        Text="{ext:Locale SettingsTabNetworkSwitchNetPassword}"
+                        ToolTip.Tip="{ext:Locale SettingsTabNetworkSwitchNetPasswordTooltip}"
+                        Width="200" />
+                    <TextBox Name="SwitchNetPassword"
+                        Text="{Binding SwitchNetPassword}"
+                        PasswordChar="*"
+                        Width="250"
+                        ToolTip.Tip="{ext:Locale SettingsTabNetworkSwitchNetPasswordTooltip}" />
+                </StackPanel>
             </StackPanel>
         </Border>
     </ScrollViewer>

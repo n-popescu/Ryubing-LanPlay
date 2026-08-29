@@ -391,6 +391,20 @@ namespace Ryujinx.Ava.Systems.Configuration
             public ReactiveObject<string> PrivateServerCaBundle { get; private set; }
 
             /// <summary>
+            /// Address of the SwitchNet server for the emulator's own account login.
+            /// Separate from RedirectNintendoServers, which redirects the GUEST's
+            /// traffic; this is the emulator fetching an identity token on its own
+            /// behalf. Point both at the same server.
+            /// </summary>
+            public ReactiveObject<string> SwitchNetServer { get; private set; }
+
+            /// <summary>The SwitchNet device account id to log in as.</summary>
+            public ReactiveObject<string> SwitchNetDeviceAccountId { get; private set; }
+
+            /// <summary>That device account's password.</summary>
+            public ReactiveObject<string> SwitchNetPassword { get; private set; }
+
+            /// <summary>
             /// Enables integrity checks on Game content files
             /// </summary>
             public ReactiveObject<bool> EnableFsIntegrityChecks { get; private set; }
@@ -486,6 +500,12 @@ namespace Ryujinx.Ava.Systems.Configuration
                 RedirectNintendoServers.LogChangesToValue(nameof(RedirectNintendoServers));
                 PrivateServerCaBundle = new ReactiveObject<string>();
                 PrivateServerCaBundle.LogChangesToValue(nameof(PrivateServerCaBundle));
+                SwitchNetServer = new ReactiveObject<string>();
+                SwitchNetServer.LogChangesToValue(nameof(SwitchNetServer));
+                SwitchNetDeviceAccountId = new ReactiveObject<string>();
+                SwitchNetDeviceAccountId.LogChangesToValue(nameof(SwitchNetDeviceAccountId));
+                // Deliberately NOT logged: LogChangesToValue prints the new value.
+                SwitchNetPassword = new ReactiveObject<string>();
                 EnableFsIntegrityChecks = new ReactiveObject<bool>();
                 EnableFsIntegrityChecks.LogChangesToValue(nameof(EnableFsIntegrityChecks));
                 FsGlobalAccessLogMode = new ReactiveObject<int>();
@@ -1005,6 +1025,9 @@ namespace Ryujinx.Ava.Systems.Configuration
                 System.EnableInternetAccess,
                 System.RedirectNintendoServers,
                 System.PrivateServerCaBundle,
+                System.SwitchNetServer,
+                System.SwitchNetDeviceAccountId,
+                System.SwitchNetPassword,
                 System.EnableFsIntegrityChecks
                     ? IntegrityCheckLevel.ErrorOnInvalid
                     : IntegrityCheckLevel.None,

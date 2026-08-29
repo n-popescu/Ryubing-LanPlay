@@ -325,6 +325,9 @@ namespace Ryujinx.Ava.UI.ViewModels
         /// Notifies so that the Browse button's result appears in the text box.
         /// </remarks>
         public string PrivateServerCaBundle
+        public string SwitchNetServer { get; set; }
+        public string SwitchNetDeviceAccountId { get; set; }
+        public string SwitchNetPassword { get; set; }
         {
             get;
             set
@@ -866,6 +869,9 @@ namespace Ryujinx.Ava.UI.ViewModels
             EnableInternetAccess = config.System.EnableInternetAccess;
             RedirectNintendoServers = config.System.RedirectNintendoServers;
             PrivateServerCaBundle = config.System.PrivateServerCaBundle;
+            SwitchNetServer = config.System.SwitchNetServer;
+            SwitchNetDeviceAccountId = config.System.SwitchNetDeviceAccountId;
+            SwitchNetPassword = config.System.SwitchNetPassword;
             // LAN interface index is loaded asynchronously in PopulateNetworkInterfaces()
 
             // Logging
@@ -999,6 +1005,9 @@ namespace Ryujinx.Ava.UI.ViewModels
             config.System.EnableInternetAccess.Value = EnableInternetAccess;
             config.System.RedirectNintendoServers.Value = RedirectNintendoServers;
             config.System.PrivateServerCaBundle.Value = PrivateServerCaBundle ?? string.Empty;
+            config.System.SwitchNetServer.Value = SwitchNetServer;
+            config.System.SwitchNetDeviceAccountId.Value = SwitchNetDeviceAccountId;
+            config.System.SwitchNetPassword.Value = SwitchNetPassword;
 
             // Logging
             config.Logger.EnableFileLog.Value = EnableFileLog;
