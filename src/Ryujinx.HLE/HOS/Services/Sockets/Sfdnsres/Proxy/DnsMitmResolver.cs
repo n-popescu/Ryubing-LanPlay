@@ -80,7 +80,21 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres.Proxy
             }
         }
 
-        public IPHostEntry ResolveAddress(string host)
+        /// <summary>
+        /// Looks a host up in the hosts file, without falling back to real DNS.
+        /// </summary>
+        /// <param name="host">The hostname the guest asked for</param>
+        /// <param name="entry">The redirect, when the hosts file names this host</param>
+        /// <returns>True if the hosts file names this host</returns>
+        /// <remarks>
+        /// Separate from <see cref="ResolveAddress"/> because callers need to know
+        /// <em>whether</em> a host is redirected, not just where to. <see cref="IResolver"/>
+        /// uses it to let a redirected host past the DNS blacklist: the blacklist exists to keep
+        /// the guest away from Nintendo's servers, and a host the operator has explicitly pointed
+        /// at their own machine is not one of those. A host with no entry stays blocked, so
+        /// enabling redirection cannot quietly open a path to real Nintendo.
+        /// </remarks>
+        public bool TryResolveRedirect(string host, out IPHostEntry entry)
         {
             foreach (KeyValuePair<string, IPAddress> hostEntry in _mitmHostEntries)
             {
@@ -88,15 +102,34 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres.Proxy
                 // NOTE: MatchesSimpleExpression also allows "?" as a wildcard
                 if (FileSystemName.MatchesSimpleExpression(hostEntry.Key, host))
                 {
-                    Logger.Info?.PrintMsg(LogClass.ServiceBsd, $"Redirecting '{host}' to: {hostEntry.Value}");
-
-                    return new IPHostEntry
+                    entry = new IPHostEntry
                     {
                         AddressList = [hostEntry.Value],
-                        HostName = hostEntry.Key,
+                        // The hostname the GUEST asked for, not the pattern that matched it.
+                        // With a wildcard entry the pattern is not a hostname at all, and
+                        // returning it made the guest's TLS see a name mismatch against a
+                        // certificate that was in fact correct.
+                        HostName = host,
                         Aliases = [],
                     };
+
+                    return true;
                 }
+            }
+
+            entry = null;
+
+            return false;
+        }
+
+        public IPHostEntry ResolveAddress(string host)
+        {
+            if (TryResolveRedirect(host, out IPHostEntry redirect))
+            {
+                Logger.Info?.PrintMsg(LogClass.ServiceBsd,
+                    $"Redirecting '{host}' to: {redirect.AddressList[0]}");
+
+                return redirect;
             }
 
             // No match has been found, resolve the host using regular dns

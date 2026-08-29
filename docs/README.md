@@ -29,6 +29,15 @@ Coding Guidelines
 - [C# coding style](coding-guidelines/coding-style.md)
 - [Service Implementation Guidelines - WIP](https://gist.github.com/gdkchan/84ba88cd50efbe58d1babfaa7cd7c455)
 
+Networking
+=================
+
+- [Native Switch LAN Play support](lan-play.md) — joining a switch-lan-play relay for local
+  multiplayer, with no second PC and no libpcap.
+- [Private Nintendo servers](private-servers.md) — pointing the guest at your own replacement for
+  Nintendo's online servers, by redirecting their hostnames and trusting your own certificate
+  authority.
+
 Project Docs
 =================
 

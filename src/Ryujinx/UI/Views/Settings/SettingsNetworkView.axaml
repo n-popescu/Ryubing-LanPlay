@@ -153,6 +153,41 @@
                         ItemsSource="{Binding NetworkInterfaceList}"
                         Width="250" />
                 </StackPanel>
+                <Separator Height="1" />
+                <TextBlock Classes="h1" Text="{ext:Locale SettingsTabNetworkPrivateServers}" />
+                <TextBlock Margin="10,0,0,0"
+                    FontStyle="Italic"
+                    MaxWidth="600"
+                    TextWrapping="Wrap"
+                    Focusable="False"
+                    Text="{ext:Locale SettingsTabNetworkPrivateServersAbout}" />
+                <CheckBox Margin="10,0,0,0"
+                    IsEnabled="{Binding EnableInternetAccess}"
+                    IsChecked="{Binding RedirectNintendoServers}">
+                    <TextBlock Text="{ext:Locale SettingsTabNetworkRedirectNintendoServers}"
+                        ToolTip.Tip="{ext:Locale SettingsTabNetworkRedirectNintendoServersTooltip}" />
+                </CheckBox>
+                <StackPanel Margin="10,0,0,0"
+                    Orientation="Horizontal"
+                    IsEnabled="{Binding RedirectNintendoServers}">
+                    <TextBlock VerticalAlignment="Center"
+                        Text="{ext:Locale SettingsTabNetworkPrivateServerCa}"
+                        ToolTip.Tip="{ext:Locale SettingsTabNetworkPrivateServerCaTooltip}"
+                        Width="200" />
+                    <TextBox Name="PrivateServerCaBundle"
+                        Text="{Binding PrivateServerCaBundle}"
+                        Width="250"
+                        ToolTip.Tip="{ext:Locale SettingsTabNetworkPrivateServerCaTooltip}"
+                        PlaceholderText="{ext:Locale SettingsTabNetworkPrivateServerCaWatermark}" />
+                    <Button
+                        Name="BrowsePrivateServerCaButton"
+                        MinWidth="90"
+                        Margin="10,0,0,0"
+                        Click="BrowsePrivateServerCaButton_OnClick">
+                        <TextBlock HorizontalAlignment="Center"
+                            Text="{ext:Locale SettingsTabNetworkPrivateServerCaBrowse}" />
+                    </Button>
+                </StackPanel>
             </StackPanel>
         </Border>
     </ScrollViewer>

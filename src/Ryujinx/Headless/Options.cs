@@ -37,6 +37,12 @@ namespace Ryujinx.Headless
             if (NeedsOverride(nameof(EnableInternetAccess)))
                 EnableInternetAccess = configurationState.System.EnableInternetAccess;
 
+            if (NeedsOverride(nameof(RedirectNintendoServers)))
+                RedirectNintendoServers = configurationState.System.RedirectNintendoServers;
+
+            if (NeedsOverride(nameof(PrivateServerCaBundle)))
+                PrivateServerCaBundle = configurationState.System.PrivateServerCaBundle;
+
             if (NeedsOverride(nameof(DisableFsIntegrityChecks)))
                 DisableFsIntegrityChecks = !configurationState.System.EnableFsIntegrityChecks;
 
@@ -299,6 +305,12 @@ namespace Ryujinx.Headless
 
         [Option("enable-internet-connection", Required = false, Default = false, HelpText = "Enables guest Internet connection.")]
         public bool EnableInternetAccess { get; set; }
+
+        [Option("redirect-nintendo-servers", Required = false, Default = false, HelpText = "Lets the hosts file on the virtual SD card override the DNS blacklist, so Nintendo's hostnames can be pointed at a private replacement for them.")]
+        public bool RedirectNintendoServers { get; set; }
+
+        [Option("private-server-ca", Required = false, Default = "", HelpText = "Path to a PEM bundle of certificate authorities the guest's TLS trusts in addition to the host's. Adds trust; does not disable verification.")]
+        public string PrivateServerCaBundle { get; set; }
 
         [Option("disable-fs-integrity-checks", Required = false, HelpText = "Disables integrity checks on Game content files.")]
         public bool DisableFsIntegrityChecks { get; set; }

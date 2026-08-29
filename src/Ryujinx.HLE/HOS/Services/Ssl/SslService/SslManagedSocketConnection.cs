@@ -19,14 +19,25 @@ namespace Ryujinx.HLE.HOS.Services.Ssl.SslService
 
         private readonly BsdContext _bsdContext;
         private readonly SslVersion _sslVersion;
+        /// <summary>
+        /// Path to a PEM bundle of certificate authorities to trust in ADDITION to the host's, for
+        /// a private replacement of Nintendo's servers. Empty means ordinary validation.
+        /// </summary>
+        private readonly string _privateServerCaBundle;
         private SslStream _stream;
         private bool _isBlockingSocket;
         private int _previousReadTimeout;
 
-        public SslManagedSocketConnection(BsdContext bsdContext, SslVersion sslVersion, int socketFd, ISocket socket)
+        public SslManagedSocketConnection(
+            BsdContext bsdContext,
+            SslVersion sslVersion,
+            int socketFd,
+            ISocket socket,
+            string privateServerCaBundle = null)
         {
             _bsdContext = bsdContext;
             _sslVersion = sslVersion;
+            _privateServerCaBundle = privateServerCaBundle;
 
             SocketFd = socketFd;
             Socket = socket;
@@ -127,7 +138,12 @@ namespace Ryujinx.HLE.HOS.Services.Ssl.SslService
                 ? new NetworkStream(hostSocket.BaseSocket, false)
                 : new SocketImplStream(socketImpl);
 
-            _stream = new SslStream(socketStream, false, null, null);
+            // A validation callback ONLY when extra certificate authorities are configured, and
+            // that callback adds trust rather than removing checks -- a name mismatch or an
+            // expired certificate still fails. Null keeps .NET's default validation, which is
+            // what every connection gets when the option is off. See PrivateServerTrust.
+            _stream = new SslStream(socketStream, false,
+                PrivateServerTrust.BuildCallback(_privateServerCaBundle), null);
             hostName = RetrieveHostName(hostName);
             _stream.AuthenticateAsClient(hostName, null, TranslateSslVersion(_sslVersion), false);
             EndSslOperation();

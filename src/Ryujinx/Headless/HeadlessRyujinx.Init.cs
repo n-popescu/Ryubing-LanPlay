@@ -224,6 +224,8 @@ namespace Ryujinx.Headless
                         !options.DisablePTC,
                         ITickSource.RealityTickScalar,
                         options.EnableInternetAccess,
+                        options.RedirectNintendoServers,
+                        options.PrivateServerCaBundle,
                         !options.DisableFsIntegrityChecks ? IntegrityCheckLevel.ErrorOnInvalid : IntegrityCheckLevel.None,
                         options.FsGlobalAccessLogMode,
                         options.SystemTimeOffset,

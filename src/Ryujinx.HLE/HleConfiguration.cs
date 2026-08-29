@@ -114,6 +114,28 @@ namespace Ryujinx.HLE
         public bool EnableInternetAccess { internal get; set; }
 
         /// <summary>
+        /// Lets the hosts file on the virtual SD card override the DNS blacklist, so that
+        /// Nintendo's hostnames can be pointed at a private replacement for them.
+        /// </summary>
+        /// <remarks>
+        /// Narrow on purpose: it applies only to a host the hosts file actually names, so the
+        /// blacklist still refuses every blocked host with no entry. See
+        /// <see cref="HOS.Services.Sockets.Sfdnsres.Proxy.DnsBlacklist.TryAllow"/>.
+        /// </remarks>
+        public bool RedirectNintendoServers { internal get; set; }
+
+        /// <summary>
+        /// Path to a PEM bundle of certificate authorities the guest's TLS trusts in ADDITION to
+        /// the host's, so that a privately-signed certificate for a Nintendo hostname is accepted.
+        /// </summary>
+        /// <remarks>
+        /// This adds trust; it does not disable verification. A name mismatch or an expired
+        /// certificate still fails. See
+        /// <see cref="HOS.Services.Ssl.SslService.PrivateServerTrust"/>.
+        /// </remarks>
+        public string PrivateServerCaBundle { internal get; set; }
+
+        /// <summary>
         /// Control LibHac's integrity check level.
         /// </summary>
         /// <remarks>This cannot be changed after <see cref="Switch"/> instantiation.</remarks>
@@ -239,6 +261,8 @@ namespace Ryujinx.HLE
                                 bool enablePtc,
                                 long tickScalar,
                                 bool enableInternetAccess,
+                                bool redirectNintendoServers,
+                                string privateServerCaBundle,
                                 IntegrityCheckLevel fsIntegrityCheckLevel,
                                 int fsGlobalAccessLogMode,
                                 long systemTimeOffset,
@@ -271,6 +295,8 @@ namespace Ryujinx.HLE
             EnablePtc = enablePtc;
             TickScalar = tickScalar;
             EnableInternetAccess = enableInternetAccess;
+            RedirectNintendoServers = redirectNintendoServers;
+            PrivateServerCaBundle = privateServerCaBundle;
             FsIntegrityCheckLevel = fsIntegrityCheckLevel;
             FsGlobalAccessLogMode = fsGlobalAccessLogMode;
             SystemTimeOffset = systemTimeOffset;

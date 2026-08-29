@@ -379,6 +379,18 @@ namespace Ryujinx.Ava.Systems.Configuration
             public ReactiveObject<bool> EnableInternetAccess { get; private set; }
 
             /// <summary>
+            /// Lets the hosts file on the virtual SD card override the DNS blacklist, so
+            /// Nintendo's hostnames can be pointed at a private replacement for them
+            /// </summary>
+            public ReactiveObject<bool> RedirectNintendoServers { get; private set; }
+
+            /// <summary>
+            /// Path to a PEM bundle of certificate authorities the guest trusts in ADDITION to
+            /// the host's, so a privately-signed certificate for a Nintendo hostname is accepted
+            /// </summary>
+            public ReactiveObject<string> PrivateServerCaBundle { get; private set; }
+
+            /// <summary>
             /// Enables integrity checks on Game content files
             /// </summary>
             public ReactiveObject<bool> EnableFsIntegrityChecks { get; private set; }
@@ -470,6 +482,10 @@ namespace Ryujinx.Ava.Systems.Configuration
                 };
                 EnableInternetAccess = new ReactiveObject<bool>();
                 EnableInternetAccess.LogChangesToValue(nameof(EnableInternetAccess));
+                RedirectNintendoServers = new ReactiveObject<bool>();
+                RedirectNintendoServers.LogChangesToValue(nameof(RedirectNintendoServers));
+                PrivateServerCaBundle = new ReactiveObject<string>();
+                PrivateServerCaBundle.LogChangesToValue(nameof(PrivateServerCaBundle));
                 EnableFsIntegrityChecks = new ReactiveObject<bool>();
                 EnableFsIntegrityChecks.LogChangesToValue(nameof(EnableFsIntegrityChecks));
                 FsGlobalAccessLogMode = new ReactiveObject<int>();
@@ -987,6 +1003,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 System.EnablePtc,
                 System.TickScalar,
                 System.EnableInternetAccess,
+                System.RedirectNintendoServers,
+                System.PrivateServerCaBundle,
                 System.EnableFsIntegrityChecks
                     ? IntegrityCheckLevel.ErrorOnInvalid
                     : IntegrityCheckLevel.None,

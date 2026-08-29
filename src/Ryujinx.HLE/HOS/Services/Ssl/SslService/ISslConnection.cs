@@ -27,10 +27,17 @@ namespace Ryujinx.HLE.HOS.Services.Ssl.SslService
 
         private byte[] _nextAplnProto;
 
-        public ISslConnection(ulong processId, SslVersion sslVersion)
+        /// <summary>
+        /// Path to a PEM bundle of certificate authorities to trust in addition to the host's,
+        /// for a private replacement of Nintendo's servers. Empty means ordinary validation.
+        /// </summary>
+        private readonly string _privateServerCaBundle;
+
+        public ISslConnection(ulong processId, SslVersion sslVersion, string privateServerCaBundle)
         {
             _processId = processId;
             _sslVersion = sslVersion;
+            _privateServerCaBundle = privateServerCaBundle;
             _ioMode = IoMode.Blocking;
             _sessionCacheMode = SessionCacheMode.None;
             _verifyOption = VerifyOption.PeerCa | VerifyOption.HostName;
@@ -79,7 +86,8 @@ namespace Ryujinx.HLE.HOS.Services.Ssl.SslService
         {
             ISocket bsdSocket = _bsdContext.RetrieveSocket(socketFd);
 
-            _connection = new SslManagedSocketConnection(_bsdContext, _sslVersion, socketFd, bsdSocket);
+            _connection = new SslManagedSocketConnection(
+                _bsdContext, _sslVersion, socketFd, bsdSocket, _privateServerCaBundle);
         }
 
         [CommandCmif(1)]

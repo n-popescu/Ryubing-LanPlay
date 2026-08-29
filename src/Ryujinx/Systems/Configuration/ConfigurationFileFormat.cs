@@ -17,7 +17,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// <summary>
         /// The current version of the file format
         /// </summary>
-        public const int CurrentVersion = 75;
+        public const int CurrentVersion = 76;
 
         /// <summary>
         /// Version of the configuration file format
@@ -285,6 +285,18 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// Enables or disables guest Internet access
         /// </summary>
         public bool EnableInternetAccess { get; set; }
+
+        /// <summary>
+        /// Lets the hosts file on the virtual SD card override the DNS blacklist, so Nintendo's
+        /// hostnames can be pointed at a private replacement for them
+        /// </summary>
+        public bool RedirectNintendoServers { get; set; }
+
+        /// <summary>
+        /// Path to a PEM bundle of certificate authorities the guest's TLS trusts in addition to
+        /// the host's, so a privately-signed certificate for a Nintendo hostname is accepted
+        /// </summary>
+        public string PrivateServerCaBundle { get; set; }
 
         /// <summary>
         /// Enables integrity checks on Game content files
