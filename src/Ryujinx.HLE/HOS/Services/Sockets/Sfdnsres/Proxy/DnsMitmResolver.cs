@@ -1,11 +1,14 @@
+using ARMeilleure.Translation;
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Services.Sockets.Nsd;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Enumeration;
 using System.Net;
+using System.Threading;
 
 namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres.Proxy
 {
@@ -52,6 +55,93 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres.Proxy
         /// </summary>
         public bool TryGetLastResolved(int port, out IPAddress address) =>
             _lastResolvedByPort.TryGetValue(port, out address);
+
+        private const int NplnJitSettleFloorMs = 2000;
+        private const int NplnJitSettlePollWindowMs = 500;
+        private const int NplnJitSettleCalmThreshold = 15;
+        private const int NplnJitSettleDefaultCapMs = 60000;
+
+        private static int _nplnJitSettleState;
+
+        /// <summary>
+        /// Splatoon 3 auto-connects to its NPLN lobby a short time after launch, which lands
+        /// squarely inside the heaviest early-boot JIT compilation burst -- title code,
+        /// background rejit and PPTC translation all running at once. grpc-core's connection
+        /// setup can stall or fully deadlock when its own worker thread gets starved during that
+        /// burst, even though the exact same setup succeeds fine once things calm down a couple
+        /// of minutes later. This is a known, previously reported symptom: "start the game with
+        /// guest internet access already on and the loading screen never finishes."
+        ///
+        /// Rather than guess a fixed delay -- too short does nothing, too long punishes every
+        /// boot -- this polls <see cref="Translator.JitTranslationTicks"/> and returns once the
+        /// per-window translation rate has actually dropped below a calm threshold, with a floor
+        /// so it never returns instantly and a cap so a system that never goes quiet does not
+        /// hang forever. Runs once per process, and only for the first lookup that looks like an
+        /// NPLN host -- every other DNS lookup is unaffected.
+        /// </summary>
+        public static void MaybeAwaitJitSettling(string host)
+        {
+            if (host == null || !host.Contains("npln", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            if (Interlocked.CompareExchange(ref _nplnJitSettleState, 1, 0) != 0)
+            {
+                return;
+            }
+
+            int capMs = NplnJitSettleCapMs;
+
+            if (capMs <= 0)
+            {
+                return;
+            }
+
+            Logger.Info?.Print(LogClass.ServiceBsd,
+                "First NPLN host lookup -- waiting for the startup JIT burst to settle before resolving");
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            Thread.Sleep(NplnJitSettleFloorMs);
+
+            long lastTicks = Translator.JitTranslationTicks;
+
+            while (stopwatch.ElapsedMilliseconds < capMs)
+            {
+                Thread.Sleep(NplnJitSettlePollWindowMs);
+
+                long ticks = Translator.JitTranslationTicks;
+                long delta = ticks - lastTicks;
+                lastTicks = ticks;
+
+                if (delta < NplnJitSettleCalmThreshold)
+                {
+                    break;
+                }
+            }
+
+            Logger.Info?.Print(LogClass.ServiceBsd, $"JIT burst wait finished after {stopwatch.ElapsedMilliseconds}ms");
+        }
+
+        /// <summary>
+        /// <c>RYUJINX_NPLN_JIT_SETTLE_CAP_MS</c> overrides the maximum wait; 0 disables the
+        /// wait entirely. Absent or invalid falls back to <see cref="NplnJitSettleDefaultCapMs"/>.
+        /// </summary>
+        private static int NplnJitSettleCapMs
+        {
+            get
+            {
+                string env = Environment.GetEnvironmentVariable("RYUJINX_NPLN_JIT_SETTLE_CAP_MS");
+
+                if (env != null && int.TryParse(env, out int parsed) && parsed >= 0)
+                {
+                    return parsed;
+                }
+
+                return NplnJitSettleDefaultCapMs;
+            }
+        }
 
         public void ReloadEntries(ServiceCtx context)
         {

@@ -37,6 +37,15 @@ namespace ARMeilleure.Translation
         private Thread[] _backgroundTranslationThreads;
         private volatile int _threadCount;
 
+        /// <summary>
+        /// Ticks upward on every function translation -- foreground, background rejit, and PPTC alike.
+        /// A guest boot compiles heavily for the first several seconds; a caller that needs to know
+        /// whether that burst has actually settled (rather than just "some time has passed") can sample
+        /// this twice, some interval apart, instead of guessing a fixed delay.
+        /// </summary>
+        public static long JitTranslationTicks => Interlocked.Read(ref _jitTranslationTicks);
+        private static long _jitTranslationTicks;
+
         public Translator(IJitMemoryAllocator allocator, IMemoryManager memory, IAddressTable<ulong> functionTable)
         {
             _allocator = allocator;
@@ -247,6 +256,8 @@ namespace ARMeilleure.Translation
 
         internal TranslatedFunction Translate(ulong address, ExecutionMode mode, bool highCq, bool singleStep = false, bool pptcTranslation = false)
         {
+            Interlocked.Increment(ref _jitTranslationTicks);
+
             ArmEmitterContext context = new(
                 Memory,
                 CountTable,

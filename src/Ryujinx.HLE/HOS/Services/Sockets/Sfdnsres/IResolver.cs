@@ -301,6 +301,8 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres
                 return ResultCode.Success;
             }
 
+            DnsMitmResolver.MaybeAwaitJitSettling(host);
+
             // TODO: Use params.
             bool enableNsdResolve = (context.RequestData.ReadInt32() & 1) != 0;
 #pragma warning disable IDE0059 // Remove unnecessary value assignment
@@ -526,6 +528,8 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres
 
                 return ResultCode.Success;
             }
+
+            DnsMitmResolver.MaybeAwaitJitSettling(host);
 
             // NOTE: We ignore hints for now.
 #pragma warning disable IDE0059 // Remove unnecessary value assignment
