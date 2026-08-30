@@ -44,6 +44,14 @@ namespace Ryujinx.HLE.HOS.Services.Account.Acc.SwitchNet
         private static string _lastFailure;
 
         /// <summary>
+        /// Whether a success has ever been logged. Without this, ReportSuccess's
+        /// "only log a recovery" rule means the very first successful login -- the one
+        /// moment an operator most wants confirmation -- is silent, and silence is
+        /// indistinguishable from SwitchNet never having been configured at all.
+        /// </summary>
+        private static bool _hasReportedSuccess;
+
+        /// <summary>
         /// Reports whether SwitchNet login is configured, and returns a client for it.
         /// </summary>
         /// <remarks>
@@ -75,8 +83,32 @@ namespace Ryujinx.HLE.HOS.Services.Account.Acc.SwitchNet
             string account = configuration.SwitchNetDeviceAccountId?.Trim();
             string password = configuration.SwitchNetPassword;
 
-            if (string.IsNullOrEmpty(server) || string.IsNullOrEmpty(account) || string.IsNullOrEmpty(password))
+            bool hasServer = !string.IsNullOrEmpty(server);
+            bool hasAccount = !string.IsNullOrEmpty(account);
+            bool hasPassword = !string.IsNullOrEmpty(password);
+
+            if (!hasServer && !hasAccount && !hasPassword)
             {
+                // All three empty is the deliberate off state -- nothing to warn about.
+                return false;
+            }
+
+            if (!hasServer || !hasAccount || !hasPassword)
+            {
+                // One or two filled in is not a state anyone chooses on purpose: it is
+                // the state right before finishing the settings page, or a field that
+                // silently failed to save. Left as silent as "fully off" above, a
+                // half-filled config and no SwitchNet account at all look identical in
+                // the log -- which is exactly the question an operator staring at a
+                // game stuck "connecting" cannot otherwise answer.
+                string missing = (!hasServer ? "Server, " : "")
+                    + (!hasAccount ? "Device Account ID, " : "")
+                    + (!hasPassword ? "Password, " : "");
+                missing = missing[..^2];
+
+                WarnOnce($"SwitchNet Account is missing {missing} -- " +
+                    "all three fields are needed, or leave all three empty to turn it off");
+
                 return false;
             }
 
@@ -104,6 +136,9 @@ namespace Ryujinx.HLE.HOS.Services.Account.Acc.SwitchNet
                     });
                     _signature = signature;
                     _lastFailure = null;
+                    // A new configuration deserves its own confirmation when it works,
+                    // not silence borrowed from whatever config succeeded before it.
+                    _hasReportedSuccess = false;
                 }
 
                 client = _client;
@@ -293,12 +328,13 @@ namespace Ryujinx.HLE.HOS.Services.Account.Acc.SwitchNet
         {
             lock (_lock)
             {
-                if (_lastFailure == null)
+                if (_lastFailure == null && _hasReportedSuccess)
                 {
                     return;
                 }
 
                 _lastFailure = null;
+                _hasReportedSuccess = true;
             }
 
             Logger.Info?.Print(LogClass.ServiceAcc, "SwitchNet login succeeded.");
