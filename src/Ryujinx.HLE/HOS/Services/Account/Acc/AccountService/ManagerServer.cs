@@ -151,10 +151,13 @@ namespace Ryujinx.HLE.HOS.Services.Account.Acc.AccountService
             ulong bufferSize = context.Request.ReceiveBuff[0].Size;
 
             // NOTE: This opens the file at "su/cache/USERID_IN_UUID_STRING.dat" (where USERID_IN_UUID_STRING is formatted as "%08x-%04x-%04x-%02x%02x-%08x%04x")
-            //       in the "account:/" savedata and writes some data in the buffer.
-            //       Since we don't support online services, we can stub it.
-
-            Logger.Stub?.PrintStub(LogClass.ServiceAcc);
+            //       in the "account:/" savedata and writes some data in the buffer. Not a
+            //       stub any more: this always does one of two real things below --
+            //       fetch the SwitchNet-signed token or generate a locally-signed one --
+            //       so it does not log itself as stubbed. A stray Stub log here once
+            //       claimed "Stubbed" on every call regardless of which branch ran,
+            //       which is exactly backwards for diagnosing why a SwitchNet login
+            //       never engaged.
 
             /*
             if (internal_object != null)
