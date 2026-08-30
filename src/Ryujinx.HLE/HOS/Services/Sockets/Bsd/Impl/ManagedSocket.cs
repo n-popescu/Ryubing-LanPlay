@@ -141,7 +141,7 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
 
         public LinuxError Connect(IPEndPoint remoteEndPoint)
         {
-            remoteEndPoint = SubstituteLostAddress(remoteEndPoint);
+            remoteEndPoint = SubstituteLostAddress(remoteEndPoint, out bool wasSubstituted);
 
             bool isLDNPrivateIP = remoteEndPoint.Address.ToString().StartsWith("192.168.");
             if (isLDNPrivateIP)
@@ -161,8 +161,19 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
             }
             catch (SocketException exception)
             {
-                if (!Blocking && exception.ErrorCode == (int)WsaError.WSAEWOULDBLOCK)
+                // SocketException.ErrorCode is the raw platform errno on Unix (EAGAIN, not
+                // WSAEWOULDBLOCK's 10035), so comparing it against a WsaError constant only ever
+                // matches on Windows. SocketErrorCode is .NET's own cross-platform-normalized
+                // enum and is what every OTHER method in this class already checks; Connect was
+                // the one place still comparing raw error codes, which meant "connect is still in
+                // progress" was silently never detected on macOS or Linux.
+                if (!Blocking && exception.SocketErrorCode == SocketError.WouldBlock)
                 {
+                    if (wasSubstituted && TryCompleteSubstitutedConnectSynchronously())
+                    {
+                        return LinuxError.SUCCESS;
+                    }
+
                     return LinuxError.EINPROGRESS;
                 }
                 else
@@ -187,8 +198,10 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
         /// normally rather than guessed at, since misdirecting a genuine peer-to-peer connect
         /// would be worse than a clear connection failure.
         /// </summary>
-        private static IPEndPoint SubstituteLostAddress(IPEndPoint remoteEndPoint)
+        private static IPEndPoint SubstituteLostAddress(IPEndPoint remoteEndPoint, out bool wasSubstituted)
         {
+            wasSubstituted = false;
+
             IPAddress address = remoteEndPoint.Address;
 
             bool addressLost = address.Equals(IPAddress.Any) || address.Equals(IPAddress.IPv6Any) ||
@@ -215,7 +228,74 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
             Logger.Info?.Print(LogClass.ServiceBsd,
                 $"Connect target for port {remoteEndPoint.Port} lost its address ({address}); substituting {resolved} from the most recent DNS lookup on that port");
 
+            wasSubstituted = true;
+
             return new IPEndPoint(resolved, remoteEndPoint.Port);
+        }
+
+        /// <summary>
+        /// For a connect whose address we just substituted (see <see cref="SubstituteLostAddress"/>),
+        /// waits briefly and returns whether it finished connecting -- rather than reporting
+        /// EINPROGRESS and trusting the guest's own async polling to notice.
+        /// </summary>
+        /// <remarks>
+        /// This exists for one specific, measured failure: a gRPC client's own connection setup
+        /// can register a non-blocking socket for write-readiness late, or on some runs never
+        /// dispatch the callback that would notice it became writable at all -- leaving a TCP
+        /// handshake that finished in milliseconds undetected for a very long time, if ever. The
+        /// symptom looks exactly like a network hang: DNS resolved, TLS never even started,
+        /// nothing logged on either side. Since a substituted connect only ever targets a server
+        /// this process just resolved (never an unknown peer), blocking here briefly to confirm
+        /// the handshake actually completed -- and reporting SUCCESS immediately when it did --
+        /// sidesteps that guest-side polling gap entirely. Left off (0) or on a slow/unusual
+        /// network, this only costs the wait before falling back to the normal EINPROGRESS path;
+        /// it never changes whether the connect eventually succeeds.
+        /// </remarks>
+        private bool TryCompleteSubstitutedConnectSynchronously()
+        {
+            int capMs = SubstitutedConnectSyncCapMs;
+
+            if (capMs <= 0)
+            {
+                return false;
+            }
+
+            try
+            {
+                if (Socket.Poll(capMs * 1000, SelectMode.SelectWrite) &&
+                    !Socket.Poll(0, SelectMode.SelectError))
+                {
+                    Logger.Info?.Print(LogClass.ServiceBsd, "Substituted connect target became writable; completing synchronously");
+
+                    return true;
+                }
+            }
+            catch (SocketException)
+            {
+                // Falls through to the normal EINPROGRESS path below.
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// <c>RYUJINX_SUBSTITUTED_CONNECT_SYNC_MS</c> overrides how long
+        /// <see cref="TryCompleteSubstitutedConnectSynchronously"/> waits; 0 disables it, falling
+        /// back to ordinary EINPROGRESS/async completion. Absent or invalid defaults to 2000.
+        /// </summary>
+        private static int SubstitutedConnectSyncCapMs
+        {
+            get
+            {
+                string env = Environment.GetEnvironmentVariable("RYUJINX_SUBSTITUTED_CONNECT_SYNC_MS");
+
+                if (env != null && int.TryParse(env, out int parsed) && parsed >= 0)
+                {
+                    return parsed;
+                }
+
+                return 2000;
+            }
         }
 
         public void Disconnect()
