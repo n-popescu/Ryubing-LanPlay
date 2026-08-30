@@ -7,6 +7,7 @@ using Ryujinx.HLE.HOS.Services.Nifm.StaticService.GeneralService;
 using Ryujinx.HLE.HOS.Services.Nifm.StaticService.Types;
 using Ryujinx.HLE.HOS.Services.Sockets.Bsd.Proxy;
 using System;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 
@@ -85,7 +86,7 @@ namespace Ryujinx.HLE.HOS.Services.Nifm.StaticService
             };
 
             networkProfile.IpSettingData.IpAddressSetting = new IpAddressSetting(interfaceProperties, unicastAddress);
-            networkProfile.IpSettingData.DnsSetting = new DnsSetting(interfaceProperties);
+            networkProfile.IpSettingData.DnsSetting = BuildDnsSetting(context, interfaceProperties);
 
             "RyujinxNetwork"u8.CopyTo(networkProfile.Name.AsSpan());
 
@@ -150,9 +151,28 @@ namespace Ryujinx.HLE.HOS.Services.Nifm.StaticService
                 context.ResponseData.WriteStruct(new IpAddressSetting(interfaceProperties, unicastAddress));
             }
 
-            context.ResponseData.WriteStruct(new DnsSetting(interfaceProperties));
+            context.ResponseData.WriteStruct(BuildDnsSetting(context, interfaceProperties));
 
             return ResultCode.Success;
+        }
+
+        /// <summary>
+        /// The DNS server(s) reported to the guest: the operator's configured private server,
+        /// when the "redirect Nintendo servers" feature is on and it names one, otherwise this
+        /// machine's own real DNS servers exactly as before. See
+        /// <see cref="DnsSetting(IPAddress)"/> for why the override exists at all.
+        /// </summary>
+        private static DnsSetting BuildDnsSetting(ServiceCtx context, IPInterfaceProperties interfaceProperties)
+        {
+            HleConfiguration configuration = context.Device.Configuration;
+
+            if (configuration.RedirectNintendoServers &&
+                IPAddress.TryParse(configuration.PrivateServerAddress, out IPAddress privateServer))
+            {
+                return new DnsSetting(privateServer);
+            }
+
+            return new DnsSetting(interfaceProperties);
         }
 
         [CommandCmif(18)]
