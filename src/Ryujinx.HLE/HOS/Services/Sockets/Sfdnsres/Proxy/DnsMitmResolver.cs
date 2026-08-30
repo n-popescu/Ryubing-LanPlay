@@ -1,6 +1,7 @@
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Services.Sockets.Nsd;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Enumeration;
@@ -16,6 +17,41 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres.Proxy
         public static DnsMitmResolver Instance => _instance ??= new DnsMitmResolver();
 
         private readonly Dictionary<string, IPAddress> _mitmHostEntries = new();
+
+        /// <summary>
+        /// The address most recently handed out by a `getaddrinfo`-style lookup for a given
+        /// port, regardless of which host it came from.
+        /// </summary>
+        /// <remarks>
+        /// Exists for one specific failure mode: some guest network stacks issue exactly one
+        /// address lookup for a host:port pair and then connect immediately after, but arrive at
+        /// <c>connect()</c> with the address lost -- 0.0.0.0 / :: -- while the port survives
+        /// intact. When that happens there is no way to recover the intended host from the
+        /// connect call alone, but the port is still a strong hint: it is very likely the same
+        /// target whose address this resolver just handed back. Recording it here lets
+        /// <c>ManagedSocket.Connect</c> substitute a real address instead of failing outright.
+        /// Keyed by port rather than by host because that is all a lost-address connect call has
+        /// left to key on.
+        /// </remarks>
+        private readonly ConcurrentDictionary<int, IPAddress> _lastResolvedByPort = new();
+
+        /// <summary>
+        /// Records the address a `getaddrinfo`-style lookup just resolved for <paramref name="port"/>,
+        /// for <see cref="TryGetLastResolved"/> to consult later.
+        /// </summary>
+        public void RememberResolution(int port, IPAddress address)
+        {
+            if (port != 0 && address != null)
+            {
+                _lastResolvedByPort[port] = address;
+            }
+        }
+
+        /// <summary>
+        /// Looks up the address most recently resolved for <paramref name="port"/>, if any.
+        /// </summary>
+        public bool TryGetLastResolved(int port, out IPAddress address) =>
+            _lastResolvedByPort.TryGetValue(port, out address);
 
         public void ReloadEntries(ServiceCtx context)
         {

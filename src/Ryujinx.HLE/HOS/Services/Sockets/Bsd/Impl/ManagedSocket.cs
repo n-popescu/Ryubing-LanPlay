@@ -1,6 +1,7 @@
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.HOS.Services.Sockets.Bsd.Proxy;
 using Ryujinx.HLE.HOS.Services.Sockets.Bsd.Types;
+using Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres.Proxy;
 using System;
 using System.Diagnostics;
 using System.Net;
@@ -140,6 +141,8 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
 
         public LinuxError Connect(IPEndPoint remoteEndPoint)
         {
+            remoteEndPoint = SubstituteLostAddress(remoteEndPoint);
+
             bool isLDNPrivateIP = remoteEndPoint.Address.ToString().StartsWith("192.168.");
             if (isLDNPrivateIP)
             {
@@ -172,6 +175,47 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Bsd.Impl
                     return WinSockHelper.ConvertError((WsaError)exception.ErrorCode);
                 }
             }
+        }
+
+        /// <summary>
+        /// Some guest network stacks resolve a host:port pair and then connect immediately after,
+        /// but the connect call can arrive here with the address lost -- 0.0.0.0 or :: -- while
+        /// the port is intact. A raw connect to either address targets this machine's loopback
+        /// or wildcard route instead of the intended peer, which just hangs. If a lookup was
+        /// recently done for this exact port, substitute that address; otherwise leave the
+        /// endpoint alone; a lost address with nothing recorded for its port is left to fail
+        /// normally rather than guessed at, since misdirecting a genuine peer-to-peer connect
+        /// would be worse than a clear connection failure.
+        /// </summary>
+        private static IPEndPoint SubstituteLostAddress(IPEndPoint remoteEndPoint)
+        {
+            IPAddress address = remoteEndPoint.Address;
+
+            bool addressLost = address.Equals(IPAddress.Any) || address.Equals(IPAddress.IPv6Any) ||
+                (address.IsIPv4MappedToIPv6 && address.MapToIPv4().Equals(IPAddress.Any));
+
+            if (!addressLost)
+            {
+                return remoteEndPoint;
+            }
+
+            if (!DnsMitmResolver.Instance.TryGetLastResolved(remoteEndPoint.Port, out IPAddress resolved))
+            {
+                Logger.Warning?.Print(LogClass.ServiceBsd,
+                    $"Connect target for port {remoteEndPoint.Port} lost its address ({address}) and no recent DNS lookup for that port is on record; connecting as given");
+
+                return remoteEndPoint;
+            }
+
+            if (address.AddressFamily == AddressFamily.InterNetworkV6 && resolved.AddressFamily == AddressFamily.InterNetwork)
+            {
+                resolved = resolved.MapToIPv6();
+            }
+
+            Logger.Info?.Print(LogClass.ServiceBsd,
+                $"Connect target for port {remoteEndPoint.Port} lost its address ({address}); substituting {resolved} from the most recent DNS lookup on that port");
+
+            return new IPEndPoint(resolved, remoteEndPoint.Port);
         }
 
         public void Disconnect()

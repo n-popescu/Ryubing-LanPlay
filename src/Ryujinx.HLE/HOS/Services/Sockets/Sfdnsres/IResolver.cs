@@ -599,6 +599,12 @@ namespace Ryujinx.HLE.HOS.Services.Sockets.Sfdnsres
                 if (int.TryParse(service, out int port) || string.IsNullOrEmpty(service))
                 {
                     errno = GaiError.Success;
+
+                    foreach (IPAddress ip in GetIpv4Addresses(hostEntry))
+                    {
+                        DnsMitmResolver.Instance.RememberResolution(port, ip);
+                    }
+
                     serializedSize = SerializeAddrInfos(context, responseBufferPosition, responseBufferSize, hostEntry, port);
                 }
                 else
